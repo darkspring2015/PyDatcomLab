@@ -1,7 +1,7 @@
 import sys
 import os
 import re
-import string
+#import string
 
 import ply.yacc as yacc
 import ply.lex as lex

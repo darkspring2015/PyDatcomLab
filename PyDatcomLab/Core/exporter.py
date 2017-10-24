@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-import os
-import re
+#import os
+#import re
+
 from jinja2 import Environment, PackageLoader
 
 

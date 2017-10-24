@@ -2,10 +2,10 @@ import unittest
 '''测试脚本的编写，这就是一个脚本，不需要定义Class'''
 
 #将所有的测试全部租住在这里
-from PyDatcomCore.test import testCore as tCore 
-from test import testParser as tP
-from test import testFrame as tFm
-from test import testDatcomRunner as tRun
+from tests import testCore as tCore 
+from tests import testParser as tP
+from tests import testFrame as tFm
+from tests import testDatcomRunner as tRun
 
 #实例化测试套件
 suite = unittest.TestSuite()  #这是eric6测试需要的关键变量
