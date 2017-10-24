@@ -55,7 +55,7 @@ class Parser(object):
             yacc.parse(file_data)
 
         if not self.keep_parse_tab:
-            parse_tab_file = "parser_DatcomParser_parsetab.py"
+            parse_tab_file = self.tabmodule +'.py'
             if os.path.exists(parse_tab_file):
                 os.remove(parse_tab_file)
 
@@ -127,6 +127,7 @@ class DatcomParser(Parser):
         'PART': 'PART',
         'DERIV': 'DERIV',
         'DUMP': 'DUMP',
+        'SAVE':'SAVE', 
     }
 
     reserved_NAMELISTS = [

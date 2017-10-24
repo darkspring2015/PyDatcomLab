@@ -12,8 +12,8 @@ class DatcomExporter(object):
             template_file=None):
 
         env = Environment(
-            loader=PackageLoader('PyDatcomCore','pydatcom',
-                                 'templates'),
+            loader=PackageLoader('PyDatcomLab','Core',
+                                 'Templates'),
             line_statement_prefix='#')
 
         template = env.get_template(template_file)

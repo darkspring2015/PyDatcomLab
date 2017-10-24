@@ -1,5 +1,10 @@
-import unittest
+#!/usr/bin/env python
+#encoding: utf-8
 '''测试脚本的编写，这就是一个脚本，不需要定义Class'''
+import unittest, os
+os.chdir(r'..')
+
+
 
 #将所有的测试全部租住在这里
 from tests import testCore as tCore 
