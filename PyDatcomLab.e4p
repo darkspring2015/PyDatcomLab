@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-10-24, 23:23:40 -->
+<!-- Saved: 2017-10-25, 06:57:03 -->
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -78,6 +78,7 @@
   <Interfaces/>
   <Others>
     <Other>INSTALL</Other>
+    <Other>PyDatcomLab.e4p</Other>
     <Other>PyDatcomLab/Bin/datcom.exe</Other>
     <Other>PyDatcomLab/Bin/datcom.lnx</Other>
     <Other>PyDatcomLab/Bin/datcom.mac</Other>

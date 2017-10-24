@@ -4,7 +4,7 @@ import unittest
 
 #sys.path.insert(0, os.path.realpath(os.path.split( os.path.realpath( sys.argv[0] ) )[0]+r'\..'))
 
-from PyDatcomGUI.Ui_MainWindow import  Ui_MainWindow
+from PyDatcomLab.GUIs.Ui_MainWindow import  Ui_MainWindow
 class mytest(unittest.TestCase):
   ##初始化工作PyDatcomGUI
 

@@ -79,9 +79,9 @@ class runner(object):
 
 
 if __name__ == '__main__':
-    pDir = os.path.join(r'test', r'Examples', r'test2')
-    fDatcomexxc = os.path.join('test', 'Bin', 'datcom.exe')
-    exampleFile =  os.path.join(r'test', r'Examples', r'test1', r'EX1.INP')
+    pDir = os.path.join(r'extras', r'PyDatcomProjects', r'tests', 'example')
+    fDatcomexxc = os.path.join('PyDatcomLab', 'Bin', 'datcom.exe')
+    exampleFile =  os.path.join(r'tests', r'data', r'exwin', r'EX1.INP')
     runner = runner(pDir, fDatcomexxc)
     #print(runner.running(exampleFile))
     print(runner.runningPopen(problemFile=exampleFile, tcwd=pDir))
