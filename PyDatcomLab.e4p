@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-5.1.dtd">
+<!-- eric project file for project PyDatcomLab -->
+<!-- Saved: 2017-10-24, 23:23:40 -->
+<!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
+<Project version="5.1">
+  <Language></Language>
+  <Hash>661c47e71d6aba341b4161883941561ca8d9b0f5</Hash>
+  <ProgLanguage mixed="0">Python3</ProgLanguage>
+  <ProjectType>PyQt5</ProjectType>
+  <Description>PyDatcomLab是Datcom软件的GUI拓展程序</Description>
+  <Version>0.1</Version>
+  <Author>linger</Author>
+  <Email>Lingo_renlo@qq.com</Email>
+  <Eol index="0"/>
+  <Sources>
+    <Source>PyDatcomLab/Core/__init__.py</Source>
+    <Source>PyDatcomLab/Core/datcomRunner.py</Source>
+    <Source>PyDatcomLab/Core/exporter.py</Source>
+    <Source>PyDatcomLab/Core/parser.py</Source>
+    <Source>PyDatcomLab/Core/parser_DatcomParser_parsetab.py</Source>
+    <Source>PyDatcomLab/Core/plotter.py</Source>
+    <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
+    <Source>PyDatcomLab/GUIs/Ui_MainWindow.py</Source>
+    <Source>PyDatcomLab/GUIs/Ui_Refernces.py</Source>
+    <Source>PyDatcomLab/GUIs/__init__.py</Source>
+    <Source>PyDatcomLab/__init__.py</Source>
+    <Source>__init__.py</Source>
+    <Source>testSuite.py</Source>
+    <Source>testSuite2.py</Source>
+    <Source>tests/__init__.py</Source>
+    <Source>tests/test.py</Source>
+    <Source>tests/testCore.py</Source>
+    <Source>tests/testDatcomRunner.py</Source>
+    <Source>tests/testFrame.py</Source>
+    <Source>tests/testLoadFromMoudle.py</Source>
+    <Source>tests/testParser.py</Source>
+  </Sources>
+  <Forms>
+    <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
+    <Form>PyDatcomLab/GUIs/Refernces.ui</Form>
+  </Forms>
+  <Translations/>
+  <Resources>
+    <Resource>PyDatcomLab/Core/Templates/modelica.mo</Resource>
+    <Resource>docs/datcom.zip</Resource>
+    <Resource>docs/datcomexec.zip</Resource>
+    <Resource>tests/data/PyDatcom-Tests/ASW-20.out</Resource>
+    <Resource>tests/data/PyDatcom-Tests/B-737.out</Resource>
+    <Resource>tests/data/PyDatcom-Tests/Citation.out</Resource>
+    <Resource>tests/data/PyDatcom-Tests/Citation_simple.out</Resource>
+    <Resource>tests/data/PyDatcom-Tests/Navion.out</Resource>
+    <Resource>tests/data/PyDatcom-Tests/SenecaII.out</Resource>
+    <Resource>tests/data/PyDatcom-Tests/canard.out</Resource>
+    <Resource>tests/data/exlinux/ex1.out</Resource>
+    <Resource>tests/data/exlinux/ex10.out</Resource>
+    <Resource>tests/data/exlinux/ex11.out</Resource>
+    <Resource>tests/data/exlinux/ex2.out</Resource>
+    <Resource>tests/data/exlinux/ex3.out</Resource>
+    <Resource>tests/data/exlinux/ex4.out</Resource>
+    <Resource>tests/data/exlinux/ex5.out</Resource>
+    <Resource>tests/data/exlinux/ex6.out</Resource>
+    <Resource>tests/data/exlinux/ex7.out</Resource>
+    <Resource>tests/data/exlinux/ex8.out</Resource>
+    <Resource>tests/data/exlinux/ex9.out</Resource>
+    <Resource>tests/data/exwin/ex1.out</Resource>
+    <Resource>tests/data/exwin/ex10.out</Resource>
+    <Resource>tests/data/exwin/ex11.out</Resource>
+    <Resource>tests/data/exwin/ex2.out</Resource>
+    <Resource>tests/data/exwin/ex3.out</Resource>
+    <Resource>tests/data/exwin/ex4.out</Resource>
+    <Resource>tests/data/exwin/ex5.out</Resource>
+    <Resource>tests/data/exwin/ex6.out</Resource>
+    <Resource>tests/data/exwin/ex7.out</Resource>
+    <Resource>tests/data/exwin/ex8.out</Resource>
+    <Resource>tests/data/exwin/ex9.out</Resource>
+  </Resources>
+  <Interfaces/>
+  <Others>
+    <Other>INSTALL</Other>
+    <Other>PyDatcomLab/Bin/datcom.exe</Other>
+    <Other>PyDatcomLab/Bin/datcom.lnx</Other>
+    <Other>PyDatcomLab/Bin/datcom.mac</Other>
+    <Other>README.md</Other>
+    <Other>tests/data/exlinux/ex1.inp</Other>
+    <Other>tests/data/exlinux/ex10.inp</Other>
+    <Other>tests/data/exlinux/ex11.inp</Other>
+    <Other>tests/data/exlinux/ex2.inp</Other>
+    <Other>tests/data/exlinux/ex3.inp</Other>
+    <Other>tests/data/exlinux/ex4.inp</Other>
+    <Other>tests/data/exlinux/ex5.inp</Other>
+    <Other>tests/data/exlinux/ex6.inp</Other>
+    <Other>tests/data/exlinux/ex7.inp</Other>
+    <Other>tests/data/exlinux/ex8.inp</Other>
+    <Other>tests/data/exlinux/ex9.inp</Other>
+    <Other>tests/data/exwin/EX1.INP</Other>
+    <Other>tests/data/exwin/EX10.INP</Other>
+    <Other>tests/data/exwin/EX11.INP</Other>
+    <Other>tests/data/exwin/EX2.INP</Other>
+    <Other>tests/data/exwin/EX3.INP</Other>
+    <Other>tests/data/exwin/EX4.INP</Other>
+    <Other>tests/data/exwin/EX5.INP</Other>
+    <Other>tests/data/exwin/EX6.INP</Other>
+    <Other>tests/data/exwin/EX7.INP</Other>
+    <Other>tests/data/exwin/EX8.INP</Other>
+    <Other>tests/data/exwin/EX9.INP</Other>
+  </Others>
+  <Vcs>
+    <VcsType>Git</VcsType>
+    <VcsOptions>
+      <dict>
+        <key>
+          <string>add</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>checkout</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>commit</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>diff</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>export</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>global</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>history</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>log</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>remove</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>status</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>tag</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>update</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+      </dict>
+    </VcsOptions>
+  </Vcs>
+  <FiletypeAssociations>
+    <FiletypeAssociation pattern="*.INP" type="OTHERS"/>
+    <FiletypeAssociation pattern="*.OUT" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.e4p" type="OTHERS"/>
+    <FiletypeAssociation pattern="*.exe" type="OTHERS"/>
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES"/>
+    <FiletypeAssociation pattern="*.lnx" type="OTHERS"/>
+    <FiletypeAssociation pattern="*.mac" type="OTHERS"/>
+    <FiletypeAssociation pattern="*.md" type="OTHERS"/>
+    <FiletypeAssociation pattern="*.mo" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.py" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.py3" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.pyw3" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.qm" type="TRANSLATIONS"/>
+    <FiletypeAssociation pattern="*.qrc" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.rst" type="OTHERS"/>
+    <FiletypeAssociation pattern="*.ts" type="TRANSLATIONS"/>
+    <FiletypeAssociation pattern="*.txt" type="OTHERS"/>
+    <FiletypeAssociation pattern="*.ui" type="FORMS"/>
+    <FiletypeAssociation pattern="*.zip" type="RESOURCES"/>
+    <FiletypeAssociation pattern="README" type="OTHERS"/>
+    <FiletypeAssociation pattern="README.*" type="OTHERS"/>
+  </FiletypeAssociations>
+</Project>
