@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Tasks SYSTEM "Tasks-6.0.dtd">
 <!-- eric6 tasks file for project PyDatcomLab -->
-<!-- Saved: 2017-10-25, 07:50:13 -->
+<!-- Saved: 2017-10-25, 08:09:06 -->
 <Tasks version="6.0">
   <ProjectScanFilter></ProjectScanFilter>
-  <Task priority="1" completed="False" type="2" uid="{833168dc-da9c-44a5-b045-7ffb70a4b081}">
+  <Task priority="1" completed="False" type="2" uid="{14f1768a-2935-4ff0-b322-9495bbcce2f0}">
     <Summary>WARNING: duplicate key %s' % key)</Summary>
     <Description></Description>
-    <Created>2017-10-25, 07:49:24</Created>
+    <Created>2017-10-25, 07:52:25</Created>
     <Resource>
       <Filename>PyDatcomLab/Core/parser.py</Filename>
       <Linenumber>563</Linenumber>

@@ -12,11 +12,11 @@ import numpy as np
 
 class DatcomPlotter(object):
 
-    def __init__(self, parser_dict):
-        self.d = parser_dict
-        if not os.path.isdir('fig'):
-            os.mkdir('fig')
-        self.figpath = os.path.abspath('fig')
+    def __init__(self, parser_dict, figdir='.'):
+        self.d = parser_dict        
+        if not os.path.isdir(figdir ):
+            os.makedirs(figdir)        
+        self.figpath = os.path.abspath(figdir)
 
     def common_plots(self):
         ## lift plots

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-10-25, 07:50:13 -->
+<!-- Saved: 2017-10-25, 08:08:58 -->
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -43,7 +43,6 @@
   <Translations/>
   <Resources>
     <Resource>PyDatcomLab/Core/Templates/modelica.mo</Resource>
-    <Resource>datcom.out</Resource>
     <Resource>docs/datcom.zip</Resource>
     <Resource>docs/datcomexec.zip</Resource>
     <Resource>extras/PyDatcomProjects/tests/example/datcom.out</Resource>

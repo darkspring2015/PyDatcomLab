@@ -12,7 +12,9 @@ class testDatcomRunner(unittest.TestCase):
     def tearDown(self):
         self.tClass = None
     def test_runningPopen(self):
-        strRes = self.tClass.runningPopen(exePath= self.exePath,problemFile=self.tproblemFile )
+        strRes = self.tClass.runningPopen(exePath= self.exePath,\
+        problemFile=self.tproblemFile, \
+        tcwd =self.tproblemDir  )
         self.assertEqual(strRes, "成功执行")
 
     

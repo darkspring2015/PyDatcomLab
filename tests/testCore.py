@@ -38,7 +38,7 @@ class Test(unittest.TestCase):
 
     def test_plot(self):
         parser = DatcomParser(os.path.join('tests','data', 'PyDatcom-Tests', 'Citation.out'))
-        plotter = DatcomPlotter(parser.get_common())
+        plotter = DatcomPlotter(parser.get_common(), os.path.join('extras','PyDatcomProjects', 'tests', 'fig'))
         plotter.common_plots()
         self.assertTrue(plotter != None)
         
