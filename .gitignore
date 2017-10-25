@@ -104,3 +104,4 @@ ENV/
 
 .extras/PyDatcomProjects/
 extras/PyDatcomProjects/*
+*_parsetab.py
