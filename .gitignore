@@ -102,6 +102,7 @@ ENV/
 
 # myProjectCache
 
-.extras/PyDatcomProjects/
-extras/PyDatcomProjects/*
+
+
 *_parsetab.py
+extras/PyDatcomProjects/
