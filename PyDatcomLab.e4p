@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-10-25, 08:08:58 -->
+<!-- Saved: 2017-10-27, 16:35:44 -->
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -15,9 +15,12 @@
   <Eol index="0"/>
   <Sources>
     <Source>PyDatcomLab/Core/__init__.py</Source>
+    <Source>PyDatcomLab/Core/datcomDefine.py</Source>
     <Source>PyDatcomLab/Core/datcomRunner.py</Source>
     <Source>PyDatcomLab/Core/exporter.py</Source>
     <Source>PyDatcomLab/Core/parser.py</Source>
+    <Source>PyDatcomLab/Core/parserTable.py</Source>
+    <Source>PyDatcomLab/Core/parserUASF.py</Source>
     <Source>PyDatcomLab/Core/parser_DatcomParser_parsetab.py</Source>
     <Source>PyDatcomLab/Core/plotter.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
@@ -25,10 +28,10 @@
     <Source>PyDatcomLab/GUIs/Ui_Refernces.py</Source>
     <Source>PyDatcomLab/GUIs/__init__.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
-    <Source>__init__.py</Source>
     <Source>tests/__init__.py</Source>
     <Source>tests/test.py</Source>
     <Source>tests/testCore.py</Source>
+    <Source>tests/testCore_Parser.py</Source>
     <Source>tests/testDatcomRunner.py</Source>
     <Source>tests/testFrame.py</Source>
     <Source>tests/testLoadFromMoudle.py</Source>
@@ -45,6 +48,17 @@
     <Resource>PyDatcomLab/Core/Templates/modelica.mo</Resource>
     <Resource>docs/datcom.zip</Resource>
     <Resource>docs/datcomexec.zip</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX10/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX11/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX1/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX2/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX3/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX4/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX5/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX6/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX7/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX8/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX9/datcom.out</Resource>
     <Resource>extras/PyDatcomProjects/tests/example/datcom.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/ASW-20.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/B-737.out</Resource>

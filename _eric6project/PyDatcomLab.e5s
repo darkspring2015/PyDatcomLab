@@ -2,16 +2,31 @@
 <!DOCTYPE Session SYSTEM "Session-5.0.dtd">
 <!-- eric6 session file for project PyDatcomLab -->
 <!-- This file was generated automatically, do not edit. -->
-<!-- Saved: 2017-10-25, 08:08:58 -->
+<!-- Saved: 2017-10-27, 16:36:17 -->
 <Session version="5.0">
   <Filenames>
-    <Filename cline="17" cindex="31" folds="" zoom="0">C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\plotter.py</Filename>
-    <Filename cline="13" cindex="91" folds="" zoom="0">C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testCore.py</Filename>
-    <Filename cline="17" cindex="40" folds="" zoom="0">C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testDatcomRunner.py</Filename>
-    <Filename cline="39" cindex="35" folds="" zoom="0">C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\datcomRunner.py</Filename>
+    <Filename cline="187" cindex="16" folds="11" zoom="0">C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parserUASF.py</Filename>
+    <Filename cline="109" cindex="7" folds="18,25,26,29,36,38,43,44,45,47,49,52,53,57,59,68,71,74,83,93,107,118,123,133,151,188,192,195,203,210,216,218,225,227,234,236,245,247,255,259,262,264,267,272,277,282,287,293,300,306,310,311,314,317,324,325,327,333,337,341,343,345,356,360,362,365,371,378,384,386,390,394,397,401,405,413,415,422,424,431,434,436,441,442,446,452,455,456,460,462,465,469,475,481,484,486,488,490,499,500,501,503,507,511,519,521,523,525,528,532,535,539,543,547,551,554,558,561,562,564,567,575,586,588,590,592,594,595,607,609,613,657" zoom="0">C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parser.py</Filename>
+    <Filename cline="33" cindex="0" folds="" zoom="0">C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parserTable.py</Filename>
   </Filenames>
-  <ActiveWindow cline="17" cindex="40">C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testDatcomRunner.py</ActiveWindow>
-  <Breakpoints/>
+  <Breakpoints>
+    <Breakpoint>
+      <BpFilename>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parserTable.py</BpFilename>
+      <Linenumber value="266"/>
+      <Condition></Condition>
+      <Temporary value="False"/>
+      <Enabled value="True"/>
+      <Count value="0"/>
+    </Breakpoint>
+    <Breakpoint>
+      <BpFilename>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parserTable.py</BpFilename>
+      <Linenumber value="33"/>
+      <Condition></Condition>
+      <Temporary value="False"/>
+      <Enabled value="True"/>
+      <Count value="0"/>
+    </Breakpoint>
+  </Breakpoints>
   <Watchexpressions/>
   <DebugInfo>
     <CommandLine></CommandLine>
@@ -30,18 +45,27 @@
     <ProjectBrowserState name="sources">
       <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab</ExpandedItemName>
       <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core</ExpandedItemName>
-      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\datcomRunner.py</ExpandedItemName>
-      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\datcomRunner.py@@5</ExpandedItemName>
-      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\plotter.py</ExpandedItemName>
-      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\plotter.py@@13</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parser.py</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parser.py@@63</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parserTable.py</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parserTable.py@@60</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parserUASF.py</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\Core\parserUASF.py@@62</ExpandedItemName>
       <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests</ExpandedItemName>
-      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testDatcomRunner.py</ExpandedItemName>
-      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testDatcomRunner.py@@5</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testCore.py</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testCore.py@@8</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testCore_Parser.py</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\tests\testCore_Parser.py@@7</ExpandedItemName>
     </ProjectBrowserState>
     <ProjectBrowserState name="forms"/>
-    <ProjectBrowserState name="resources"/>
+    <ProjectBrowserState name="resources">
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab</ExpandedItemName>
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\docs</ExpandedItemName>
+    </ProjectBrowserState>
     <ProjectBrowserState name="translations"/>
     <ProjectBrowserState name="interfaces"/>
-    <ProjectBrowserState name="others"/>
+    <ProjectBrowserState name="others">
+      <ExpandedItemName>C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab</ExpandedItemName>
+    </ProjectBrowserState>
   </ProjectBrowserStates>
 </Session>

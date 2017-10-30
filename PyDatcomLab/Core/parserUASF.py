@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import os
 import re
@@ -6,7 +7,6 @@ import re
 import ply.yacc as yacc
 import ply.lex as lex
 from ply.lex import TOKEN
-
 
 class Parser(object):
     """
@@ -59,61 +59,18 @@ class Parser(object):
             if os.path.exists(parse_tab_file):
                 os.remove(parse_tab_file)
 
-
 class DatcomParser(Parser):
     """
-    Parses a datcom output file.
+    Parses a datcom output file.USAF
     """
 
     re_float = \
         r'(\+|-)?((\d*\.\d+)|(\d+\.))(E(\+|-)?\d+)?'
 
-    re_float_vector = \
-        r'{f}([\n\s]*(,[\n\s]*{f})+)+'.format(f=re_float)
-
-    re_dynamictable = \
-        r'DYNAMIC\ DERIVATIVES\n(?P<config>.*)\n' \
-        r'(?P<case>.*)\n(.*\n){2}' \
-        r'(?P<condition_headers>(.*\n){2})' \
-        r'(?P<condition_units>.*)\n' \
-        r'(?P<conditions>.*)\n(.*\n){2}0' \
-        r'(?P<deriv_headers>.*)\n0.*\n' \
-        r'(?P<deriv_table>([^\d\n].*\n)+)'
-
-    re_statictable = \
-        r'CHARACTERISTICS\ AT\ ANGLE\ OF\ ATTACK.*\n' \
-        r'(?P<config>.*(\n.*POWER.*)?)\n' \
-        r'(?P<case>.*)\n(.*\n){2}' \
-        r'(?P<condition_headers>(.*\n){2})' \
-        r'(?P<condition_units>.*)\n' \
-        r'(?P<conditions>.*)\n(.*\n){1}0' \
-        r'(?P<deriv_headers>.*)\n0.*\n' \
-        r'(?P<deriv_table>([^\d\n].*\n)+)'
-
-    re_symflptable = \
-        r'CHARACTERISTICS\ OF\ HIGH' \
-        r'\ LIFT\ AND\ CONTROL\ DEVICES.*\n' \
-        r'(?P<config>.*)\n(?P<case>.*)\n(.*\n){1}' \
-        r'(?P<condition_headers>(.*\n){2})' \
-        r'(?P<condition_units>.*)\n' \
-        r'(?P<conditions>.*)\n(.*\n){1}' \
-        r'0(?P<deriv_headers>.*)\n(.*\n){2}' \
-        r'(?P<deriv_table>([^\d\n].*\n)+)' \
-        r'(.*\n){2}.*INDUCED\ DRAG\ COEFFICIENT' \
-        r'\ INCREMENT.*\n.*DELTA\ =' \
-        r'(?P<deflection>.*)\n(.*\n){2}' \
-        r'(?P<drag_table>([^\d\n].*\n)+)'
-
-    re_asyflptable = \
-        r'CHARACTERISTICS\ OF\ HIGH\ LIFT' \
-        r'\ AND\ CONTROL\ DEVICES.*\n' \
-        r'(?P<config>.*)\n(?P<case>.*)\n(.*\n){1}' \
-        r'(?P<condition_headers>(.*\n){2})' \
-        r'(?P<condition_units>.*)\n' \
-        r'(?P<conditions>.*)\n(.*\n){1}.*' \
-        r'\(DELTAL-DELTAR\)=(?P<deflection>.*)' \
-        r'\n(.*\n){2}(?P<yaw_table>([^0].*\n)+)' \
-        r'(.*\n){3}(?P<roll_table>([^1].*\n)+)'
+    re_namelist = \
+        r'(\$(?<namelist>.*)\$)'
+        
+    
 
     states = (
         ('CASE', 'exclusive'),
@@ -121,65 +78,82 @@ class DatcomParser(Parser):
     )
 
     reserved_INPUT = {
-        'TRIM': 'TRIM',
-        'DIM': 'DIM',
-        'DAMP': 'DAMP',
-        'PART': 'PART',
-        'DERIV': 'DERIV',
-        'DUMP': 'DUMP',
-        'SAVE':'SAVE', 
+#        'TRIM': 'TRIM',
+#        'DIM': 'DIM',
+#        'DAMP': 'DAMP',
+#        'PART': 'PART',
+#        'DERIV': 'DERIV',
+#        'DUMP': 'DUMP',
+#        'SAVE':'SAVE', 
     }
 
     reserved_NAMELISTS = [
-        'FLTCON',
-        'SYNTHS',
-        'BODY',
-        'WGPLNF',
-        'SYMFLP',
-        'ASYFLP',
-        'OPTINS',
-        'HTPLNF',
-        'VTPLNF',
-        'VFPLNF',
-        'WGSCHR',
-        'HTSCHR',
-        'VTSCHR',
-        'VFSCHR',
-        'PROPWR',
-        'JETPWR']
+#        'FLTCON',#
+#        'SYNTHS',#
+#        'BODY',#
+#        'SYMFLP',#
+#        'ASYFLP', #
+#        'OPTINS',#
+#        'WGPLNF', #    
+#        'HTPLNF',#
+#        'VTPLNF',#
+#        'VFPLNF',#
+#        'WGSCHR',#
+#        'HTSCHR',#
+#        'VTSCHR',#
+#        'VFSCHR',#
+#        'PROPWR',#linger
+#        'JETPWR', #
+#        'CONTAB', #
+#        'EXPR', #
+#        'GRNDEF', #
+#        'HYPEFF', #
+#        'LARWB', #
+#        'TRNJET', #
+#        'TVTPAN', #    
+        ]
 
     tokens = (
-        'AIRFOIL',
-        'NAME',
-        'LPAREN',
-        'RPAREN',
-        'NEWCASE',
-        'DYNAMICTABLE',
-        'STATICTABLE',
-        'ASYFLPTABLE',
-        'SYMFLPTABLE',
-        'FLOAT',
-        'FLOATVECTOR',
-        'INTEGER',
-        'EQUALS',
-        'ENDNAMELIST',  # delimeter
-        'COMMA',
-        'BOOL',
-        'CASEID',
-        'NAMELIST')\
+        'WORD',       #任意单词
+        'BLACKSPACE', #空白
+        'NEWLINE',    #\n
+        'ZEROBEGIN',  #0开头的行
+        'ONEBEGIN'    #1开头的行
+        'BALCKBEGIN', #空白开头的行   
+        'SHROTBAR',   #-
+        'ASTERRISK'   #* 匹配星号
+        
+#        'NEWCASE',
+#        'DYNAMICTABLE',
+#        'STATICTABLE',
+#        'ASYFLPTABLE',
+#        'SYMFLPTABLE',
+#        'FLOAT',
+#        'FLOATVECTOR',
+#        'INTEGER',
+#        'EQUALS',
+#        'ENDNAMELIST',  # delimeter
+#        'COMMA',
+#        'BOOL',
+#        'CASEID',
+#        'NAMELIST',          
+        )\
         +tuple(reserved_INPUT.values())
 
 
     # Tokens
-
-    #t_ANY_LPAREN = '\('
-    #t_ANY_RPAREN = '\)'
+    t_ANY_WORD   = r'\b\w+[-]?\w\b'
     t_ANY_LPAREN = r'\('
     t_ANY_RPAREN = r'\)'
+    t_ANY_ASTERRISK= r'\*'
+    t_ANY_ZEROBEGIN = r'^0\s'
+    t_ANY_ONEBEGIN = r'^1\s'
+    t_ANY_BALCKBEGIN = r'^\w'
+    r'(\b[a-zA-Z]+\*{1,2}\w+\b)|(\b\w+/\w+\b)'
 
     t_INITIAL_ignore = ' \t'
 
-    t_ANY_ignore = ' \t'
+    t_ANY_TAB = ' \t'
 
     t_INPUT_EQUALS = r'='
 
@@ -189,85 +163,7 @@ class DatcomParser(Parser):
         r'(\.TRUE\.|\.FALSE\.)'
         return t
 
-    def t_INPUT_NEXTCASE(self, t):
-        r'NEXT\ CASE'
 
-    def t_CASE_NEWCASE(self, t):
-        r'.*THE\ FOLLOWING\ IS\ A\ LIST\ OF\ ALL.*'
-        # pop old case
-        # starts within input first
-        t.lexer.push_state('INPUT')
-        #print 'new case'
-        return t
-
-    def t_INITIAL_NEWCASE(self, t):
-        r'.*THE\ FOLLOWING\ IS\ A\ LIST\ OF\ ALL.*'
-        t.lexer.push_state('CASE')
-        t.lexer.push_state('INPUT')
-        #print 'new case'
-        return t
-
-    def t_CASE_end_CASE(self, t):
-        r'1\ END\ OF\ JOB\.'
-        #print 'end of job'
-        t.lexer.pop_state()
-
-    @TOKEN(re_dynamictable)
-    def t_CASE_DYNAMICTABLE(self, t):
-        match = t.lexer.lexmatch
-        t.value = {
-            'deriv_table': match.group('deriv_table'),
-        }
-        #print 'dynamic table'
-        return t
-
-    @TOKEN(re_statictable)
-    def t_CASE_STATICTABLE(self, t):
-        match = t.lexer.lexmatch
-        t.value = {
-            'deriv_table': match.group('deriv_table'),
-        }
-        #print 'static table'
-        return t
-
-    @TOKEN(re_symflptable)
-    def t_CASE_SYMFLPTABLE(self, t):
-        match = t.lexer.lexmatch
-        t.value = {
-            'deriv_table': match.group('deriv_table'),
-            'deflection': match.group('deflection'),
-            'drag_table': match.group('drag_table'),
-        }
-        #print 'symflp table'
-        return t
-
-    @TOKEN(re_asyflptable)
-    def t_CASE_ASYFLPTABLE(self, t):
-        match = t.lexer.lexmatch
-        t.value = {
-            'deflection': match.group('deflection'),
-            'yaw_table': match.group('yaw_table'),
-            'roll_table': match.group('roll_table'),
-        }
-        #print 'asyflp table'
-        return t
-
-    def t_INPUT_COMMA(self, t):
-        r','
-        return t
-
-    def t_INPUT_NAMELIST(self, t):
-        '\$(?P<name>[A-Z]+)'
-        t.value = t.lexer.lexmatch.group('name')
-        if t.value in self.reserved_NAMELISTS:
-            return t
-        else:
-            self.t_ANY_error(t)
-
-    def t_INPUT_ENDNAMELIST(self, t):
-        '\$'
-        #print 'delim'
-        return t
 
     def t_ANY_newline(self, t):
         r'\n'
@@ -279,46 +175,8 @@ class DatcomParser(Parser):
         t.lexer.skip(1)
         sys.exit(1)
 
-    def t_INPUT_end_INPUT(self, t):
-        r'1.*AUTOMATED\ STABILITY\ AND\ CONTROL\ METHODS.*'
-        #print 'end input'
-        t.lexer.pop_state()
 
-    def t_INPUT_AIRFOIL(self, t):
-        r'NACA[-\s]+[WHVF][-\s]+\d[-\s](?P<number>[\d-]+)?'
-        #print 'airfoil'
-        t.value = t.lexer.lexmatch.group('number')
-        return t
 
-    def t_INPUT_CASEID(self, t):
-        r'.*CASEID (?P<name>.*)'
-        t.value = t.lexer.lexmatch.group('name').strip()
-        t.num = len(self.cases)
-        #print '\ncase:', t.value
-        return t
-
-    def t_INPUT_NAME(self, t):
-        r'[a-zA-Z_][a-zA-Z0-9_]*'
-        t.type = self.reserved_INPUT.get(t.value, 'NAME')
-        #print t
-        return t
-
-    def t_CASE_INITIAL_JUNKALL(self, t):
-        r'.+'
-
-    @TOKEN(re_float_vector)
-    def t_INPUT_FLOATVECTOR(self, t):
-        try:
-            vector = []
-            #for num in string.split(t.value, ','):
-            for num in t.value.split(','):
-                vector.append(float(num))
-            t.value = vector
-        except ValueError:
-            p_error(t)
-            t.value = 0
-        #print t
-        return t
 
     @TOKEN(re_float)
     def t_INPUT_FLOAT(self, t):
@@ -353,6 +211,7 @@ class DatcomParser(Parser):
     precedence = ()
 
     # first rule is top-level rule
+    #linger 分析这条rule是用来产生case集合的
     def p_file_statement_append(self, p):
         """
         file : statement file
