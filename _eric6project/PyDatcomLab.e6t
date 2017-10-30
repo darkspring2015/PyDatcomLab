@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Tasks SYSTEM "Tasks-6.0.dtd">
 <!-- eric6 tasks file for project PyDatcomLab -->
-<!-- Saved: 2017-10-27, 16:36:20 -->
+<!-- Saved: 2017-10-31, 02:02:49 -->
 <Tasks version="6.0">
   <ProjectScanFilter></ProjectScanFilter>
-  <Task priority="1" completed="False" type="2" uid="{8466772d-a0fd-4c5a-a44b-2bbc6be2cd3f}">
+  <Task priority="1" completed="False" type="2" uid="{b8d27801-000e-4cc2-80a5-7165985926de}">
     <Summary>WARNING: duplicate key %s' % key)</Summary>
     <Description></Description>
-    <Created>2017-10-27, 09:55:02</Created>
+    <Created>2017-10-31, 02:00:55</Created>
     <Resource>
       <Filename>PyDatcomLab/Core/parser.py</Filename>
       <Linenumber>563</Linenumber>
     </Resource>
   </Task>
-  <Task priority="1" completed="False" type="2" uid="{a78a3e36-5dad-4561-8f3b-3be7672366b0}">
+  <Task priority="1" completed="False" type="2" uid="{fa96a5a3-46a5-4e2e-8665-6b81273cba98}">
     <Summary>WARNING: duplicate key %s' % key)</Summary>
     <Description></Description>
-    <Created>2017-10-27, 16:36:20</Created>
+    <Created>2017-10-31, 02:00:55</Created>
     <Resource>
       <Filename>PyDatcomLab/Core/parserUASF.py</Filename>
       <Linenumber>422</Linenumber>
