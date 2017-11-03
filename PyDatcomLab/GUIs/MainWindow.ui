@@ -6,20 +6,33 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1202</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Datcom辅助分析软件</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1202</width>
      <height>23</height>
     </rect>
    </property>
@@ -131,182 +144,347 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QHBoxLayout" name="horizontalLayout"/>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4"/>
+  </widget>
   <action name="actionDocs">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/ircEditTopic.png</normaloff>:/icos/ircEditTopic.png</iconset>
+   </property>
    <property name="text">
     <string>文档</string>
    </property>
   </action>
   <action name="actionHelp">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/help.png</normaloff>:/icos/help.png</iconset>
+   </property>
    <property name="text">
     <string>帮助</string>
    </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/preferences-mail_generic.png</normaloff>:/icos/preferences-mail_generic.png</iconset>
+   </property>
    <property name="text">
     <string>关于我们</string>
    </property>
   </action>
   <action name="actionNewProject">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/projectUserProps.png</normaloff>:/icos/projectUserProps.png</iconset>
+   </property>
    <property name="text">
     <string>新建项目</string>
    </property>
   </action>
   <action name="actionOpenProject">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/dirOpen.png</normaloff>:/icos/dirOpen.png</iconset>
+   </property>
    <property name="text">
     <string>打开项目</string>
    </property>
   </action>
   <action name="actionSaveProject">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/fileSave.png</normaloff>:/icos/fileSave.png</iconset>
+   </property>
    <property name="text">
     <string>保存项目</string>
    </property>
   </action>
   <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/configureShortcuts.png</normaloff>:/icos/configureShortcuts.png</iconset>
+   </property>
    <property name="text">
     <string>设置</string>
    </property>
   </action>
   <action name="actionImportSettings">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/bookmarkPrevious.png</normaloff>:/icos/bookmarkPrevious.png</iconset>
+   </property>
    <property name="text">
     <string>导入设置</string>
    </property>
   </action>
   <action name="actionExportSettings">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/bookmarkNext.png</normaloff>:/icos/bookmarkNext.png</iconset>
+   </property>
    <property name="text">
     <string>导出设置</string>
    </property>
   </action>
   <action name="actionExit">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/close.png</normaloff>:/icos/close.png</iconset>
+   </property>
    <property name="text">
     <string>退出</string>
    </property>
   </action>
   <action name="actionBrowse">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/pluginRepository.png</normaloff>:/icos/pluginRepository.png</iconset>
+   </property>
    <property name="text">
     <string>浏览</string>
    </property>
   </action>
   <action name="actionNewModel">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/pluginInstall.png</normaloff>:/icos/pluginInstall.png</iconset>
+   </property>
    <property name="text">
     <string>新建模型</string>
    </property>
   </action>
   <action name="actionSaveModel">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/plugin.png</normaloff>:/icos/plugin.png</iconset>
+   </property>
    <property name="text">
     <string>保存模型</string>
    </property>
   </action>
   <action name="actionExportModel">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/bookmarkToggle.png</normaloff>:/icos/bookmarkToggle.png</iconset>
+   </property>
    <property name="text">
     <string>导出模型</string>
    </property>
   </action>
   <action name="actionImportModel">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/outgoingBookmark.png</normaloff>:/icos/outgoingBookmark.png</iconset>
+   </property>
    <property name="text">
     <string>导入模型</string>
    </property>
   </action>
   <action name="actionCopyModel">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/moveBookmark.png</normaloff>:/icos/moveBookmark.png</iconset>
+   </property>
    <property name="text">
     <string>复制模型</string>
    </property>
   </action>
   <action name="actionManageModelTemplete">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/preferences-api.png</normaloff>:/icos/preferences-api.png</iconset>
+   </property>
    <property name="text">
     <string>管理模型模板</string>
    </property>
   </action>
   <action name="actionNewCASE">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/tabNew.png</normaloff>:/icos/tabNew.png</iconset>
+   </property>
    <property name="text">
     <string>新建CASE</string>
    </property>
   </action>
   <action name="actionCopyCASE">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/importShortcuts.png</normaloff>:/icos/importShortcuts.png</iconset>
+   </property>
    <property name="text">
     <string>复制CASE</string>
    </property>
   </action>
   <action name="actionDeleteCASE">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/cBreak.png</normaloff>:/icos/cBreak.png</iconset>
+   </property>
    <property name="text">
     <string>删除CASE</string>
    </property>
   </action>
   <action name="actionRunning">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/1rightarrow.png</normaloff>:/icos/1rightarrow.png</iconset>
+   </property>
    <property name="text">
     <string>运行当前CASE</string>
    </property>
   </action>
   <action name="actionRunAllCASE">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/2rightarrow.png</normaloff>:/icos/2rightarrow.png</iconset>
+   </property>
    <property name="text">
     <string>运行所有CASE</string>
    </property>
   </action>
   <action name="actionProjectManager">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/projectOpen.png</normaloff>:/icos/projectOpen.png</iconset>
+   </property>
    <property name="text">
     <string>项目管理器</string>
    </property>
   </action>
   <action name="actionNACA">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/fileIDL.png</normaloff>:/icos/fileIDL.png</iconset>
+   </property>
    <property name="text">
     <string>NACA定义</string>
    </property>
   </action>
   <action name="actionModelPreview">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/preferences-search.png</normaloff>:/icos/preferences-search.png</iconset>
+   </property>
    <property name="text">
     <string>模型预览窗口</string>
    </property>
   </action>
   <action name="actionReportWindow">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/drawFill.png</normaloff>:/icos/drawFill.png</iconset>
+   </property>
    <property name="text">
     <string>报表窗口</string>
    </property>
   </action>
   <action name="actionExportUserLayout">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/pullBookmark.png</normaloff>:/icos/pullBookmark.png</iconset>
+   </property>
    <property name="text">
     <string>导出用户布局</string>
    </property>
   </action>
   <action name="actionReloadLayout">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/updateLocal.png</normaloff>:/icos/updateLocal.png</iconset>
+   </property>
    <property name="text">
     <string>恢复默认布局</string>
    </property>
   </action>
   <action name="actionImportUserLayout">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/pushBookmark.png</normaloff>:/icos/pushBookmark.png</iconset>
+   </property>
    <property name="text">
     <string>导入用户布局</string>
    </property>
   </action>
   <action name="actionNewSubPlot">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/icons.png</normaloff>:/icos/icons.png</iconset>
+   </property>
    <property name="text">
     <string>新建图表</string>
    </property>
   </action>
   <action name="actionDeletePlot">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/deleteShape.png</normaloff>:/icos/deleteShape.png</iconset>
+   </property>
    <property name="text">
     <string>删除图表</string>
    </property>
   </action>
   <action name="actionOnlyOnePlot">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/documentNewView.png</normaloff>:/icos/documentNewView.png</iconset>
+   </property>
    <property name="text">
     <string>1行1列</string>
    </property>
   </action>
   <action name="actionTwoOneLayout">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/documentNewView.png</normaloff>:/icos/documentNewView.png</iconset>
+   </property>
    <property name="text">
     <string>1行2列</string>
    </property>
   </action>
   <action name="actionTwoTwoPlot">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/icons.png</normaloff>:/icos/icons.png</iconset>
+   </property>
    <property name="text">
     <string>2行2列</string>
    </property>
   </action>
   <action name="actionCustomPlot">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/grid.png</normaloff>:/icos/grid.png</iconset>
+   </property>
    <property name="text">
     <string>自定义</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="MainWindow.qrc"/>
+ </resources>
  <connections/>
 </ui>
