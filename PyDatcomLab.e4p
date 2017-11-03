@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-10-27, 16:35:44 -->
+<!-- Saved: 2017-11-03, 19:22:15 -->
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -24,10 +24,12 @@
     <Source>PyDatcomLab/Core/parser_DatcomParser_parsetab.py</Source>
     <Source>PyDatcomLab/Core/plotter.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
+    <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_MainWindow.py</Source>
-    <Source>PyDatcomLab/GUIs/Ui_Refernces.py</Source>
+    <Source>PyDatcomLab/GUIs/Ui_Reference.py</Source>
     <Source>PyDatcomLab/GUIs/__init__.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
+    <Source>PyDatcomLab/main.py</Source>
     <Source>tests/__init__.py</Source>
     <Source>tests/test.py</Source>
     <Source>tests/testCore.py</Source>
@@ -41,13 +43,18 @@
   </Sources>
   <Forms>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
-    <Form>PyDatcomLab/GUIs/Refernces.ui</Form>
+    <Form>PyDatcomLab/GUIs/Reference.ui</Form>
   </Forms>
   <Translations/>
   <Resources>
+    <Resource>Docs/datcom.zip</Resource>
+    <Resource>Docs/datcomexec.zip</Resource>
     <Resource>PyDatcomLab/Core/Templates/modelica.mo</Resource>
+    <Resource>PyDatcomLab/GUIs/MainWindow.qrc</Resource>
     <Resource>docs/datcom.zip</Resource>
     <Resource>docs/datcomexec.zip</Resource>
+    <Resource>extras/PyDatcomProjects/1/myex1 - 副本.out</Resource>
+    <Resource>extras/PyDatcomProjects/1/myex1.out</Resource>
     <Resource>extras/PyDatcomProjects/tests/example/EX10/datcom.out</Resource>
     <Resource>extras/PyDatcomProjects/tests/example/EX11/datcom.out</Resource>
     <Resource>extras/PyDatcomProjects/tests/example/EX1/datcom.out</Resource>

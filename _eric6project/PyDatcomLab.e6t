@@ -1,25 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Tasks SYSTEM "Tasks-6.0.dtd">
 <!-- eric6 tasks file for project PyDatcomLab -->
-<!-- Saved: 2017-10-27, 16:36:20 -->
+<!-- Saved: 2017-11-03, 19:22:18 -->
 <Tasks version="6.0">
   <ProjectScanFilter></ProjectScanFilter>
-  <Task priority="1" completed="False" type="2" uid="{8466772d-a0fd-4c5a-a44b-2bbc6be2cd3f}">
+  <Task priority="1" completed="False" type="2" uid="{aac64d08-9d78-4100-8dd1-9f95e0d05b89}">
     <Summary>WARNING: duplicate key %s' % key)</Summary>
     <Description></Description>
-    <Created>2017-10-27, 09:55:02</Created>
+    <Created>2017-11-03, 18:31:22</Created>
+    <Resource>
+      <Filename>PyDatcomLab/Core/parserUASF.py</Filename>
+      <Linenumber>422</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="2" uid="{61a6e96d-6d43-4d18-8456-05b7ea43dec1}">
+    <Summary>WARNING: duplicate key %s' % key)</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 18:31:22</Created>
     <Resource>
       <Filename>PyDatcomLab/Core/parser.py</Filename>
       <Linenumber>563</Linenumber>
     </Resource>
   </Task>
-  <Task priority="1" completed="False" type="2" uid="{a78a3e36-5dad-4561-8f3b-3be7672366b0}">
+  <Task priority="1" completed="False" type="2" uid="{02e48bdb-121f-462e-82a3-9b55094f284d}">
     <Summary>WARNING: duplicate key %s' % key)</Summary>
     <Description></Description>
-    <Created>2017-10-27, 16:36:20</Created>
+    <Created>2017-11-03, 18:31:23</Created>
+    <Resource>
+      <Filename>PyDatcomLab/Core/parser.py</Filename>
+      <Linenumber>563</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="2" uid="{a4157e3e-9400-42ca-8a56-aa0fa252e955}">
+    <Summary>WARNING: duplicate key %s' % key)</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 18:31:23</Created>
     <Resource>
       <Filename>PyDatcomLab/Core/parserUASF.py</Filename>
       <Linenumber>422</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="1" uid="{37e20d89-4c67-49d9-be2a-df1cad44be45}">
+    <Summary>TODO: not implemented yet</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 19:05:59</Created>
+    <Resource>
+      <Filename>PyDatcomLab/GUIs/MainWindow.py</Filename>
+      <Linenumber>34</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="1" uid="{2cc010f4-f0c7-4ebe-a2b1-eec3f11df880}">
+    <Summary>TODO: not implemented yet</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 19:05:59</Created>
+    <Resource>
+      <Filename>PyDatcomLab/GUIs/MainWindow.py</Filename>
+      <Linenumber>43</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="1" uid="{077f7acb-8b8e-4d80-8c46-95d82f829688}">
+    <Summary>TODO: not implemented yet</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 19:05:59</Created>
+    <Resource>
+      <Filename>PyDatcomLab/GUIs/MainWindow.py</Filename>
+      <Linenumber>51</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="1" uid="{2d0fa7b9-fcfa-41dd-99b8-fc85a6764d11}">
+    <Summary>TODO: not implemented yet</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 19:05:59</Created>
+    <Resource>
+      <Filename>PyDatcomLab/GUIs/MainWindow.py</Filename>
+      <Linenumber>59</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="1" uid="{25b20697-31ae-4213-8558-8ff6da7b241c}">
+    <Summary>TODO: not implemented yet</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 19:05:59</Created>
+    <Resource>
+      <Filename>PyDatcomLab/GUIs/MainWindow.py</Filename>
+      <Linenumber>67</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="1" uid="{3f6916d4-7663-4ab5-b421-151e764e9ee7}">
+    <Summary>TODO: not implemented yet</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 19:05:59</Created>
+    <Resource>
+      <Filename>PyDatcomLab/GUIs/MainWindow.py</Filename>
+      <Linenumber>75</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="1" uid="{8a9096d9-ebc1-4e01-b52a-71a0008084af}">
+    <Summary>TODO: not implemented yet</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 19:05:59</Created>
+    <Resource>
+      <Filename>PyDatcomLab/GUIs/MainWindow.py</Filename>
+      <Linenumber>86</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" type="1" uid="{a77380d1-9481-4169-937c-79bd6e881331}">
+    <Summary>TODO: not implemented yet</Summary>
+    <Description></Description>
+    <Created>2017-11-03, 19:05:59</Created>
+    <Resource>
+      <Filename>PyDatcomLab/GUIs/MainWindow.py</Filename>
+      <Linenumber>94</Linenumber>
     </Resource>
   </Task>
 </Tasks>
