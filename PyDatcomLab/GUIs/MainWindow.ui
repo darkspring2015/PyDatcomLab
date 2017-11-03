@@ -11,9 +11,301 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Datcom辅助分析软件</string>
   </property>
   <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuProject">
+    <property name="title">
+     <string>项目</string>
+    </property>
+    <addaction name="actionNewProject"/>
+    <addaction name="actionOpenProject"/>
+    <addaction name="actionSaveProject"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
+    <addaction name="actionImportSettings"/>
+    <addaction name="actionExportSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Model">
+    <property name="title">
+     <string>模型</string>
+    </property>
+    <addaction name="actionBrowse"/>
+    <addaction name="actionNewModel"/>
+    <addaction name="actionCopyModel"/>
+    <addaction name="actionSaveModel"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportModel"/>
+    <addaction name="actionImportModel"/>
+    <addaction name="separator"/>
+    <addaction name="actionManageModelTemplete"/>
+    <addaction name="separator"/>
+    <addaction name="actionNACA"/>
+   </widget>
+   <widget class="QMenu" name="menu_Problem">
+    <property name="title">
+     <string>算例</string>
+    </property>
+    <addaction name="actionNewCASE"/>
+    <addaction name="actionCopyCASE"/>
+    <addaction name="actionDeleteCASE"/>
+    <addaction name="separator"/>
+    <addaction name="actionRunning"/>
+    <addaction name="actionRunAllCASE"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menu_Windows">
+    <property name="title">
+     <string>窗口</string>
+    </property>
+    <addaction name="actionProjectManager"/>
+    <addaction name="actionModelPreview"/>
+    <addaction name="actionReportWindow"/>
+    <addaction name="separator"/>
+    <addaction name="actionReloadLayout"/>
+    <addaction name="actionImportUserLayout"/>
+    <addaction name="actionExportUserLayout"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="actionDocs"/>
+    <addaction name="actionHelp"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menu_Analyze">
+    <property name="title">
+     <string>分析</string>
+    </property>
+    <widget class="QMenu" name="menu_8">
+     <property name="title">
+      <string>分析向导</string>
+     </property>
+     <addaction name="actionNewSubPlot"/>
+     <addaction name="actionDeletePlot"/>
+    </widget>
+    <widget class="QMenu" name="menu_7">
+     <property name="title">
+      <string>曲线窗口布局</string>
+     </property>
+     <addaction name="actionOnlyOnePlot"/>
+     <addaction name="actionTwoOneLayout"/>
+     <addaction name="actionTwoTwoPlot"/>
+     <addaction name="separator"/>
+     <addaction name="actionCustomPlot"/>
+    </widget>
+    <addaction name="menu_8"/>
+    <addaction name="separator"/>
+    <addaction name="menu_7"/>
+   </widget>
+   <addaction name="menuProject"/>
+   <addaction name="menu_Model"/>
+   <addaction name="menu_Problem"/>
+   <addaction name="menu_Analyze"/>
+   <addaction name="menu_Windows"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="actionDocs">
+   <property name="text">
+    <string>文档</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>帮助</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>关于我们</string>
+   </property>
+  </action>
+  <action name="actionNewProject">
+   <property name="text">
+    <string>新建项目</string>
+   </property>
+  </action>
+  <action name="actionOpenProject">
+   <property name="text">
+    <string>打开项目</string>
+   </property>
+  </action>
+  <action name="actionSaveProject">
+   <property name="text">
+    <string>保存项目</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>设置</string>
+   </property>
+  </action>
+  <action name="actionImportSettings">
+   <property name="text">
+    <string>导入设置</string>
+   </property>
+  </action>
+  <action name="actionExportSettings">
+   <property name="text">
+    <string>导出设置</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="actionBrowse">
+   <property name="text">
+    <string>浏览</string>
+   </property>
+  </action>
+  <action name="actionNewModel">
+   <property name="text">
+    <string>新建模型</string>
+   </property>
+  </action>
+  <action name="actionSaveModel">
+   <property name="text">
+    <string>保存模型</string>
+   </property>
+  </action>
+  <action name="actionExportModel">
+   <property name="text">
+    <string>导出模型</string>
+   </property>
+  </action>
+  <action name="actionImportModel">
+   <property name="text">
+    <string>导入模型</string>
+   </property>
+  </action>
+  <action name="actionCopyModel">
+   <property name="text">
+    <string>复制模型</string>
+   </property>
+  </action>
+  <action name="actionManageModelTemplete">
+   <property name="text">
+    <string>管理模型模板</string>
+   </property>
+  </action>
+  <action name="actionNewCASE">
+   <property name="text">
+    <string>新建CASE</string>
+   </property>
+  </action>
+  <action name="actionCopyCASE">
+   <property name="text">
+    <string>复制CASE</string>
+   </property>
+  </action>
+  <action name="actionDeleteCASE">
+   <property name="text">
+    <string>删除CASE</string>
+   </property>
+  </action>
+  <action name="actionRunning">
+   <property name="text">
+    <string>运行当前CASE</string>
+   </property>
+  </action>
+  <action name="actionRunAllCASE">
+   <property name="text">
+    <string>运行所有CASE</string>
+   </property>
+  </action>
+  <action name="actionProjectManager">
+   <property name="text">
+    <string>项目管理器</string>
+   </property>
+  </action>
+  <action name="actionNACA">
+   <property name="text">
+    <string>NACA定义</string>
+   </property>
+  </action>
+  <action name="actionModelPreview">
+   <property name="text">
+    <string>模型预览窗口</string>
+   </property>
+  </action>
+  <action name="actionReportWindow">
+   <property name="text">
+    <string>报表窗口</string>
+   </property>
+  </action>
+  <action name="actionExportUserLayout">
+   <property name="text">
+    <string>导出用户布局</string>
+   </property>
+  </action>
+  <action name="actionReloadLayout">
+   <property name="text">
+    <string>恢复默认布局</string>
+   </property>
+  </action>
+  <action name="actionImportUserLayout">
+   <property name="text">
+    <string>导入用户布局</string>
+   </property>
+  </action>
+  <action name="actionNewSubPlot">
+   <property name="text">
+    <string>新建图表</string>
+   </property>
+  </action>
+  <action name="actionDeletePlot">
+   <property name="text">
+    <string>删除图表</string>
+   </property>
+  </action>
+  <action name="actionOnlyOnePlot">
+   <property name="text">
+    <string>1行1列</string>
+   </property>
+  </action>
+  <action name="actionTwoOneLayout">
+   <property name="text">
+    <string>1行2列</string>
+   </property>
+  </action>
+  <action name="actionTwoTwoPlot">
+   <property name="text">
+    <string>2行2列</string>
+   </property>
+  </action>
+  <action name="actionCustomPlot">
+   <property name="text">
+    <string>自定义</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
