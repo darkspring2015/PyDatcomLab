@@ -23,6 +23,8 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         super(DatcomMainWindow, self).__init__(parent)
         self.setupUi(self)
+        #添加日志系同
+        self.logger = None
     
     @pyqtSlot()
     def on_actionAbout_triggered(self):

@@ -1,5 +1,7 @@
 <RCC>
   <qresource>
+    <file>icos/plot1.png</file>
+    <file>icos/plot1-2.png</file>
     <file>icos/1downarrow.png</file>
     <file>icos/1leftarrow.png</file>
     <file>icos/1rightarrow.png</file>

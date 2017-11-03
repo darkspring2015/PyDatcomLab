@@ -143,6 +143,31 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNewProject"/>
+   <addaction name="actionOpenProject"/>
+   <addaction name="actionSaveProject"/>
+   <addaction name="separator"/>
+   <addaction name="actionBrowse"/>
+   <addaction name="actionNewModel"/>
+   <addaction name="actionSaveModel"/>
+   <addaction name="actionCopyModel"/>
+   <addaction name="actionExportModel"/>
+   <addaction name="actionImportModel"/>
+   <addaction name="separator"/>
+   <addaction name="actionNewCASE"/>
+   <addaction name="actionDeleteCASE"/>
+   <addaction name="actionCopyCASE"/>
+   <addaction name="actionRunning"/>
+   <addaction name="actionRunAllCASE"/>
+   <addaction name="separator"/>
+   <addaction name="actionNACA"/>
+   <addaction name="separator"/>
+   <addaction name="actionNewSubPlot"/>
+   <addaction name="actionDeletePlot"/>
+   <addaction name="actionOnlyOnePlot"/>
+   <addaction name="actionTwoOneLayout"/>
+   <addaction name="actionTwoTwoPlot"/>
+   <addaction name="actionCustomPlot"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="floating">
@@ -431,7 +456,7 @@
   <action name="actionNewSubPlot">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/icons.png</normaloff>:/icos/icons.png</iconset>
+     <normaloff>:/icos/preferences-shell.png</normaloff>:/icos/preferences-shell.png</iconset>
    </property>
    <property name="text">
     <string>新建图表</string>
@@ -449,7 +474,7 @@
   <action name="actionOnlyOnePlot">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/documentNewView.png</normaloff>:/icos/documentNewView.png</iconset>
+     <normaloff>:/icos/plot1.png</normaloff>:/icos/plot1.png</iconset>
    </property>
    <property name="text">
     <string>1行1列</string>
@@ -458,7 +483,7 @@
   <action name="actionTwoOneLayout">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/documentNewView.png</normaloff>:/icos/documentNewView.png</iconset>
+     <normaloff>:/icos/plot1-2.png</normaloff>:/icos/plot1-2.png</iconset>
    </property>
    <property name="text">
     <string>1行2列</string>
