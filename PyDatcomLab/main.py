@@ -13,19 +13,21 @@ from PyDatcomLab.GUIs.MainWindow import DatcomMainWindow
 
 import logging #导入日志系统
 
-def InitLogger(logFile=r'test.log'):
+def InitLogger(tlogFile = r'datcomlog.log', tlogName = r'Datcomlogger', tlogLevel = logging.INFO ):
+    """
+    """   
 
     # 创建一个logger
-    logger = logging.getLogger('Datcomlogger')
-    logger.setLevel(logging.DEBUG)
+    logger = logging.getLogger(tlogName)
+    logger.setLevel(tlogLevel)
     
     # 创建一个handler，用于写入日志文件
-    fh = logging.FileHandler(logFile)
-    fh.setLevel(logging.DEBUG)
+    fh = logging.FileHandler(tlogFile)
+    fh.setLevel(tlogLevel)
     
     # 再创建一个handler，用于输出到控制台
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    ch.setLevel(tlogLevel)
     
     # 定义handler的输出格式
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -36,17 +38,24 @@ def InitLogger(logFile=r'test.log'):
     logger.addHandler(fh)
     logger.addHandler(ch)    
     # 记录一条日志
-    logger.info('完成日志系统的初始化')  
+    logger.info('完成文件日志系统的初始化')  
+    logger.info('完成标准流日志系统的初始化')  
     return logger
+
+
 
 #执行主要脚本
 dirStr = os.path.join(os.path.abspath(sys.path[0]), r'extras','PyDatcomProjects', '1')
-logger = InitLogger(os.path.abspath(os.path.join(dirStr, 'DatcomLog.log')))
+logfile = os.path.abspath(os.path.join(dirStr, 'DatcomLog.log'))
+logChannel = r'Datcomlogger'
+logLevel = logging.INFO
+logger = InitLogger(tlogFile =logfile, tlogName = logChannel , tlogLevel = logLevel)
 
+#进入系统的主循环
 app = QtWidgets.QApplication(sys.argv)
 mainWin = DatcomMainWindow()
 mainWin.logger = logger
-logger.info("启动了日志系统")
+logger.info("启动了DatcomMainWindow")
 mainWin.show()
 sys.exit(app.exec_())
 
