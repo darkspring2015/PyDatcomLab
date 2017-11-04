@@ -159,7 +159,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         if '项目管理器'  not in self.docksConfig.keys():
             #create ProjectsManager
             prjMgr= ProjectsManager.ProjectsManager()
-            prjMgr.logger = self.logger
+            #prjMgr.logger = self.logger
             actions = [self.actionNewProject , 
                        self.actionOpenProject, 
                        self.actionSaveProject, 
