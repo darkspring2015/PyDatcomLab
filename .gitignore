@@ -106,3 +106,19 @@ ENV/
 
 *_parsetab.py
 extras/PyDatcomProjects/
+
+
+# Eric IDEµÄºöÂÔÏî
+.eric6project/
+_eric6project/
+.eric5project/
+_eric5project/
+.eric4project/
+_eric4project/
+.ropeproject/
+_ropeproject/
+.directory/
+
+
+
+
