@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\GUIs\MainWindow.ui'
+# Form implementation generated from reading ui file 'D:\workspace\PyDatcomLab\PyDatcomLab\PyDatcomLab\GUIs\MainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.9
 #
@@ -51,28 +51,28 @@ class Ui_MainWindow(object):
         self.toolBar = QtWidgets.QToolBar(MainWindow)
         self.toolBar.setObjectName("toolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
-        self.dockWidget = QtWidgets.QDockWidget(MainWindow)
-        self.dockWidget.setFloating(False)
-        self.dockWidget.setObjectName("dockWidget")
+        self.dockWidget_Bottom = QtWidgets.QDockWidget(MainWindow)
+        self.dockWidget_Bottom.setFloating(False)
+        self.dockWidget_Bottom.setObjectName("dockWidget_Bottom")
         self.dockWidgetContents = QtWidgets.QWidget()
         self.dockWidgetContents.setObjectName("dockWidgetContents")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.dockWidgetContents)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.dockWidget.setWidget(self.dockWidgetContents)
-        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidget)
-        self.dockWidget_2 = QtWidgets.QDockWidget(MainWindow)
-        self.dockWidget_2.setObjectName("dockWidget_2")
+        self.dockWidget_Bottom.setWidget(self.dockWidgetContents)
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidget_Bottom)
+        self.dockWidget_Left = QtWidgets.QDockWidget(MainWindow)
+        self.dockWidget_Left.setObjectName("dockWidget_Left")
         self.dockWidgetContents_2 = QtWidgets.QWidget()
         self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
-        self.dockWidget_2.setWidget(self.dockWidgetContents_2)
-        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget_2)
-        self.dockWidget_3 = QtWidgets.QDockWidget(MainWindow)
-        self.dockWidget_3.setObjectName("dockWidget_3")
+        self.dockWidget_Left.setWidget(self.dockWidgetContents_2)
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget_Left)
+        self.dockWidget_Right = QtWidgets.QDockWidget(MainWindow)
+        self.dockWidget_Right.setObjectName("dockWidget_Right")
         self.dockWidgetContents_4 = QtWidgets.QWidget()
         self.dockWidgetContents_4.setObjectName("dockWidgetContents_4")
-        self.dockWidget_3.setWidget(self.dockWidgetContents_4)
-        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidget_3)
+        self.dockWidget_Right.setWidget(self.dockWidgetContents_4)
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidget_Right)
         self.actionDocs = QtWidgets.QAction(MainWindow)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icos/ircEditTopic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -248,6 +248,11 @@ class Ui_MainWindow(object):
         icon34.addPixmap(QtGui.QPixmap(":/icos/grid.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionCustomPlot.setIcon(icon34)
         self.actionCustomPlot.setObjectName("actionCustomPlot")
+        self.actionLogWindow = QtWidgets.QAction(MainWindow)
+        icon35 = QtGui.QIcon()
+        icon35.addPixmap(QtGui.QPixmap(":/icos/compareFiles.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionLogWindow.setIcon(icon35)
+        self.actionLogWindow.setObjectName("actionLogWindow")
         self.menuProject.addAction(self.actionNewProject)
         self.menuProject.addAction(self.actionOpenProject)
         self.menuProject.addAction(self.actionSaveProject)
@@ -278,6 +283,7 @@ class Ui_MainWindow(object):
         self.menu_Windows.addAction(self.actionProjectManager)
         self.menu_Windows.addAction(self.actionModelPreview)
         self.menu_Windows.addAction(self.actionReportWindow)
+        self.menu_Windows.addAction(self.actionLogWindow)
         self.menu_Windows.addSeparator()
         self.menu_Windows.addAction(self.actionReloadLayout)
         self.menu_Windows.addAction(self.actionImportUserLayout)
@@ -379,6 +385,7 @@ class Ui_MainWindow(object):
         self.actionTwoOneLayout.setText(_translate("MainWindow", "1行2列"))
         self.actionTwoTwoPlot.setText(_translate("MainWindow", "2行2列"))
         self.actionCustomPlot.setText(_translate("MainWindow", "自定义"))
+        self.actionLogWindow.setText(_translate("MainWindow", "日志窗口"))
 
 import MainWindow_rc
 

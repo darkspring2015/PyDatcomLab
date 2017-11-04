@@ -60,10 +60,10 @@ mainWin.logger = logger
 logger.info("启动了DatcomMainWindow")
 mainWin.show()
 
-#logform
-from PyDatcomLab.GUIs import logForm
-logfm  = logForm.logForm()
-logfm.show()
+#logform - for debug
+#from PyDatcomLab.GUIs import logForm
+#logfm  = logForm.logForm()
+#logfm.show()
 
 sys.exit(app.exec_())
 

@@ -44,6 +44,9 @@ class logForm(QtWidgets.QWidget, Ui_Form):
         响应信号 LoggerSignal
         """        
         self.plainTextEdit_log.appendPlainText(val)    
+        
+    def getLogger(self):
+        return self.logger
     
     @pyqtSlot()
     def on_actionClearLog_triggered(self):

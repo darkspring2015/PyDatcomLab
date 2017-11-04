@@ -85,6 +85,7 @@
     <addaction name="actionProjectManager"/>
     <addaction name="actionModelPreview"/>
     <addaction name="actionReportWindow"/>
+    <addaction name="actionLogWindow"/>
     <addaction name="separator"/>
     <addaction name="actionReloadLayout"/>
     <addaction name="actionImportUserLayout"/>
@@ -169,7 +170,7 @@
    <addaction name="actionTwoTwoPlot"/>
    <addaction name="actionCustomPlot"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="dockWidget_Bottom">
    <property name="floating">
     <bool>false</bool>
    </property>
@@ -180,13 +181,13 @@
     <layout class="QHBoxLayout" name="horizontalLayout"/>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_2">
+  <widget class="QDockWidget" name="dockWidget_Left">
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_3">
+  <widget class="QDockWidget" name="dockWidget_Right">
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
@@ -505,6 +506,15 @@
    </property>
    <property name="text">
     <string>自定义</string>
+   </property>
+  </action>
+  <action name="actionLogWindow">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/compareFiles.png</normaloff>:/icos/compareFiles.png</iconset>
+   </property>
+   <property name="text">
+    <string>日志窗口</string>
    </property>
   </action>
  </widget>
