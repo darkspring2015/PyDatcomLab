@@ -170,29 +170,6 @@
    <addaction name="actionTwoTwoPlot"/>
    <addaction name="actionCustomPlot"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_Bottom">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QHBoxLayout" name="horizontalLayout"/>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_Left">
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2"/>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_Right">
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_4"/>
-  </widget>
   <action name="actionDocs">
    <property name="icon">
     <iconset resource="MainWindow.qrc">

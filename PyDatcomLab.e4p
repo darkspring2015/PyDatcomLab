@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-11-04, 20:58:36 -->
+<!-- Saved: 2017-11-04, 23:01:59 -->
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -26,8 +26,10 @@
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
+    <Source>PyDatcomLab/GUIs/ProjectsManager.py</Source>
     <Source>PyDatcomLab/GUIs/Reference.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_MainWindow.py</Source>
+    <Source>PyDatcomLab/GUIs/Ui_ProjectsManager.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_Reference.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_logForm.py</Source>
     <Source>PyDatcomLab/GUIs/__init__.py</Source>
@@ -43,11 +45,13 @@
     <Source>tests/testLoadFromMoudle.py</Source>
     <Source>tests/testLogForm.py</Source>
     <Source>tests/testParser.py</Source>
+    <Source>tests/testProjectsManager.py</Source>
     <Source>tests/testSuite.py</Source>
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
+    <Form>PyDatcomLab/GUIs/ProjectsManager.ui</Form>
     <Form>PyDatcomLab/GUIs/Reference.ui</Form>
     <Form>PyDatcomLab/GUIs/logForm.ui</Form>
   </Forms>
@@ -61,6 +65,18 @@
     <Resource>docs/datcomexec.zip</Resource>
     <Resource>extras/PyDatcomProjects/1/myex1 - 副本.out</Resource>
     <Resource>extras/PyDatcomProjects/1/myex1.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX10/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX11/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX1/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX2/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX3/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX4/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX5/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX6/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX7/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX8/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX9/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/datcom.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/ASW-20.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/B-737.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/Citation.out</Resource>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\workspace\PyDatcomLab\PyDatcomLab\PyDatcomLab\GUIs\MainWindow.ui'
+# Form implementation generated from reading ui file 'C:\Users\lingo\Documents\workspace\DatcomSolution\PyDatcomLab\PyDatcomLab\GUIs\MainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.9
 #
@@ -51,28 +51,6 @@ class Ui_MainWindow(object):
         self.toolBar = QtWidgets.QToolBar(MainWindow)
         self.toolBar.setObjectName("toolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
-        self.dockWidget_Bottom = QtWidgets.QDockWidget(MainWindow)
-        self.dockWidget_Bottom.setFloating(False)
-        self.dockWidget_Bottom.setObjectName("dockWidget_Bottom")
-        self.dockWidgetContents = QtWidgets.QWidget()
-        self.dockWidgetContents.setObjectName("dockWidgetContents")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.dockWidgetContents)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.dockWidget_Bottom.setWidget(self.dockWidgetContents)
-        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidget_Bottom)
-        self.dockWidget_Left = QtWidgets.QDockWidget(MainWindow)
-        self.dockWidget_Left.setObjectName("dockWidget_Left")
-        self.dockWidgetContents_2 = QtWidgets.QWidget()
-        self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
-        self.dockWidget_Left.setWidget(self.dockWidgetContents_2)
-        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget_Left)
-        self.dockWidget_Right = QtWidgets.QDockWidget(MainWindow)
-        self.dockWidget_Right.setObjectName("dockWidget_Right")
-        self.dockWidgetContents_4 = QtWidgets.QWidget()
-        self.dockWidgetContents_4.setObjectName("dockWidgetContents_4")
-        self.dockWidget_Right.setWidget(self.dockWidgetContents_4)
-        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidget_Right)
         self.actionDocs = QtWidgets.QAction(MainWindow)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icos/ircEditTopic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
