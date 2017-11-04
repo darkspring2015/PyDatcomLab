@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
+<<<<<<< HEAD
 <!-- Saved: 2017-11-04, 20:58:36 -->
+=======
+<!-- Saved: 2017-10-31, 02:02:49 -->
+>>>>>>> origin/master
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -59,8 +63,23 @@
     <Resource>PyDatcomLab/GUIs/MainWindow.qrc</Resource>
     <Resource>docs/datcom.zip</Resource>
     <Resource>docs/datcomexec.zip</Resource>
+<<<<<<< HEAD
     <Resource>extras/PyDatcomProjects/1/myex1 - 副本.out</Resource>
     <Resource>extras/PyDatcomProjects/1/myex1.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX10/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX11/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX1/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX2/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX3/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX4/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX5/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX6/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX7/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX8/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/EX9/datcom.out</Resource>
+    <Resource>extras/PyDatcomProjects/tests/example/datcom.out</Resource>
+=======
+>>>>>>> origin/master
     <Resource>tests/data/PyDatcom-Tests/ASW-20.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/B-737.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/Citation.out</Resource>
