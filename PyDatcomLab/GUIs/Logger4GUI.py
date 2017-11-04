@@ -37,6 +37,7 @@ class myMemoryHandler(MemoryHandler, QObject):
                 content+= self.format(record)
             self.logSingal.emit(content)
             self.buffer = [] 
+    
 
 
 
@@ -66,4 +67,6 @@ def getLogger(logSlot,
     logger.addHandler(ch)
     # 记录一条日志
     logger.info('完成Slot日志系统的初始化,%s'%logSlot.__name__)  
-    return logger
+    return logger, ch
+
+

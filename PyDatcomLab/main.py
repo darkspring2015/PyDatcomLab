@@ -53,10 +53,18 @@ logger = InitLogger(tlogFile =logfile, tlogName = logChannel , tlogLevel = logLe
 
 #进入系统的主循环
 app = QtWidgets.QApplication(sys.argv)
+
+#MainWindow
 mainWin = DatcomMainWindow()
 mainWin.logger = logger
 logger.info("启动了DatcomMainWindow")
 mainWin.show()
+
+#logform
+from PyDatcomLab.GUIs import logForm
+logfm  = logForm.logForm()
+logfm.show()
+
 sys.exit(app.exec_())
 
 
