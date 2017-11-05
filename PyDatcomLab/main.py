@@ -1,7 +1,8 @@
 #！
 #PyDatcom的主程序
 import os, sys
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtWidgets
+
 
 
 #确保相对的导入能够起到作用，需要导入相对路径
