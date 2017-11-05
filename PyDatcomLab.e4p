@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-11-04, 23:01:59 -->
+<!-- Saved: 2017-11-05, 09:24:41 -->
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -14,6 +14,7 @@
   <Email>Lingo_renlo@qq.com</Email>
   <Eol index="0"/>
   <Sources>
+    <Source>PyDatcomLab/Application.py</Source>
     <Source>PyDatcomLab/Core/__init__.py</Source>
     <Source>PyDatcomLab/Core/datcomDefine.py</Source>
     <Source>PyDatcomLab/Core/datcomRunner.py</Source>

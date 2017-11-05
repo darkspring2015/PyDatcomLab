@@ -29,7 +29,7 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
         self.logger = logging.getLogger(r'Datcomlogger')
         
         
-    def  BindingAction(self, tActions = []):
+    def BindingAction(self, tActions = []):
         """
         将父窗口的Action添加到控件
         """
