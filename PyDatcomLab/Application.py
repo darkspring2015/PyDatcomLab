@@ -4,11 +4,10 @@
 包括：
 '''
 
-import os, sys
-import logging
+from PyDatcomLab.Core import tools 
 
 #定义日志系统信息
-logChannel = r'DatcomLogger'
-logLevel   = logging.INFO
+logChannel = tools.loggerChannel
+
 
 #

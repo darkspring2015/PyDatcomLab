@@ -4,7 +4,7 @@
 Module implementing ProjectsManager.
 """
 
-from PyQt5.QtCore import pyqtSlot
+#from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QMainWindow
 
 from .Ui_ProjectsManager import Ui_ProjectsMainWindow

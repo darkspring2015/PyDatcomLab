@@ -1,5 +1,22 @@
 #!/usr/bin/env python
 
+class datcom(object):
+    '''
+    常量定义空间
+    
+    
+    需要注意的Datcom中量的规定
+    
+    
+    '''
+    configurationType = [u'常规布局', 
+                         u'双垂尾布局', 
+                         u'高超声速布局']
+    
+    def __init__(self):
+        pass
+
+
 class datcomDefine(object):
     reserved_NAMELISTS = [
         'FLTCON',#

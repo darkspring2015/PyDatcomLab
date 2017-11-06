@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-11-05, 09:24:41 -->
+<!-- Saved: 2017-11-06, 23:38:27 -->
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -24,6 +24,8 @@
     <Source>PyDatcomLab/Core/parserUASF.py</Source>
     <Source>PyDatcomLab/Core/parser_DatcomParser_parsetab.py</Source>
     <Source>PyDatcomLab/Core/plotter.py</Source>
+    <Source>PyDatcomLab/Core/projectManager.py</Source>
+    <Source>PyDatcomLab/Core/tools.py</Source>
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
@@ -41,6 +43,8 @@
     <Source>tests/test.py</Source>
     <Source>tests/testCore.py</Source>
     <Source>tests/testCore_Parser.py</Source>
+    <Source>tests/testCore_ProjectManager.py</Source>
+    <Source>tests/testCore_dcProject.py</Source>
     <Source>tests/testDatcomRunner.py</Source>
     <Source>tests/testFrame.py</Source>
     <Source>tests/testLoadFromMoudle.py</Source>
