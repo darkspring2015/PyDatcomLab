@@ -4,7 +4,7 @@
 Module implementing ProjectsManager.
 """
 
-#from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, QPoint
 from PyQt5.QtWidgets import QMainWindow
 
 from .Ui_ProjectsManager import Ui_ProjectsMainWindow
@@ -49,4 +49,14 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
         #开始绑定
         self.treeView_Projects.setModel(tModel)
         self.logger.info('绑定数据成功')
-
+    
+    @pyqtSlot(QPoint)
+    def on_treeView_Projects_customContextMenuRequested(self, pos):
+        """
+        Slot documentation goes here.
+        
+        @param pos DESCRIPTION
+        @type QPoint
+        """
+        # TODO: not implemented yet
+        raise NotImplementedError

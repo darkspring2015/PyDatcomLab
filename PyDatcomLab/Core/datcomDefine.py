@@ -16,6 +16,34 @@ class datcom(object):
     def __init__(self):
         pass
 
+#定义datcon的常量说明
+definition = """\
+<Idenity Name = 'FLTCON', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'SYNTHS', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'BODY'  , IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'SYMFLP', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'ASYFLP', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'OPTINS', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'WGPLNF', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'HTPLNF', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'VTPLNF', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'VFPLNF', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'WGSCHR', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'HTSCHR', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'VTSCHR', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'VFSCHR', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'PROPWR', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'JETPWR', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'CONTAB', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'EXPR'   , IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'GRNDEF', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'HYPEFF', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'LARWB', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'TRNJET', IDType = 'NAMELIST',Parent = ''></Idenity>
+<Idenity Name = 'TVTPAN', IDType = 'NAMELIST',Parent = ''></Idenity>
+
+<Idenity Name = 'TVTPAN', IDType = 'NAMELIST',Parent = ''></Idenity>
+"""
 
 class datcomDefine(object):
     reserved_NAMELISTS = [

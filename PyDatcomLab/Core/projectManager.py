@@ -362,6 +362,7 @@ class dcProject(object):
         """
         if dict is None:
             pass
+            
         self.caseTemplate ="""\
 <CASE index=1>
     <NAMELIST name ='BODY',alias ='机身'>
@@ -389,6 +390,29 @@ class dcProject(object):
     </NAMELIST>
 </CASE>
         """
+        #创建一个CASE对应的doc
+        return  ET.fromstring(self.caseTemplate)
+        
+    
+    def setCase(self, caseNode,  namelist, vardict ):
+        """
+        设置对应CASE的参数
+        caseNode ：case的节点 
+        namelist   : 
+        vardict     : {varName:varValue}
+        """
+        
+        if caseNode is None:
+            tl.logError(u'CASE Node无效')
+            return 
+        #
+        node = caseNode.find(namelist)
+        if node is None:
+            node = ET.SubElement(caseNode, namelist)
+        
+        #设置参数变量
+        
+        
         
         
         
