@@ -355,7 +355,40 @@ class dcProject(object):
             tl.logError("不存在对应节点：%s" % xpath )
         return nodes[0].text
         
-    
+    def newCASE(self, dict =None):
+        """
+        新建一个CASE
+        dict 提供基本的数据定义
+        """
+        if dict is None:
+            pass
+        self.caseTemplate ="""\
+<CASE index=1>
+    <NAMELIST name ='BODY',alias ='机身'>
+        <VARIABLE name ='NX',alias = '截面数',varType = 'INTEGER'>10.0</VARIABLE>
+        <VARIABLE name ='X',alias = '截面坐标X',varType = 'REAL',startId ='1'>
+        0.0, .175,.322,.530,.850,1.46,2.5,3.43,3.97,4.57,
+        </VARIABLE>
+        <VARIABLE name ='S',alias = '截面面积S',varType = 'REAL',startId ='1'>
+        0.0,.00547,.022,.0491,.0872,.136,.136,.136,.0993,.0598,
+        </VARIABLE>
+    </NAMELIST>
+    <NAMELIST name ='FLTCON',alias ='飞行条件'>
+        <VARIABLE name ='NMACH',alias = '马赫数数',varType = 'INTEGER'>
+        2.0
+        </VARIABLE>
+        <VARIABLE name ='MACH',alias = '马赫数',varType = 'REAL',startId ='1'>
+        0.6,0.8,
+        </VARIABLE>
+        <VARIABLE name ='NALPHA',alias = '攻角数',varType = 'INTEGER'>
+        9.0
+        </VARIABLE>
+        <VARIABLE name ='ALSCHD',alias = '攻角',varType = 'REAL',startId ='1'>
+        -2.0,0.0,2.0,4.0,8.0,12.0,16.0,20.0,24.0,
+        </VARIABLE>
+    </NAMELIST>
+</CASE>
+        """
         
         
         
