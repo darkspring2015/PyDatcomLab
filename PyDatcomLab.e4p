@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-11-06, 23:38:27 -->
+<!-- Saved: 2017-12-11, 23:43:58 -->
 <!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -26,15 +26,49 @@
     <Source>PyDatcomLab/Core/plotter.py</Source>
     <Source>PyDatcomLab/Core/projectManager.py</Source>
     <Source>PyDatcomLab/Core/tools.py</Source>
+    <Source>PyDatcomLab/GUIs/BODY/BODY-old.py</Source>
+    <Source>PyDatcomLab/GUIs/BODY/BODY.py</Source>
+    <Source>PyDatcomLab/GUIs/BODY/Ui_BODY.py</Source>
+    <Source>PyDatcomLab/GUIs/BODY/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/DatcomCASE/CASE.py</Source>
+    <Source>PyDatcomLab/GUIs/DatcomCASE/Ui_CASE.py</Source>
+    <Source>PyDatcomLab/GUIs/DatcomCASE/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/FLTCON/FLTCON.py</Source>
+    <Source>PyDatcomLab/GUIs/FLTCON/Ui_FLTCON.py</Source>
+    <Source>PyDatcomLab/GUIs/FLTCON/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/FlyCondition/FlyCondition.py</Source>
+    <Source>PyDatcomLab/GUIs/FlyCondition/Ui_FlyCondition.py</Source>
+    <Source>PyDatcomLab/GUIs/FlyCondition/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/HTPLNF/HTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/HTPLNF/Ui_HTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/HTPLNF/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
+    <Source>PyDatcomLab/GUIs/OPTIONS/Ui_OPTIONS.py</Source>
+    <Source>PyDatcomLab/GUIs/OPTIONS/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/ProjectsManager.py</Source>
     <Source>PyDatcomLab/GUIs/Reference.py</Source>
+    <Source>PyDatcomLab/GUIs/SYNTHS/SYNTHS.py</Source>
+    <Source>PyDatcomLab/GUIs/SYNTHS/Ui_SYNTHS.py</Source>
+    <Source>PyDatcomLab/GUIs/SYNTHS/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/TIPECASE/CASE.py</Source>
+    <Source>PyDatcomLab/GUIs/TIPECASE/CASEPlugin.py</Source>
+    <Source>PyDatcomLab/GUIs/TIPECASE/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/TIPEPLANE/PLANE.py</Source>
+    <Source>PyDatcomLab/GUIs/TIPEPLANE/PLANEPlugin.py</Source>
+    <Source>PyDatcomLab/GUIs/TIPEPLANE/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_ProjectsManager.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_Reference.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_logForm.py</Source>
+    <Source>PyDatcomLab/GUIs/VFPLNF/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/VTPLNF/Ui_VTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/VTPLNF/VTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/VTPLNF/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/WGPLNF/Ui_WGPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/WGPLNF/WGPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/WGPLNF/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/logForm.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
@@ -55,9 +89,18 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
+    <Form>PyDatcomLab/GUIs/BODY/BODY.ui</Form>
+    <Form>PyDatcomLab/GUIs/DatcomCASE/CASE.ui</Form>
+    <Form>PyDatcomLab/GUIs/FLTCON/FLTCON.ui</Form>
+    <Form>PyDatcomLab/GUIs/FlyCondition/FlyCondition.ui</Form>
+    <Form>PyDatcomLab/GUIs/HTPLNF/HTPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
+    <Form>PyDatcomLab/GUIs/OPTIONS/OPTIONS.ui</Form>
     <Form>PyDatcomLab/GUIs/ProjectsManager.ui</Form>
     <Form>PyDatcomLab/GUIs/Reference.ui</Form>
+    <Form>PyDatcomLab/GUIs/SYNTHS/SYNTHS.ui</Form>
+    <Form>PyDatcomLab/GUIs/VTPLNF/VTPLNF.ui</Form>
+    <Form>PyDatcomLab/GUIs/WGPLNF/WGPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/logForm.ui</Form>
   </Forms>
   <Translations/>
@@ -68,20 +111,6 @@
     <Resource>PyDatcomLab/GUIs/MainWindow.qrc</Resource>
     <Resource>docs/datcom.zip</Resource>
     <Resource>docs/datcomexec.zip</Resource>
-    <Resource>extras/PyDatcomProjects/1/myex1 - 副本.out</Resource>
-    <Resource>extras/PyDatcomProjects/1/myex1.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX10/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX11/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX1/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX2/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX3/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX4/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX5/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX6/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX7/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX8/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/EX9/datcom.out</Resource>
-    <Resource>extras/PyDatcomProjects/tests/example/datcom.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/ASW-20.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/B-737.out</Resource>
     <Resource>tests/data/PyDatcom-Tests/Citation.out</Resource>
