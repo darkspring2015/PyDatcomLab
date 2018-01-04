@@ -231,6 +231,11 @@ class Ui_MainWindow(object):
         icon35.addPixmap(QtGui.QPixmap(":/icos/compareFiles.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionLogWindow.setIcon(icon35)
         self.actionLogWindow.setObjectName("actionLogWindow")
+        self.actionImageTips = QtWidgets.QAction(MainWindow)
+        icon36 = QtGui.QIcon()
+        icon36.addPixmap(QtGui.QPixmap(":/icos/siteinfo-media.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionImageTips.setIcon(icon36)
+        self.actionImageTips.setObjectName("actionImageTips")
         self.menuProject.addAction(self.actionNewProject)
         self.menuProject.addAction(self.actionOpenProject)
         self.menuProject.addAction(self.actionSaveProject)
@@ -262,6 +267,7 @@ class Ui_MainWindow(object):
         self.menu_Windows.addAction(self.actionModelPreview)
         self.menu_Windows.addAction(self.actionReportWindow)
         self.menu_Windows.addAction(self.actionLogWindow)
+        self.menu_Windows.addAction(self.actionImageTips)
         self.menu_Windows.addSeparator()
         self.menu_Windows.addAction(self.actionReloadLayout)
         self.menu_Windows.addAction(self.actionImportUserLayout)
@@ -364,6 +370,7 @@ class Ui_MainWindow(object):
         self.actionTwoTwoPlot.setText(_translate("MainWindow", "2行2列"))
         self.actionCustomPlot.setText(_translate("MainWindow", "自定义"))
         self.actionLogWindow.setText(_translate("MainWindow", "日志窗口"))
+        self.actionImageTips.setText(_translate("MainWindow", "可视化提示窗口"))
 
 import MainWindow_rc
 

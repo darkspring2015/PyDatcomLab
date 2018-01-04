@@ -25,8 +25,39 @@ class bodyFrom(QWidget, Ui_Form):
         super(bodyFrom, self).__init__(parent)
         self.setupUi(self)
         
+        
         #修改
         self.model = QStandardItemModel()
+        self.initiate()
+        
+    def initiate(self):
+        path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        path = path.rstrip("\\BODYz")  # remove the BODY in the path
+        path2 = "\\rc\\Body_SubSonic.png"
+        filePath = path + path2
+        icon = QtGui.QPixmap(filePath)
+        icon2 = icon.scaled(500, 400, 0, 0)
+        self.Ui.image_BODY.setPixmap(icon2)
+        self.Ui.label_BNOSE.setEnabled(False)
+        self.Ui.label_BTAIL.setEnabled(False)
+        self.Ui.label_BLN.setEnabled(False)
+        self.Ui.label_BLA.setEnabled(False)
+        self.Ui.checkBox_DS.setEnabled(False)
+        self.Ui.comboBox_BNOSE.setEnabled(False)
+        self.Ui.comboBox_BTAIL.setEnabled(False)
+        self.Ui.lineEdit_BLN.setEnabled(False)
+        self.Ui.lineEdit_BLA.setEnabled(False)
+        self.Ui.lineEdit_DS.setEnabled(False)
+        self.Ui.comboBox_ITYPE.setEnabled(False)
+        # initiate the table
+        self.Ui.Tab_ComboVariables.setRowCount(1)
+        self.Ui.Tab_ComboVariables.setColumnCount(1)
+        self.Ui.Tab_ComboVariables.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem('截面半径'))
+        self.Ui.Tab_ComboVariables.setItem(0, 0, QtWidgets.QTableWidgetItem())
+        self.Ui.lineEdit_BODY_Num.setText('')
+        self.Ui.lineEdit_BLN.setText('')
+        self.Ui.label_BTAIL.setText('')
+        self.Ui.lineEdit_DS.setText('')
     
     def initXMLModel(self):
         """

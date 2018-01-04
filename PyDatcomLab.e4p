@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2017-12-11, 23:43:58 -->
-<!-- Copyright (C) 2017 linger, Lingo_renlo@qq.com -->
+<!-- Saved: 2018-01-04, 23:16:51 -->
+<!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
   <Hash>661c47e71d6aba341b4161883941561ca8d9b0f5</Hash>
@@ -70,6 +70,13 @@
     <Source>PyDatcomLab/GUIs/WGPLNF/WGPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/WGPLNF/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/cardInfo_rc.py</Source>
+    <Source>PyDatcomLab/GUIs/components/BrowseModels.py</Source>
+    <Source>PyDatcomLab/GUIs/components/ImageTips.py</Source>
+    <Source>PyDatcomLab/GUIs/components/PlaneConfiguration.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_BrowseModels.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_ImageTips.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_PlaneConfiguration.py</Source>
     <Source>PyDatcomLab/GUIs/logForm.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
     <Source>PyDatcomLab/main.py</Source>
@@ -81,6 +88,8 @@
     <Source>tests/testCore_dcProject.py</Source>
     <Source>tests/testDatcomRunner.py</Source>
     <Source>tests/testFrame.py</Source>
+    <Source>tests/testGUI/test_BrowseModels.py</Source>
+    <Source>tests/testGUI/test_ImageTips.py</Source>
     <Source>tests/testLoadFromMoudle.py</Source>
     <Source>tests/testLogForm.py</Source>
     <Source>tests/testParser.py</Source>
@@ -89,6 +98,9 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
+    <Form>PyDatcomLab/GUIs/components/BrowseModels.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/ImageTips.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/PlaneConfiguration.ui</Form>
     <Form>PyDatcomLab/GUIs/BODY/BODY.ui</Form>
     <Form>PyDatcomLab/GUIs/DatcomCASE/CASE.ui</Form>
     <Form>PyDatcomLab/GUIs/FLTCON/FLTCON.ui</Form>
@@ -107,6 +119,7 @@
   <Resources>
     <Resource>Docs/datcom.zip</Resource>
     <Resource>Docs/datcomexec.zip</Resource>
+    <Resource>PyDatcomLab/GUIs/cardInfo.qrc</Resource>
     <Resource>PyDatcomLab/Core/Templates/modelica.mo</Resource>
     <Resource>PyDatcomLab/GUIs/MainWindow.qrc</Resource>
     <Resource>docs/datcom.zip</Resource>
@@ -172,6 +185,7 @@
     <Other>tests/data/exwin/EX8.INP</Other>
     <Other>tests/data/exwin/EX9.INP</Other>
   </Others>
+  <MainScript>PyDatcomLab/main.py</MainScript>
   <Vcs>
     <VcsType>Git</VcsType>
     <VcsOptions>

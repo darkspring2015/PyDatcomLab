@@ -86,6 +86,7 @@
     <addaction name="actionModelPreview"/>
     <addaction name="actionReportWindow"/>
     <addaction name="actionLogWindow"/>
+    <addaction name="actionImageTips"/>
     <addaction name="separator"/>
     <addaction name="actionReloadLayout"/>
     <addaction name="actionImportUserLayout"/>
@@ -492,6 +493,15 @@
    </property>
    <property name="text">
     <string>日志窗口</string>
+   </property>
+  </action>
+  <action name="actionImageTips">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/icos/siteinfo-media.png</normaloff>:/icos/siteinfo-media.png</iconset>
+   </property>
+   <property name="text">
+    <string>可视化提示窗口</string>
    </property>
   </action>
  </widget>

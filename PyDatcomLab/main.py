@@ -21,7 +21,7 @@ def InitLogger(tlogFile = r'datcomlog.log', tlogName = r'Datcomlogger', tlogLeve
     logger = logging.getLogger(tlogName)
     logger.setLevel(tlogLevel)
     
-    # 创建一个handler，用于写入日志文件
+    # 创建一个handler，用于写入日志文件  
     fh = logging.FileHandler(tlogFile)
     fh.setLevel(tlogLevel)
     

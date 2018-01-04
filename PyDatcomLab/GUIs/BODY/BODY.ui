@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1060</width>
+    <width>1121</width>
     <height>569</height>
    </rect>
   </property>
@@ -322,13 +322,19 @@
    <property name="geometry">
     <rect>
      <x>710</x>
-     <y>20</y>
-     <width>500</width>
-     <height>300</height>
+     <y>60</y>
+     <width>471</width>
+     <height>271</height>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../cardInfo.qrc">:/card/SubSonicBody</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox_Sub">
@@ -427,7 +433,9 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../cardInfo.qrc"/>
+ </resources>
  <connections/>
  <slots>
   <slot>slot_Tab_ComboVariables()</slot>

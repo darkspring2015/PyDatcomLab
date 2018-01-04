@@ -12,6 +12,8 @@ from PyQt5 import  QtCore,  QtWidgets, QtGui
 from .Ui_MainWindow import Ui_MainWindow
 from PyDatcomLab.GUIs  import   logForm
 
+from PyDatcomLab.GUIs.components import BrowseModels 
+
 
 
 class DatcomMainWindow(QMainWindow, Ui_MainWindow):
@@ -73,9 +75,15 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     def on_actionBrowse_triggered(self):
         """
         Slot documentation goes here.
+        浏览模型
         """
         # TODO: not implemented yet
-        raise NotImplementedError
+        
+        #遍历目录，获得所有的模型
+        self.ModelBrowseDlg = BrowseModels.DlgBrowseModels()
+        #self.ModelBrowseDlg.setModal(True)
+        self.ModelBrowseDlg.show()
+        #raise NotImplementedError
     
     @pyqtSlot()
     def on_actionCopyModel_triggered(self):
@@ -192,3 +200,30 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         # TODO: not implemented yet
         raise NotImplementedError
+    
+    @pyqtSlot()
+    def on_actionImageTips_triggered(self):
+        """
+        Slot documentation goes here.
+        """
+        # TODO: not implemented yet
+        from PyDatcomLab.GUIs.components import ImageTips
+        # TODO: not implemented yet
+        if '可视化提示'  not in self.docksConfig.keys():
+            #create ProjectsManager
+            imgTips = ImageTips.ImageTips()
+            #创建日志窗口并添加
+            self.dock_ImageTips = QtWidgets.QDockWidget('可视化提示', self)             
+            self.dock_ImageTips.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea|QtCore.Qt.BottomDockWidgetArea)          
+            self.dock_ImageTips.setWidget(imgTips)  
+            self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.dock_ImageTips)  
+            self.dock_ImageTips.setFloating(True)
+            self.dock_ImageTips.resize(QtCore.QSize(300, 600))
+            self.docksConfig['可视化提示'] = self.dock_ImageTips
+            
+            
+        else:
+            if self.docksConfig['可视化提示'].isHidden() :
+                self.docksConfig['可视化提示'].show()
+            else:
+                self.docksConfig['可视化提示'].hide()

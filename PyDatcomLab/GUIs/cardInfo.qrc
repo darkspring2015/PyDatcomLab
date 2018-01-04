@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="card">
+    <file alias="SubSonicBody">rc/Body_SubSonic.png</file>
+    <file alias="SuperSonicBody_all">rc/Body_SuperSonic all.png</file>
+    <file alias="SuperSonicBody">rc/Body_SuperSonic.png</file>
+    <file alias="SuperSonicBody_NOSE">rc/Body_SuperSonic_NOSE.png</file>
+    <file alias="SuperSonicBody_NOSE_AFTER_BODY">rc/Body_SuperSonic_NOSE_AFTER_BODY.png</file>
+    <file>rc/Body_SuperSonic_NOSE_AFTER_BODY-TAIL.png</file>
+    <file>rc/Body_SuperSonic_NOSE_TAIL.png</file>
+    <file>rc/HTPLNF.png</file>
+    <file>rc/SYNTHS.png</file>
+    <file>rc/VTPLNF.png</file>
+    <file>rc/WGPLNF.png</file>
+    <file>rc/WGPLNF_TB.png</file>
+  </qresource>
+</RCC>
