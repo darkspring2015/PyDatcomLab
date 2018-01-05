@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-05, 00:20:50 -->
+<!-- Saved: 2018-01-05, 17:55:01 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -18,6 +18,7 @@
     <Source>PyDatcomLab/Core/__init__.py</Source>
     <Source>PyDatcomLab/Core/datcomDefine.py</Source>
     <Source>PyDatcomLab/Core/datcomRunner.py</Source>
+    <Source>PyDatcomLab/Core/dcModel.py</Source>
     <Source>PyDatcomLab/Core/exporter.py</Source>
     <Source>PyDatcomLab/Core/parser.py</Source>
     <Source>PyDatcomLab/Core/parserTable.py</Source>
@@ -37,7 +38,6 @@
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
     <Source>PyDatcomLab/GUIs/OPTIONS/Ui_OPTIONS.py</Source>
     <Source>PyDatcomLab/GUIs/OPTIONS/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY-old.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.py</Source>
@@ -52,26 +52,28 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/WGPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/card_rc_rc.py</Source>
-    <Source>PyDatcomLab/GUIs/ProjectsManager.py</Source>
-    <Source>PyDatcomLab/GUIs/Reference.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_MainWindow.py</Source>
-    <Source>PyDatcomLab/GUIs/Ui_ProjectsManager.py</Source>
-    <Source>PyDatcomLab/GUIs/Ui_Reference.py</Source>
-    <Source>PyDatcomLab/GUIs/Ui_logForm.py</Source>
     <Source>PyDatcomLab/GUIs/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/cardInfo_rc.py</Source>
     <Source>PyDatcomLab/GUIs/components/BrowseModels.py</Source>
     <Source>PyDatcomLab/GUIs/components/ImageTips.py</Source>
+    <Source>PyDatcomLab/GUIs/components/NewModel.py</Source>
     <Source>PyDatcomLab/GUIs/components/PlaneConfiguration.py</Source>
+    <Source>PyDatcomLab/GUIs/components/ProjectsManager.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Reference.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_BrowseModels.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_ImageTips.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_NewModel.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_PlaneConfiguration.py</Source>
-    <Source>PyDatcomLab/GUIs/logForm.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_ProjectsManager.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_Reference.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_logForm.py</Source>
+    <Source>PyDatcomLab/GUIs/components/logForm.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
     <Source>PyDatcomLab/main.py</Source>
     <Source>tests/__init__.py</Source>
     <Source>tests/test.py</Source>
     <Source>tests/testCore.py</Source>
+    <Source>tests/testCore/testDcModel.py</Source>
     <Source>tests/testCore_Parser.py</Source>
     <Source>tests/testCore_ProjectManager.py</Source>
     <Source>tests/testCore_dcProject.py</Source>
@@ -80,6 +82,7 @@
     <Source>tests/testGUI/test_BrowseModels.py</Source>
     <Source>tests/testGUI/test_ImageTips.py</Source>
     <Source>tests/testGUI/test_PlaneConfiguration.py</Source>
+    <Source>tests/testGUI/test_newModel.py</Source>
     <Source>tests/testLoadFromMoudle.py</Source>
     <Source>tests/testLogForm.py</Source>
     <Source>tests/testParser.py</Source>
@@ -98,12 +101,13 @@
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/VTPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/WGPLNF.ui</Form>
-    <Form>PyDatcomLab/GUIs/ProjectsManager.ui</Form>
-    <Form>PyDatcomLab/GUIs/Reference.ui</Form>
     <Form>PyDatcomLab/GUIs/components/BrowseModels.ui</Form>
     <Form>PyDatcomLab/GUIs/components/ImageTips.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/NewModel.ui</Form>
     <Form>PyDatcomLab/GUIs/components/PlaneConfiguration.ui</Form>
-    <Form>PyDatcomLab/GUIs/logForm.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/ProjectsManager.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/Reference.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/logForm.ui</Form>
   </Forms>
   <Translations/>
   <Resources>
@@ -112,7 +116,6 @@
     <Resource>PyDatcomLab/Core/Templates/modelica.mo</Resource>
     <Resource>PyDatcomLab/GUIs/MainWindow.qrc</Resource>
     <Resource>PyDatcomLab/GUIs/PlaneConfiguration/card_rc.qrc</Resource>
-    <Resource>PyDatcomLab/GUIs/cardInfo.qrc</Resource>
     <Resource>docs/datcom.zip</Resource>
     <Resource>docs/datcomexec.zip</Resource>
     <Resource>tests/data/PyDatcom-Tests/ASW-20.out</Resource>

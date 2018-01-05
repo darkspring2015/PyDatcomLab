@@ -17,13 +17,16 @@ import uuid
 from PyDatcomLab.Core import tools as tl
 from xml.etree import ElementTree  as ET
 
+from PyDatcomLab.Core import datcomDefine as dF    
+
+
 class projectManager(object):
     '''
     主要设计约束：
     1.项目管理器新建目录结构
     2.CASE Group中的CASE将被创建到一个INPUT文件中
     '''
-    def __init__(self, mgrFile ):
+    def __init__(self, mgrFile = None):
         """
         初始化创建一个manager对象
         如果 mgrFile 存在，则从磁盘文件加载Manager配置
@@ -74,12 +77,7 @@ class projectManager(object):
                 prjNode.find('canUse').text = r'False'
                 if autoRemove:
                     self.doc.remove(prjNode) #移除对应的节点
-        
     
-            
-        
-
-        
     
     def newProject(self, tParentDir , tProjectName, tAerocraftName, prjDescribe =u""):
         '''
@@ -358,38 +356,61 @@ class dcProject(object):
     def newCASE(self, dict =None):
         """
         新建一个CASE
-        dict 提供基本的数据定义
-        """
-        if dict is None:
-            pass
-        self.caseTemplate ="""\
-<CASE index=1>
-    <NAMELIST name ='BODY',alias ='机身'>
-        <VARIABLE name ='NX',alias = '截面数',varType = 'INTEGER'>10.0</VARIABLE>
-        <VARIABLE name ='X',alias = '截面坐标X',varType = 'REAL',startId ='1'>
-        0.0, .175,.322,.530,.850,1.46,2.5,3.43,3.97,4.57,
-        </VARIABLE>
-        <VARIABLE name ='S',alias = '截面面积S',varType = 'REAL',startId ='1'>
-        0.0,.00547,.022,.0491,.0872,.136,.136,.136,.0993,.0598,
-        </VARIABLE>
-    </NAMELIST>
-    <NAMELIST name ='FLTCON',alias ='飞行条件'>
-        <VARIABLE name ='NMACH',alias = '马赫数数',varType = 'INTEGER'>
-        2.0
-        </VARIABLE>
-        <VARIABLE name ='MACH',alias = '马赫数',varType = 'REAL',startId ='1'>
-        0.6,0.8,
-        </VARIABLE>
-        <VARIABLE name ='NALPHA',alias = '攻角数',varType = 'INTEGER'>
-        9.0
-        </VARIABLE>
-        <VARIABLE name ='ALSCHD',alias = '攻角',varType = 'REAL',startId ='1'>
-        -2.0,0.0,2.0,4.0,8.0,12.0,16.0,20.0,24.0,
-        </VARIABLE>
-    </NAMELIST>
-</CASE>
+        dict 提供基本的数据定义，定义如下
+        >>>from PyDatcomLab.Core import datcomDefine as dF 
+        >>>dict = dF.datcomDefine.dtNmlstExmple
+        
+        
         """
         
+        #导入Datcom的定义
+        from PyDatcomLab.Core import datcomDefine as dF        
+        keyLst = dF.datcomDefine.reserved_NAMELISTS  #定义了所有Namelist信息的list
+        
+        
+        #获得CASE定义的跟节点
+        casegroup = self.getNodeTextByXPath(r'./datcomProject/casegroup')
+        newCASEID = casegroup.findall('CASE').count + 1
+        #添加一个CASE到CASE集合
+        newCase = ET.SubElement(casegroup,"CASE", {'INDEX':newCASEID})
+            
+        if dict is None:            
+            return
+        
+        #若干字典信息存在，则根据字典顺序下达信息
+        for nmlst in dict.keys():
+            if nmlst not in keyLst:
+                continue
+            #如果在，则创建响应的节点
+            nmlstNode = ET.SubElement(newCase, nmlst)
+            if dict[nmlst] is 'dict':
+                for var in dict[nmlst].keys(): #添加遍历namelist下面的遍历
+                    varNode = ET.SubElement(nmlstNode, var)
+                    if len(dict[nmlst][var]) == 1: #如果变量时单值的直接添加
+                        ET.SubElement(varNode, dict[nmlst][var])
+                        continue
+                    for aVal in dict[nmlst][var]: #如果遍历是多值的，遍历变量的每一个值
+                        valNode = ET.SubElement(varNode, 'value')
+                        valNode.text = str(aVal)
+            else:
+                self.logger.info("异常的字典结构")
+   
+    
+    def setCASEModel(self, caseID=1, dict = None):
+        """
+        设置CASE的Model内容
+        """
+        if dict is None:
+            return
+        
+        #获得对应的CASE
+        
+        root = self.doc
+        #导入Datcom的定义
+    
+
+
+
         
         
 

@@ -155,7 +155,6 @@ class Ui_Form(object):
         self.comboBox_METHED.setItemText(0, _translate("Form", "1. 使用现有方法（系统默认）"))
         self.comboBox_METHED.setItemText(1, _translate("Form", "2. 使用Jorgensen方法"))
 
-import cardInfo_rc
 import card_rc_rc
 
 if __name__ == "__main__":

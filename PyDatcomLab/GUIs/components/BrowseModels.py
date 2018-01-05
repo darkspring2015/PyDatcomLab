@@ -4,7 +4,7 @@
 Module implementing DlgBrowseModels.
 """
 
-from PyQt5.QtCore import pyqtSlot, QSize
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QSize
 from PyQt5.QtWidgets import QDialog, QFileDialog, QListView, QListWidgetItem
 from PyQt5.QtGui import QIcon, QPixmap
 
@@ -18,6 +18,9 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
     """
     Class documentation goes here.
     """
+    
+    emit_ModelSelected = pyqtSignal(object)
+    
     def __init__(self, parent=None):
         """
         Constructor
@@ -39,6 +42,10 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         """
         # TODO: not implemented yet
         self.logger.info(r"点击了模型")
+
+        fN = os.path.join(self.textEdit_Dir.toPlainText(),self.listWidget_Models.currentItem().text() )
+        self.emit_ModelSelected.emit(fN)
+        
         
     @pyqtSlot()
     def on_pushButton_ChoiseDir_clicked(self):
@@ -70,7 +77,18 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
                 #pix1 = QPixmap(r"E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\rc_card/亚音速常规布局.jpg");
                 it = QListWidgetItem(QIcon(pix1.scaled(QSize(100,100))),fileName)
                 it = self.listWidget_Models.addItem(it);
-                
+    
+    def setPreviewDirectory(self, prjDir):
+        """
+        设置预览窗口
+        """
+        if not os.path.exists(prjDir):
+            self.logger.error(r'尝试浏览的目录%s 不存在！'%prjDir)
+            return
+        
+        self.AddModels(prjDir)
+        self.textEdit_Dir.setText(prjDir)
+        
 
 
         

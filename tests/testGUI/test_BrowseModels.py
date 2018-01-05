@@ -21,6 +21,15 @@ class parserTest(unittest.TestCase):
         mainWin.logger.info("启动了ImageTips")
         mainWin.show()
         self.assertEqual(app.exec_(), 0)
+    def test_setPreviewDirectory(self):
+
+        #进入系统的主循环
+        app = QtWidgets.QApplication(sys.argv)
+        mainWin = self.tClass()
+        mainWin.logger.info("启动了ImageTips")
+        mainWin.setPreviewDirectory(os.path.abspath(r"E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1"))
+        mainWin.show()
+        self.assertEqual(app.exec_(), 0)
         
         
 if  __name__ == '__main__':

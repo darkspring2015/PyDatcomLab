@@ -6,6 +6,7 @@ from PyQt5 import QtCore, QtWidgets
 
 #确保相对的导入能够起到作用，需要导入相对路径
 sys.path.append(os.path.abspath(os.path.join('.', 'PyDatcomLab', 'GUIs')))
+sys.path.append(os.path.abspath(os.path.join('.', 'PyDatcomLab', 'GUIs', 'PlaneConfiguration')))
 sys.path.append(os.path.abspath(os.path.join('.', 'PyDatcomLab', 'Core')))
 
 #导入主要的窗体

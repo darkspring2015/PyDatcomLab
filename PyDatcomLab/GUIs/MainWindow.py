@@ -4,17 +4,18 @@
 Module implementing DatcomMainWindow.
 """
 
+import os, sys
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QMainWindow, QLabel
-
+from PyQt5.QtWidgets import QMainWindow, QLabel, QMessageBox
 from PyQt5 import  QtCore,  QtWidgets, QtGui
 
 from .Ui_MainWindow import Ui_MainWindow
-from PyDatcomLab.GUIs  import   logForm
+#from PyDatcomLab.GUIs  import   
 
-from PyDatcomLab.GUIs.components import BrowseModels , NewModel
-
-
+from PyDatcomLab.GUIs.components import BrowseModels , NewModel, logForm
+from PyDatcomLab.GUIs.components import ProjectsManager
+from PyDatcomLab.GUIs.components import ImageTips
+from PyDatcomLab.GUIs.components import PlaneConfiguration
 
 class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     """
@@ -30,11 +31,15 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         super(DatcomMainWindow, self).__init__(parent)
         self.setupUi(self)
         
+        #初始化配置信息
+        self.prjPath = os.path.abspath(r"E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1")
+        
         #配置MainWindow的Dock系统信息
         self.setDockNestingEnabled(True)
         
         #创建数据
         self.InitProjectsData()
+        self.InitModelData()
         
         #初始化存储Dock配置信息的位置
         self.docksConfig={}  #key 是dock的name，内容是{}，包括
@@ -49,17 +54,34 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         #self.singal
         self.on_actionLogWindow_triggered()
         self.on_actionProjectManager_triggered()
+        self.on_actionModelPreview_triggered()         #模型预览窗口
+        
+        #连接信号和槽
+        self.docksConfig["模型预览窗口"].widget().emit_ModelSelected.connect(self.currentModelChanged)
         
 
+        #全屏显示
+        self.showMaximized()
+        #self.showFullScreen()
      
   
     def InitProjectsData(self):
-        """    
+        """
+        初始化项目信息的存储空间
         """  
         self.ProjectsModel = QtGui.QStandardItemModel(3, 3)
         self.ProjectsModel.setHeaderData(0,QtCore.Qt.Horizontal,u"项目名称") 
         self.ProjectsModel.setHeaderData(1,QtCore.Qt.Horizontal,u"路径") 
         self.ProjectsModel.setHeaderData(2,QtCore.Qt.Horizontal,u"说明")
+    
+    def InitModelData(self):
+        """
+        初始化模型信息的存储空间
+        """
+        self.ModelStorge = QtGui.QStandardItemModel(3, 3)
+        self.ModelStorge.setHeaderData(0,QtCore.Qt.Horizontal,u"项目名称") 
+        self.ModelStorge.setHeaderData(1,QtCore.Qt.Horizontal,u"路径") 
+        self.ModelStorge.setHeaderData(2,QtCore.Qt.Horizontal,u"说明")
 
     
     @pyqtSlot()
@@ -91,6 +113,9 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
+        
+        #获得当前模型的信息
+        
         raise NotImplementedError
     
     @pyqtSlot()
@@ -162,7 +187,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         Slot documentation goes here.
         """
-        from PyDatcomLab.GUIs import ProjectsManager
+
         # TODO: not implemented yet
         if '项目管理器'  not in self.docksConfig.keys():
             #create ProjectsManager
@@ -206,8 +231,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
-        from PyDatcomLab.GUIs.components import ImageTips
+
         # TODO: not implemented yet
         if '可视化提示'  not in self.docksConfig.keys():
             #create ProjectsManager
@@ -220,6 +244,8 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             self.dock_ImageTips.setFloating(True)
             self.dock_ImageTips.resize(QtCore.QSize(300, 600))
             self.docksConfig['可视化提示'] = self.dock_ImageTips
+            
+
             
             
         else:
@@ -255,12 +281,39 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             self.dock_BrowseModels.setWidget(browseMod)  
             self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.dock_BrowseModels)  
             #self.dock_BrowseModels.setFloating(True)
-            self.dock_BrowseModels.resize(QtCore.QSize(300, 600))
+            self.dock_BrowseModels.resize(QtCore.QSize(200, 600))
             self.docksConfig['模型预览窗口'] = self.dock_BrowseModels
             
+            #设置初始化目录
+            browseMod.setPreviewDirectory(self.prjPath)
             
         else:
             if self.docksConfig['模型预览窗口'].isHidden() :
                 self.docksConfig['模型预览窗口'].show()
             else:
                 self.docksConfig['模型预览窗口'].hide()
+                
+    def currentModelChanged(self, modelPath):
+        """
+        更改当前模型是触发
+        """
+        self.logger.info("当前模型为%s"%modelPath)
+        
+        nowModel = self.centralWidget()
+        if nowModel is not None:
+            """"""
+        
+        self.setCentralWidget(PlaneConfiguration.PlaneConfiguration())
+    
+    @pyqtSlot()
+    def on_actionExit_triggered(self):
+        """
+        Slot documentation goes here.
+        """
+        # TODO: not implemented yet
+        button = QMessageBox.question(self, r"退出程序",
+                                   r"确认退出程序?",
+                                   QMessageBox.Yes | QMessageBox.No)
+        if button == QMessageBox.Yes:
+            self.close()
+        #raise NotImplementedError

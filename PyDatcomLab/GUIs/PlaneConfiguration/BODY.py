@@ -6,10 +6,10 @@ Module implementing BODY.
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QTableWidgetItem
-from PyQt5.QtGui import QStandardItemModel, QImage
+from PyQt5.QtGui import QStandardItemModel
 
 from .Ui_BODY import Ui_Form
-
+from xml.etree import ElementTree  as ET
 
 class BODY(QWidget, Ui_Form):
     """
@@ -63,7 +63,17 @@ class BODY(QWidget, Ui_Form):
         """
         初始化本节点的xml描述文档
         """
-        self.docxml = None
+        baseXML = """
+    <NAMELIST name ='BODY',alias ='机身'>
+        <VARIABLE name ='NX',alias = '截面数',varType = 'INTEGER'>10.0</VARIABLE>
+        <VARIABLE name ='X',alias = '截面坐标X',varType = 'REAL',startId ='1'>
+        0.0, .175,.322,.530,.850,1.46,2.5,3.43,3.97,4.57,
+        </VARIABLE>
+        <VARIABLE name ='S',alias = '截面面积S',varType = 'REAL',startId ='1'>
+        0.0,.00547,.022,.0491,.0872,.136,.136,.136,.0993,.0598,
+        </VARIABLE>
+    </NAMELIST>"""
+        self.docxml = ET.fromstring(baseXML)
         
     def getXML(self):
         """

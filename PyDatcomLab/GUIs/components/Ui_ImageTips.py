@@ -23,7 +23,7 @@ class Ui_Form(object):
         self.imageTips = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.imageTips.setGeometry(QtCore.QRect(0, 0, 351, 553))
         self.imageTips.setText("")
-        self.imageTips.setPixmap(QtGui.QPixmap(":/card/SuperSonicBody_all"))
+        self.imageTips.setPixmap(QtGui.QPixmap(":/card/rc_card/Body_SuperSonic all.png"))
         self.imageTips.setObjectName("imageTips")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.horizontalLayout.addWidget(self.scrollArea)
@@ -35,7 +35,7 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
 
-import cardInfo_rc
+import card_rc_rc
 
 if __name__ == "__main__":
     import sys

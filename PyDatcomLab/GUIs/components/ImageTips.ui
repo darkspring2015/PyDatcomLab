@@ -41,7 +41,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../cardInfo.qrc">:/card/SuperSonicBody_all</pixmap>
+        <pixmap resource="../PlaneConfiguration/card_rc.qrc">:/card/rc_card/Body_SuperSonic all.png</pixmap>
        </property>
       </widget>
      </widget>
@@ -50,7 +50,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../cardInfo.qrc"/>
+  <include location="../PlaneConfiguration/card_rc.qrc"/>
  </resources>
  <connections/>
 </ui>
