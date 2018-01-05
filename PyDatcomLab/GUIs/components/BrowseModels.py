@@ -4,11 +4,15 @@
 Module implementing DlgBrowseModels.
 """
 
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QDialog, QFileDialog
+from PyQt5.QtCore import pyqtSlot, QSize
+from PyQt5.QtWidgets import QDialog, QFileDialog, QListView, QListWidgetItem
+from PyQt5.QtGui import QIcon, QPixmap
 
 from .Ui_BrowseModels import Ui_Dialog
 import logging
+import os
+
+import PyDatcomLab.GUIs.PlaneConfiguration.card_rc_rc
 
 class DlgBrowseModels(QDialog, Ui_Dialog):
     """
@@ -23,7 +27,9 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         """
         super(DlgBrowseModels, self).__init__(parent)
         self.setupUi(self)
-        
+        #self.splitter.setStretchFactor(1, 4)
+        self.listWidget_Models.setViewMode(QListView.IconMode)
+        self.listWidget_Models.setIconSize(QSize(100,100));
         self.logger = logging.getLogger(r'Datcomlogger')
     
     @pyqtSlot()
@@ -33,19 +39,39 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         """
         # TODO: not implemented yet
         self.logger.info(r"点击了模型")
-    
-    @pyqtSlot(bool)
-    def on_pushButton_ChoiseDir_toggled(self, checked):
+        
+    @pyqtSlot()
+    def on_pushButton_ChoiseDir_clicked(self):
         """
         Slot documentation goes here.
-        
-        @param checked DESCRIPTION
-        @type bool
         """
         # TODO: not implemented yet
-        modelDir = QFileDialog.getExistingDirectory("打开模型目录", '.')
+        self.modelDir = QFileDialog.getExistingDirectory(self,"打开模型目录", '.')
         self.logger.info("Try 打开模型目录")
-        if modelDir is None:
+        if self.modelDir is None:
             self.logger.error("无效的目录")
-        self.textEdit_Dir.setText(modelDir)
-        #raise NotImplementedError
+            return
+            
+        self.textEdit_Dir.setText(self.modelDir)
+        
+        self.AddModels(self.modelDir)
+        
+    def AddModels(self, dir):
+        """
+        """
+
+        f_list = os.listdir(dir)
+        # print f_list
+        for i in f_list:
+            # os.path.splitext():分离文件名与扩展名
+            if os.path.splitext(i)[1] == '.xml':
+                dirName, fileName = os.path.split(i)
+                pix1 = QPixmap(r":/card/rc_card/亚音速常规布局.jpg");
+                #pix1 = QPixmap(r"E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\rc_card/亚音速常规布局.jpg");
+                it = QListWidgetItem(QIcon(pix1.scaled(QSize(100,100))),fileName)
+                it = self.listWidget_Models.addItem(it);
+                
+
+
+        
+        

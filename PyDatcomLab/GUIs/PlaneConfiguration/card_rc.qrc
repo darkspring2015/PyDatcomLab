@@ -1,0 +1,24 @@
+<RCC>
+  <qresource prefix="card">
+    <file>rc_card/Body_SubSonic.png</file>
+    <file>rc_card/Body_SuperSonic all.png</file>
+    <file>rc_card/Body_SuperSonic.png</file>
+    <file>rc_card/Body_SuperSonic_NOSE.png</file>
+    <file>rc_card/Body_SuperSonic_NOSE_AFTER_BODY.png</file>
+    <file>rc_card/Body_SuperSonic_NOSE_AFTER_BODY-TAIL.png</file>
+    <file>rc_card/Body_SuperSonic_NOSE_TAIL.png</file>
+    <file>rc_card/HTPLNF.png</file>
+    <file>rc_card/SYNTHS.png</file>
+    <file>rc_card/VTPLNF.png</file>
+    <file>rc_card/WGPLNF.png</file>
+    <file>rc_card/WGPLNF_TB.png</file>
+    <file>rc_card/飞翼布局.jpg</file>
+    <file>rc_card/高超音速布局.jpg</file>
+    <file>rc_card/高音速布局.jpg</file>
+    <file>rc_card/其他布局.jpg</file>
+    <file>rc_card/无尾布局.jpg</file>
+    <file>rc_card/鸭翼布局.jpg</file>
+    <file>rc_card/亚音速常规布局.jpg</file>
+    <file>rc_card/鹞式布局.jpg</file>
+  </qresource>
+</RCC>

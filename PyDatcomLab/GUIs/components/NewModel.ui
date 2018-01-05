@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>新建模型</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <widget class="QPushButton" name="pushButton_New">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>240</y>
+     <width>75</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>新建模型</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit_DirPath">
+   <property name="geometry">
+    <rect>
+     <x>72</x>
+     <y>90</y>
+     <width>243</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_ModelDir">
+   <property name="geometry">
+    <rect>
+     <x>19</x>
+     <y>90</y>
+     <width>48</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>模型目录</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_ChoiseDir">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>90</y>
+     <width>75</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+  </widget>
+  <widget class="QSplitter" name="splitter">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>304</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <widget class="QLabel" name="label_ModelName">
+    <property name="text">
+     <string>模型名称</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEdit_ModelName"/>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

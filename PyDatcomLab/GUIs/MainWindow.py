@@ -12,7 +12,7 @@ from PyQt5 import  QtCore,  QtWidgets, QtGui
 from .Ui_MainWindow import Ui_MainWindow
 from PyDatcomLab.GUIs  import   logForm
 
-from PyDatcomLab.GUIs.components import BrowseModels 
+from PyDatcomLab.GUIs.components import BrowseModels , NewModel
 
 
 
@@ -227,3 +227,40 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
                 self.docksConfig['可视化提示'].show()
             else:
                 self.docksConfig['可视化提示'].hide()
+    
+    @pyqtSlot()
+    def on_actionNewModel_triggered(self):
+        """
+        Slot documentation goes here.
+        """
+        # TODO: not implemented yet
+        
+        self.NewModel = NewModel.NewModelDlg()
+        self.NewModel.show()
+        
+        #raise NotImplementedError
+    
+    @pyqtSlot()
+    def on_actionModelPreview_triggered(self):
+        """
+        Slot documentation goes here.
+        """
+        # TODO: not implemented yet
+        if '模型预览窗口'  not in self.docksConfig.keys():
+            #create ProjectsManager
+            browseMod = BrowseModels.DlgBrowseModels()
+            #创建日志窗口并添加
+            self.dock_BrowseModels = QtWidgets.QDockWidget('模型预览窗口', self)             
+            self.dock_BrowseModels.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea|QtCore.Qt.BottomDockWidgetArea)          
+            self.dock_BrowseModels.setWidget(browseMod)  
+            self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.dock_BrowseModels)  
+            #self.dock_BrowseModels.setFloating(True)
+            self.dock_BrowseModels.resize(QtCore.QSize(300, 600))
+            self.docksConfig['模型预览窗口'] = self.dock_BrowseModels
+            
+            
+        else:
+            if self.docksConfig['模型预览窗口'].isHidden() :
+                self.docksConfig['模型预览窗口'].show()
+            else:
+                self.docksConfig['模型预览窗口'].hide()

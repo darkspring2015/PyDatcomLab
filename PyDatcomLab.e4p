@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-04, 23:16:51 -->
+<!-- Saved: 2018-01-05, 00:20:50 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -26,49 +26,38 @@
     <Source>PyDatcomLab/Core/plotter.py</Source>
     <Source>PyDatcomLab/Core/projectManager.py</Source>
     <Source>PyDatcomLab/Core/tools.py</Source>
-    <Source>PyDatcomLab/GUIs/BODY/BODY-old.py</Source>
-    <Source>PyDatcomLab/GUIs/BODY/BODY.py</Source>
-    <Source>PyDatcomLab/GUIs/BODY/Ui_BODY.py</Source>
-    <Source>PyDatcomLab/GUIs/BODY/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/DatcomCASE/CASE.py</Source>
     <Source>PyDatcomLab/GUIs/DatcomCASE/Ui_CASE.py</Source>
     <Source>PyDatcomLab/GUIs/DatcomCASE/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/FLTCON/FLTCON.py</Source>
-    <Source>PyDatcomLab/GUIs/FLTCON/Ui_FLTCON.py</Source>
-    <Source>PyDatcomLab/GUIs/FLTCON/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/FlyCondition/FlyCondition.py</Source>
     <Source>PyDatcomLab/GUIs/FlyCondition/Ui_FlyCondition.py</Source>
     <Source>PyDatcomLab/GUIs/FlyCondition/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/HTPLNF/HTPLNF.py</Source>
-    <Source>PyDatcomLab/GUIs/HTPLNF/Ui_HTPLNF.py</Source>
-    <Source>PyDatcomLab/GUIs/HTPLNF/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
     <Source>PyDatcomLab/GUIs/OPTIONS/Ui_OPTIONS.py</Source>
     <Source>PyDatcomLab/GUIs/OPTIONS/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY-old.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_BODY.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_FLTCON.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_SYNTHS.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_WGPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/VTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/WGPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/card_rc_rc.py</Source>
     <Source>PyDatcomLab/GUIs/ProjectsManager.py</Source>
     <Source>PyDatcomLab/GUIs/Reference.py</Source>
-    <Source>PyDatcomLab/GUIs/SYNTHS/SYNTHS.py</Source>
-    <Source>PyDatcomLab/GUIs/SYNTHS/Ui_SYNTHS.py</Source>
-    <Source>PyDatcomLab/GUIs/SYNTHS/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/TIPECASE/CASE.py</Source>
-    <Source>PyDatcomLab/GUIs/TIPECASE/CASEPlugin.py</Source>
-    <Source>PyDatcomLab/GUIs/TIPECASE/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/TIPEPLANE/PLANE.py</Source>
-    <Source>PyDatcomLab/GUIs/TIPEPLANE/PLANEPlugin.py</Source>
-    <Source>PyDatcomLab/GUIs/TIPEPLANE/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_ProjectsManager.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_Reference.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_logForm.py</Source>
-    <Source>PyDatcomLab/GUIs/VFPLNF/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/VTPLNF/Ui_VTPLNF.py</Source>
-    <Source>PyDatcomLab/GUIs/VTPLNF/VTPLNF.py</Source>
-    <Source>PyDatcomLab/GUIs/VTPLNF/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/WGPLNF/Ui_WGPLNF.py</Source>
-    <Source>PyDatcomLab/GUIs/WGPLNF/WGPLNF.py</Source>
-    <Source>PyDatcomLab/GUIs/WGPLNF/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/cardInfo_rc.py</Source>
     <Source>PyDatcomLab/GUIs/components/BrowseModels.py</Source>
@@ -90,6 +79,7 @@
     <Source>tests/testFrame.py</Source>
     <Source>tests/testGUI/test_BrowseModels.py</Source>
     <Source>tests/testGUI/test_ImageTips.py</Source>
+    <Source>tests/testGUI/test_PlaneConfiguration.py</Source>
     <Source>tests/testLoadFromMoudle.py</Source>
     <Source>tests/testLogForm.py</Source>
     <Source>tests/testParser.py</Source>
@@ -98,30 +88,31 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
+    <Form>PyDatcomLab/GUIs/DatcomCASE/CASE.ui</Form>
+    <Form>PyDatcomLab/GUIs/FlyCondition/FlyCondition.ui</Form>
+    <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
+    <Form>PyDatcomLab/GUIs/OPTIONS/OPTIONS.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/VTPLNF.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/WGPLNF.ui</Form>
+    <Form>PyDatcomLab/GUIs/ProjectsManager.ui</Form>
+    <Form>PyDatcomLab/GUIs/Reference.ui</Form>
     <Form>PyDatcomLab/GUIs/components/BrowseModels.ui</Form>
     <Form>PyDatcomLab/GUIs/components/ImageTips.ui</Form>
     <Form>PyDatcomLab/GUIs/components/PlaneConfiguration.ui</Form>
-    <Form>PyDatcomLab/GUIs/BODY/BODY.ui</Form>
-    <Form>PyDatcomLab/GUIs/DatcomCASE/CASE.ui</Form>
-    <Form>PyDatcomLab/GUIs/FLTCON/FLTCON.ui</Form>
-    <Form>PyDatcomLab/GUIs/FlyCondition/FlyCondition.ui</Form>
-    <Form>PyDatcomLab/GUIs/HTPLNF/HTPLNF.ui</Form>
-    <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
-    <Form>PyDatcomLab/GUIs/OPTIONS/OPTIONS.ui</Form>
-    <Form>PyDatcomLab/GUIs/ProjectsManager.ui</Form>
-    <Form>PyDatcomLab/GUIs/Reference.ui</Form>
-    <Form>PyDatcomLab/GUIs/SYNTHS/SYNTHS.ui</Form>
-    <Form>PyDatcomLab/GUIs/VTPLNF/VTPLNF.ui</Form>
-    <Form>PyDatcomLab/GUIs/WGPLNF/WGPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/logForm.ui</Form>
   </Forms>
   <Translations/>
   <Resources>
     <Resource>Docs/datcom.zip</Resource>
     <Resource>Docs/datcomexec.zip</Resource>
-    <Resource>PyDatcomLab/GUIs/cardInfo.qrc</Resource>
     <Resource>PyDatcomLab/Core/Templates/modelica.mo</Resource>
     <Resource>PyDatcomLab/GUIs/MainWindow.qrc</Resource>
+    <Resource>PyDatcomLab/GUIs/PlaneConfiguration/card_rc.qrc</Resource>
+    <Resource>PyDatcomLab/GUIs/cardInfo.qrc</Resource>
     <Resource>docs/datcom.zip</Resource>
     <Resource>docs/datcomexec.zip</Resource>
     <Resource>tests/data/PyDatcom-Tests/ASW-20.out</Resource>
