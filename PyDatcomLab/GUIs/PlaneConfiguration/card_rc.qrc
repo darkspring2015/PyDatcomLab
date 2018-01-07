@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="card">
+    <file>rc_card/WGPLNF_Para.png</file>
+    <file>rc_card/Roughness.png</file>
     <file>rc_card/Body_SubSonic.png</file>
     <file>rc_card/Body_SuperSonic all.png</file>
     <file>rc_card/Body_SuperSonic.png</file>

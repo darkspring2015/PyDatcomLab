@@ -183,8 +183,12 @@ class dcModel(object):
         
         nmlstObj = self.doc[nmlst]
         
-        #重复赋值会冲掉        
-        if type(varVaule) is list:
+        #重复赋值会冲掉   
+        if varVaule is None :
+            #空值则从字典中删除对应的参数
+            if varName in nmlstObj:
+                nmlstObj.pop(varName) #删除该变量                
+        elif type(varVaule) is list:
             tD = {'Index':Index, 'Value':varVaule}
             nmlstObj[varName] = tD
         else:

@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QDoubleValidator
 
 from PyDatcomLab.Core import dcModel
+import logging
 
 from .Ui_SYNTHS import Ui_Form
 
@@ -30,6 +31,7 @@ class SYNTHS(QWidget, Ui_Form):
         
         #初始化数据
         self.InitDoc(model)
+        self.logger = logging.getLogger(r'Datcomlogger')
  
         #初始化界面
         self.initUI()

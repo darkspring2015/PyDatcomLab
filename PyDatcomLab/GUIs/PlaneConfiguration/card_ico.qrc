@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="cardIco">
+    <file>rc_card/icos/AddedIcon.ico</file>
+    <file>rc_card/icos/DeletedIcon.ico</file>
+    <file>rc_card/icos/mlpkginstall.ico</file>
+    <file>rc_card/icos/NormalIcon.ico</file>
+    <file>rc_card/icos/tick.ico</file>
+    <file>rc_card/icos/tool-pro.ico</file>
+    <file>rc_card/icos/youxi.ico</file>
+  </qresource>
+</RCC>

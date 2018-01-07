@@ -18,7 +18,7 @@ suite = unittest.TestSuite()  #这是eric6测试需要的关键变量
 #将测试用例加载到测试套件中
 #将所有的测试类放到这里：
 test_cases = (tCore.Test, tP.parserTest, tFm.myFrameTet, tRun.testDatcomRunner
-                Imtips.)  #每一个unittest.TestCase类的子类
+                )  #每一个unittest.TestCase类的子类
 for test_case in test_cases:
     tests = unittest.defaultTestLoader.loadTestsFromTestCase(test_case)
     suite.addTests(tests) 
