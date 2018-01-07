@@ -3,45 +3,121 @@
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core import datcomDefine as dF  
 
+import time
+import logging
+
 class dcModel(object):
     """
     dcModel 定义一个不包含计算条件的飞机模型的类型
     """
-    def __init__(self, aerocraftName, configuration='常规布局'):
+    def __init__(self, aerocraftName ='AircraftName', configuration='常规布局'):
         """
         初始化
         """
         self.doc ={}
         self.aerocraftName = aerocraftName
         self.configuration = configuration
+        self.createTime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+        self.modifyTime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
         
+        #初始化日志系统
+        self.logger = logging.getLogger(r'Datcomlogger')
+        
+        #定义XML结构
         self.xmlTemplete ="""\
-    <aerocraftInfo>
-    </aerocraftInfo>
+<AerocraftInfo AircraftName='AircraftName' Configuration='常规布局' createTime='' modifyTime = '' >
+</AerocraftInfo>
         """
+        self.xmlDoc = ET.ElementTree(ET.XML(self.xmlTemplete))  #Tree Object
+
         
-    def getDocXML(self):
+    def getDocXMLString(self):
         """
         返回模型的xml描述
         """
+        root = self.createXMLDoc()
+        if root is None: return ""
+        #保存最新信息到self.xmlDoc
+        self.xmlDoc._setroot(root) 
         
-        return self.toXML(self.doc)
+        return ET.tostring(root)
+        
     def setDoc(self, doc):
+        """
+        用外部的doc设置doc
+        """
+        if doc is None : 
+            self.logger.error("doc参数为空")
+            return
         self.doc = doc
         
-    def toXML(self, root):
+    def SetDocByXML(self, tXML):
+        """
+        根据XML的内容设置dcModel的值
+        @tXML 是Element的对象
+        """
+        if tXML is None: return
+        #修改表头
+        self.aerocraftName = tXML.get("AircraftName")
+        self.configuration = tXML.get("Configuration")
+        self.createTime = tXML.get("createTime")
+        self.modifyTime = tXML.get("modifyTime")
+        #读取实例
+        keyLst = dF.reserved_NAMELISTS  #定义了所有Namelist信息的list
+        
+        for nmlstNode in list(tXML):
+            if nmlstNode.tag not in keyLst:continue #不在Namelist列表中的将被跳过
+            
+            #分析子节点
+            for aVar in list(nmlstNode): #遍历所有的子节点
+                if not aVar.get('dcType') == 'Variable':continue #如果是变量节则跳过
+                tInd = aVar.get('Index')
+                if tInd: #说明是数组值                    
+                    #循环读取数据
+                    tValue =[]
+                    for itr in aVar.findall('value'):
+                        tValue.append(float(itr.text))
+                    #填充数据
+                    self.setNamelist( nmlstNode.tag , aVar.tag, tValue, tInd)
+                else: #说明是单值
+                    if aVar.text in ['.TRUE.', '.FLASE.']:
+                        self.setNamelist( nmlstNode.tag , aVar.tag, aVar.text)
+                    else:
+                        self.setNamelist( nmlstNode.tag , aVar.tag, float(aVar.text))
+        #解析结束
+
+
+    def loadXML(self, tFile):
+        """
+        从XML文件tFile中加载数据
+        """
+        root = ET.parse(tFile).getroot()
+        if root is None:return 
+        #分析XML文件
+        if not root.tag == 'AerocraftInfo': 
+            self.logger.error("加载XML文件：%s失败，其中不包含AerocraftInfo节"%tFile)
+            return
+        #根据节点设置对象信息    
+        self.SetDocByXML(root)
+        
+        
+        
+    def createXMLDoc(self):
         """
         将doc写出成XML格式
         """
+        #创建临时的属
         root = ET.XML(self.xmlTemplete)
-
-        #写入
-        ET.SubElement(root,'aerocraftName' ).text = self.aerocraftName
-        ET.SubElement(root,'configuration' ).text = self.configuration
-        #循环写入NameList
+        #写入模型的属性信息
+        root.set('AerocraftName',self.aerocraftName )
+        root.set('Configuration',self.configuration )
+        root.set('createTime',self.createTime )
+        root.set('modifyTime',self.modifyTime )
         
-        if self.doc is None:            
-            return root.tostring()
+        #循环写入NameList        
+        if self.doc is None:   
+            self.logger.error("模型内并没有doc")
+            return None
         
 
         keyLst = dF.reserved_NAMELISTS  #定义了所有Namelist信息的list
@@ -71,23 +147,17 @@ class dcModel(object):
         
         #ET.dump(root)
         #返回对应的XML文档
-        return  ET.tostring(root)
+        return  root
+        
+    def writeToXML(self, file):
+        """
+        将doc的内容写入到xml文件
+        """
+        root = self.createXMLDoc()
+        indent(root, 0)        
+        ET.ElementTree(root).write(file, encoding="UTF-8" )
     
-    def ToDoc(self, tXML):
-        """
-        将XML表述转换为dict形式
-        认为tXML中只包含 model的定义部分
-        """
-        if tXML is None:
-            return {}
-            
-        root = None;
-        if type(tXML) is str:
-            root =ET.XML(tXML)
-        if type(tXML) is ET.ElementTree:
-            root = tXML
-        #分析XML
-        #尚未实现玩
+
         
 
     def setNamelist(self, nmlst , varName, varVaule, Index =1):
@@ -97,6 +167,9 @@ class dcModel(object):
         varName 是变量名
         varVaule 是变量值
         Index 是Array类型的序号，默认1
+        比如：
+        >>> mod = dcModel('J5','常规布局')
+        >>> mod.setNamelist('SYNTHS','XCG',10)
         """
         
         keyLst = dF.reserved_NAMELISTS  #定义了所有Namelist信息的list
@@ -127,4 +200,43 @@ class dcModel(object):
         
         return self.doc[nmlst]
         
+    def getNamelistVar(self, nmlst, varName):
+        """
+        获得nmlist中varName对应变量的值
+        >>> mod = dcModel('J5','常规布局')
+        >>> mod.setNamelist('SYNTHS','XCG',10)
+        >>> mod.getNamelistVar('SYNTHS','XCG')
+        ...10
+        """
+        keyLst = dF.reserved_NAMELISTS  #定义了所有Namelist信息的list
         
+        #判断是否存在
+        if nmlst not in keyLst:
+            return None
+        
+        if nmlst not in self.doc.keys():
+            return None
+        
+        dic = self.doc[nmlst]
+        if varName not in dic.keys():
+            return None
+        
+        return dic[varName]
+        
+        
+def indent(elem, level=0):
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for elem in elem:
+            indent(elem, level+1)
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+            
+

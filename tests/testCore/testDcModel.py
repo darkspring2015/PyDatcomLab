@@ -19,7 +19,7 @@ class test_Core_dcModel(unittest.TestCase):
         pmObj = self.tClass('J6', '常规布局')
         tDoc = Df.dtNmlstExmple
         pmObj.setDoc(tDoc)
-        tXML = pmObj.getDocXML()
+        tXML = pmObj.getDocXMLString()
         print(tXML)       
         self.assertTrue(not pmObj is  None)
         self.assertTrue(not tXML is None)
@@ -34,6 +34,28 @@ class test_Core_dcModel(unittest.TestCase):
         self.assertTrue('NX' in doc.keys())
         self.assertEqual([0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,] 
                         , doc['X']['Value'])
+    def test_SetDocByXML(self):
+        dM = self.tClass('J6', '常规布局')
+        dM.setNamelist('BODY', 'NX', '10.0')
+        dM.setNamelist('BODY', 'X', [0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,], 1)
+
+        import tempfile
+        # delete默认删除，为True则关闭临时文件时候不删除，
+        #f_2 = NamedTemporaryFile(delete=False)
+        #tempfile.mkstemp([suffix=”[, prefix=’tmp'[, dir=None[, text=False]]]])
+        s_2, f_2 = tempfile.mkstemp(suffix='.dcxml',prefix='Datcom', text=True)
+        print(f_2)
+        dM.writeToXML(f_2)
+
+        
+        dM2 = self.tClass('J62', '常规布局2')
+        dM2.loadXML(f_2)
+        
+        doc = dM2.getNamelist('BODY')
+        self.assertTrue(type(doc) is dict)
+        self.assertTrue('NX' in doc.keys())
+        self.assertEqual([0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,] 
+                                , doc['X']['Value'])
         
 
 

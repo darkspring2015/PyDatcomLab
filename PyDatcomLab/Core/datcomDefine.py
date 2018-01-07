@@ -1,21 +1,11 @@
 #!/usr/bin/env python
 
-class datcom(object):
-    '''
-    常量定义空间
-    
-    
-    需要注意的Datcom中量的规定
-    
-    
-    '''
-    configurationType = [u'常规布局', 
-                         u'双垂尾布局', 
-                         u'高超声速布局']
-    
-    def __init__(self):
-        pass
 
+configurationType = [u'常规布局', 
+                         u'双垂尾布局', 
+                         u'高超声速布局']        
+        
+speedRegime = ['Subsoinc', 'Transoinc', 'Supersonic', 'Hypersonic']
 
 reserved_NAMELISTS = [
     'FLTCON',#
@@ -51,6 +41,8 @@ reserved_NAMELISTS = [
 #'ASYFLP'
 dict_ASYFLP=['DELTAL', 'DELTAR', 'DELTAD', 'DELTAS', 'XSOC', 'HSOC', 'STYPE', 'XSPRME', 'NDELTA', 'CHRDFI', 
 'CHRDFO', 'SPANFI', 'SPANFO', 'PHETE']
+
+
 
 
 dtInputFile = """\
@@ -145,9 +137,4 @@ dtNmlstExmple2 ={
     }
 }
     
-ABCC = {"A":{'AAAA'}}
-    
-    
-    
-if __name__ == "__main__":
-    pass
+

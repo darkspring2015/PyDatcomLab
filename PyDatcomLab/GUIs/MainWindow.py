@@ -17,6 +17,8 @@ from PyDatcomLab.GUIs.components import ProjectsManager
 from PyDatcomLab.GUIs.components import ImageTips
 from PyDatcomLab.GUIs.components import PlaneConfiguration
 
+
+
 class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     """
     Class documentation goes here.
@@ -40,6 +42,11 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         #创建数据
         self.InitProjectsData()
         self.InitModelData()
+        self.currentModelPath = os.getcwd()
+        
+        #创建UI逻辑
+        self.centralWidgetUsed = False
+        self.nowPlaneConfiguration = None
         
         #初始化存储Dock配置信息的位置
         self.docksConfig={}  #key 是dock的name，内容是{}，包括
@@ -299,11 +306,21 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         self.logger.info("当前模型为%s"%modelPath)
         
-        nowModel = self.centralWidget()
-        if nowModel is not None:
-            """"""
-        
-        self.setCentralWidget(PlaneConfiguration.PlaneConfiguration())
+        #保存当前的模型
+        if  self.nowPlaneConfiguration is not None and self.centralWidgetUsed :
+            #当前模型存在,则提示是否写入到XML
+            button = QMessageBox.question(self, r"切换模型",
+                                   r"保存当前的Model吗?",
+                                   QMessageBox.Yes | QMessageBox.No)
+            if button == QMessageBox.Yes:
+                tDoc = self.nowPlaneConfiguration.getDoc()
+                tDoc.writeToXML(self.currentModelPath)
+                self.logger.info(r"保存模型到：%s"%self.currentModelPath)
+        #加载新模型
+        self.nowPlaneConfiguration = PlaneConfiguration.PlaneConfiguration(modelpath = modelPath)
+        self.setCentralWidget(self.nowPlaneConfiguration)
+        self.currentModelPath = modelPath
+        self.centralWidgetUsed = True
     
     @pyqtSlot()
     def on_actionExit_triggered(self):

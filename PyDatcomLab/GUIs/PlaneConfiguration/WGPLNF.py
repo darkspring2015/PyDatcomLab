@@ -41,3 +41,11 @@ class WGPLNF(QWidget, Ui_Form):
         """
         将界面的内容设置成tXML对应的内容
         """
+    def getDoc(self):
+        """
+        将界面的内容刷新到变量model
+        """
+        
+        #执行界面刷新
+        
+        #获取界面输入值
