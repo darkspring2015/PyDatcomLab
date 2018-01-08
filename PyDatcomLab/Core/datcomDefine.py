@@ -78,12 +78,44 @@ NEXT CASE
 CASEID HYPERSONIC BODY SOLUTION,  EXAMPLE PROBLEM 1, CASE 4
 NEXT CASE
 """    
+# @bug 此处存在异常 RNNUB存在识别的二义性，因为只有1个，所以没有写（1），导致识别成了单数值
 dtNmlstExmple ={
     'FLTCON':{
     'NMACH':1, 'MACH':{'Index':1, 'Value':[0.60, ]},
     'NALPHA':11.0, 
     'ALSCHD':{'Index':1, 'Value':[-6.0, -4.0, -2.0, 0.0, 2.0,4.0, 8.0, 12.0, 16.0, 20.0, 24.0]}, 
     'RNNUB':4.28E6
+    },
+    
+    'OPTINS':{
+    'SREF':8.85, 'CBARR':2.48, 'BLREF':4.28
+    }, 
+    'SYNTHS':{
+    'XCG':4.14, 'ZCG':-0.20
+    }, 
+    
+    'BODY':{
+    'NX':10.0, 
+    'X':{'Index':1, 'Value':[0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,]}, 
+    'R':{'Index':1, 'Value':[0.0,0.186,0.286,0.424,0.533,0.533,0.533,0.533,0.533,0.533,]}, 
+    'S':{'Index':1, 'Value':[0.0,0.080,0.160,0.323,0.751,0.883,0.939,1.032,1.032,1.032,]}, 
+    'P':{'Index':1, 'Value':[0.0,1.00,1.42,2.01,3.08,3.34,3.44,3.61,3.61,3.61, ]}, 
+    'BNOSE':1.0, 
+    'BLN':2.59, 
+    'BLA':3.67
+    }, 
+    'CASEID':{
+    'CASEID':'APPROXIMATE AXISYMMETRIC BODY SOLUTION, EXAMPLE PROBLEM 1', 
+    'CASE':1   
+    }
+}
+
+dtNmlstExmple3 ={
+    'FLTCON':{
+    'NMACH':1.0, 'MACH':{'Index':1, 'Value':[0.60, ]},
+    'NALPHA':11.0, 
+    'ALSCHD':{'Index':1, 'Value':[-6.0, -4.0, -2.0, 0.0, 2.0,4.0, 8.0, 12.0, 16.0, 20.0, 24.0]}, 
+    'RNNUB':{'Index':1, 'Value':[4.28E6]}
     },
     'OPTINS':{
     'SREF':8.85, 'CBARR':2.48, 'BLREF':4.28

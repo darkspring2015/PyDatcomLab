@@ -28,7 +28,7 @@ class BODY_Test(unittest.TestCase):
     def test_Model(self):
         #构造数据
         pmObj = pm.dcModel('J6', '常规布局')
-        tDoc = Df.dtNmlstExmple
+        tDoc = Df.dtNmlstExmple3
         pmObj.setDoc(tDoc)      
 
         

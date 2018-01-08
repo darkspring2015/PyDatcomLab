@@ -6,7 +6,7 @@ Module implementing WGPLNF.
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QIntValidator ,QDoubleValidator
+from PyQt5.QtGui import QDoubleValidator
 from PyDatcomLab.Core import dcModel
 import logging
 from .Ui_WGPLNF import Ui_Form
