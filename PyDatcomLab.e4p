@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-08, 15:03:57 -->
+<!-- Saved: 2018-01-09, 00:16:21 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -55,12 +55,14 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/card_rc_rc.py</Source>
     <Source>PyDatcomLab/GUIs/Ui_MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/components/AddProject.py</Source>
     <Source>PyDatcomLab/GUIs/components/BrowseModels.py</Source>
     <Source>PyDatcomLab/GUIs/components/ImageTips.py</Source>
     <Source>PyDatcomLab/GUIs/components/NewModel.py</Source>
     <Source>PyDatcomLab/GUIs/components/PlaneConfiguration.py</Source>
     <Source>PyDatcomLab/GUIs/components/ProjectsManager.py</Source>
     <Source>PyDatcomLab/GUIs/components/Reference.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_AddProject.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_BrowseModels.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_ImageTips.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_NewModel.py</Source>
@@ -87,6 +89,7 @@
     <Source>tests/testGUI/test_OPTION.py</Source>
     <Source>tests/testGUI/test_PlaneConfiguration.py</Source>
     <Source>tests/testGUI/test_WGPLNF.py</Source>
+    <Source>tests/testGUI/test_addProject.py</Source>
     <Source>tests/testGUI/test_newModel.py</Source>
     <Source>tests/testLoadFromMoudle.py</Source>
     <Source>tests/testLogForm.py</Source>
@@ -96,6 +99,7 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
+    <Form>PyDatcomLab/GUIs/components/AddProject.ui</Form>
     <Form>PyDatcomLab/GUIs/DatcomCASE/CASE.ui</Form>
     <Form>PyDatcomLab/GUIs/FlyCondition/FlyCondition.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>

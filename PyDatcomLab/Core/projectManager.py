@@ -15,18 +15,29 @@ import time
 import uuid
 #from xml.dom.minidom import Document  
 from PyDatcomLab.Core import tools as tl
+from PyDatcomLab.Core import dcModel as M
 from xml.etree import ElementTree  as ET
 
-from PyDatcomLab.Core import datcomDefine as dF    
+#from PyDatcomLab.Core import datcomDefine as dF    
 
 
 class projectManager(object):
     '''
-    主要设计约束：
-    1.项目管理器新建目录结构
-    2.CASE Group中的CASE将被创建到一个INPUT文件中
+    项目管理器被设计为后台存储所有数据的核心数据结构
+    主要层级结构如下：
+    projectManager  #顶级Solution prjMXML文件
+        project 1  #系统运行的基本单位 dcProject承载
+            目录结构
+            case 1
+                dcModel  #dcXML *.inp
+                reslut1  #dcResXML *.out
+            case 2
+                dcModel
+                reslut1        
+        project 2
+
     '''
-    def __init__(self, mgrFile = None):
+    def __init__(self, mgrFile=''):
         """
         初始化创建一个manager对象
         如果 mgrFile 存在，则从磁盘文件加载Manager配置
@@ -50,7 +61,14 @@ class projectManager(object):
 </datcomProjectManager>
         """
         self.doc = ET.fromstring(self.managerTemplate)
-        
+#        self.doc = {
+#        'ManagerPath':'', 
+#        'ProjectSet':[
+#        {'ProjectFile':'', 'ProjectPath':''}
+#        ]
+#        
+#        }
+        #
         if  os.path.isfile(mgrFile):
             tmpDoc = ET.parse(mgrFile)  #parse是从文件，类名将是字符串
             if tmpDoc.getroot().tag == 'datcomProjectManager':
@@ -60,6 +78,7 @@ class projectManager(object):
             else:
                 tl.logError(u'加载datcomProjectManager失败 %s'%tmpDoc.tostring())
         
+        self.projectSet = {}
 
 
     def checkProjectExist(self, autoRemove = False):
@@ -79,7 +98,7 @@ class projectManager(object):
                     self.doc.remove(prjNode) #移除对应的节点
     
     
-    def newProject(self, tParentDir , tProjectName, tAerocraftName, prjDescribe =u""):
+    def CreateProject(self, tParentDir , tProjectName, tAerocraftName, prjDescribe =u""):
         '''
         创建一个新工程
         '''
@@ -128,37 +147,65 @@ class projectManager(object):
         ET.SubElement(node, 'canUse').text = r'True'
         
         tl.logInfo(u'创建项目工程文件 %s - %s'%(tProjectName, tAerocraftName))
-
-#        with open(filePath, 'w') as f:
-#            tXML.write(f, addindent = r'    ' ,
-#                                      newl = '\n' ,encoding = 'utf-8' )
-        #日志
+        #添加到当前的管理器
+        self.projectSet[filePath] = prj
         
-    def removeProject(self, prjDir):
+        return filePath
+
+  
+    def AddProject(self, tPath):
+        """
+        将tPath指定的项目添加到项目管理器
+        """
+        aPj = dcProject()
+        if not aPj.loadProject(tPath):
+            tl.logInfo(u'加载项目工程文件失败 %s'%tPath)
+            return 
+        
+        self.projectSet[tPath] = aPj
+        tl.logInfo(u'添加项目到管理器 %s'%tPath)
+        
+        
+        
+    def deletePrject(self, tPath):
+        """
+        从管理器中移除工程，并不删除磁盘文件
+        """ 
+        if not os.path.isfile(tPath):
+            tl.logInfo('请输入合法的项目文件， %s'%tPath)
+            return 
+        self.projectSet.pop(tPath)
+        
+
+        
+    def removeProjectFromDisk(self, tPath):
         """
         从磁盘删除一个工程
         """
-        tl.logInfo('尝试从磁盘移除一个工程，将无法恢复： %s'%prjDir)
-        rootDir = prjDir
-        if os.path.isfile(prjDir):
-            rootDir = os.path.dirname(prjDir)
+        
+        if not os.path.exists(tPath):
+            tl.logInfo('无法删除不存在的工程： %s'%tPath)
+            return 
+        
+        #判断删除的内容  
+        rootDir = tPath
+        if os.path.isfile(tPath):
+            rootDir = os.path.dirname(tPath)
             
         import shutil         
-        if  os.path.exists(rootDir) :
+        if os.path.exists(rootDir) :
             shutil.rmtree(rootDir)
-    def deletePrject(self, prjName):
-        """
-        从管理器中移除工程，并不删除磁盘文件
-        """
+            tl.logInfo('从磁盘删除：%s  工程！'%tPath)
+
         
 
 
         
 class dcProject(object):
     """
-    Datcom Project的类，负责承载
-    
+    Datcom Project的类，负责承载    
     """
+    
     def __init__(self, prjName=u'A Datcom project', 
                  prjDescribe =u'', tAerocraftName ='A earocraft'):
         """ 
@@ -171,6 +218,7 @@ class dcProject(object):
         self.prjDescribe = prjDescribe    
         self.aerocraftName = tAerocraftName
         self.uuid = str(uuid.uuid1())
+        self.model = M.dcModel(aerocraftName = tAerocraftName, configuration='常规布局')
         
         self.prjTemplete = """\
 <?xml version="1.0" encoding="utf-8"?>
@@ -405,7 +453,7 @@ class dcProject(object):
         
         #获得对应的CASE
         
-        root = self.doc
+        #root = self.doc
         #导入Datcom的定义
     
 

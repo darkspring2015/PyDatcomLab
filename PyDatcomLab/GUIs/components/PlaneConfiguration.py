@@ -11,7 +11,8 @@ from .Ui_PlaneConfiguration import Ui_Dialog
 
 from PyDatcomLab.Core import  dcModel
 
-from PyDatcomLab.GUIs.PlaneConfiguration import BODY, HTPLNF,  SYNTHS, VTPLNF,WGPLNF
+from PyDatcomLab.GUIs.PlaneConfiguration import BODY, HTPLNF,  SYNTHS, VTPLNF,WGPLNF 
+from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON
 
 import logging
 
@@ -54,9 +55,11 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         self.tabWidget_Configuration.clear()
         self.tabWidget_Configuration.addTab( SYNTHS.SYNTHS(model = self.dcModel), r"综合参数")
         self.tabWidget_Configuration.addTab( BODY.BODY(), r"机体参数") 
+        self.tabWidget_Configuration.addTab( WGPLNF.WGPLNF(), r"机翼形状参数")
         self.tabWidget_Configuration.addTab( VTPLNF.VTPLNF(), r"VTPLNE")
         self.tabWidget_Configuration.addTab( HTPLNF.HTPLNF(), r"HTPLNF")
-        self.tabWidget_Configuration.addTab( WGPLNF.WGPLNF(), r"机翼形状参数")
+        self.tabWidget_Configuration.addTab( FLTCON.FLTCON(), r'飞行条件')
+
     
     @pyqtSlot(int)
     def on_tabWidget_Configuration_currentChanged(self, index):

@@ -4,10 +4,11 @@
 Module implementing DatcomMainWindow.
 """
 
-import os, sys
+import os
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QMainWindow, QLabel, QMessageBox
-from PyQt5 import  QtCore,  QtWidgets, QtGui
+from PyQt5.QtWidgets import QMainWindow, QLabel, QMessageBox, QFileDialog
+from PyQt5 import  QtCore,  QtWidgets
+from PyQt5.QtGui import  QStandardItem, QStandardItemModel
 
 from .Ui_MainWindow import Ui_MainWindow
 #from PyDatcomLab.GUIs  import   
@@ -15,7 +16,8 @@ from .Ui_MainWindow import Ui_MainWindow
 from PyDatcomLab.GUIs.components import BrowseModels , NewModel, logForm
 from PyDatcomLab.GUIs.components import ProjectsManager
 from PyDatcomLab.GUIs.components import ImageTips
-from PyDatcomLab.GUIs.components import PlaneConfiguration
+from PyDatcomLab.GUIs.components import PlaneConfiguration, AddProject
+from PyDatcomLab.Core import projectManager as PM
 
 
 
@@ -76,7 +78,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         初始化项目信息的存储空间
         """  
-        self.ProjectsModel = QtGui.QStandardItemModel(3, 3)
+        self.ProjectsModel = QStandardItemModel(0, 3)
         self.ProjectsModel.setHeaderData(0,QtCore.Qt.Horizontal,u"项目名称") 
         self.ProjectsModel.setHeaderData(1,QtCore.Qt.Horizontal,u"路径") 
         self.ProjectsModel.setHeaderData(2,QtCore.Qt.Horizontal,u"说明")
@@ -85,8 +87,8 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         初始化模型信息的存储空间
         """
-        self.ModelStorge = QtGui.QStandardItemModel(3, 3)
-        self.ModelStorge.setHeaderData(0,QtCore.Qt.Horizontal,u"项目名称") 
+        self.ModelStorge = QStandardItemModel(0, 3)
+        self.ModelStorge.setHeaderData(0,QtCore.Qt.Horizontal,u"模型名称") 
         self.ModelStorge.setHeaderData(1,QtCore.Qt.Horizontal,u"路径") 
         self.ModelStorge.setHeaderData(2,QtCore.Qt.Horizontal,u"说明")
 
@@ -168,7 +170,25 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         # TODO: not implemented yet
         label = QLabel( 'Action : 创建项目!')
         self.statusBar.addWidget(label)
-        #raise NotImplementedError
+
+        #创建目录结构        
+        aDlg = AddProject.AddProject()
+        aDlg.show()
+        prj = aDlg.getData()
+        
+        self.PM = PM.projectManager()
+        prjPath = self.PM.newProject( prj['Path'] , prj['ProjectName'],
+                    prj['ProjectName'],prj['Describe'])
+        
+        self.ProjectsModel.insertRow(self.ProjectsModel.rowCount(), 
+                            [QStandardItem( prj['ProjectName']), 
+                            QStandardItem(prjPath), 
+                            QStandardItem(prj['Describe'])] 
+                            )
+                            
+        self.docksConfig['项目管理器'].widget().BindingModel(self.ProjectsModel)
+
+      
     
     @pyqtSlot()
     def on_actionLogWindow_triggered(self):
@@ -231,7 +251,12 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        raise NotImplementedError
+        #模式对话框
+        button = QFileDialog.getOpenFileName(self,"打开项目文件", 
+                    "~/", "Datcom Project Files (*.dcxml *.xml )")
+        if os.path.exists(button):
+            self.ProjectsModel
+        
     
     @pyqtSlot()
     def on_actionImageTips_triggered(self):
