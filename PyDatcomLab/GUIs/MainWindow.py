@@ -393,4 +393,19 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
 
         #弹出计算结果
         os.system("explorer.exe %s" % tmpPath) 
-
+    
+    @pyqtSlot()
+    def on_actionSaveModel_triggered(self):
+        """
+        Slot documentation goes here.
+        """
+        # TODO: not implemented yet
+        #保存模型
+            #当前模型存在,则提示是否写入到XML
+        button = QMessageBox.question(self, r"保存模型",
+                               r"保存当前的Model吗?",
+                               QMessageBox.Yes | QMessageBox.No)
+        if button == QMessageBox.Yes:
+            tDoc = self.nowPlaneConfiguration.getDoc()
+            tDoc.writeToXML(self.currentModelPath)
+            self.logger.info(r"保存模型到：%s"%self.currentModelPath)        

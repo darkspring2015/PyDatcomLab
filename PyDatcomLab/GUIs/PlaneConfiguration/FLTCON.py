@@ -299,16 +299,18 @@ class FLTCON(QWidget, Ui_Form):
         if self.LOOP.currentIndex() == 0:
             self.model.setNamelist( 'FLTCON' , 'LOOP', None) #移除
         else:
-            self.model.setNamelist( 'FLTCON' , 'LOOP', '%d.0'%(self.LOOP.currentIndex() +1)) #移除
+            self.model.setNamelist( 'FLTCON' , 'LOOP', self.LOOP.currentIndex() +1) #移除
        
         #NMACH
-        self.model.setNamelist( 'FLTCON' , 'NMACH', float(self.NMACH.text()))
+        if self.NMACH.isEnabled() :
+            self.model.setNamelist( 'FLTCON' , 'NMACH', int(float(self.NMACH.text())))
 
         #NALT
-        self.model.setNamelist( 'FLTCON' , 'NALT', float(self.NALT.text()))
+        if self.NALT.isEnabled() :
+            self.model.setNamelist( 'FLTCON' , 'NALT', int(float(self.NALT.text())))
 
         #NALPHA
-        self.model.setNamelist( 'FLTCON' , 'NALPHA', float(self.NALPHA.text()))
+        self.model.setNamelist( 'FLTCON' , 'NALPHA', int(float(self.NALPHA.text())))
         
         #WT
         if self.checkBox_WT.checkState() == Qt.Checked:
@@ -350,6 +352,7 @@ class FLTCON(QWidget, Ui_Form):
         if self.ALSCHD.rowCount() == 0 :
             self.logger.info("没有输入足够的攻角，总数为0,移除原来的数据")
             self.model.setNamelist( 'FLTCON' , 'ALSCHD', None)
+            self.model.setNamelist( 'FLTCON' , 'NALPHA', 0)            
         else:
             tVaList = []
             for itC in range(self.ALSCHD.rowCount()):
@@ -367,11 +370,16 @@ class FLTCON(QWidget, Ui_Form):
             tValList =[]
             for itR in range(self.Speed_Atmospheric.rowCount()):
                 tItem = self.Speed_Atmospheric.item(itR, itC)
-                if tItem is None : continue
+                if tItem is None : 
+                    self.logger.info("%s 在%d,%d没有有效值"%(pNm, itR, itC))
+                    continue
                 #如果不为None
-                if tVder.validate(tItem.text(), 0) == QValidator.Acceptable:
+                st = tVder.validate(tItem.text(), 0)[0]
+                if st == QValidator.Acceptable:
                     tValList.append(float(tItem.text()))
-            if len(tVaList) >0 : #有数据则加入到集合
+                else:
+                    self.logger.error("%s 在%d,%d没有有效值"%(tItem.text(), itR, itC))
+            if len(tValList) >0 : #有数据则加入到集合
                 self.model.setNamelist( 'FLTCON' , pNm, 
                 {'Index':1, 'Value':tValList})
             else : #没有数据则清除

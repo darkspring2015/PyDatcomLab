@@ -85,7 +85,7 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         """
         tabCount = self.tabWidget_Configuration.count()
         if tabCount > 0:
-            for num in range(0,tabCount-1):
+            for num in range(0,tabCount):
                 self.tabWidget_Configuration.widget(num).getDoc()
 
                 

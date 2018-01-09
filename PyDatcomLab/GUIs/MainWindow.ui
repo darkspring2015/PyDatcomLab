@@ -282,7 +282,7 @@
   <action name="actionSaveModel">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/plugin.png</normaloff>:/icos/plugin.png</iconset>
+     <normaloff>:/icos/issueFixed.png</normaloff>:/icos/issueFixed.png</iconset>
    </property>
    <property name="text">
     <string>保存模型</string>

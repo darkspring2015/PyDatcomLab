@@ -113,7 +113,7 @@ class Ui_MainWindow(object):
         self.actionNewModel.setObjectName("actionNewModel")
         self.actionSaveModel = QtWidgets.QAction(MainWindow)
         icon12 = QtGui.QIcon()
-        icon12.addPixmap(QtGui.QPixmap(":/icos/plugin.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon12.addPixmap(QtGui.QPixmap(":/icos/issueFixed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionSaveModel.setIcon(icon12)
         self.actionSaveModel.setObjectName("actionSaveModel")
         self.actionExportModel = QtWidgets.QAction(MainWindow)
