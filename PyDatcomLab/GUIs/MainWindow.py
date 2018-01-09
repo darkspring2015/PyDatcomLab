@@ -18,6 +18,7 @@ from PyDatcomLab.GUIs.components import ProjectsManager
 from PyDatcomLab.GUIs.components import ImageTips
 from PyDatcomLab.GUIs.components import PlaneConfiguration, AddProject
 from PyDatcomLab.Core import projectManager as PM
+from PyDatcomLab.Core import  datcomRunner  
 
 
 
@@ -37,7 +38,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         
         #初始化配置信息
         self.prjPath = os.path.abspath(r"E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1")
-        
+        self.exePath = os.path.join(os.path.dirname(__file__), r'..\Bin\datcom.exe')
         #配置MainWindow的Dock系统信息
         self.setDockNestingEnabled(True)
         
@@ -45,6 +46,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         self.InitProjectsData()
         self.InitModelData()
         self.currentModelPath = os.getcwd()
+        self.currentCASE = None
         
         #创建UI逻辑
         self.centralWidgetUsed = False
@@ -359,3 +361,36 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         if button == QMessageBox.Yes:
             self.close()
         #raise NotImplementedError
+    
+    @pyqtSlot()
+    def on_actionRunning_triggered(self):
+        """
+        Slot documentation goes here.
+        """
+        # TODO: not implemented yet
+        
+        #获得当前的CASE
+        tPC = self.centralWidget()
+        if tPC == 0:
+            QMessageBox.information(self, '提示', '没有打开任何模型！')
+            return
+        dcM = tPC.getDoc()
+        #创建运行目录
+        import tempfile
+        tmpPath= tempfile.mkdtemp(suffix='',prefix='Datcom')
+        tFile = os.path.join(tmpPath, 'ex.inp')
+        dcM.writeToDatcomInput(tFile)
+        
+        #执行计算
+        aRunner = datcomRunner.runner(problemDir=tmpPath,
+                            execDatcomPath=self.exePath)
+        strRes = aRunner.runningPopen(exePath= self.exePath,
+                            problemFile=tFile,    tcwd =tmpPath  )
+        if strRes == "成功执行":
+            self.logger.info("完成了当前算例的计算。算例目录：%s"%tmpPath)
+        else:
+            self.logger.info("当前算例的计算失败。算例目录：%s"%tmpPath)
+
+        #弹出计算结果
+        os.system("explorer.exe %s" % tmpPath) 
+

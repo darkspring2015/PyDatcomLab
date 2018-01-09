@@ -19,7 +19,7 @@ class SYNTHS(QWidget, Ui_Form):
     Class documentation goes here.
     SCLAE ：缩放因子，用来适应风洞数据
     """
-    def __init__(self, parent=None, model = None):
+    def __init__(self, parent=None, tModel = None):
         """
         Constructor
         
@@ -30,7 +30,7 @@ class SYNTHS(QWidget, Ui_Form):
         self.setupUi(self)
         
         #初始化数据
-        self.InitDoc(model)
+        self.InitDoc(tModel)
         self.logger = logging.getLogger(r'Datcomlogger')
  
         #初始化界面

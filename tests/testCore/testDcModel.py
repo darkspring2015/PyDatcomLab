@@ -17,10 +17,14 @@ class test_Core_dcModel(unittest.TestCase):
         
     def test_setDoc(self):
         pmObj = self.tClass('J6', '常规布局')
-        tDoc = Df.dtNmlstExmple
+        tDoc = Df.dtNmlstExmple3
         pmObj.setDoc(tDoc)
         tXML = pmObj.getDocXMLString()
-        print(tXML)       
+        #print(tXML)   
+        import tempfile
+        s_2, f_2 = tempfile.mkstemp(suffix='.dcxml',prefix='Datcom', text=True)
+        print(f_2)
+        pmObj.writeToXML(f_2)
         self.assertTrue(not pmObj is  None)
         self.assertTrue(not tXML is None)
         
@@ -56,7 +60,17 @@ class test_Core_dcModel(unittest.TestCase):
         self.assertTrue('NX' in doc.keys())
         self.assertEqual([0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,] 
                                 , doc['X']['Value'])
+    def test_writeToDatcomInput(self):
+        """测试文件写入能力"""
+        import tempfile
         
+        s_2, f_2 = tempfile.mkstemp(suffix='.inp',prefix='Datcom', text=True)
+        print(f_2)
+        
+        dM = self.tClass('J6', '常规布局')
+        dM.setDoc(Df.dtNmlstExmple)
+        res = dM.writeToDatcomInput(f_2)
+        self.assertTrue( not res  ==  "")
 
 
     

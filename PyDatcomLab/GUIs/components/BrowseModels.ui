@@ -87,17 +87,42 @@
     </widget>
    </item>
    <item>
-    <widget class="QListWidget" name="listWidget_Models">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
+    <widget class="QTableWidget" name="ModelSet"/>
    </item>
   </layout>
+  <action name="actionNewModel">
+   <property name="icon">
+    <iconset resource="../MainWindow.qrc">
+     <normaloff>:/icos/pluginInstall.png</normaloff>:/icos/pluginInstall.png</iconset>
+   </property>
+   <property name="text">
+    <string>新建模型</string>
+   </property>
+   <property name="toolTip">
+    <string>新建一个模型</string>
+   </property>
+  </action>
+  <action name="actionAddModel">
+   <property name="icon">
+    <iconset resource="../MainWindow.qrc">
+     <normaloff>:/icos/pluginRepository.png</normaloff>:/icos/pluginRepository.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加模型</string>
+   </property>
+  </action>
+  <action name="actionRemoveModel">
+   <property name="icon">
+    <iconset resource="../MainWindow.qrc">
+     <normaloff>:/icos/syncToc.png</normaloff>:/icos/syncToc.png</iconset>
+   </property>
+   <property name="text">
+    <string>移除模型</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../MainWindow.qrc"/>
+ </resources>
  <connections/>
 </ui>

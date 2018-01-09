@@ -8,7 +8,7 @@ import logging
 
 class dcModel(object):
     """
-    dcModel 定义一个不包含计算条件的飞机模型的类型
+    dcModel 定义用于一次计算的完整配置
     """
     def __init__(self, aerocraftName ='AircraftName', configuration='常规布局'):
         """
@@ -30,6 +30,7 @@ class dcModel(object):
         """
         self.xmlDoc = ET.ElementTree(ET.XML(self.xmlTemplete))  #Tree Object
 
+        self.numForE = 100
         
     def getDocXMLString(self):
         """
@@ -226,6 +227,93 @@ class dcModel(object):
             return None
         
         return dic[varName]
+        
+    def writeToDatcomInput(self, tPath):
+        """
+        将当前配置写入到一个输出文件中
+        """
+        if len(self.doc ) == 0:
+            self.logger.error("模型内并没有信息")
+            return 
+        #开始内容分析机制,        
+        #将信息格式化为输出文件 要求列宽为80
+
+        TStr = []
+        tCASEDes = ''
+        tCASEID =1
+        for itr in self.doc.keys():#循环Namelist
+            #跳过CASEID的描述
+            if itr == "CASEID":
+                tCASEDes = self.doc[itr]['CASEID']
+                tCASEID  = self.doc[itr]['CASE']
+                continue    
+            #添加一个数据行，记录            
+            TStr.append('')  
+            theStr = " $%s "%itr
+            self.Append80ColumsLimit(TStr, theStr)
+            tNMlstPos = len(TStr[-1]) #记录Namelist变量的位置
+            tNmlst = self.doc[itr]
+            lastCheck = 0
+            for itVar in tNmlst.keys():#循环Var
+                lastCheck +=1
+                theStr = '%s'%itVar 
+                if type(tNmlst[itVar]) == dict: #是Array
+                    tVars     = tNmlst[itVar]['Value']
+                    tVarIndex = tNmlst[itVar]['Index']
+                    theStr += '(%s)='%tVarIndex
+                    if len(TStr[-1])> tNMlstPos: #当当前行是非空行时换行增加序列值
+                        TStr.append(' '*tNMlstPos) 
+                    self.Append80ColumsLimit(TStr, theStr)
+                    tNewPos = len(TStr[-1]) #记录当前变量的位置
+                    for itValue in tVars: #循环追加所有的数据                        
+                        if itValue < self.numForE :
+                            theStr = '%.3f,'%itValue
+                        else:
+                            theStr = '%.3E,'%itValue
+                        self.Append80ColumsLimit(TStr, theStr, tNewPos)
+                    if lastCheck < len(tNmlst.keys()):
+                        TStr.append(' '*tNMlstPos) #防止个数变量出现在序列变量之后
+                else :
+                    if type(tNmlst[itVar]) is str : #对于1.0 2.0 或者.TRUE.等字符型
+                        theStr += '=%s,'%tNmlst[itVar]
+                    else: #对于数值类型 
+                        if float(tNmlst[itVar]) < self.numForE:
+                            theStr += '=%.3f,'%float(tNmlst[itVar])
+                        else:
+                            theStr += '=%.3E,'%float(tNmlst[itVar])
+                    self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
+            TStr[-1] = TStr[-1][:-1] + '$'            
+      
+
+        #写入CASE ID
+        TStr.append('CASEID %s,CASE %s'%(tCASEDes, str(tCASEID)) )       
+        #写入SAVE
+        TStr.append('SAVE')
+        TStr.append('DUMP CASE' )      
+        TStr.append('NEXT CASE' )   
+        
+        LastResult = '\n'.join(TStr)
+        with open(tPath,"w") as f:
+            f.write(LastResult)
+            
+        return LastResult
+        
+
+        
+    def Append80ColumsLimit(self, tStrBuffer, beAddStr,   newLineStartPos = 1, limitLen = 78):  
+        """
+        将输出流限制到宽度
+        tStrBuffer 是一个str的List数组
+        """  
+        if len(beAddStr) + newLineStartPos >= limitLen:
+            self.logger.error("需要追加的字段实在是太长了")
+        #尝试追加数据
+        if len(tStrBuffer[-1]) + len(beAddStr)  < limitLen:
+            tStrBuffer[-1] += beAddStr
+        else :
+            tStrBuffer.append(' '*newLineStartPos + beAddStr)
+            
+
         
         
 def indent(elem, level=0):

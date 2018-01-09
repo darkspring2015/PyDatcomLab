@@ -1,17 +1,13 @@
-#！
+#!/usr/bin/env python
+#encoding: utf-8
+
+"""
 #PyDatcom的主程序
-import os, sys
+>>>main.py --prjDir=""
+"""
+
+import os, sys, time
 from PyQt5 import QtWidgets
-
-
-#确保相对的导入能够起到作用，需要导入相对路径
-sys.path.append(os.path.abspath(os.path.join('.', 'PyDatcomLab', 'GUIs')))
-sys.path.append(os.path.abspath(os.path.join('.', 'PyDatcomLab', 'GUIs', 'PlaneConfiguration')))
-sys.path.append(os.path.abspath(os.path.join('.', 'PyDatcomLab', 'Core')))
-
-#导入主要的窗体
-from PyDatcomLab.GUIs.MainWindow import DatcomMainWindow
-
 import logging #导入日志系统
 
 def InitLogger(tlogFile = r'datcomlog.log', tlogName = r'Datcomlogger', tlogLevel = logging.INFO ):
@@ -46,12 +42,47 @@ def InitLogger(tlogFile = r'datcomlog.log', tlogName = r'Datcomlogger', tlogLeve
 
 
 #执行主要脚本
-dirStr = os.path.join(os.path.abspath(sys.path[0]), r'extras','PyDatcomProjects', '1')
-logfile = os.path.abspath(os.path.join(dirStr, 'DatcomLog.log'))
+import argparse
+parser= argparse.ArgumentParser()
+parser.add_argument('--ProjectDir', help='项目目录')
+parser.add_argument('--log', help='日志文件')
+parser.add_argument('--logLevel', help='日志等级 info,error,warning')
+
+argments = parser.parse_args()
+
+
+#确保相对的导入能够起到作用，需要导入相对路径
+mainPath = os.path.split(os.path.realpath(__file__))[0]
+sys.path.append(os.path.abspath(os.path.join(mainPath, '..')))
+sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs')))
+sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'PlaneConfiguration')))
+sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'components')))
+sys.path.append(os.path.abspath(os.path.join(mainPath, 'Core')))
+
+
+
+#建立项目文件夹 ~\.PyDatcomLab
+configPath = os.path.join(os.path.expanduser('~'), '.PyDatcom')
+dirList = {'PyDatcomLab':os.path.join(os.path.expanduser('~'), '.PyDatcom') , 
+           'LogDirectory':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'log') 
+}
+for tDir in dirList.keys():
+    if  not os.path.exists(dirList[tDir]):
+        os.makedirs(dirList[tDir])
+
+#配置日志系统  
+logFileName = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
+logfile = os.path.abspath(os.path.join(dirList['LogDirectory'], logFileName))
+#if not os.path.exists(logfile):
+#    os.mknod(logfile) #创建空文件
+    
 logChannel = r'Datcomlogger'
 logLevel = logging.INFO
 logger = InitLogger(tlogFile =logfile, tlogName = logChannel , tlogLevel = logLevel)
 
+
+#导入主要的窗体
+from PyDatcomLab.GUIs.MainWindow import DatcomMainWindow
 #进入系统的主循环
 app = QtWidgets.QApplication(sys.argv)
 
@@ -60,11 +91,6 @@ mainWin = DatcomMainWindow()
 mainWin.logger = logger
 logger.info("启动了DatcomMainWindow")
 mainWin.show()
-
-#logform - for debug
-#from PyDatcomLab.GUIs import logForm
-#logfm  = logForm.logForm()
-#logfm.show()
 
 sys.exit(app.exec_())
 

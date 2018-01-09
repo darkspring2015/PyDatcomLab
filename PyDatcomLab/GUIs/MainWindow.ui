@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Datcom辅助分析软件</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
+  <widget class="QWidget" name="centralWidgetLay">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QWidget" name="Main_widget" native="true">

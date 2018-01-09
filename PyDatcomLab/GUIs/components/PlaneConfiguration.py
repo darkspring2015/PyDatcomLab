@@ -38,7 +38,8 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         #建立内存结构
         if os.path.isfile(modelpath):
             self.dcModel.loadXML(modelpath)
-        else: self.logger.error("输入路径无效！%s"%modelpath)
+        else: 
+            self.logger.error("输入路径无效！%s"%modelpath)
 
 
         #test#
@@ -53,12 +54,12 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         初始化所有的page页
         """
         self.tabWidget_Configuration.clear()
-        self.tabWidget_Configuration.addTab( SYNTHS.SYNTHS(model = self.dcModel), r"综合参数")
-        self.tabWidget_Configuration.addTab( BODY.BODY(), r"机体参数") 
-        self.tabWidget_Configuration.addTab( WGPLNF.WGPLNF(), r"机翼形状参数")
+        self.tabWidget_Configuration.addTab( SYNTHS.SYNTHS(tModel = self.dcModel), r"综合参数")
+        self.tabWidget_Configuration.addTab( BODY.BODY(tModel = self.dcModel), r"机体参数") 
+        self.tabWidget_Configuration.addTab( WGPLNF.WGPLNF(tModel = self.dcModel), r"机翼形状参数")
         self.tabWidget_Configuration.addTab( VTPLNF.VTPLNF(), r"VTPLNE")
         self.tabWidget_Configuration.addTab( HTPLNF.HTPLNF(), r"HTPLNF")
-        self.tabWidget_Configuration.addTab( FLTCON.FLTCON(), r'飞行条件')
+        self.tabWidget_Configuration.addTab( FLTCON.FLTCON(tModel = self.dcModel), r'飞行条件')
 
     
     @pyqtSlot(int)
