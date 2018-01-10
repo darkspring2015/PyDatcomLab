@@ -11,7 +11,7 @@ from .Ui_PlaneConfiguration import Ui_Dialog
 
 from PyDatcomLab.Core import  dcModel
 
-from PyDatcomLab.GUIs.PlaneConfiguration import BODY, HTPLNF,  SYNTHS, VTPLNF,WGPLNF 
+from PyDatcomLab.GUIs.PlaneConfiguration import BODY, HTPLNF,  SYNTHS, VTPLNF,WGPLNF, WGSCHR
 from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON
 
 import logging
@@ -47,6 +47,10 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         
         #添加页码
         self.Initialize()
+        #连接各个页面之间的信号
+        
+        
+        
        
         
     def Initialize(self):
@@ -54,12 +58,36 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         初始化所有的page页
         """
         self.tabWidget_Configuration.clear()
-        self.tabWidget_Configuration.addTab( SYNTHS.SYNTHS(tModel = self.dcModel), r"综合参数")
-        self.tabWidget_Configuration.addTab( BODY.BODY(tModel = self.dcModel), r"机体参数") 
-        self.tabWidget_Configuration.addTab( WGPLNF.WGPLNF(tModel = self.dcModel), r"机翼形状参数")
-        self.tabWidget_Configuration.addTab( VTPLNF.VTPLNF(), r"VTPLNE")
-        self.tabWidget_Configuration.addTab( HTPLNF.HTPLNF(), r"HTPLNF")
-        self.tabWidget_Configuration.addTab( FLTCON.FLTCON(tModel = self.dcModel), r'飞行条件')
+        #FLTCON
+        aW = FLTCON.FLTCON(tModel = self.dcModel)
+        aW.setObjectName('FLTCON')
+        self.tabWidget_Configuration.addTab( aW, r'飞行条件')
+        #SYNTHS
+        aW = SYNTHS.SYNTHS(tModel = self.dcModel)
+        aW.setObjectName('SYNTHS')
+        self.tabWidget_Configuration.addTab( aW, r"综合参数")
+        #BODY
+        aW = BODY.BODY(tModel = self.dcModel)
+        aW.setObjectName('BODY') 
+        self.tabWidget_Configuration.addTab( aW, r"机体参数") 
+        #WGPLNF
+        aW = WGPLNF.WGPLNF(tModel = self.dcModel)
+        aW.setObjectName('WGPLNF')         
+        self.tabWidget_Configuration.addTab( aW, r"机翼几何参数")
+        #WGSCHR
+        theModel = {'model':self.dcModel}
+        aW = WGSCHR.WGSCHR(config  = theModel)
+        aW.setObjectName('WGSCHR')         
+        self.tabWidget_Configuration.addTab( aW, r"机翼翼型参数")        
+        #VTPLNE
+        aW = VTPLNF.VTPLNF()
+        aW.setObjectName('VTPLNE')         
+        self.tabWidget_Configuration.addTab( aW, r"VTPLNE")
+        #HTPLNF
+        aW = HTPLNF.HTPLNF()
+        aW.setObjectName('HTPLNF')   
+        self.tabWidget_Configuration.addTab( aW, r"HTPLNF")
+
 
     
     @pyqtSlot(int)

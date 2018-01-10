@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="card">
+    <file>rc_card/ARCL.png</file>
     <file>rc_card/FLTCON.png</file>
     <file>rc_card/FLTCON2.png</file>
     <file>rc_card/WGPLNF_Para.png</file>

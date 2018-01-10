@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-09, 00:16:21 -->
+<!-- Saved: 2018-01-11, 01:08:14 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -99,7 +99,6 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
-    <Form>PyDatcomLab/GUIs/components/AddProject.ui</Form>
     <Form>PyDatcomLab/GUIs/DatcomCASE/CASE.ui</Form>
     <Form>PyDatcomLab/GUIs/FlyCondition/FlyCondition.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
@@ -110,6 +109,8 @@
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/VTPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/WGPLNF.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/WGSCHR.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/AddProject.ui</Form>
     <Form>PyDatcomLab/GUIs/components/BrowseModels.ui</Form>
     <Form>PyDatcomLab/GUIs/components/ImageTips.ui</Form>
     <Form>PyDatcomLab/GUIs/components/NewModel.ui</Form>

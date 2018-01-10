@@ -4,7 +4,7 @@
 Module implementing FLTCON.
 """
 
-from PyQt5.QtCore import pyqtSlot, Qt, QPoint
+from PyQt5.QtCore import pyqtSlot, Qt, QPoint, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QMenu, QTableWidgetItem, QMessageBox
 from PyQt5.QtGui import QDoubleValidator, QIntValidator, QValidator
 
@@ -18,6 +18,12 @@ class FLTCON(QWidget, Ui_Form):
     """
     Class documentation goes here.
     """
+    
+    #定义各个Widget之间进行参数同步的信号
+    emit_NMACHChanged = pyqtSignal(str, int)  #发送NMACH变化的信息
+    emit_NACAChanged = pyqtSignal(str, bool)  #发送NACA选项卡的信号
+    
+    
     def __init__(self, parent=None, tModel = None):
         """
         Constructor
