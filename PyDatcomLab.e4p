@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-11, 01:08:14 -->
+<!-- Saved: 2018-01-11, 01:11:39 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -48,8 +48,10 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_SYNTHS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VTPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_WGPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_WGSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/VTPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/WGPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/WGSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/card_ico_rc.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/card_rc_rc.py</Source>
