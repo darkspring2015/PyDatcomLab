@@ -12,7 +12,7 @@ from .Ui_PlaneConfiguration import Ui_Dialog
 from PyDatcomLab.Core import  dcModel
 
 from PyDatcomLab.GUIs.PlaneConfiguration import BODY, HTPLNF,  SYNTHS, VTPLNF,WGPLNF, WGSCHR
-from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON
+from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON , EXPR
 
 import logging
 
@@ -84,14 +84,30 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         aW = WGSCHR.WGSCHR(tModel = self.dcModel)
         aW.setObjectName('WGSCHR')         
         self.tabWidget_Configuration.addTab( aW, r"机翼翼型参数")    
-        #VTPLNE
-        aW = VTPLNF.VTPLNF()
-        aW.setObjectName('VTPLNE')         
-        self.tabWidget_Configuration.addTab( aW, r"VTPLNE")
-        #HTPLNF
-        aW = HTPLNF.HTPLNF()
-        aW.setObjectName('HTPLNF')   
-        self.tabWidget_Configuration.addTab( aW, r"HTPLNF")
+#        #VTPLNE
+#        aW = VTPLNF.VTPLNF()
+#        aW.setObjectName('VTPLNE')         
+#        self.tabWidget_Configuration.addTab( aW, r"VTPLNE")
+#        #HTPLNF
+#        aW = HTPLNF.HTPLNF()
+#        aW.setObjectName('HTPLNF')   
+#        self.tabWidget_Configuration.addTab( aW, r"HTPLNF")
+        
+        #EXPR
+        aW = EXPR.EXPR()
+        aW.setObjectName('EXPR')   
+        self.tabWidget_Configuration.addTab( aW, r"试验数据录入")
+        
+        
+#         file_name  模块名  
+#
+# module = __import__(file_name)
+#
+# AClass = getattr(module, class_name_str)()
+#
+# a = AClass() 或
+#
+#obj = new.instance(AClass)
 
 
     

@@ -5,12 +5,14 @@ Module implementing NewModelDlg.
 """
 
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QDialog, QFileDialog
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
 
 from .Ui_NewModel import Ui_Dialog
 import logging
 
-from xml.etree import ElementTree  as ET
+from PyDatcomLab.Core.dcModel import dcModel 
+
+#from xml.etree import ElementTree  as ET
 import os
 
 class NewModelDlg(QDialog, Ui_Dialog):
@@ -27,7 +29,12 @@ class NewModelDlg(QDialog, Ui_Dialog):
         super(NewModelDlg, self).__init__(parent)
         self.setupUi(self)
         
+        #日志系统        
         self.logger = logging.getLogger(r'Datcomlogger')
+        self.ext = '.dcxml'
+        self.ModelName = "test"
+        self.ModelDir = '.'
+        self.Modelpath = os.path.join(self.ModelDir , self.ModelName +  self.ext)
     
 
     
@@ -37,7 +44,22 @@ class NewModelDlg(QDialog, Ui_Dialog):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        raise NotImplementedError
+        if self.textEdit_ModelName.toPlainText() == "":
+            QMessageBox.information(self, '请指定模型名称', '模型名称不能为空')
+            return
+        self.ModelName = self.textEdit_ModelName.toPlainText()
+        if self.textEdit_DirPath.toPlainText() == '':
+            QMessageBox.information(self, '警告', '请模型名称不能为空')
+            return
+        self.ModelDir = self.textEdit_DirPath.toPlainText()
+        if not os.path.exists(self.ModelDir):
+            os.mkdirs(self.ModelDir)
+        self.Modelpath = os.path.join(self.ModelDir, self.ModelName+self.ext )
+        tModel = dcModel(self.ModelName, '常规布局')
+        tModel.writeToXML(self.Modelpath)
+        
+        #加载到模型管理器
+        self.close()
     
     @pyqtSlot()
     def on_pushButton_ChoiseDir_clicked(self):
@@ -45,39 +67,20 @@ class NewModelDlg(QDialog, Ui_Dialog):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        fN = QFileDialog.getSaveFileName(self, "创建模型文件", ".", "飞机模型 (*.xml)")
         
-        if fN[0] != None:            
-            dirName, fileName =os.path.split(fN[0])
-            self.textEdit_DirPath.setText(dirName)
-            self.textEdit_ModelName.setText(fileName)
-            if not os.path.exists (fN[0]):
-                self.createModel(fN[0])
+        fN = QFileDialog.getExistingDirectory(self, "创建模型文件", "", QFileDialog.DontUseNativeDialog)      
+
+        if not os.path.exists (fN):
+            self.logger.error("目录：%s 不存在！"%fN)
+            return
+        #
+        self.ModelDir = fN
+        self.textEdit_DirPath.setText(fN)
                 
 
-            
-    def createModel(self, filePath):
+    def getModelPath(self):
         """
-        写入一个空的文件
+        返回模型的路径
         """
-        self.ModelTemplate = """\
-<?xml version="1.0" encoding="utf-8"?>
-<datcomProjectManager>
-    <managerInfo>
-        <managerName>DefaultManager</managerName>    
-    </managerInfo>
-    <project>
-        <projectName>某个项目 </projectName>
-        <projectDescribe>项目样例</projectDescribe>
-        <projectUUID> </projectUUID>
-        <projectPath>.</projectPath>
-        <canUse>False</canUse>
-        <createTime/>
-        <modifyTime/>
-    </project>
-</datcomProjectManager>
-        """
-        self.doc = ET.fromstring(self.ModelTemplate)
-        tXML = ET.ElementTree(self.doc)
-        #ET.register_namespace('datcom', "https://github.com/darkspring2015/PyDatcomLab/")
-        tXML.write(filePath ,encoding = 'utf-8',xml_declaration=True)  
+        return self.Modelpath        
+

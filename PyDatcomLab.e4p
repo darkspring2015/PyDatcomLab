@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-11, 14:28:53 -->
+<!-- Saved: 2018-01-11, 22:14:37 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -31,11 +31,14 @@
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomCARD.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/OPTIONS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_BODY.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_FLTCON.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HTPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_OPTIONS.py</Source>
@@ -80,11 +83,13 @@
     <Source>tests/testFrame.py</Source>
     <Source>tests/testGUI/test_BODY.py</Source>
     <Source>tests/testGUI/test_BrowseModels.py</Source>
+    <Source>tests/testGUI/test_EXPR.py</Source>
     <Source>tests/testGUI/test_FLTCON.py</Source>
     <Source>tests/testGUI/test_ImageTips.py</Source>
     <Source>tests/testGUI/test_OPTION.py</Source>
     <Source>tests/testGUI/test_PlaneConfiguration.py</Source>
     <Source>tests/testGUI/test_WGPLNF.py</Source>
+    <Source>tests/testGUI/test_WGSCHR.py</Source>
     <Source>tests/testGUI/test_addProject.py</Source>
     <Source>tests/testGUI/test_newModel.py</Source>
     <Source>tests/testLoadFromMoudle.py</Source>
@@ -97,6 +102,7 @@
   <Forms>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/OPTIONS.ui</Form>

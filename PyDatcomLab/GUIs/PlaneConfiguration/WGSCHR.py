@@ -367,38 +367,7 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 self.logger.info("访问的变量：%s 具有无法识别的类型 %s"%(varName,self.WGSCHRList[varName]['TYPE'] ))
         #自动化循环赋值        
         
-#        #处理表格
-#        #SLOPE
-#        if self.checkBox_SLOPE.checkState() == Qt.Checked:
-#            tVars = []
-#            for itR in self.tableWidget_SLOPE.columnCount():
-#                tVars.append(float(self.tableWidget_SLOPE.item(itR, 0).text()))
-#            self.model.setNamelist( tNameList , 'SLOPE', {'Index':1, 'Value':tVars})
-#        else:#从系统中删除参数
-#            self.model.setNamelist( tNameList , 'SLOPE', None)  
-#        
-#        #检测参数组合 Lift
-#        for itC in range(self.tableWidget_Lift.columnCount()):
-#            pNm = self.tableWidget_Lift.horizontalHeaderItem(itC).text()
-#            tVder = QDoubleValidator(self)
-#            tValList =[]
-#            for itR in range(self.tableWidget_Lift.rowCount()):
-#                tItem = self.tableWidget_Lift.item(itR, itC)
-#                if tItem is None : 
-#                    self.logger.info("%s 在%d,%d没有有效值"%(pNm, itR, itC))
-#                    continue
-#                #如果不为None
-#                st = tVder.validate(tItem.text(), 0)[0]
-#                if st == QValidator.Acceptable:
-#                    tValList.append(float(tItem.text()))
-#                else:
-#                    self.logger.error("%s 在%d,%d没有有效值"%(tItem.text(), itR, itC))
-#            if len(tValList)  ==  self.tableWidget_Lift.rowCount(): #有数据则加入到集合
-#                self.model.setNamelist( 'FLTCON' , pNm, 
-#                {'Index':1, 'Value':tValList})
-#            else : #没有数据则清除
-#                self.model.setNamelist( 'FLTCON' , pNm, None)
-        
+
         return self.model
         
     def getColumnIndex(self, tTable, tHeader):

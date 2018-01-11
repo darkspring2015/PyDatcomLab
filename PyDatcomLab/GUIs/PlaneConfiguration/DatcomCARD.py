@@ -17,23 +17,16 @@ class DatcomCARD(object):
     class DatcomCARD 是提供CARD录入的基础类
     """
     
-    def __init__(self, tModel = None):
+    def __init__(self):
         """
-        """
-        #创建日志
-        self.logger = logging.getLogger(r'Datcomlogger')
-        
-        #修改后台的数据
-        if tModel is None:
-            tModel = dcModel.dcModel('J6', '常规布局')        
-        self.model = tModel  
-        
-        #define 
+        """        
+        #给Ui绑定验证器
         self.NameList = ''       #必须赋值
         self.VariableList = {}     #必须赋值
-        
+    def setDefine(self,NameList, VariableList ):
         #给Ui绑定验证器
-        
+        self.NameList = NameList             #必须赋值
+        self.VariableList = VariableList     #必须赋值
         
     def InitUi(self):
         """
@@ -203,9 +196,16 @@ class DatcomCARD(object):
         """
         初始化本节点的xml描述文档
         """
-        if type(tModel) is not dcModel.dcModel:
+        #创建日志
+        self.logger = logging.getLogger(r'Datcomlogger')
+        #define 
+        
+        #修改后台的数据
+        if tModel is None or type(tModel) is not dcModel.dcModel:
             self.logger.error('传递的参数不是合格的类型：%s'%type(tModel) )
-        self.Model = tModel        
+            tModel = dcModel.dcModel('J6', '常规布局')        
+        self.model = tModel  
+      
         #执行参数配置过程        
         self.InitDoc()       
 

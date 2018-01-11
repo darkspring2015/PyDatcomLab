@@ -170,6 +170,8 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
+        return
+        
         label = QLabel( 'Action : 创建项目!')
         self.statusBar.addWidget(label)
 

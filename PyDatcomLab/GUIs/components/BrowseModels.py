@@ -12,7 +12,9 @@ from .Ui_BrowseModels import Ui_Dialog
 import logging
 import os
 
-import PyDatcomLab.GUIs.PlaneConfiguration.card_rc_rc
+from PyDatcomLab.GUIs.components.NewModel import NewModelDlg 
+
+#import PyDatcomLab.GUIs.PlaneConfiguration.card_rc_rc
 
 class DlgBrowseModels(QDialog, Ui_Dialog):
     """
@@ -45,6 +47,9 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         self.curPos = QPoint(0, 0)
         self.curWidget = None
         self.popMenu = None
+        
+        #初始化界面
+        
 
         
         
@@ -54,7 +59,8 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        self.modelDir = QFileDialog.getExistingDirectory(self,"打开模型目录", '.')
+        self.modelDir = QFileDialog.getExistingDirectory(self,"打开模型目录", ''
+                                    , QFileDialog.DontUseNativeDialog) 
         self.logger.info("Try 打开模型目录")
         if self.modelDir is None:
             self.logger.error("无效的目录")
@@ -72,14 +78,29 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         for aFile in os.listdir(dir):
             # os.path.splitext():分离文件名与扩展名
             if os.path.splitext(aFile)[1] in self.extList :
-                fN, extN = os.path.splitext(aFile)
-                tRow = self.ModelSet.rowCount() 
-                self.ModelSet.insertRow(tRow)
-                tPath = os.path.join(dir, aFile)
-                pix1 = QPixmap(r":/card/rc_card/亚音速常规布局.jpg")                
-                self.ModelSet.setItem(tRow, 0, QTableWidgetItem(QIcon(pix1.scaled(QSize(100,100))),fN))
-                self.ModelSet.setItem(tRow, 1, QTableWidgetItem(os.path.abspath(tPath)))
-                self.ModelSet.setItem(tRow, 2, QTableWidgetItem(''))
+                tItems =  self.ModelSet.findItems(aFile, Qt.MatchExactly)
+                if len(tItems) >0:
+                    continue
+                self.AddModel(dir, aFile)
+                
+
+    def AddModel(self,tDir,  tFile):
+        """
+        添加一个模型
+        """
+        fpath = os.path.join(tDir, tFile)
+        if not os.path.isfile(fpath):
+            return            #    
+        fN, extN = os.path.splitext(tFile)
+        if extN not in self.extList:
+            return 
+        #添加一行    
+        tRow = self.ModelSet.rowCount() 
+        self.ModelSet.insertRow(tRow)
+        pix1 = QPixmap(r":/card/rc_card/亚音速常规布局.jpg")                
+        self.ModelSet.setItem(tRow, 0, QTableWidgetItem(QIcon(pix1.scaled(QSize(100,100))),fN))
+        self.ModelSet.setItem(tRow, 1, QTableWidgetItem(os.path.abspath(fpath)))
+        self.ModelSet.setItem(tRow, 2, QTableWidgetItem(''))
 
     def setPreviewDirectory(self, prjDir):
         """
@@ -117,8 +138,10 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        #
-        
+        dlg = NewModelDlg()
+        dlg.show()
+        mPath = dlg.getModelPath()        
+        self.AddModel(os.path.dirname(mPath), os.path.basename(mPath))
     
     @pyqtSlot()
     def on_actionAddModel_triggered(self):
@@ -141,6 +164,9 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
             self.ModelSet.setItem(tRow, 0, QTableWidgetItem(QIcon(pix1.scaled(QSize(100,100))),fN))
             self.ModelSet.setItem(tRow, 1, QTableWidgetItem(os.path.abspath(aFile)))
             self.ModelSet.setItem(tRow, 2, QTableWidgetItem(''))
+            
+            #切换模型
+            
 
 
     
