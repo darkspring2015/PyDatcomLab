@@ -8,11 +8,10 @@ from PyQt5.QtCore import pyqtSlot, Qt, QPoint
 from PyQt5.QtWidgets import QWidget, QMenu, QTableWidgetItem, QLineEdit, QComboBox, QTableWidget
 from PyQt5.QtWidgets import QAction, QCheckBox 
 from PyQt5.QtGui import QDoubleValidator, QIntValidator, QIcon, QPixmap, QValidator
-
-from .Ui_VTPLNF import Ui_VTPLNF
-
 from PyDatcomLab.Core import dcModel 
 import logging
+
+from Ui_VTPLNF import Ui_VTPLNF
 
 class VTPLNF(QWidget, Ui_VTPLNF):
     """
@@ -292,13 +291,14 @@ class VTPLNF(QWidget, Ui_VTPLNF):
                     self.logger.error('没有改空间 %s'%varName)
                     continue
                 tCheckWidget = self.findChild(QCheckBox,'checkBox_'+varName)
+                tRange = self.VariableList[varName]['Range']
                 if not tCheckWidget is None: #存在Check
                     if tCheckWidget.checkState() == Qt.Checked:
-                        self.model.setNamelist( self.NameList , varName, '%d.0'%(tWidget.currentIndex() +1))
+                        self.model.setNamelist( self.NameList , varName, tRange[tWidget.currentIndex() ])
                     else:
                         self.model.setNamelist( self.NameList , varName, None)
                 else: #必须参数
-                    self.model.setNamelist( self.NameList , varName, '%d.0'%(tWidget.currentIndex() +1))
+                    self.model.setNamelist( self.NameList , varName, tRange[tWidget.currentIndex() ])
                 #LIST
             elif self.VariableList[varName]['TYPE'] == 'Array': 
                 """对于Array类型需要专门的进行分析"""
@@ -414,7 +414,7 @@ class VTPLNF(QWidget, Ui_VTPLNF):
         @type int
         """
         # TODO: not implemented yet
-        raise NotImplementedError
+        self.UILogic()
     
     @pyqtSlot(QPoint)
     def on_tableWidget_VTArea_customContextMenuRequested(self, pos):

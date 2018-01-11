@@ -12,7 +12,7 @@ from .Ui_PlaneConfiguration import Ui_Dialog
 from PyDatcomLab.Core import  dcModel
 
 from PyDatcomLab.GUIs.PlaneConfiguration import BODY, HTPLNF,  SYNTHS, VTPLNF,WGPLNF, WGSCHR
-from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON , EXPR
+from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON , EXPR, VFPLNF
 
 import logging
 
@@ -36,81 +36,40 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         self.dcModelPath =  modelpath
         self.lastIndex = -1
         
+        self.widgetNameList = {
+            FLTCON.FLTCON:['FLTCON','飞行条件'], 
+            SYNTHS.SYNTHS:['SYNTHS','综合参数'], 
+            BODY.BODY:[    'BODY'  ,'机体参数'], 
+            WGPLNF.WGPLNF:['WGPLNF','机翼几何参数'], 
+            WGSCHR.WGSCHR:['WGSCHR','机翼翼型参数'], 
+            VTPLNF.VTPLNF:['VTPLNF','垂尾几何参数'], 
+            HTPLNF.HTPLNF:['HTPLNF','平尾几何参数'], 
+            VFPLNF.VFPLNF:['VFPLNF','腹鳍几何参数'],           
+            EXPR.EXPR:[    'EXPR'  ,'试验数据'],             
+        }
+        
         #建立内存结构
         if os.path.isfile(modelpath):
             self.dcModel.loadXML(modelpath)
         else: 
             self.logger.error("输入路径无效！%s"%modelpath)
-
-
-        #test#
-        #self.dcModel.setNamelist('SYNTHS','XCG',10)
-        
+            
         #添加页码
         self.Initialize()
         
         #连接各个页面之间的信号
-        
-        
-        
        
         
     def Initialize(self):
         """
         初始化所有的page页
         """
-        self.tabWidget_Configuration.clear()
-        #FLTCON
-        aW = FLTCON.FLTCON(tModel = self.dcModel)
-        aW.setObjectName('FLTCON')
-        self.tabWidget_Configuration.addTab( aW, r'飞行条件')
-        #SYNTHS
-        aW = SYNTHS.SYNTHS(tModel = self.dcModel)
-        aW.setObjectName('SYNTHS')
-        self.tabWidget_Configuration.addTab( aW, r"综合参数")
-        #BODY
-        aW = BODY.BODY(tModel = self.dcModel)
-        aW.setObjectName('BODY') 
-        self.tabWidget_Configuration.addTab( aW, r"机体参数") 
-        #WGPLNF
-        aW = WGPLNF.WGPLNF(tModel = self.dcModel)
-        aW.setObjectName('WGPLNF')         
-        self.tabWidget_Configuration.addTab( aW, r"机翼几何参数")
-        #WGSCHR
-#        theModel = {'model':self.dcModel}
-#        aW = WGSCHR.WGSCHR(config  = theModel)
-#        aW.setObjectName('WGSCHR')         
-#        self.tabWidget_Configuration.addTab( aW, r"机翼翼型参数")  
-        aW = WGSCHR.WGSCHR(tModel = self.dcModel)
-        aW.setObjectName('WGSCHR')         
-        self.tabWidget_Configuration.addTab( aW, r"机翼翼型参数")    
-        #VTPLNE
-        aW = VTPLNF.VTPLNF()
-        aW.setObjectName('VTPLNE')         
-        self.tabWidget_Configuration.addTab( aW, r"垂尾几何参数")
-#        #HTPLNF
-#        aW = HTPLNF.HTPLNF()
-#        aW.setObjectName('HTPLNF')   
-#        self.tabWidget_Configuration.addTab( aW, r"HTPLNF")
-        
-        #EXPR
-        aW = EXPR.EXPR()
-        aW.setObjectName('EXPR')   
-        self.tabWidget_Configuration.addTab( aW, r"试验数据录入")
-        
-        self.widgetNameList = ['FLTCON']
-        
-#         file_name  模块名  
-#
-# module = __import__(file_name)
-#
-# AClass = getattr(module, class_name_str)()
-#
-# a = AClass() 或
-#
-#obj = new.instance(AClass)
-
-
+        self.tabWidget_Configuration.clear()  
+        for mdName in self.widgetNameList.keys():
+            aW = mdName(tModel = self.dcModel)
+            aW.setObjectName(self.widgetNameList[mdName][0] )
+            self.tabWidget_Configuration.addTab( aW, self.widgetNameList[mdName][1])
+            
     
     @pyqtSlot(int)
     def on_tabWidget_Configuration_currentChanged(self, index):

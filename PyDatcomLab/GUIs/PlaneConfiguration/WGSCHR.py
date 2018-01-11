@@ -47,7 +47,7 @@ class WGSCHR(QWidget, Ui_WGSCHR):
         self.model = tModel  
         #定义核心数据
         self.NameList = 'WGSCHR'
-        self.WGSCHRList = {
+        self.VariableList = {
                 'TOVC':{'TYPE':'REAL'  ,'Range':[0, float('inf') ] }, 
                 #'TOVC':{'TYPE':'REAL'  ,'Range':[0, 100000000 ] }, 
                 'DELTAY':{'TYPE':'REAL'}, 
@@ -82,23 +82,23 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 'THICK':{'TYPE':'Array',  'Limit':[0, 50] , 'Group':'AirfoilSection'},   
         }
         #配置界面 
-        for varName in self.WGSCHRList.keys():            
-            if self.WGSCHRList[varName]['TYPE'] == 'REAL':
+        for varName in self.VariableList.keys():            
+            if self.VariableList[varName]['TYPE'] == 'REAL':
                 #给控件设置属性
                 tWidget = self.findChild(QLineEdit,varName)
                 if tWidget is None:
                     self.logger.error("访问的变量：%s 不在本窗体"%varName)
                 else:
                     tVd = QDoubleValidator(tWidget)
-                    if 'Range' in self.WGSCHRList[varName].keys():
-                        tRange = self.WGSCHRList[varName]['Range']
+                    if 'Range' in self.VariableList[varName].keys():
+                        tRange = self.VariableList[varName]['Range']
                         if tRange[0] not in [float('-inf'), float('inf'), float('nan')] :
                             tVd.setBottom(tRange[0])
                         if tRange[1] not in [float('-inf'), float('inf'), float('nan')] :
                             tVd.setTop(tRange[1])
                     tWidget.setValidator(tVd)  
                     
-            elif self.WGSCHRList[varName]['TYPE'] == 'INT':
+            elif self.VariableList[varName]['TYPE'] == 'INT':
                 #给控件设置属性
                 tWidget = self.findChild(QLineEdit,varName)
                 if tWidget is None:
@@ -106,8 +106,8 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 else:
                     tVd = QIntValidator(tWidget)
                     tVd.setBottom(0)
-                    if 'Range' in self.WGSCHRList[varName].keys():
-                        tRange = self.WGSCHRList[varName]['Range']
+                    if 'Range' in self.VariableList[varName].keys():
+                        tRange = self.VariableList[varName]['Range']
                         tVd.setRange(tRange[0], tRange[1])
                     tWidget.setValidator(tVd) 
 
@@ -136,12 +136,12 @@ class WGSCHR(QWidget, Ui_WGSCHR):
         #开始参数配置过程
         tableCache ={}
         #自动化循环赋值
-        for varName in self.WGSCHRList.keys():
+        for varName in self.VariableList.keys():
             tVar = self.model.getNamelistVar('WGSCHR',varName)            
-            if self.WGSCHRList[varName]['TYPE'] == 'REAL':
+            if self.VariableList[varName]['TYPE'] == 'REAL':
                 #查询默认值
-                if 'Default' in self.WGSCHRList[varName].keys():
-                    tVar = self.WGSCHRList[varName]['Default'] if tVar is None else float(tVar)
+                if 'Default' in self.VariableList[varName].keys():
+                    tVar = self.VariableList[varName]['Default'] if tVar is None else float(tVar)
                 else:
                     tVar = 0 if tVar is None else float(tVar)
                 #给控件赋值
@@ -151,10 +151,10 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 else:
                     tWidget.setText(str(tVar))
                 
-            elif self.WGSCHRList[varName]['TYPE'] == 'INT':
+            elif self.VariableList[varName]['TYPE'] == 'INT':
                 #查询默认值
-                if 'Default' in self.WGSCHRList[varName].keys():
-                    tVar = self.WGSCHRList[varName]['Default'] if tVar is None else int(float(tVar))
+                if 'Default' in self.VariableList[varName].keys():
+                    tVar = self.VariableList[varName]['Default'] if tVar is None else int(float(tVar))
                 else:
                     tVar = 0 if tVar is None else int(float(tVar))
                 #给控件赋值
@@ -164,14 +164,14 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 else:
                     tWidget.setText(str(tVar))
 
-            elif self.WGSCHRList[varName]['TYPE'] == 'List':  
+            elif self.VariableList[varName]['TYPE'] == 'List':  
                 #查询默认值
                 tVarIndex =0
-                if 'Default' in self.WGSCHRList[varName].keys():
+                if 'Default' in self.VariableList[varName].keys():
                     if tVar is None:
-                        tVarIndex = self.WGSCHRList[varName]['Range'].index(self.WGSCHRList[varName]['Default'])  
+                        tVarIndex = self.VariableList[varName]['Range'].index(self.VariableList[varName]['Default'])  
                     else :
-                        tVarIndex = self.WGSCHRList[varName]['Range'].index(tVar)     
+                        tVarIndex = self.VariableList[varName]['Range'].index(tVar)     
                 else:
                     tVar = 0 if tVar is None else int(float(tVar))                    
                 #给控件赋值
@@ -180,16 +180,16 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                     self.logger.error("访问的变量：%s 不在本窗体"%varName)
                 else:
                     tWidget.setCurrentIndex(tVarIndex)
-            elif self.WGSCHRList[varName]['TYPE'] == 'Array': 
+            elif self.VariableList[varName]['TYPE'] == 'Array': 
                 """对于Array类型需要专门的进行分析"""
                 #'SLOPE':{'TYPE':'Array' , 'Limit':[6, 6]  , 'Group':'SLOPE'}  ,
-                groupName = self.WGSCHRList[varName]['Group']
+                groupName = self.VariableList[varName]['Group']
                 if groupName in tableCache.keys() :
                     tableCache[groupName].append(varName)
                 else:
                     tableCache[groupName] =[varName]
             else:
-                self.logger.info("访问的变量：%s 具有无法识别的类型 %s"%(varName,self.WGSCHRList[varName]['TYPE'] ))
+                self.logger.info("访问的变量：%s 具有无法识别的类型 %s"%(varName,self.VariableList[varName]['TYPE'] ))
         #自动化循环赋值
         
         #对于表格类型的数据进行赋值
@@ -208,13 +208,13 @@ class WGSCHR(QWidget, Ui_WGSCHR):
             for itC in range(len(tableCache[iTb])):
                 varName = tableCache[iTb][itC]
                 #获得变量的限制属性
-                if 'Limit' in self.WGSCHRList[varName].keys():
-                    limitVar = self.WGSCHRList[varName]['Limit']
+                if 'Limit' in self.VariableList[varName].keys():
+                    limitVar = self.VariableList[varName]['Limit']
                 else:
                     limitVar = None
                 #获得变量元素的默认值
-                if 'Default' in  self.WGSCHRList[varName].keys():
-                    defualtVar = self.WGSCHRList[varName]['Default']
+                if 'Default' in  self.VariableList[varName].keys():
+                    defualtVar = self.VariableList[varName]['Default']
                 else:
                     defualtVar = None
                 #查询变量的值
@@ -276,9 +276,9 @@ class WGSCHR(QWidget, Ui_WGSCHR):
 
 
         #自动化循环赋值
-        for varName in self.WGSCHRList.keys():
+        for varName in self.VariableList.keys():
             #分类型开展写入         
-            if self.WGSCHRList[varName]['TYPE'] == 'REAL':
+            if self.VariableList[varName]['TYPE'] == 'REAL':
                 #查询默认值
                 tWidget = self.findChild(QLineEdit,varName)
                 if tWidget is None :
@@ -293,7 +293,7 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 else: #必须参数
                     self.model.setNamelist( self.NameList , varName, float(tWidget.text()))
                 #end REAL 
-            elif self.WGSCHRList[varName]['TYPE'] == 'INT':
+            elif self.VariableList[varName]['TYPE'] == 'INT':
                 #查询默认值
                 tWidget = self.findChild(QLineEdit,varName)
                 if tWidget is None :
@@ -308,26 +308,27 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 else: #必须参数
                     self.model.setNamelist( self.NameList , varName, '%s.0'%tWidget.text())
 
-            elif self.WGSCHRList[varName]['TYPE'] == 'List':  
+            elif self.VariableList[varName]['TYPE'] == 'List':  
                 #查询默认值
                 tWidget = self.findChild(QComboBox,'comboBox_'+varName)
                 if tWidget is None :
                     self.logger.error('没有改空间%s'%varName)
                     continue
                 tCheckWidget = self.findChild(QCheckBox,'checkBox_'+varName)
+                tRange = self.VariableList[varName]['Range']
                 if not tCheckWidget is None: #存在Check
                     if tCheckWidget.checkState() == Qt.Checked:
-                        self.model.setNamelist( self.NameList , varName, '%d.0'%(tWidget.currentIndex() +1))
+                        self.model.setNamelist( self.NameList , varName, tRange[tWidget.currentIndex() ])
                     else:
                         self.model.setNamelist( self.NameList , varName, None)
                 else: #必须参数
-                    self.model.setNamelist( self.NameList , varName, '%d.0'%(tWidget.currentIndex() +1))
+                    self.model.setNamelist( self.NameList , varName, tRange[tWidget.currentIndex() ])
                 #LIST
-            elif self.WGSCHRList[varName]['TYPE'] == 'Array': 
+            elif self.VariableList[varName]['TYPE'] == 'Array': 
                 """对于Array类型需要专门的进行分析"""
                 #'SLOPE':{'TYPE':'Array' , 'Limit':[6, 6]  , 'Group':'SLOPE'}  , 
                       #检测参数组合 Lift
-                groupName = self.WGSCHRList[varName]['Group']
+                groupName = self.VariableList[varName]['Group']
                 tTableWidget = self.findChild(QTableWidget, 'tableWidget_'+groupName)
                 if tTableWidget is None :
                     self.logger.info("无法找到对应的Widget ：tableWidget_%s "%groupName) 
@@ -364,7 +365,7 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 else : #没有数据则清除
                     self.model.setNamelist( 'FLTCON' , varName, None)  
             else:
-                self.logger.info("访问的变量：%s 具有无法识别的类型 %s"%(varName,self.WGSCHRList[varName]['TYPE'] ))
+                self.logger.info("访问的变量：%s 具有无法识别的类型 %s"%(varName,self.VariableList[varName]['TYPE'] ))
         #自动化循环赋值        
         
 

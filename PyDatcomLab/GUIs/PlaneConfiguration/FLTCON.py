@@ -11,7 +11,7 @@ from PyQt5.QtGui import QDoubleValidator, QIntValidator, QValidator
 from PyDatcomLab.Core import dcModel
 import logging
 
-from .Ui_FLTCON import Ui_Form
+from Ui_FLTCON import Ui_Form
 
 
 class FLTCON(QWidget, Ui_Form):
