@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-11, 01:11:39 -->
+<!-- Saved: 2018-01-11, 14:28:53 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -27,12 +27,6 @@
     <Source>PyDatcomLab/Core/plotter.py</Source>
     <Source>PyDatcomLab/Core/projectManager.py</Source>
     <Source>PyDatcomLab/Core/tools.py</Source>
-    <Source>PyDatcomLab/GUIs/DatcomCASE/CASE.py</Source>
-    <Source>PyDatcomLab/GUIs/DatcomCASE/Ui_CASE.py</Source>
-    <Source>PyDatcomLab/GUIs/DatcomCASE/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/FlyCondition/FlyCondition.py</Source>
-    <Source>PyDatcomLab/GUIs/FlyCondition/Ui_FlyCondition.py</Source>
-    <Source>PyDatcomLab/GUIs/FlyCondition/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
@@ -101,8 +95,6 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
-    <Form>PyDatcomLab/GUIs/DatcomCASE/CASE.ui</Form>
-    <Form>PyDatcomLab/GUIs/FlyCondition/FlyCondition.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.ui</Form>
@@ -168,6 +160,7 @@
     <Other>PyDatcomLab/Bin/datcom.exe</Other>
     <Other>PyDatcomLab/Bin/datcom.lnx</Other>
     <Other>PyDatcomLab/Bin/datcom.mac</Other>
+    <Other>PyDatcomLab/start.bat</Other>
     <Other>README.md</Other>
     <Other>tests/data/exlinux/ex1.inp</Other>
     <Other>tests/data/exlinux/ex10.inp</Other>

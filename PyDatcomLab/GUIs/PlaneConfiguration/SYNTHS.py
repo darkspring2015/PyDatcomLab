@@ -29,23 +29,35 @@ class SYNTHS(QWidget, Ui_Form):
         super(SYNTHS, self).__init__(parent)
         self.setupUi(self)
         
+        if tModel is None:
+            tModel = dcModel.dcModel()
+            self.logger.info('SYNTHS内部创建了一个doc类')
+        
+        self.model = tModel     
+        
         #初始化数据
-        self.InitDoc(tModel)
+        self.InitDoc()
         self.logger = logging.getLogger(r'Datcomlogger')
  
         #初始化界面
         self.initUI()
         
         
-    def InitDoc(self, tModel):
+    def setModel(self, tModel):
+        """
+        初始化本节点的xml描述文档
+        """
+        
+        self.Model = tModel        
+        #执行参数配置过程        
+        self.InitDoc()        
+        self.UILogic()       
+        
+    def InitDoc(self):
         """
         分析并初始化后台数据
         """
-        if tModel is None:
-            tModel = dcModel.dcModel()
-            self.logger.info('SYNTHS内部创建了一个doc类')
-        
-        self.model = tModel        
+   
         #如果没有数据，使用默认配置
         
         #赋初值   
@@ -135,9 +147,9 @@ class SYNTHS(QWidget, Ui_Form):
 
         
         #刷新界面管理
-        self.UILogin()
+        self.UILogic()
         
-    def UILogin(self):
+    def UILogic(self):
         """
         整体负责界面的逻辑控制
         """
@@ -151,8 +163,7 @@ class SYNTHS(QWidget, Ui_Form):
         将界面的内容刷新到变量model
         """
         
-        #执行界面刷新
-        
+        #执行界面刷新         
         #获取界面输入值
         self.model.setNamelist('SYNTHS','XCG',float(self.XCG.text()))
         self.model.setNamelist('SYNTHS','ZCG',float(self.ZCG.text()))
@@ -187,7 +198,7 @@ class SYNTHS(QWidget, Ui_Form):
         @type int
         """
         # TODO: not implemented yet
-        self.UILogin()
+        self.UILogic()
 
         
     
@@ -201,4 +212,4 @@ class SYNTHS(QWidget, Ui_Form):
         """
         # TODO: not implemented yet
         #raise NotImplementedError
-
+        self.UILogic()
