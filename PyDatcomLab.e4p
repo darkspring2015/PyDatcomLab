@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-11, 22:14:37 -->
+<!-- Saved: 2018-01-11, 23:58:25 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -88,6 +88,7 @@
     <Source>tests/testGUI/test_ImageTips.py</Source>
     <Source>tests/testGUI/test_OPTION.py</Source>
     <Source>tests/testGUI/test_PlaneConfiguration.py</Source>
+    <Source>tests/testGUI/test_VTPLNF.py</Source>
     <Source>tests/testGUI/test_WGPLNF.py</Source>
     <Source>tests/testGUI/test_WGSCHR.py</Source>
     <Source>tests/testGUI/test_addProject.py</Source>

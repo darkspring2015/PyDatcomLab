@@ -287,6 +287,9 @@
    <property name="text">
     <string>保存模型</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionExportModel">
    <property name="icon">

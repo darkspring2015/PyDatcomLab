@@ -386,7 +386,9 @@ class EXPR(QWidget, Ui_Form):
 
     
     def UILogic(self):
-        """"""
+        """
+        统一执行Ui联动的逻辑
+        """
         #判断CheckBox的逻辑
         for varName in self.VariableList.keys():
             #判断checkbox是否存在

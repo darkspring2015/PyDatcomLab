@@ -253,7 +253,7 @@ class DatcomCARD(object):
 
             elif self.VariableList[varName]['TYPE'] == 'List':  
                 #查询默认值
-                tWidget = self.findChild(QComboBox,varName)
+                tWidget = self.findChild(QComboBox,'comboBox_'+varName)
                 if tWidget is None :
                     self.logger.error('没有改空间%s'%varName)
                     continue

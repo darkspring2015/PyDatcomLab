@@ -347,6 +347,7 @@ class Ui_MainWindow(object):
         self.actionBrowse.setText(_translate("MainWindow", "浏览"))
         self.actionNewModel.setText(_translate("MainWindow", "新建模型"))
         self.actionSaveModel.setText(_translate("MainWindow", "保存模型"))
+        self.actionSaveModel.setShortcut(_translate("MainWindow", "Ctrl+S"))
         self.actionExportModel.setText(_translate("MainWindow", "导出模型"))
         self.actionImportModel.setText(_translate("MainWindow", "导入模型"))
         self.actionCopyModel.setText(_translate("MainWindow", "复制模型"))

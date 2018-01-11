@@ -84,10 +84,10 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         aW = WGSCHR.WGSCHR(tModel = self.dcModel)
         aW.setObjectName('WGSCHR')         
         self.tabWidget_Configuration.addTab( aW, r"机翼翼型参数")    
-#        #VTPLNE
-#        aW = VTPLNF.VTPLNF()
-#        aW.setObjectName('VTPLNE')         
-#        self.tabWidget_Configuration.addTab( aW, r"VTPLNE")
+        #VTPLNE
+        aW = VTPLNF.VTPLNF()
+        aW.setObjectName('VTPLNE')         
+        self.tabWidget_Configuration.addTab( aW, r"垂尾几何参数")
 #        #HTPLNF
 #        aW = HTPLNF.HTPLNF()
 #        aW.setObjectName('HTPLNF')   
@@ -98,6 +98,7 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         aW.setObjectName('EXPR')   
         self.tabWidget_Configuration.addTab( aW, r"试验数据录入")
         
+        self.widgetNameList = ['FLTCON']
         
 #         file_name  模块名  
 #
