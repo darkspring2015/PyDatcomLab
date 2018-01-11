@@ -5,7 +5,7 @@ Module implementing PlaneConfiguration.
 """
 import os 
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QWidget
 
 from .Ui_PlaneConfiguration import Ui_Dialog
 
@@ -34,6 +34,7 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         #创建内部数据结构
         self.dcModel = dcModel.dcModel('AircraftName', '常规构型') 
         self.dcModelPath =  modelpath
+        self.lastIndex = -1
         
         #建立内存结构
         if os.path.isfile(modelpath):
@@ -47,6 +48,7 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         
         #添加页码
         self.Initialize()
+        
         #连接各个页面之间的信号
         
         
@@ -75,10 +77,13 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         aW.setObjectName('WGPLNF')         
         self.tabWidget_Configuration.addTab( aW, r"机翼几何参数")
         #WGSCHR
-        theModel = {'model':self.dcModel}
-        aW = WGSCHR.WGSCHR(config  = theModel)
+#        theModel = {'model':self.dcModel}
+#        aW = WGSCHR.WGSCHR(config  = theModel)
+#        aW.setObjectName('WGSCHR')         
+#        self.tabWidget_Configuration.addTab( aW, r"机翼翼型参数")  
+        aW = WGSCHR.WGSCHR(tModel = self.dcModel)
         aW.setObjectName('WGSCHR')         
-        self.tabWidget_Configuration.addTab( aW, r"机翼翼型参数")        
+        self.tabWidget_Configuration.addTab( aW, r"机翼翼型参数")    
         #VTPLNE
         aW = VTPLNF.VTPLNF()
         aW.setObjectName('VTPLNE')         
@@ -99,12 +104,18 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         @type int
         """
         # TODO: not implemented yet
-        nTab = self.tabWidget_Configuration.currentWidget()
-        if not nTab is None:
-            self.logger.info('编辑当前写%s'%nTab.windowTitle())
         #raise NotImplementedError
-        
+        if self.lastIndex != -1:
+            tW =self.tabWidget_Configuration.widget(self.lastIndex)
+            if not tW is None:
+                self.dcModel = tW.getDoc()
         #刷新
+        self.lastIndex = index
+        if not self.tabWidget_Configuration.widget(index) is None:
+            if not type(self.tabWidget_Configuration.widget(index)) is QWidget:
+                self.tabWidget_Configuration.widget(index).setModel(self.dcModel)
+            
+            
         
         
     def getDoc(self):

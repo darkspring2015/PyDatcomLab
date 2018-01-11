@@ -115,7 +115,7 @@ class BODY(QWidget, Ui_Form):
         if tVar: 
             self.checkBox_BNOSE.setCheckState(Qt.Checked)
             self.comboBox_BNOSE.setEnabled(True)
-            tVar = 1 if tVar is None else int(tVar)
+            tVar = 1 if tVar is None else int(float(tVar))
             self.comboBox_BNOSE.setCurrentIndex(tVar -1)
         else :
             self.checkBox_BNOSE.setCheckState(Qt.Unchecked)

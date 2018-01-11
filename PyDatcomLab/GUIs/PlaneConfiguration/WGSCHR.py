@@ -21,7 +21,8 @@ class WGSCHR(QWidget, Ui_WGSCHR):
     NACA
     PINF
     """
-    def __init__(self, parent=None, config = {}):
+    #def __init__(self, parent=None, config = {}):
+    def __init__(self, parent=None, tModel = None):
         """
         Constructor
         
@@ -35,13 +36,20 @@ class WGSCHR(QWidget, Ui_WGSCHR):
         self.logger = logging.getLogger(r'Datcomlogger')
         
         #修改后台的数据
-        tModel = config['model'] if 'model' in config.keys() else None
+#        tModel = config['model'] if 'model' in config.keys() else None
+#        if tModel is None:
+#            tModel = dcModel.dcModel('J6', '常规布局')         
+#        self.model = tModel 
+
+        #修改后台的数据
         if tModel is None:
             tModel = dcModel.dcModel('J6', '常规布局')         
-        self.model = tModel 
+        self.model = tModel  
         #定义核心数据
+        self.NameList = 'WGSCHR'
         self.WGSCHRList = {
                 'TOVC':{'TYPE':'REAL'  ,'Range':[0, float('inf') ] }, 
+                #'TOVC':{'TYPE':'REAL'  ,'Range':[0, 100000000 ] }, 
                 'DELTAY':{'TYPE':'REAL'}, 
                 'XOVC':{'TYPE':'REAL'}, 
                 'CLI':{'TYPE':'REAL'},
@@ -84,7 +92,10 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                     tVd = QDoubleValidator(tWidget)
                     if 'Range' in self.WGSCHRList[varName].keys():
                         tRange = self.WGSCHRList[varName]['Range']
-                        tVd.setRange(tRange[0], tRange[1])
+                        if tRange[0] not in [float('-inf'), float('inf'), float('nan')] :
+                            tVd.setBottom(tRange[0])
+                        if tRange[1] not in [float('-inf'), float('inf'), float('nan')] :
+                            tVd.setTop(tRange[1])
                     tWidget.setValidator(tVd)  
                     
             elif self.WGSCHRList[varName]['TYPE'] == 'INT':
@@ -263,7 +274,7 @@ class WGSCHR(QWidget, Ui_WGSCHR):
         
         #执行界面刷新
 
-        tNameList = 'WGSCHR'
+
         #自动化循环赋值
         for varName in self.WGSCHRList.keys():
             #分类型开展写入         
@@ -276,11 +287,11 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 tCheckWidget = self.findChild(QCheckBox,'checkBox_'+varName)
                 if not tCheckWidget is None: #存在Check
                     if tCheckWidget.checkState() == Qt.Checked:
-                        self.model.setNamelist( tNameList , varName, float(tWidget.text()))
+                        self.model.setNamelist( self.NameList , varName, float(tWidget.text()))
                     else:
-                        self.model.setNamelist( tNameList , varName, None)
+                        self.model.setNamelist( self.NameList , varName, None)
                 else: #必须参数
-                    self.model.setNamelist( tNameList , varName, float(tWidget.text()))
+                    self.model.setNamelist( self.NameList , varName, float(tWidget.text()))
                 #end REAL 
             elif self.WGSCHRList[varName]['TYPE'] == 'INT':
                 #查询默认值
@@ -291,11 +302,11 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 tCheckWidget = self.findChild(QCheckBox,'checkBox_'+varName)
                 if not tCheckWidget is None: #存在Check
                     if tCheckWidget.checkState() == Qt.Checked:
-                        self.model.setNamelist( tNameList , varName, '%s.0'%tWidget.text())
+                        self.model.setNamelist( self.NameList , varName, '%s.0'%tWidget.text())
                     else:
-                        self.model.setNamelist( tNameList , varName, None)
+                        self.model.setNamelist( self.NameList , varName, None)
                 else: #必须参数
-                    self.model.setNamelist( tNameList , varName, '%s.0'%tWidget.text())
+                    self.model.setNamelist( self.NameList , varName, '%s.0'%tWidget.text())
 
             elif self.WGSCHRList[varName]['TYPE'] == 'List':  
                 #查询默认值
@@ -306,11 +317,11 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 tCheckWidget = self.findChild(QCheckBox,'checkBox_'+varName)
                 if not tCheckWidget is None: #存在Check
                     if tCheckWidget.checkState() == Qt.Checked:
-                        self.model.setNamelist( tNameList , varName, '%d.0'%(tWidget.currentIndex() +1))
+                        self.model.setNamelist( self.NameList , varName, '%d.0'%(tWidget.currentIndex() +1))
                     else:
-                        self.model.setNamelist( tNameList , varName, None)
+                        self.model.setNamelist( self.NameList , varName, None)
                 else: #必须参数
-                    self.model.setNamelist( tNameList , varName, '%d.0'%(tWidget.currentIndex() +1))
+                    self.model.setNamelist( self.NameList , varName, '%d.0'%(tWidget.currentIndex() +1))
                 #LIST
             elif self.WGSCHRList[varName]['TYPE'] == 'Array': 
                 """对于Array类型需要专门的进行分析"""
@@ -324,13 +335,13 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 tCheckWidget = self.findChild(QCheckBox,'checkBox_'+varName)
                 if not tCheckWidget is None : #存在Check 并且没有选中 则删除数据
                     if tCheckWidget.checkState() == Qt.Unchecked:
-                        self.model.setNamelist( tNameList , varName, None)
+                        self.model.setNamelist( self.NameList , varName, None)
                         continue               
                 #执行分析 
                 itC = self.getColumnIndex(tTableWidget, varName)
                 if itC == -1:
                     self.logger.error("在tableWidget_%s无法找到%s对应的列 "%(groupName,varName ))
-                    self.model.setNamelist( tNameList , varName, None)
+                    self.model.setNamelist( self.NameList , varName, None)
                     continue 
                    
                 tVder = QDoubleValidator(self)
@@ -347,8 +358,8 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                     else:
                         self.logger.error("%s 在%d,%d没有有效值"%(tItem.text(), itR, itC))
                 #查看结果
-                if len(tValList)  ==  tTableWidget.rowCount(): #有数据则加入到集合
-                    self.model.setNamelist( tNameList , varName, 
+                if len(tValList)  ==  tTableWidget.rowCount() and len(tValList) != 0: #有数据则加入到集合
+                    self.model.setNamelist( self.NameList , varName, 
                     {'Index':1, 'Value':tValList})
                 else : #没有数据则清除
                     self.model.setNamelist( 'FLTCON' , varName, None)  
