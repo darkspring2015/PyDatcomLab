@@ -13,6 +13,7 @@ from PyQt5 import  QtWidgets
 class BODY_Test(unittest.TestCase):    
     def setUp(self):
         self.tClass = O.WGSCHR
+        self.tClassName = 'WGSCHR'
     def tearDown(self):
         self.tClass = None
     def testRuning(self):
@@ -27,24 +28,26 @@ class BODY_Test(unittest.TestCase):
         
     def test_Model(self):
         #构造数据
-        pmObj = pm.dcModel('J6', '常规布局')
+        dM = pm.dcModel('J6', '常规布局')
         tDoc = Df.dtNmlstExmple3
-        pmObj.setDoc(tDoc) 
-        pmObj2 =  pm.dcModel('J6', '常规布局')
-        pmObj2.setDoc(tDoc) 
+        dM.setDoc(tDoc) 
+        dM.setNamelist('WGSCHR', 'NPTS', 10)
+        dM.setNamelist('WGSCHR', 'XCORD', [0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,], 1)
+        dM.setNamelist('WGSCHR', 'YUPPER', [0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,], 1)
+        dM.setNamelist('WGSCHR', 'YLOWER', [0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,], 1)
+
+
         #进入系统的主循环
         
         app = QtWidgets.QApplication(sys.argv)
-        config= {'model':pmObj}
-        mainWin = self.tClass(config = config)
+        mainWin = self.tClass(tModel = dM)
         mainWin.logger.info("启动了WGSCHR")
         mainWin.show()
         self.assertEqual(app.exec_(), 0)
         tDoc2 = mainWin.getDoc()
 
         self.assertTrue(tDoc2 is not None)
-        self.assertEqual(pmObj2.getNamelistVar('WGSCHR','TOVC')
-                       , tDoc2.getNamelistVar('WGSCHR','TOVC'))
+
         
 
         

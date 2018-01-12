@@ -72,6 +72,31 @@ class test_Core_dcModel(unittest.TestCase):
         res = dM.writeToDatcomInput(f_2)
         self.assertTrue( not res  ==  "")
 
+    def test_loadXML(self):
+        """测试文件写入能力"""
+        import tempfile
+        
+        s_1, f_1 = tempfile.mkstemp(suffix='.dcxml',prefix='Datcom', text=True)
+        print('模型文件：%s'%f_1)
+        
+        dM = self.tClass('J6', '常规布局')
+        dM.setNamelist('VTSCHR', 'NPTS', 10)
+        dM.setNamelist('VTSCHR', 'XCORD', [0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,], 1)
+        dM.setNamelist('VTSCHR', 'YUPPER', [0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,], 1)
+        dM.setNamelist('VTSCHR', 'YLOWER', [0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,], 1)
+        
+        dM.writeToXML(f_1)
+        
+        dM2 = self.tClass('J6', '常规布局')
+        dM2.loadXML(f_1)   
+        
+        #执行断言 
+        self.assertEqual(dM2.getNamelistVar('VTSCHR', 'NPTS'), dM.getNamelistVar('VTSCHR', 'NPTS'))
+        self.assertEqual(dM2.getNamelistVar('VTSCHR', 'XCORD'), dM.getNamelistVar('VTSCHR', 'XCORD'))
+        self.assertEqual(dM2.getNamelistVar('VTSCHR', 'YUPPER'), dM.getNamelistVar('VTSCHR', 'YUPPER'))
+        self.assertEqual(dM2.getNamelistVar('VTSCHR', 'YLOWER'), dM.getNamelistVar('VTSCHR', 'YLOWER'))        
+        
+
 
     
     

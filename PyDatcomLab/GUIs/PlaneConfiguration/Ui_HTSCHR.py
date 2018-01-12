@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\HTSCHR.ui'
+# Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab/GUIs/PlaneConfiguration/HTSCHR.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.1
 #
@@ -435,7 +435,7 @@ class Ui_HTSCHR(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1310, 895))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 98, 32))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.horizontalLayout_29 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout_29.setObjectName("horizontalLayout_29")

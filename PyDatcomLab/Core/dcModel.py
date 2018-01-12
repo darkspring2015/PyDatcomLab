@@ -79,9 +79,9 @@ class dcModel(object):
                     for itr in aVar.findall('value'):
                         tValue.append(float(itr.text))
                     #填充数据
-                    self.setNamelist( nmlstNode.tag , aVar.tag, tValue, tInd)
+                    self.setNamelist( nmlstNode.tag , aVar.tag, tValue, int(float(tInd)))
                 else: #说明是单值
-                    if aVar.text in ['.TRUE.', '.FLASE.']:
+                    if aVar.text in ['.TRUE.', '.FALSE.']:
                         self.setNamelist( nmlstNode.tag , aVar.tag, aVar.text)
                     else:
                         self.setNamelist( nmlstNode.tag , aVar.tag, float(aVar.text))
@@ -139,7 +139,7 @@ class dcModel(object):
                     if type(tVar)is not dict:  #如果不是dict类型说明是.True. 或者单值函数
                         varNode.text = str(tVar)
                         continue
-                    varNode.set('Index',str(tVar['Index']) ) #读取Index的值                    
+                    varNode.set('Index',str(int(float(tVar['Index']))) ) #读取Index的值                    
                     for aVal in tVar['Value']: #如果是字典类型，说明是序列值                        
                         ET.SubElement(varNode, 'value').text = str(aVal)
 

@@ -112,7 +112,7 @@ class DatcomCARD(object):
                     if tVar is None:
                         tVarIndex = self.Widget.VariableList[varName]['Range'].index(self.Widget.VariableList[varName]['Default'])  
                     else :
-                        tVarIndex = self.Widget.VariableList[varName]['Range'].index(tVar)     
+                        tVarIndex = self.Widget.VariableList[varName]['Range'].index(str(tVar) )    
                 else:
                     tVar = 0 if tVar is None else int(float(tVar))                    
                 #给控件赋值
@@ -166,7 +166,7 @@ class DatcomCARD(object):
                         if tNMACH is None : 
                             self.logger.error("升力参数表单依赖与NMACH 但是没有定义")
                         else:
-                            limitVar = [int(tNMACH), int(tNMACH)]
+                            limitVar = [int(float(tNMACH)), int(float(tNMACH))]
                     #其他表格进行通用处理  
                     self.logger.info("数据卡：%s 不在数据表单中,扩大表格至必须的规模"%varName)
                     if  not limitVar is  None:
@@ -184,15 +184,29 @@ class DatcomCARD(object):
                         pass
                 else :#定义了该变量
                     tValueList = tVar['Value']
-                    for itR in range(len(tValueList)): #写入数据
-                        tWidget.setItem(itR, itC,QTableWidgetItem(str(tValueList[itR])))
                     if  not limitVar is  None:   #考虑表格最小规模限制
                         if limitVar[0] > tWidget.rowCount(): #将表格的行数限制到最小行数以上                            
                             for ii in range(tWidget.rowCount(), limitVar[0]):
                                 tWidget.insertRow(ii)
                             if not defualtVar is None: #如果指定了默认值，则使用默认值进行填充
-                                for itR in range(len(tValueList), tWidget.rowCount()):
+                                for itR in range(0, tWidget.rowCount()):
                                     tWidget.setItem(itR, itC, QTableWidgetItem(str(defualtVar)))
+                        elif limitVar[1] < tWidget.rowCount():
+                            self.logger.error("现有表格长度大于了限制的最大表格大小：%d ： %d!执行删除"%(tWidget.rowCount(), limitVar[1]))
+                            for ii in range( tWidget.rowCount(), limitVar[1]):
+                                tWidget.removeRow(ii)
+                    #写入数据到表格
+                    if len(tValueList) not in range(limitVar[0], limitVar[1]):
+                        self.logger.error("输入数据行数%d不在限制范围之内[%d,%d]"%(
+                                        len(tValueList), limitVar[0], limitVar[1]))
+                    else:
+                        if tWidget.rowCount()< len(tValueList):
+                            for ii in range(tWidget.rowCount(), len(tValueList)):
+                                tWidget.insertRow(ii)
+                    #写入数据    
+                    for itR in range(len(tValueList)): 
+                        tWidget.setItem(itR, itC,QTableWidgetItem(str(tValueList[itR])))
+                                
                         
             #遍历所有的遍历写入到表格中
         #遍历所有表格控件
@@ -344,13 +358,14 @@ class DatcomCARD(object):
                     tWidget.setEnabled(False)
                     
         #表格行数联动
+        
         #NPTS的联动
         
         #跨越Widget获得NMACH的参数 FLTCON中获得NMACH VINF的数量指定
         
         tNMACH = self.model.getNamelistVar('FLTCON', 'NMACH')
         if  not tNMACH is None:
-            tNMACH = int(tNMACH)
+            tNMACH = int(float(tNMACH))
             for iTab in self.Widget.NMACHLinkTable:
                 tWidget   = self.Widget.findChild(QTableWidget, 'tableWidget_%s'%iTab)
                 if tWidget is None: 

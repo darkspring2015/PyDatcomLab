@@ -59,8 +59,12 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        self.modelDir = QFileDialog.getExistingDirectory(self,"打开模型目录", ''
+        tDir = QFileDialog.getExistingDirectory(self,"打开模型目录", ''
                                     , QFileDialog.DontUseNativeDialog) 
+        if os.path.exists(tDir):
+            self.modelDir = tDir
+        else:
+            return
         self.logger.info("Try 打开模型目录")
         if self.modelDir is None:
             self.logger.error("无效的目录")

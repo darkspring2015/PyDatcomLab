@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\VFSCHR.ui'
+# Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab/GUIs/PlaneConfiguration/VFSCHR.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.1
 #

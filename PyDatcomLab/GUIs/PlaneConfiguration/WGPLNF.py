@@ -4,10 +4,14 @@
 Module implementing WGPLNF.
 """
 
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot,  QPoint
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QDoubleValidator
+#from PyQt5.QtGui import  QIcon, QPixmap
+
+
 from PyDatcomLab.Core import dcModel
+from PyDatcomLab.GUIs.PlaneConfiguration import DatcomCARD as DC
+
 import logging
 from .Ui_WGPLNF import Ui_Form
 
@@ -28,185 +32,89 @@ class WGPLNF(QWidget, Ui_Form):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger')
         
+        #开始核心数据的定义
+        self.NameList = 'WGPLNF'
+        self.VariableList = {
+                #
+                'CHRDTP':{  'TYPE':'REAL'},
+                'CHRDBP':{  'TYPE':'REAL'},
+                'CHRDR':{   'TYPE':'REAL'},
+                'SSPNOP':{  'TYPE':'REAL'},
+                'SSPNE':{   'TYPE':'REAL'},
+                'SSPN':{    'TYPE':'REAL'}, 
+                'SAVSI':{   'TYPE':'REAL'}, 
+                'SAVSO':{   'TYPE':'REAL'},
+                'CHSTAT':{ 'TYPE':'REAL'},
+                'TWISTA':{ 'TYPE':'REAL'},
+                'SSPNDD':{ 'TYPE':'REAL'},
+                'DHDADI':{ 'TYPE':'REAL'},
+                'DHDADO':{ 'TYPE':'REAL'},                
+                #
+                'TYPE':{ 'TYPE':'List', 'Range':['1.0' , '2.0', '3.0'], 'Default':'1.0'},             
+                #垂尾受机翼平尾影响参数定义
+                #'SVWB':{  'TYPE':'Array' , 'Limit':[0, 20]  , 'Group':'HTArea'}  , 
+                #'SVB':{   'TYPE':'Array' , 'Limit':[0, 20]  , 'Group':'HTArea'}  , 
+                #'SVHB':{  'TYPE':'Array' , 'Limit':[0, 20]  , 'Group':'HTArea'}  , 
+ 
+        } 
+        self.NMACHLinkTable = [ ]
+        
+        #调用其他初始化过程
         #修改后台的数据
         if tModel is None:
-            tModel = dcModel.dcModel('J6', '常规布局')         
-        self.model = tModel  
-        #配置界面
-        self.lineEdit_CHRDTP.setValidator(QDoubleValidator(self))
-        self.lineEdit_CHRDBP.setValidator(QDoubleValidator(self))
-        self.lineEdit_CHRDR.setValidator(QDoubleValidator(self))
-        self.lineEdit_SSPNOP.setValidator(QDoubleValidator(self))
-        self.lineEdit_SSPNE.setValidator(QDoubleValidator(self))
-        self.lineEdit_SSPN.setValidator(QDoubleValidator(self))        
-        self.lineEdit_SAVSI.setValidator(QDoubleValidator(self))
-        self.lineEdit_SAVSO.setValidator(QDoubleValidator(self))
-        self.lineEdit_TWISTA.setValidator(QDoubleValidator(self))
-        self.lineEdit_CHSTAT.setValidator(QDoubleValidator(self))
-        self.lineEdit_SSPNDD.setValidator(QDoubleValidator(self))
-        self.lineEdit_DHDADI.setValidator(QDoubleValidator(self))
-        self.lineEdit_DHDADO.setValidator(QDoubleValidator(self))
+            tModel = dcModel.dcModel('J6', '常规布局')  
+        #定义数据
+        self.DatcomCARD = DC.DatcomCARD(self)
+        self.DatcomCARD.InitUi()
+        self.DatcomCARD.setModel(tModel)   #设置模型 
         
+        #界面参数
+        self.curPos = QPoint(0, 0)
+        self.curWidget = None
+        self.curN = None
+        self.popMenu = None
+        #刷新界面
+        self.UILogic()  
         
-        #self.NX.setEnabled(False)
-        #初始化数据和内容
-        self.InitDoc()   
-        self.UILogic()     
-        
-    def InitDoc(self):
-        """
-        分析并初始化后台数据
-        """
-        
-#        self.lineEdit_CHRDTP.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','CHRDTP')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_CHRDTP.setText(tVar)
-#        self.lineEdit_CHRDBP.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','CHRDBP')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_CHRDBP.setText(tVar)
-#        self.lineEdit_CHRDR.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','CHRDR')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_CHRDR.setText(tVar)
-#        self.lineEdit_SSPNOP.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','SSPNOP')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_SSPNOP.setText(tVar)
-#        self.lineEdit_SSPNE.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','SSPNE')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_SSPNE.setText(tVar)
-#        self.lineEdit_SSPN.setValidator(QDoubleValidator(self)) 
-        tVar = self.model.getNamelistVar('WGPLNF','SSPN')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_SSPN.setText(tVar)
-#        self.lineEdit_SAVSI.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','SAVSI')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_SAVSI.setText(tVar)
-#        self.lineEdit_SAVSO.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','SAVSO')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_SAVSO.setText(tVar)
-#        self.lineEdit_TWISTA.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','TWISTA')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_TWISTA.setText(tVar)
-#        self.lineEdit_CHSTAT.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','CHSTAT')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_CHSTAT.setText(tVar)
-#        self.lineEdit_SSPNDD.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','SSPNDD')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_SSPNDD.setText(tVar)
-#        self.lineEdit_DHDADI.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','DHDADI')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_DHDADI.setText(tVar)
-#        self.lineEdit_DHDADO.setValidator(QDoubleValidator(self))
-        tVar = self.model.getNamelistVar('WGPLNF','DHDADO')
-        tVar = '0.0' if tVar is None else str(tVar)
-        self.lineEdit_DHDADO.setText(tVar)
-        
-        #TYPE
-        tVar = self.model.getNamelistVar('WGPLNF','TYPE')
-        tVar = 0 if tVar is None else int(float(tVar)) -1
-        self.comboBox_TYPE.setCurrentIndex(tVar)
-        
-
-
-
     def setModel(self, tModel):
         """
         初始化本节点的xml描述文档
         """
         
-        self.Model = tModel        
-        #执行参数配置过程        
-        self.InitDoc()
-        
+        #self.Model = tModel        
+        #执行参数配置过程    
+        self.DatcomCARD.setModel(tModel)      
         self.UILogic()
-
-
+        
     def getDoc(self):
         """
         将界面的内容刷新到变量model
         """
         
         #执行界面刷新
-        #TYPE
-        tTYPE = self.comboBox_TYPE.currentIndex() + 1
-        self.model.setNamelist( 'WGPLNF' , 'TYPE', 
-                                  '%d.'%(tTYPE) )
-
-#        self.lineEdit_CHRDTP
-        self.model.setNamelist( 'WGPLNF' , 'CHRDTP',float(self.lineEdit_CHRDTP.text()) )
-#        self.lineEdit_CHRDBP
-        if tTYPE == 1:        
-            self.model.setNamelist( 'WGPLNF' , 'CHRDBP',None )
-        else:
-            self.model.setNamelist( 'WGPLNF' , 'CHRDBP',float(self.lineEdit_CHRDBP.text()) )
-#        self.lineEdit_CHRDR
-        self.model.setNamelist( 'WGPLNF' , 'CHRDR',float(self.lineEdit_CHRDR.text()) )
-#        self.lineEdit_SSPNOP
-        if tTYPE == 1:
-            self.model.setNamelist( 'WGPLNF' , 'SSPNOP',None )
-        else:
-            self.model.setNamelist( 'WGPLNF' , 'SSPNOP',float(self.lineEdit_SSPNOP.text()) )
+        return self.DatcomCARD.getModel()
         
-#        self.lineEdit_SSPNE
-        self.model.setNamelist( 'WGPLNF' , 'SSPNE',float(self.lineEdit_SSPNE.text()) )
-#        self.lineEdit_SSPN      
-        self.model.setNamelist( 'WGPLNF' , 'SSPN',float(self.lineEdit_SSPN.text()) )
-#        self.lineEdit_SAVSI
-        self.model.setNamelist( 'WGPLNF' , 'SAVSI',float(self.lineEdit_SAVSI.text()) )
-#        self.lineEdit_SAVSO
-        if tTYPE == 1:
-            self.model.setNamelist( 'WGPLNF' , 'SAVSO',None )
-        else:
-            self.model.setNamelist( 'WGPLNF' , 'SAVSO',float(self.lineEdit_SAVSO.text()) )
-
-#        self.lineEdit_TWISTA
-        self.model.setNamelist( 'WGPLNF' , 'TWISTA',float(self.lineEdit_TWISTA.text()) )
-#        self.lineEdit_CHSTAT
-        self.model.setNamelist( 'WGPLNF' , 'CHSTAT',float(self.lineEdit_CHSTAT.text()) )
-#        self.lineEdit_SSPNDD
-        if tTYPE == 1:
-            self.model.setNamelist( 'WGPLNF' , 'SSPNDD',None )
-        else:
-            self.model.setNamelist( 'WGPLNF' , 'SSPNDD',float(self.lineEdit_SSPNDD.text()) )
-
-#        self.lineEdit_DHDADI
-        self.model.setNamelist( 'WGPLNF' , 'DHDADI',float(self.lineEdit_DHDADI.text()) )
-#        self.lineEdit_DHDADO
-        self.model.setNamelist( 'WGPLNF' , 'DHDADO',float(self.lineEdit_DHDADO.text()) )
-
         
-        #获取界面输入值
-        return self.model
         
     def UILogic(self):
         """
         在此刷新UI，需要根据不同的情况执行判断
-        """
+        """ 
+        #调用公用的刷新逻辑      
+        self.DatcomCARD.UILogic()  
+
+        #特有的刷新逻辑
         if self.comboBox_TYPE.currentIndex() == 0: #不需要部分输入
-            self.lineEdit_SSPNOP.setEnabled(False)
-            self.lineEdit_CHRDBP.setEnabled(False)
-            self.lineEdit_SAVSO.setEnabled(False)
-            self.lineEdit_SSPNDD.setEnabled(False)
+            self.SSPNOP.setEnabled(False)
+            self.CHRDBP.setEnabled(False)
+            self.SAVSO.setEnabled(False)
+            self.SSPNDD.setEnabled(False)
         else:
-            self.lineEdit_SSPNOP.setEnabled(True)
-            self.lineEdit_CHRDBP.setEnabled(True)
-            self.lineEdit_SAVSO.setEnabled(True)
-            self.lineEdit_SSPNDD.setEnabled(True)
-            
-            
-            
-        
-        
+            self.SSPNOP.setEnabled(True)
+            self.CHRDBP.setEnabled(True)
+            self.SAVSO.setEnabled(True)
+            self.SSPNDD.setEnabled(True)   
+    
     
     @pyqtSlot()
     def on_lineEdit_CHRDTP_editingFinished(self):

@@ -48,7 +48,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="LOOP">
+           <widget class="QComboBox" name="comboBox_LOOP">
             <item>
              <property name="text">
               <string>=1 同步计算高度、马赫数（默认值）</string>
@@ -472,7 +472,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="HYPERS">
+           <widget class="QComboBox" name="comboBox_HYPERS">
             <item>
              <property name="text">
               <string>.TRUE</string>
@@ -513,7 +513,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="TR">
+           <widget class="QComboBox" name="comboBox_TR">
             <item>
              <property name="text">
               <string>1.0</string>
@@ -557,7 +557,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_13">
        <item>
-        <widget class="QTableWidget" name="ALSCHD">
+        <widget class="QTableWidget" name="tableWidget_ALSCHD">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -579,7 +579,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableWidget" name="Speed_Atmospheric">
+        <widget class="QTableWidget" name="tableWidget_Speed_Atmospheric">
          <property name="contextMenuPolicy">
           <enum>Qt::CustomContextMenu</enum>
          </property>

@@ -424,7 +424,7 @@ class EXPR(QWidget, Ui_Form):
         
         tNMACH = self.model.getNamelistVar('FLTCON', 'NMACH')
         if  not tNMACH is None:
-            tNMACH = int(tNMACH)
+            tNMACH = int(float(tNMACH))
             for iTab in self.NMACHLinkTable:
                 tWidget   = self.findChild(QTableWidget, 'tableWidget_%s'%iTab)
                 if tWidget is None: 

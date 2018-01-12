@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-12, 01:12:56 -->
+<!-- Saved: 2018-01-12, 16:40:02 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -14,6 +14,9 @@
   <Email>Lingo_renlo@qq.com</Email>
   <Eol index="0"/>
   <Sources>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HTSCHR.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VFSCHR.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VTSCHR.py</Source>
     <Source>PyDatcomLab/Application.py</Source>
     <Source>PyDatcomLab/Core/__init__.py</Source>
     <Source>PyDatcomLab/Core/datcomDefine.py</Source>
@@ -35,20 +38,26 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/HTSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/OPTIONS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_BODY.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_FLTCON.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HTSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_OPTIONS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_SYNTHS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VFPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VFSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VTSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_WGPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_WGSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/VFPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/VFSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/VTPLNF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/VTSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/WGPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/WGSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/__init__.py</Source>
@@ -88,10 +97,12 @@
     <Source>tests/testGUI/test_EXPR.py</Source>
     <Source>tests/testGUI/test_FLTCON.py</Source>
     <Source>tests/testGUI/test_HTPLNF.py</Source>
+    <Source>tests/testGUI/test_HTSCHR.py</Source>
     <Source>tests/testGUI/test_ImageTips.py</Source>
     <Source>tests/testGUI/test_OPTION.py</Source>
     <Source>tests/testGUI/test_PlaneConfiguration.py</Source>
     <Source>tests/testGUI/test_VTPLNF.py</Source>
+    <Source>tests/testGUI/test_VTSCHR.py</Source>
     <Source>tests/testGUI/test_WGPLNF.py</Source>
     <Source>tests/testGUI/test_WGSCHR.py</Source>
     <Source>tests/testGUI/test_addProject.py</Source>
@@ -104,7 +115,9 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
-    <Form>PyDatcomLab/GUIs/PlaneConfiguration/VFPLNF.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/HTSCHR.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/VFSCHR.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/VTSCHR.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.ui</Form>
@@ -112,6 +125,7 @@
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/OPTIONS.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/VFPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/VTPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/WGPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/WGSCHR.ui</Form>
