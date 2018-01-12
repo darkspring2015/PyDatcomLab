@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QAction, QCheckBox
 from PyQt5.QtGui import QDoubleValidator, QIntValidator, QIcon, QPixmap, QValidator
 
 from PyDatcomLab.Core import dcModel
+from PyDatcomLab.GUIs.PlaneConfiguration import DatcomCARD as DC
 import logging
 
 from Ui_WGSCHR import Ui_WGSCHR
@@ -81,6 +82,17 @@ class WGSCHR(QWidget, Ui_WGSCHR):
                 'MEAN':{'TYPE':'Array',   'Limit':[0, 50] , 'Group':'AirfoilSection'},
                 'THICK':{'TYPE':'Array',  'Limit':[0, 50] , 'Group':'AirfoilSection'},   
         }
+        
+        self.NMACHLinkTable = ['Lift' ]
+        
+        #修改后台的数据
+        if tModel is None:
+            tModel = dcModel.dcModel('J6', '常规布局')  
+        #定义数据
+        self.DatcomCARD = DC.DatcomCARD(self)
+        self.DatcomCARD.InitUi()
+        self.DatcomCARD.setModel(tModel)   #设置模型
+        
         #配置界面 
         for varName in self.VariableList.keys():            
             if self.VariableList[varName]['TYPE'] == 'REAL':
