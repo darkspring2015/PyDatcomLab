@@ -217,13 +217,7 @@ class FLTCON(QWidget, Ui_Form):
                     self.Speed_Atmospheric.setItem(itR, itC,
                         QTableWidgetItem(str(tDataV[itR])))
         #判断模式
-        #添加表头给对应控件        
-
-
-        
-
-
-        
+        #添加表头给对应控件   
 
     def setModel(self, tModel):
         """
@@ -362,6 +356,8 @@ class FLTCON(QWidget, Ui_Form):
         else:
             tVaList = []
             for itC in range(self.ALSCHD.rowCount()):
+                if self.ALSCHD.item(itC, 0).text() is None:
+                    continue
                 tVaList.append(float(self.ALSCHD.item(itC, 0).text()))
             tDict = {'Index':1, 'Value':tVaList}
             self.model.setNamelist( 'FLTCON' , 'ALSCHD', tDict)

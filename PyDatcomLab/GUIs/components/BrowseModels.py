@@ -139,7 +139,7 @@ class DlgBrowseModels(QDialog, Ui_Dialog):
         """
         # TODO: not implemented yet
         dlg = NewModelDlg()
-        dlg.show()
+        dlg.exec()
         mPath = dlg.getModelPath()        
         self.AddModel(os.path.dirname(mPath), os.path.basename(mPath))
     

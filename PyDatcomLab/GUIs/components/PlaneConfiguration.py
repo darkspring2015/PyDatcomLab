@@ -12,7 +12,7 @@ from .Ui_PlaneConfiguration import Ui_Dialog
 from PyDatcomLab.Core import  dcModel
 
 from PyDatcomLab.GUIs.PlaneConfiguration import BODY, HTPLNF,  SYNTHS, VTPLNF,WGPLNF, WGSCHR
-from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON , EXPR, VFPLNF
+from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON , EXPR, VFPLNF, HTSCHR, VTSCHR, VFSCHR
 
 import logging
 
@@ -41,10 +41,13 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
             SYNTHS.SYNTHS:['SYNTHS','综合参数'], 
             BODY.BODY:[    'BODY'  ,'机体参数'], 
             WGPLNF.WGPLNF:['WGPLNF','机翼几何参数'], 
-            WGSCHR.WGSCHR:['WGSCHR','机翼翼型参数'], 
+            WGSCHR.WGSCHR:['WGSCHR','机翼气动参数'], 
             VTPLNF.VTPLNF:['VTPLNF','垂尾几何参数'], 
+            VTSCHR.VTSCHR:['VTSCHR','垂尾气动参数'],
             HTPLNF.HTPLNF:['HTPLNF','平尾几何参数'], 
-            VFPLNF.VFPLNF:['VFPLNF','腹鳍几何参数'],           
+            HTSCHR.HTSCHR:['HTSCHR','平尾气动参数'], 
+            VFPLNF.VFPLNF:['VFPLNF','腹鳍几何参数'],
+            VFSCHR.VFSCHR:['VFSCHR','腹鳍气动参数'],
             EXPR.EXPR:[    'EXPR'  ,'试验数据'],             
         }
         

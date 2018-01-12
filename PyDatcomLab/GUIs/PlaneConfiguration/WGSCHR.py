@@ -12,7 +12,7 @@ from PyQt5.QtGui import QDoubleValidator, QIntValidator, QIcon, QPixmap, QValida
 from PyDatcomLab.Core import dcModel
 import logging
 
-from .Ui_WGSCHR import Ui_WGSCHR
+from Ui_WGSCHR import Ui_WGSCHR
 
 
 class WGSCHR(QWidget, Ui_WGSCHR):
