@@ -68,7 +68,8 @@ class VFSCHR(QWidget, Ui_VFSCHR):
         }
         
         self.NMACHLinkTable = ['Lift' ]
-        
+        self.RuleNumToCount =[]
+        self.RuleIndexToCombo = []
         #修改后台的数据
         if tModel is None:
             tModel = dcModel.dcModel('J6', '常规布局')  

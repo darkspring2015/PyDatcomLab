@@ -75,6 +75,8 @@ class EXPR(QWidget, Ui_Form):
                 'QOQINF':{ 'TYPE':'Array' , 'Limit':[0, 20]  , 'Group':'Downwash'}  ,
         }  
         self.NMACHLinkTable = ['Body', 'Wing','HorizontalTail', 'WingBody' ,'Downwash' ]
+        self.RuleNumToCount =[]
+        self.RuleIndexToCombo = []
 
         #调用其他初始化过程
         self.InitUi()

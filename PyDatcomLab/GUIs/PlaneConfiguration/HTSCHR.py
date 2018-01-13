@@ -67,7 +67,8 @@ class HTSCHR(QWidget, Ui_HTSCHR):
                 'THICK':{'TYPE':'Array',  'Limit':[0, 50] , 'Group':'AirfoilSection'},   
         }
         self.NMACHLinkTable = ['Lift' ]
-        
+        self.RuleNumToCount =[]
+        self.RuleIndexToCombo = []
         #修改后台的数据
         if tModel is None:
             tModel = dcModel.dcModel('J6', '常规布局')  

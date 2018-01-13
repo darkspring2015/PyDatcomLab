@@ -58,7 +58,8 @@ class WGPLNF(QWidget, Ui_Form):
  
         } 
         self.NMACHLinkTable = [ ]
-        
+        self.RuleNumToCount =[]
+        self.RuleIndexToCombo = []
         #调用其他初始化过程
         #修改后台的数据
         if tModel is None:

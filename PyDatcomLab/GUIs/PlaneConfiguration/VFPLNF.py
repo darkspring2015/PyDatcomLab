@@ -53,7 +53,8 @@ class VFPLNF(QWidget, Ui_VFPLNF):
  
         }  
         self.NMACHLinkTable = ['VTArea' ]
-        
+        self.RuleNumToCount =[]
+        self.RuleIndexToCombo = []
         #设置表格功能
         self.tableWidget_VTArea.setContextMenuPolicy(Qt.CustomContextMenu)
 

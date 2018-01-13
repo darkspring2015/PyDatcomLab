@@ -5,7 +5,7 @@ Module implementing FLTCON.
 """
 
 from PyQt5.QtCore import pyqtSlot, Qt, QPoint, pyqtSignal
-from PyQt5.QtWidgets import QWidget, QMessageBox, QMenu
+from PyQt5.QtWidgets import QWidget, QMenu  #,QMessageBox
 
 
 from PyDatcomLab.Core import dcModel
@@ -46,22 +46,31 @@ class FLTCON(QWidget, Ui_Form):
                 'NALPHA':{'TYPE':'INT'   ,'Range':[0, 20 ] },
                 'WT':{    'TYPE':'REAL'  ,'Range':[0, float('inf') ] },
                 'GAMMA':{ 'TYPE':'REAL'  },
-                'STMACH':{'TYPE':'REAL' ,'Range':[0.6, 0.99 ]},    
-                'TSMACH':{'TYPE':'REAL' ,'Range':[1.01, 1.4 ]},  
-                'HYPERS':{'TYPE':'List' ,'Range':['.TRUE.', '.FALSE.']  , 'Default':'.TRUE.'}, 
-                'TR':{    'TYPE':'List' ,'Range':['0.0', '1.0']  , 'Default':'0.0'}, 
+                'STMACH':{'TYPE':'REAL'  ,'Range':[0.6, 0.99 ]},    
+                'TSMACH':{'TYPE':'REAL'  ,'Range':[1.01, 1.4 ]},  
+                'HYPERS':{'TYPE':'List'  ,'Range':['.TRUE.', '.FALSE.']  , 'Default':'.TRUE.'}, 
+                'TR':{    'TYPE':'List'  ,'Range':['0.0', '1.0']  , 'Default':'0.0'}, 
+                'ALSCHD':{'TYPE':'Array', 'Limit':[0, 20] , 'Group':'ALSCHD'}, 
                 'MACH':{  'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'}, 
                 'VINF':{  'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'}, 
-                'ALSCHD':{'TYPE':'Array', 'Limit':[0, 20] , 'Group':'ALSCHD'}, 
                 'RNNUB':{ 'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'},
                 'ALT':{   'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'},                
                 'PINF':{  'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'},  
                 'TINF':{  'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'},
         }        
         
-        
-        
-        self.NMACHLinkTable = ['Lift' ]
+        self.NMACHLinkTable = []   #['Lift' ]
+        self.RuleNumToCount =[{'Num':'NMACH' , 'Group':'Speed_Atmospheric'}, 
+                              {'Num':'NALPHA', 'Group':'ALSCHD'}]        
+        self.RuleIndexToCombo = [{'Index':'Variables', 
+                        'HowTo':{'1.0':['MACH', 'RNNUB'], 
+                                 '2.0':['MACH', 'ALT'  ,'PINF', 'TINF' , 'RNNUB'], 
+                                 '3.0':['VINF', 'ALT'  ,'PINF', 'TINF' , 'MACH', 'RNNUB'], 
+                                 '4.0':['PINF', 'TINF', 'VINF', 'RNNUB', 'MACH'], 
+                                 '5.0':['PINF', 'TINF', 'MACH', 'RNNUB', 'VINF'], 
+                                 }, 
+                        'Group':'Speed_Atmospheric'} 
+                        ]
         
         #修改后台的数据
         if tModel is None:
@@ -111,10 +120,16 @@ class FLTCON(QWidget, Ui_Form):
         self.DatcomCARD.UILogic()
         
         #NACA
-        if self.checkBox_UsingNACA.checkState() == Qt.Checked:
-            self.comboBox_Variables.setCurrentIndex(0) #选中模式1
-        else :
-            self.comboBox_Variables.setCurrentIndex(1) #选中模式2,认为是默认值
+#        if self.checkBox_UsingNACA.checkState() == Qt.Checked:
+#            self.comboBox_Variables.setCurrentIndex(0) #选中模式1
+#        else :
+#            #self.comboBox_Variables.setCurrentIndex(1) #选中模式2,认为是默认值
+#            pass
+            
+        if self.comboBox_Variables.currentIndex() == 0:
+            self.checkBox_UsingNACA.setCheckState(Qt.Checked)
+        else:
+            self.checkBox_UsingNACA.setCheckState(Qt.Unchecked)
             
         #分析LOOP执行相应的选择模式
         if self.comboBox_LOOP.currentIndex() == 0:
@@ -151,22 +166,22 @@ class FLTCON(QWidget, Ui_Form):
         #因为只实现LOOP =1
 
         
-        nowRows = self.tableWidget_Speed_Atmospheric.rowCount()
-        tNx = int(self.NMACH.text())
-        if nowRows < tNx: 
-            #if 当前行数少，考虑增加
-            for itR in range(nowRows, tNx):
-                self.tableWidget_Speed_Atmospheric.insertRow(itR)
-        if nowRows == tNx:
-            pass
-        if nowRows > tNx:
-            self.NMACH.setText(str(nowRows))
-            strInfo = "尝试的NMACH小于现有数据行数，请手动从表格中删除对应行"
-            QMessageBox.information(self, "提示" , strInfo)  
-            self.logger.info(strInfo)    
-            
-        if self.NMACH.text() != self.NALT.text():
-            self.NALT.setText(self.NMACH.text())        
+#        nowRows = self.tableWidget_Speed_Atmospheric.rowCount()
+#        tNx = int(self.NMACH.text())
+#        if nowRows < tNx: 
+#            #if 当前行数少，考虑增加
+#            for itR in range(nowRows, tNx):
+#                self.tableWidget_Speed_Atmospheric.insertRow(itR)
+#        if nowRows == tNx:
+#            pass
+#        if nowRows > tNx:
+#            self.NMACH.setText(str(nowRows))
+#            strInfo = "尝试的NMACH小于现有数据行数，请手动从表格中删除对应行"
+#            QMessageBox.information(self, "提示" , strInfo)  
+#            self.logger.info(strInfo)    
+#            
+#        if self.NMACH.text() != self.NALT.text():
+#            self.NALT.setText(self.NMACH.text())        
         
         #因为只实现LOOP =1
         self.UILogic()  
@@ -179,19 +194,19 @@ class FLTCON(QWidget, Ui_Form):
         
         """
         # TODO: not implemented yet
-        nowRows = self.tableWidget_ALSCHD.rowCount()
-        tNx = int(self.NALPHA.text())
-        if nowRows < tNx: 
-            #if 当前行数少，考虑增加
-            for itR in range(nowRows, tNx):
-                self.tableWidget_ALSCHD.insertRow(itR)
-        if nowRows == tNx:
-            pass
-        if nowRows > tNx:
-            self.NALPHA.setText(str(nowRows))
-            strInfo = "尝试的NALPHA小于现有数据行数，请手动从表格中删除对应行"
-            QMessageBox.information(self, "提示" , strInfo)  
-            self.logger.info(strInfo)    
+#        nowRows = self.tableWidget_ALSCHD.rowCount()
+#        tNx = int(self.NALPHA.text())
+#        if nowRows < tNx: 
+#            #if 当前行数少，考虑增加
+#            for itR in range(nowRows, tNx):
+#                self.tableWidget_ALSCHD.insertRow(itR)
+#        if nowRows == tNx:
+#            pass
+#        if nowRows > tNx:
+#            self.NALPHA.setText(str(nowRows))
+#            strInfo = "尝试的NALPHA小于现有数据行数，请手动从表格中删除对应行"
+#            QMessageBox.information(self, "提示" , strInfo)  
+#            self.logger.info(strInfo)    
             
         
         self.UILogic()  

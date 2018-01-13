@@ -384,7 +384,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_BLN">
+           <widget class="QLineEdit" name="BLN">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -428,7 +428,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_BLA">
+           <widget class="QLineEdit" name="BLA">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -462,7 +462,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_DS">
+           <widget class="QLineEdit" name="DS">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -583,7 +583,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="QTableWidget" name="Tab_ComboVariables">
+        <widget class="QTableWidget" name="tableWidget_BODY">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -615,8 +615,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>695</width>
-            <height>447</height>
+            <width>98</width>
+            <height>32</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -660,8 +660,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1178</width>
-            <height>485</height>
+            <width>98</width>
+            <height>32</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -772,14 +772,14 @@ Tips 7：在Lbt =0 是忽略BTAIL，即无尾时</string>
   <tabstop>ELLIP</tabstop>
   <tabstop>comboBox_BNOSE</tabstop>
   <tabstop>comboBox_BTAIL</tabstop>
-  <tabstop>lineEdit_BLN</tabstop>
-  <tabstop>lineEdit_BLA</tabstop>
+  <tabstop>BLN</tabstop>
+  <tabstop>BLA</tabstop>
   <tabstop>checkBox_DS</tabstop>
-  <tabstop>lineEdit_DS</tabstop>
+  <tabstop>DS</tabstop>
   <tabstop>comboBox_METHED</tabstop>
   <tabstop>checkBox_ITYPE</tabstop>
   <tabstop>comboBox_ITYPE</tabstop>
-  <tabstop>Tab_ComboVariables</tabstop>
+  <tabstop>tableWidget_BODY</tabstop>
   <tabstop>plainTextEdit</tabstop>
  </tabstops>
  <resources>

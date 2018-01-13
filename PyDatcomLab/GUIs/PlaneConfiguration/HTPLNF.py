@@ -60,6 +60,8 @@ class HTPLNF(QWidget, Ui_HTPLNF):
  
         }  
         self.NMACHLinkTable = ['HTArea' ]
+        self.RuleNumToCount =[]
+        self.RuleIndexToCombo = []
         
         #设置表格功能
         self.tableWidget_HTArea.setContextMenuPolicy(Qt.CustomContextMenu)

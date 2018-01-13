@@ -74,7 +74,8 @@ class WGSCHR(QWidget, Ui_WGSCHR):
         }
         #关联NMACH
         self.NMACHLinkTable = ['Lift' ]
-        
+        self.RuleNumToCount =[]
+        self.RuleIndexToCombo = []
         #修改后台的数据
         if tModel is None:
             tModel = dcModel.dcModel('J6', '常规布局')  
