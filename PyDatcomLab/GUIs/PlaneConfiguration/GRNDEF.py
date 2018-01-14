@@ -32,7 +32,7 @@ class GRNDEF(QWidget, Ui_GRNDEF):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger')
         #开始核心数据的定义
-        self.NameList = 'JETPWR'
+        self.NameList = 'GRNDEF'
         self.VariableList = {
                 'GRDHT':{'TYPE':'Array', 'Limit':[0, 20] , 'Group':'GHeight'}, 
                 'NGH':{  'TYPE':'INT'},
@@ -56,6 +56,7 @@ class GRNDEF(QWidget, Ui_GRNDEF):
         self.curWidget = None
         self.curN = None
         self.popMenu = None        
+        self.tableWidget_GHeight.setContextMenuPolicy(Qt.CustomContextMenu)
         
         #初始化数据和内容  
         self.UILogic()   
@@ -109,12 +110,11 @@ class GRNDEF(QWidget, Ui_GRNDEF):
         """
         # TODO: not implemented yet
         self.curPos = pos
-        self.curWidget = self.tableWidget_AirfoilSection        
+        self.curWidget = self.tableWidget_GHeight        
         posG = self.curWidget.mapToGlobal(pos)
         self.popMenu = QMenu(self.curWidget)
         self.popMenu.addAction(self.actionAddRow)
         self.popMenu.addAction(self.actionDeleteRow)
-        self.curWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.curN = self.NGH
         
         self.popMenu.exec(posG)

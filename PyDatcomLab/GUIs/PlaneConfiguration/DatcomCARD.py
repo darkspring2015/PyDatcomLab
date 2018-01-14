@@ -386,13 +386,13 @@ class DatcomCARD(object):
             tVarName = tRule['Num']       
             tNumVar = self.getVariableFromWidget(WidgetContainer,tVarName )
             if tNumVar is None:
-                self.logger.error("当前CARD：%s并不存在%s的变量"%(WidgetContainer.getObjectName(),tNumVar ))
+                self.logger.error("当前CARD：%s并不存在%s的变量"%(WidgetContainer.objectName(),tNumVar ))
                 continue
             #存在 Num
             tGroupName = tRule['Group']
             tTableWidget = WidgetContainer.findChild(QTableWidget, 'tableWidget_%s'%tGroupName)
             if tTableWidget is None:
-                self.logger.error("当前CARD：%s并不存在%s的表单"%(WidgetContainer.getObjectName(),tGroupName ))
+                self.logger.error("当前CARD：%s并不存在%s的表单"%(WidgetContainer.objectName(),tGroupName ))
                 continue
             #存在 Table
             #执行 Num to Table row的逻辑            
@@ -400,7 +400,7 @@ class DatcomCARD(object):
                 for itR in range(tTableWidget.rowCount(), tNumVar):
                     tTableWidget.insertRow(itR)
             elif  tNumVar < tTableWidget.rowCount(): #不能表格行数
-                self.logger.info("CARD： %s尝试直接缩减%s表格行数到现有行数之下，重置%s"%(WidgetContainer.getObjectName(), 
+                self.logger.info("CARD： %s尝试直接缩减%s表格行数到现有行数%d之下，重置为%s"%(WidgetContainer.objectName(), 
                                         tGroupName,tTableWidget.rowCount() , tVarName))
                 tNumWidget = WidgetContainer.findChild(QLineEdit, tVarName)
                 tNumWidget.setText(str(tTableWidget.rowCount()))
