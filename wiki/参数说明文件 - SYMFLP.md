@@ -6,9 +6,7 @@
 
 |工程量   | VariableName|别名|长度限制| Definition|参数说明|
 |:-------:|:-------:|:----------------------------|:-:|:-----------------------------------------------------------|:------------------------------------------|
-|           | FTYPE  |   襟翼类别                 | 0 |  =1.0 plain flaps <br> =2.0 single slotted flaps <br> 
- =3.0 fowler flaps <br> =4.0 double slotted flaps<br> =5.0 split flaps 
- <br> =6.0 leading edge flap <br> =7.0 leading edge slats <br> =8.0 krueger |= 1平瓣<BR> = 2单缝襟翼<BR> = 3福勒皮瓣<BR> = 4双缝襟翼<BR> = 5分瓣<BR> = 6前缘襟翼<BR> = 7前缘缝翼<BR> = 8克鲁格 |
+|           | FTYPE  |   襟翼类别                 | 0 |  =1.0 plain flaps <br> =2.0 single slotted flaps <br> =3.0 fowler flaps <br> =4.0 double slotted flaps<br> =5.0 split flaps <br> =6.0 leading edge flap <br> =7.0 leading edge slats <br> =8.0 krueger |= 1平瓣<BR> = 2单缝襟翼<BR> = 3福勒皮瓣<BR> = 4双缝襟翼<BR> = 5分瓣<BR> = 6前缘襟翼<BR> = 7前缘缝翼<BR> = 8克鲁格 |
 |           | NDELTA |   襟翼或slat的偏转角数量   | 0 | number of flap or slat deflection angles ,max 9 | 襟翼或slat的偏转角数量，最大9                        |
 | δf        | DELTA  |   襟翼偏转角               | 9 | flap deflection angles measured steamwise       | 从流向（stramwise）测量的襟翼偏转角                  |
 | tan(OTE/2)| PHETE  |   翼型后缘角正切值         | 0 | tangent of airfoil trailine edge angle based on ordinates at 90 and 99 percent chord |  翼型后缘角正切值 在95和99%弦长处      | 
