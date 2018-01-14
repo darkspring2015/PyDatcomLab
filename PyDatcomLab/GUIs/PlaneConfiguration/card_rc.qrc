@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="card">
+    <file>rc_card/GRNDEF-para.png</file>
+    <file>rc_card/GRNDEF.png</file>
+    <file>rc_card/JETPWR.png</file>
+    <file>rc_card/JETPWR-para.png</file>
     <file>rc_card/PROPWR-fig.bmp</file>
     <file>rc_card/PROWER.bmp</file>
     <file>rc_card/ARCL.png</file>

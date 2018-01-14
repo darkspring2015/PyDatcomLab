@@ -77,7 +77,7 @@ class PROPWR(QWidget, Ui_PROPWR):
         
         #self.Model = tModel        
         #执行参数配置过程    
-        self.InitComboVar(tModel)
+        #self.InitComboVar(tModel)
         self.DatcomCARD.setModel(tModel)      
         self.UILogic()
         
