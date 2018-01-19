@@ -49,6 +49,51 @@
            <height>0</height>
           </size>
          </property>
+         <item>
+          <property name="text">
+           <string>1.0 平襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2.0 单缝襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3.0 福勒襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4.0 双缝襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>5.0 分裂襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>6.0 前缘襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>7.0 前缘缝翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>8.0 克鲁格襟翼 </string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>9.0 射流襟翼</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
@@ -165,7 +210,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLineEdit" name="NDELTA_3">
+        <widget class="QLineEdit" name="PHETEP">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -559,6 +604,21 @@
            <height>0</height>
           </size>
          </property>
+         <item>
+          <property name="text">
+           <string>1.0 圆形鼻襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2.0 椭圆形鼻襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3.0 尖鼻襟翼</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
@@ -589,19 +649,27 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLineEdit" name="JETFLP">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>0</height>
-          </size>
-         </property>
+        <widget class="QComboBox" name="comboBox_JETFLP">
+         <item>
+          <property name="text">
+           <string>1.0 纯喷气襟翼</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2.0 IBF</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3.0 EBF</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4.0 机械喷气组合襟翼</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
@@ -654,7 +722,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_input">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -679,6 +747,16 @@
           </size>
          </property>
         </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>射流襟翼参数</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_20">
+       <item>
+        <widget class="QTableWidget" name="tableWidget_jet"/>
        </item>
       </layout>
      </widget>
@@ -736,8 +814,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>32</height>
+            <width>919</width>
+            <height>560</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
