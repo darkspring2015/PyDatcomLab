@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="card">
+    <file>rc_card/LARWB-01.png</file>
+    <file>rc_card/LARWB-02.png</file>
+    <file>rc_card/LARWB-03.png</file>
+    <file>rc_card/LARWB-para.png</file>
     <file>rc_card/ASYFLP-PARA.png</file>
     <file>rc_card/ASYFLP.png</file>
     <file>rc_card/ASYFLP01.png</file>
