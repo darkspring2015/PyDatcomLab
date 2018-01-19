@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="card">
+    <file>rc_card/ASYFLP-PARA.png</file>
+    <file>rc_card/ASYFLP.png</file>
+    <file>rc_card/ASYFLP01.png</file>
+    <file>rc_card/ASYFLP02.png</file>
+    <file>rc_card/ASYFLP-PARA01.png</file>
+    <file>rc_card/ASYFLP-PARA02.png</file>
     <file>rc_card/SYMFLP.png</file>
     <file>rc_card/SYMFLP-2.png</file>
     <file>rc_card/SYMFLP-fig1.png</file>

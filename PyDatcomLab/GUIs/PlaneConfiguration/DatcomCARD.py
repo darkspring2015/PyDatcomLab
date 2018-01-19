@@ -386,7 +386,7 @@ class DatcomCARD(object):
                 tVarName = tRule['Num']       
                 tNumVar = self.getVariableFromWidget(WidgetContainer,tVarName )
                 if tNumVar is None:
-                    self.logger.error("当前CARD：%s并不存在%s的变量"%(WidgetContainer.objectName(),tNumVar ))
+                    self.logger.error("当前CARD：%s并不存在%s的变量"%(WidgetContainer.objectName(),tVarName ))
                     continue
                 #存在 Num
                 tGroupName = tRule['Group']
@@ -556,7 +556,8 @@ class DatcomCARD(object):
             if tWidget is  None:
                 return None
             else:
-                if tWidget.text() == '':return None
+                if tWidget.text() == '':
+                    return None
                 return int(float((tWidget.text())))                
         elif VariableList[tVarName]['TYPE'] == 'List':
             tWidget = WidgetContainer.findChild(QComboBox, 'comboBox_%s'%tVarName)

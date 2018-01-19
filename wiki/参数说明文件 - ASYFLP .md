@@ -6,10 +6,10 @@
 
 |工程量   | VariableName|别名|长度限制| Definition|参数说明|
 |:-------:|:-------:|:----------------------------|:-:|:-----------------------------------------------------------|:------------------------------------------|
-|           | STYPE  |   类别                     | 0 |  =1.0 flap spoiler on wing<br> =2.0 plus spoiler on wing<br> =3.0 spoiler-slot-deflection on wing<br> =4.0 plain flap aileron<br> =5.0 differentially deflected moveable horizontal tail | =1.0 瓣扰流翼<BR> =2.0 加扰流翼 <BR> =3.0 扰流板槽偏转翼 <BR> =4.0 简单襟翼副翼 <BR> =5.0 差动平尾 |           | NDELTA |   襟翼或slat的偏转角数量   | 0 | number of flap or slat deflection angles ,max 9 | 襟翼或slat的偏转角数量，最大9                        |
+|           | STYPE  |   类别                     | 0 |  =1.0 flap spoiler on wing<br> =2.0 plug spoiler on wing<br> =3.0 spoiler-slot-deflection on wing<br> =4.0 plain flap aileron<br> =5.0 differentially deflected moveable horizontal tail | =1.0 机翼襟翼扰流板<BR> =2.0 机翼上的扰流板 <BR> =3.0 扰流板槽偏转翼 <BR> =4.0 简单襟翼副翼 <BR> =5.0 差动平尾 |          
 |           | NDELTA |   控制面偏转角数量         | 0 | number of control deflection angles；required for all controls，max.of 9       |  控制面偏转角数量                  |
 | bi        | SPANFI |   内侧端的横向距离         | 0 | span location of inborad end of flap or spoiler control.<br>measured perpendicular to vertical plane of symmetry      | 内侧端的横向距离，测量垂直于纵向对称面        | 
-| bo        | SPANFO |   襟翼外侧端的横向距离     | 0 | span location of outborad end of flap or spoiler control.<br>measured to perpendicular to vertical plane of symmetry      | 外侧端的横向距离，测量垂直于纵向对称面        | 
+| bo        | SPANFO |   外侧端的横向距离         | 0 | span location of outborad end of flap or spoiler control.<br>measured to perpendicular to vertical plane of symmetry      | 外侧端的横向距离，测量垂直于纵向对称面        | 
 | tan(OTE/2)| PHETE  |   翼型后缘角正切值(90,99)  | 0 | tangent of airfoil trailine edge angle based on ordinates at 90 and 99 percent chord |  翼型后缘角正切值 在90和99%弦长处      | 
 | δL        | DELTAL |   左偏转角                 | 9 | deflection angles for left hand plain flap aileron or left hand panel all moveable horizontal tail<br> measured in vertical plane of symmetry  | 左侧简单襟副翼或左侧全动平尾的偏转角度<br>在垂直对称面内测量      |
 | δR        | DELTAR |   右偏转角                 | 9 | deflection angles for right hand plain flap aileron or right hand panel all moveable horizontal tail<br> measured in vertical plane of symmetry  | 右侧简单襟副翼或右侧全动平尾的偏转角度<br>在垂直对称面内测量      |

@@ -5,7 +5,7 @@ Module implementing SYMFLP.
 """
 
 from PyQt5.QtCore import pyqtSlot, Qt, QPoint #, pyqtSignal
-from PyQt5.QtWidgets import QWidget, QMenu , QLineEdit, QComboBox, QTableWidget
+from PyQt5.QtWidgets import QWidget, QMenu  #, QLineEdit, QComboBox, QTableWidget
 from PyDatcomLab.GUIs.PlaneConfiguration import DatcomCARD as DC
 
 
@@ -265,41 +265,6 @@ class SYMFLP(QWidget, Ui_SYMFLP):
         self.DatcomCARD.UILogic()
         #其他表格的逻辑
 
-
-            
-    def getWidgetByName(self, tContainer, tVatName):
-        """
-        """
-        if tContainer is None: return None
-        if tVatName not in  tContainer.VariableList.keys():
-            self.logger.error("尝试获取未知的变量%s"%tVatName)
-            return None
-        if tContainer.VariableList[tVatName]['TYPE'] == 'INT' :
-            tWidgetName = tVatName
-            tWidgetType = QLineEdit
-        elif  tContainer.VariableList[tVatName]['TYPE'] == 'REAL' :
-            tWidgetName = tVatName
-            tWidgetType = QLineEdit
-        elif  tContainer.VariableList[tVatName]['TYPE'] == 'List' :
-            tWidgetName = 'comboBox_%s'%tVatName
-            tWidgetType = QComboBox
-        elif tContainer.VariableList[tVatName]['TYPE'] == 'Array' :
-            tWidgetName = 'tableWidget_%s'%tVatName
-            tWidgetType = QTableWidget
-        else :
-            self.logger.error("尝试获取未知类型%s的变量%s"%(tContainer.VariableList[tVatName]['TYPE'], tVatName))
-            return None
-        
-        #查询
-        tWidget         = tContainer.findChild(tWidgetType,tWidgetName )
-        tWidgetCheckBox = tContainer.findChild(tWidgetType,"checkBox_%s"%tVatName )
-        
-        if tWidget is None :
-            self.logger.error("%s中不包含名称为%s的widget"%(tContainer.objectName(), tWidgetName))
-            return None, None
-        return tWidget, tWidgetCheckBox
-        
-  
         
     @pyqtSlot(int)
     def on_comboBox_FTYPE_currentIndexChanged(self, index):
