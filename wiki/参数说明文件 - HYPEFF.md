@@ -17,7 +17,7 @@
 | Cf      | CF      |  控制装置弦长               | 0  | control chord length      | 控制装置弦长        | 
 |         | HNDLTA  |  襟翼偏转角数量             | 0  | number of flap deflection angles （maximum of 10） |  襟翼偏转角数量     | 
 | δf      | HDELTA  |  控制偏角                   | 10 | control deflection angle,positive trailing edge down  | 控制偏角，后沿向下为正      |
-|         | LAMNR   |  边界层类型                 | 0  | =.TRUE. -boundary layer at hinge line is laminar<br> =.FALSE. -boundary layer at hinge line is turbulent | =.TRUE. 层流边界层<br> =.FALSE. 湍流边界层   |
+|         | LAMNR   |  边界层类型                 | 0  |  =.TRUE. -boundary layer at hinge line is laminar<br> =.FALSE. -boundary layer at hinge line is turbulent |  =.TRUE. 层流边界层<br> =.FALSE. 湍流边界层   |
 
 
 
