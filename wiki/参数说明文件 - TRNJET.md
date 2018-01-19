@@ -4,10 +4,10 @@
 <br>Input for NAMELIST TRNJET
 <br>
 ### 参数示意图
-![参数示意图](fig/TRANJET.png) 
+![参数示意图](fig/TRNJET.png) 
 <br>
 ### 参数表
-![参数表](fig/TRANJET-para.png) 
+![参数表](fig/TRNJET-para.png) 
 <br>
 
 ## 参数表
