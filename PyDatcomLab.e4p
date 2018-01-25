@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-14, 00:49:31 -->
+<!-- Saved: 2018-01-20, 18:13:41 -->
 <!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
 <Project version="5.1">
   <Language></Language>
@@ -30,24 +30,40 @@
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomCARD.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/GRNDEF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/HTSCHR.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/HYPEFF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/JETPWR.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/LARWB.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/OPTIONS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/PROPWR.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/SYMFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/TRNJET.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/TVTPAN.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_ASYFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_BODY.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_FLTCON.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_GRNDEF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HTPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HTSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HTSCHR.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HYPEFF.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_JETPWR.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_LARWB.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_OPTIONS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_PROPWR.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_SYMFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_SYNTHS.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_TRNJET.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_TVTPAN.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VFPLNF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VFSCHR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_VFSCHR.py</Source>
@@ -94,16 +110,24 @@
     <Source>tests/testCore_dcProject.py</Source>
     <Source>tests/testDatcomRunner.py</Source>
     <Source>tests/testFrame.py</Source>
+    <Source>tests/testGUI/test_ASYFLP.py</Source>
     <Source>tests/testGUI/test_BODY.py</Source>
     <Source>tests/testGUI/test_BrowseModels.py</Source>
     <Source>tests/testGUI/test_EXPR.py</Source>
     <Source>tests/testGUI/test_FLTCON.py</Source>
+    <Source>tests/testGUI/test_GRNDEF.py</Source>
     <Source>tests/testGUI/test_HTPLNF.py</Source>
     <Source>tests/testGUI/test_HTSCHR.py</Source>
+    <Source>tests/testGUI/test_HYPEFF.py</Source>
     <Source>tests/testGUI/test_ImageTips.py</Source>
+    <Source>tests/testGUI/test_JETPWR.py</Source>
+    <Source>tests/testGUI/test_LARWB.py</Source>
     <Source>tests/testGUI/test_OPTION.py</Source>
     <Source>tests/testGUI/test_PROPWR.py</Source>
     <Source>tests/testGUI/test_PlaneConfiguration.py</Source>
+    <Source>tests/testGUI/test_SYMFLP.py</Source>
+    <Source>tests/testGUI/test_TRNJET.py</Source>
+    <Source>tests/testGUI/test_TVTPAN.py</Source>
     <Source>tests/testGUI/test_VTPLNF.py</Source>
     <Source>tests/testGUI/test_VTSCHR.py</Source>
     <Source>tests/testGUI/test_WGPLNF.py</Source>
@@ -118,15 +142,23 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
-    <Form>PyDatcomLab/GUIs/PlaneConfiguration/PROPWR.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/GRNDEF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/HTPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/HTSCHR.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/HYPEFF.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/JETPWR.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/LARWB.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/OPTIONS.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/PROPWR.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/SYMFLP.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/TRNJET.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/TVTPAN.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/VFPLNF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/VFSCHR.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/VTPLNF.ui</Form>
@@ -213,6 +245,7 @@
     <Other>tests/data/exwin/EX7.INP</Other>
     <Other>tests/data/exwin/EX8.INP</Other>
     <Other>tests/data/exwin/EX9.INP</Other>
+    <Other>wiki</Other>
     <Other>wiki/参数说明文件.md</Other>
   </Others>
   <MainScript>PyDatcomLab/main.py</MainScript>
