@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Project SYSTEM "Project-5.1.dtd">
+<!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-20, 18:13:41 -->
-<!-- Copyright (C) 2018 linger, Lingo_renlo@qq.com -->
-<Project version="5.1">
+<!-- Saved: 2018-01-26, 00:17:18 -->
+<!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
+<Project version="6.0">
   <Language></Language>
   <Hash>661c47e71d6aba341b4161883941561ca8d9b0f5</Hash>
   <ProgLanguage mixed="0">Python3</ProgLanguage>
   <ProjectType>PyQt5</ProjectType>
   <Description>PyDatcomLab是Datcom软件的GUI拓展程序</Description>
-  <Version>0.1</Version>
+  <Version>0.2</Version>
   <Author>linger</Author>
-  <Email>Lingo_renlo@qq.com</Email>
+  <Email>lingo_renlo@qq.com</Email>
   <Eol index="0"/>
   <Sources>
     <Source>PyDatcomLab/Application.py</Source>
@@ -32,6 +32,7 @@
     <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/CONTAB.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomCARD.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
@@ -49,6 +50,7 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/TVTPAN.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_ASYFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_BODY.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_CONTAB.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_FLTCON.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_GRNDEF.py</Source>
@@ -101,6 +103,7 @@
     <Source>PyDatcomLab/GUIs/components/logForm.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
     <Source>PyDatcomLab/main.py</Source>
+    <Source>setup.py</Source>
     <Source>tests/__init__.py</Source>
     <Source>tests/test.py</Source>
     <Source>tests/testCore.py</Source>
@@ -113,6 +116,7 @@
     <Source>tests/testGUI/test_ASYFLP.py</Source>
     <Source>tests/testGUI/test_BODY.py</Source>
     <Source>tests/testGUI/test_BrowseModels.py</Source>
+    <Source>tests/testGUI/test_CONTAB.py</Source>
     <Source>tests/testGUI/test_EXPR.py</Source>
     <Source>tests/testGUI/test_FLTCON.py</Source>
     <Source>tests/testGUI/test_GRNDEF.py</Source>
@@ -145,6 +149,7 @@
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/CONTAB.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/GRNDEF.ui</Form>
@@ -174,7 +179,6 @@
     <Form>PyDatcomLab/GUIs/components/Reference.ui</Form>
     <Form>PyDatcomLab/GUIs/components/logForm.ui</Form>
   </Forms>
-  <Translations/>
   <Resources>
     <Resource>Docs/datcom.zip</Resource>
     <Resource>Docs/datcomexec.zip</Resource>
@@ -214,7 +218,6 @@
     <Resource>tests/data/exwin/ex8.out</Resource>
     <Resource>tests/data/exwin/ex9.out</Resource>
   </Resources>
-  <Interfaces/>
   <Others>
     <Other>INSTALL</Other>
     <Other>PyDatcomLab.e4p</Other>
