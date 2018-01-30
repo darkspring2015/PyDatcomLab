@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-26, 00:17:18 -->
+<!-- Saved: 2018-01-31, 07:41:33 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -103,8 +103,10 @@
     <Source>PyDatcomLab/GUIs/components/logForm.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
     <Source>PyDatcomLab/main.py</Source>
-    <Source>setup.py</Source>
     <Source>tests/__init__.py</Source>
+    <Source>tests/parserBuild/Ui_datcomParsermain.py</Source>
+    <Source>tests/parserBuild/__init__.py</Source>
+    <Source>tests/parserBuild/datcomParsermain.py</Source>
     <Source>tests/test.py</Source>
     <Source>tests/testCore.py</Source>
     <Source>tests/testCore/testDcModel.py</Source>
@@ -178,6 +180,7 @@
     <Form>PyDatcomLab/GUIs/components/ProjectsManager.ui</Form>
     <Form>PyDatcomLab/GUIs/components/Reference.ui</Form>
     <Form>PyDatcomLab/GUIs/components/logForm.ui</Form>
+    <Form>tests/parserBuild/datcomParsermain.ui</Form>
   </Forms>
   <Resources>
     <Resource>Docs/datcom.zip</Resource>

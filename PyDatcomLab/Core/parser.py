@@ -15,10 +15,9 @@ class Parser(object):
     tokens = ()
     precedence = ()
 
-    def __init__(self, file_name=None, debug=0,
-                keep_parse_tab=False):
+    def __init__(self, debug=0, keep_parse_tab=False):
         self.debug = debug
-        self.file_name = file_name
+        self.file_name = ""
         self.keep_parse_tab = keep_parse_tab
         self.cases = []
         self.common_dicts = []
@@ -40,24 +39,30 @@ class Parser(object):
             debugfile=self.debugfile,
             tabmodule=self.tabmodule)
 
-        if self.file_name == None:
-            while 1:
-                try:
-                    s = input('> ')
-                except EOFError:
-                    break
-                if not s:
-                    continue
-                yacc.parse(s)
-        else:
-            with open(self.file_name) as f:
-                file_data = f.read()
-            yacc.parse(file_data)
-
         if not self.keep_parse_tab:
             parse_tab_file = self.tabmodule +'.py'
             if os.path.exists(parse_tab_file):
                 os.remove(parse_tab_file)
+                
+    def parseString(self, tInput):
+        """
+        尝试解析字符串中的Datcom内容
+        """
+        if tInput is "":return None
+        #解析
+        self.yacc.parse(tInput)
+        
+    def parseFile(self, tFile):
+        """
+        尝试解析文件中的Datcom内容
+        """
+        if os.path.exists(tFile):
+            self.file_name = tFile
+        else:
+            return None
+        with open(self.file_name) as f:
+            file_data = f.read()
+            self.yacc.parse(file_data)
 
 
 class DatcomParser(Parser):
@@ -335,9 +340,13 @@ class DatcomParser(Parser):
         print ('error: %s' ,  t.value)
 
     def t_INPUT_ZEROLINE(self, t):
-        r'0.*'
+        r'\n0.*'
         #print 'zeroline'
-
+        
+    def t_INPUT_ONELINE(self, t):
+        r'\n1\s(?P<name>.*)\n'
+        #print 'zeroline'
+        
     def t_ANY_INTEGER(self, t):
         r'\d+'
         try:
@@ -502,7 +511,7 @@ class DatcomParser(Parser):
                   % (p.value, self.lex.lineno, self.lex.lexstate))
         else:
             print("Syntax error at EOF")
-        sys.exit(1)
+        #sys.exit(1)
 
     def p_namelist(self, p):
         'statement : NAMELIST terms ENDNAMELIST'
@@ -656,3 +665,43 @@ class DatcomParser(Parser):
 
     def get_cases(self):
         return self.cases
+        
+        
+if __name__ == "__main__":
+    """
+    """
+    tString = """
+ $FLTCON NMACH = 1.0, MACH(1)=0.60, NALPHA = 11.0,
+         ALSCHD(1) = -6.0, -4.0, -2.0, 0.0, 2.0,
+                      4.0, 8.0, 12.0, 16.0, 20.0, 24.0,
+         RNNUB=4.28E6$
+ $OPTINS SREF=8.85, CBARR=2.48, BLREF=4.28$
+ $SYNTHS XCG=4.14, ZCG=-0.20$
+ $BODY NX = 10.0,
+   X(1)=0.0,0.258,0.589,1.260,2.260,2.590,2.930,3.590,4.570,6.260,
+   R(1)=0.0,0.186,0.286,0.424,0.533,0.533,0.533,0.533,0.533,0.533,
+   S(1)=0.0,0.080,0.160,0.323,0.751,0.883,0.939,1.032,1.032,1.032,
+   P(1)=0.0,1.00,1.42,2.01,3.08,3.34,3.44,3.61,3.61,3.61$
+ $BODY BNOSE=1.0, BLN=2.59, BLA=3.67$
+CASEID APPROXIMATE AXISYMMETRIC BODY SOLUTION, EXAMPLE PROBLEM 1, CASE 1
+SAVE
+DUMP CASE
+NEXT CASE
+ $BODY ZU(1)= -.595,-.476,-.372,-.138, .200,
+               .334, .343, .343, .343, .343,
+       ZL(1)= -.595,-.715,-.754,-.805,-.868, 
+              -.868,-.868,-.868,-.868,-.868$
+CASEID ASYMMETRIC (CAMBERED) BODY SOLUTION, EXAMPLE PROBLEM 1, CASE 2
+SAVE
+NEXT CASE
+ $FLTCON NMACH=3.0, MACH(1)=0.9,1.4,2.5, RNNUB=6.4E6, 9.96E6, 17.0E6$
+SAVE
+CASEID ASYMMETRIC (CAMBERED) BODY SOLUTION, EXAMPLE PROBLEM 1, CASE 3
+NEXT CASE
+ $FLTCON NMACH=1.0, MACH(1)=2.5, RNNUB=17.86E6, HYPERS=.TRUE.$
+ $BODY DS=0.0$
+CASEID HYPERSONIC BODY SOLUTION,  EXAMPLE PROBLEM 1, CASE 4
+NEXT CASE"""
+    datcom = DatcomParser(keep_parse_tab = True)
+    datcom.parseString(tString)
+    tD = datcom.get_cases()
