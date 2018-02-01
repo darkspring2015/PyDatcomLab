@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\BODY.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -107,11 +107,11 @@ class Ui_Form(object):
         self.horizontalLayout_9.addWidget(self.label_8)
         spacerItem5 = QtWidgets.QSpacerItem(5, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_9.addItem(spacerItem5)
-        self.comboBox_METHED = QtWidgets.QComboBox(self.groupBox_Sub)
-        self.comboBox_METHED.setObjectName("comboBox_METHED")
-        self.comboBox_METHED.addItem("")
-        self.comboBox_METHED.addItem("")
-        self.horizontalLayout_9.addWidget(self.comboBox_METHED)
+        self.comboBox_METHOD = QtWidgets.QComboBox(self.groupBox_Sub)
+        self.comboBox_METHOD.setObjectName("comboBox_METHOD")
+        self.comboBox_METHOD.addItem("")
+        self.comboBox_METHOD.addItem("")
+        self.horizontalLayout_9.addWidget(self.comboBox_METHOD)
         self.verticalLayout_3.addLayout(self.horizontalLayout_9)
         self.verticalLayout.addWidget(self.groupBox_Sub)
         self.groupBox_Sup_Hyp = QtWidgets.QGroupBox(Form)
@@ -276,7 +276,7 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 98, 32))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 695, 447))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
@@ -302,7 +302,7 @@ class Ui_Form(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 98, 32))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 1178, 485))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -354,8 +354,8 @@ class Ui_Form(object):
         Form.setTabOrder(self.BLN, self.BLA)
         Form.setTabOrder(self.BLA, self.checkBox_DS)
         Form.setTabOrder(self.checkBox_DS, self.DS)
-        Form.setTabOrder(self.DS, self.comboBox_METHED)
-        Form.setTabOrder(self.comboBox_METHED, self.checkBox_ITYPE)
+        Form.setTabOrder(self.DS, self.comboBox_METHOD)
+        Form.setTabOrder(self.comboBox_METHOD, self.checkBox_ITYPE)
         Form.setTabOrder(self.checkBox_ITYPE, self.comboBox_ITYPE)
         Form.setTabOrder(self.comboBox_ITYPE, self.tableWidget_BODY)
         Form.setTabOrder(self.tableWidget_BODY, self.plainTextEdit)
@@ -374,9 +374,9 @@ class Ui_Form(object):
         self.comboBox_VarCombo.setItemText(1, _translate("Form", "X-S-ZU-ZL"))
         self.comboBox_VarCombo.setItemText(2, _translate("Form", "X-R-S-P-ZU-ZL  "))
         self.checkBox_ELLIP.setText(_translate("Form", "ELLIP：机身高宽比"))
-        self.label_8.setText(_translate("Form", "METHED：计算方法"))
-        self.comboBox_METHED.setItemText(0, _translate("Form", "1. 使用现有方法（系统默认）"))
-        self.comboBox_METHED.setItemText(1, _translate("Form", "2. 使用Jorgensen方法"))
+        self.label_8.setText(_translate("Form", "METHOD：计算方法"))
+        self.comboBox_METHOD.setItemText(0, _translate("Form", "1. 使用现有方法（系统默认）"))
+        self.comboBox_METHOD.setItemText(1, _translate("Form", "2. 使用Jorgensen方法"))
         self.checkBox_BNOSE.setText(_translate("Form", "BNOSE：机头样式"))
         self.comboBox_BNOSE.setItemText(0, _translate("Form", "1.0 圆锥型机头"))
         self.comboBox_BNOSE.setItemText(1, _translate("Form", "2.0 尖型机头"))

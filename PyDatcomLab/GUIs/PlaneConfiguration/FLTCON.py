@@ -12,10 +12,10 @@ from PyDatcomLab.Core import dcModel
 from PyDatcomLab.GUIs.PlaneConfiguration import DatcomCARD as DC
 import logging
 
-from Ui_FLTCON import Ui_Form
+from Ui_FLTCON import Ui_FLTCON
 
 
-class FLTCON(QWidget, Ui_Form):
+class FLTCON(QWidget, Ui_FLTCON):
     """
     Class documentation goes here.
     """

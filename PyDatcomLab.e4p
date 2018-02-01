@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-02-01, 10:54:26 -->
+<!-- Saved: 2018-02-01, 16:28:47 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -43,7 +43,7 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/HYPEFF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/JETPWR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/LARWB.py</Source>
-    <Source>PyDatcomLab/GUIs/PlaneConfiguration/OPTIONS.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/OPTINS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/PROPWR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/SYMFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.py</Source>
@@ -61,7 +61,7 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_HYPEFF.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_JETPWR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_LARWB.py</Source>
-    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_OPTIONS.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_OPTINS.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_PROPWR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_SYMFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/Ui_SYNTHS.py</Source>
@@ -161,7 +161,7 @@
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/HYPEFF.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/JETPWR.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/LARWB.ui</Form>
-    <Form>PyDatcomLab/GUIs/PlaneConfiguration/OPTIONS.ui</Form>
+    <Form>PyDatcomLab/GUIs/PlaneConfiguration/OPTINS.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/PROPWR.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/SYMFLP.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/SYNTHS.ui</Form>

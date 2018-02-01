@@ -46,7 +46,7 @@ class BODY(QWidget, Ui_Form):
                 'BLA':{    'TYPE':'REAL'}, 
                 'DS':{     'TYPE':'REAL'}, 
                 'ITYPE':{  'TYPE':'List','Range':['1.0', '2.0', '3.0']   , 'Default':'2.0'},
-                'METHED':{ 'TYPE':'List','Range':['1.0', '2.0']          , 'Default':'1.0'},
+                'METHOD':{ 'TYPE':'List','Range':['1.0', '2.0']          , 'Default':'1.0'},
              
                 #Body参数定义
                 'X':{  'TYPE':'Array' , 'Limit':[0, 20]  , 'Group':'BODY'}  , 

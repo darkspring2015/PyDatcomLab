@@ -31,6 +31,9 @@ class dcModel(object):
         self.xmlDoc = ET.ElementTree(ET.XML(self.xmlTemplete))  #Tree Object
 
         self.numForE = 100
+        #其他内部需要的结构
+        self.cardlist = [] #记录本模型有效的CARD内容
+        
         
     def getDocXMLString(self):
         """
@@ -158,8 +161,46 @@ class dcModel(object):
         indent(root, 0)        
         ET.ElementTree(root).write(file, encoding="UTF-8" )
     
-
+    def setCARDList(self, tList):
+        """
+        设置本模型激活的CARD的具体类型
+        """
+        isValid = True
+        for iC in tList:
+            if not iC in  dF.reserved_NAMELISTS:
+                isValid = False
+                break
+        #检查有效性
+        if not isValid:
+            self.logger.error('尝试设置不存在的CARD%s'%(str(tList)))
+            return
+        self.cardlist = tList
+    def getCARDList(self):
+        """
+        返回模型中包含的CARD
+        """
+        return self.cardlist
+    def addCARD(self, tCARDList):
+        """
+        将tCARDList中定义的CARD添加到本模型
+        """
+        for iC in tCARDList:
+            if not iC in  dF.reserved_NAMELISTS:
+                self.logger.error('尝试添加不合法的CARD：%s'%iC)
+                continue
+            if self.cardlist.index(iC) != -1:
+                continue
+            else:
+                self.cardlist.append(iC)
         
+    def removeCARD(self,tCARDList ):
+        """
+        从模型中移除对应的CARD
+        """
+        for iC in tCARDList:
+            if iC in self.cardlist:
+                self.cardlist.remove(iC)
+
 
     def setNamelist(self, nmlst , varName, varVaule, Index =1):
         """

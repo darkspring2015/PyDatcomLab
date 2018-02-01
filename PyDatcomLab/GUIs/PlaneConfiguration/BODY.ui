@@ -223,7 +223,7 @@
           <item>
            <widget class="QLabel" name="label_8">
             <property name="text">
-             <string>METHED：计算方法</string>
+             <string>METHOD：计算方法</string>
             </property>
            </widget>
           </item>
@@ -241,7 +241,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox_METHED">
+           <widget class="QComboBox" name="comboBox_METHOD">
             <item>
              <property name="text">
               <string>1. 使用现有方法（系统默认）</string>
@@ -615,8 +615,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>32</height>
+            <width>695</width>
+            <height>447</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -660,8 +660,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>32</height>
+            <width>1178</width>
+            <height>485</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -776,7 +776,7 @@ Tips 7：在Lbt =0 是忽略BTAIL，即无尾时</string>
   <tabstop>BLA</tabstop>
   <tabstop>checkBox_DS</tabstop>
   <tabstop>DS</tabstop>
-  <tabstop>comboBox_METHED</tabstop>
+  <tabstop>comboBox_METHOD</tabstop>
   <tabstop>checkBox_ITYPE</tabstop>
   <tabstop>comboBox_ITYPE</tabstop>
   <tabstop>tableWidget_BODY</tabstop>

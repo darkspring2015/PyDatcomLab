@@ -11,8 +11,7 @@ from .Ui_PlaneConfiguration import Ui_Dialog
 
 from PyDatcomLab.Core import  dcModel
 
-from PyDatcomLab.GUIs.PlaneConfiguration import BODY, HTPLNF,  SYNTHS, VTPLNF,WGPLNF, WGSCHR
-from PyDatcomLab.GUIs.PlaneConfiguration import FLTCON , EXPR, VFPLNF, HTSCHR, VTSCHR, VFSCHR
+from PyDatcomLab.GUIs.PlaneConfiguration import *
 
 import logging
 

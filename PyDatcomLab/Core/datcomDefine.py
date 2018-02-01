@@ -9,11 +9,9 @@ speedRegime = ['Subsoinc', 'Transoinc', 'Supersonic', 'Hypersonic']
 
 reserved_NAMELISTS = [
     'FLTCON',#
+    'OPTINS',#
     'SYNTHS',#
     'BODY',#
-    'SYMFLP',#
-    'ASYFLP', #
-    'OPTINS',#
     'WGPLNF', #    
     'HTPLNF',#
     'VTPLNF',#
@@ -22,16 +20,60 @@ reserved_NAMELISTS = [
     'HTSCHR',#
     'VTSCHR',#
     'VFSCHR',#
+    'EXPR', #
     'PROPWR',#linger
     'JETPWR', #
     'CONTAB', #
-    'EXPR', #
+    'SYMFLP',#
+    'ASYFLP', #
     'GRNDEF', #
     'HYPEFF', #
     'LARWB', #
     'TRNJET', #
     'TVTPAN', #   
     ]
+    
+namelistDefine = {
+    'FLTCON':{'ShowName':'飞行条件'},
+    'OPTINS':{'ShowName':'可选项'},
+    'SYNTHS':{'ShowName':'总体参数'},
+    'BODY'  :{'ShowName':'机体参数'},
+    'WGPLNF':{'ShowName':'机翼外形参数'},    
+    'HTPLNF':{'ShowName':'平尾外形参数'},
+    'VTPLNF':{'ShowName':'垂尾外形参数'},
+    'VFPLNF':{'ShowName':'腹鳍外形参数'},
+    'WGSCHR':{'ShowName':'机翼气动参数'},
+    'HTSCHR':{'ShowName':'平尾气动参数'},
+    'VTSCHR':{'ShowName':'垂尾气动参数'},
+    'VFSCHR':{'ShowName':'副翼气动参数'},
+    'EXPR'  :{'ShowName':'实验参数'},
+    'PROPWR':{'ShowName':'螺旋桨动力'},
+    'JETPWR':{'ShowName':'喷气动力'},
+    'CONTAB':{'ShowName':'控制面参数'},
+    'SYMFLP':{'ShowName':'对称偏转面参数'},
+    'ASYFLP':{'ShowName':'差动偏转面参数'},
+    'GRNDEF':{'ShowName':'地效参数'},
+    'HYPEFF':{'ShowName':'高超声速襟翼'},
+    'LARWB' :{'ShowName':'翼身融合体'},
+    'TRNJET':{'ShowName':'横向喷流控制装置'},
+    'TVTPAN':{'ShowName':'双垂面'},   
+    }
+modelTemplate ={
+'1.0':{'TName':'常规布局', 'CARDList':[
+    'FLTCON','OPTINS',#
+    'SYNTHS',#
+    'BODY',#
+    'WGPLNF', #    
+    'HTPLNF',#
+    'VTPLNF',#
+    'VFPLNF',#
+    'WGSCHR',#
+    'HTSCHR',#
+    'VTSCHR',#
+    'VFSCHR',#
+]}, #'1.0
+
+}
 #dictNamelist ={
 #{'ASYFLP', 'DELTAL', 9 , 'deflection angle for left hand plain flap aileron or left hand panel all moveable horizontal tail, measured in vertical plane of symmetry', 'deg'}, 
 #{'ASYFLP2', 'DELTAR', 9 , 'deflection angle for left hand plain flap aileron or left hand panel all moveable horizontal tail, measured in vertical plane of symmetry', 'deg'}, 

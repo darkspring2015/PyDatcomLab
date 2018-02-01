@@ -135,7 +135,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        raise NotImplementedError
+        #raise NotImplementedError
     
     @pyqtSlot()
     def on_actionImportModel_triggered(self):
@@ -143,7 +143,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        raise NotImplementedError
+        #raise NotImplementedError
     
     @pyqtSlot()
     def on_actionDocs_triggered(self):
@@ -151,7 +151,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        raise NotImplementedError
+        #raise NotImplementedError
     
     @pyqtSlot(str)
     def on_statusBar_windowTitleChanged(self, title):
@@ -162,7 +162,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         @type str
         """
         # TODO: not implemented yet
-        raise NotImplementedError
+        #raise NotImplementedError
     
     @pyqtSlot()
     def on_actionNewProject_triggered(self):
