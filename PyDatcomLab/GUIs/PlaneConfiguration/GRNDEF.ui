@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1146</width>
-    <height>704</height>
+    <width>840</width>
+    <height>428</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,52 +54,22 @@
       </layout>
      </item>
      <item>
-      <widget class="QTableWidget" name="tableWidget_GHeight"/>
+      <widget class="QTableWidget" name="tableWidget_GHeight">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>示意图</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLabel" name="label_16">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="card_rc.qrc">:/card/rc_card/GRNDEF.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>参数表</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="card_rc.qrc">:/card/rc_card/GRNDEF-para.png</pixmap>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
        <string>参数说明</string>

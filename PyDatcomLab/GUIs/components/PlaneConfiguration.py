@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QDialog, QWidget
 
 from .Ui_PlaneConfiguration import Ui_Dialog
 
-from PyDatcomLab.Core import  dcModel
+from PyDatcomLab.Core import  dcModel, datcomDefine as dF
 
 from PyDatcomLab.GUIs.PlaneConfiguration import *
 
@@ -31,8 +31,13 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         #初始化日志系统
         self.logger = logging.getLogger(r'Datcomlogger')
         #创建内部数据结构
-        self.dcModel = dcModel.dcModel('AircraftName', '常规构型') 
-        self.dcModelPath =  modelpath
+        self.dcModel = dcModel.dcModel() 
+        if os.path.exists(modelpath):
+            self.dcModel.loadXML(modelpath)
+            self.dcModelPath =  modelpath
+        else:
+            self.dcModelPath =  None
+        
         self.lastIndex = -1
         
         self.widgetNameList = {
@@ -49,6 +54,8 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
             VFSCHR.VFSCHR:['VFSCHR','腹鳍气动参数'],
             EXPR.EXPR:[    'EXPR'  ,'试验数据'],             
         }
+        
+        #self.cardList = dF.namelistDefine.keys() #默认使用所有的CARD
         
         #建立内存结构
         if os.path.isfile(modelpath):
@@ -67,10 +74,17 @@ class PlaneConfiguration(QDialog, Ui_Dialog):
         初始化所有的page页
         """
         self.tabWidget_Configuration.clear()  
-        for mdName in self.widgetNameList.keys():
-            aW = mdName(tModel = self.dcModel)
-            aW.setObjectName(self.widgetNameList[mdName][0] )
-            self.tabWidget_Configuration.addTab( aW, self.widgetNameList[mdName][1])
+        for mdName in self.dcModel.getCARDList():
+            mdObj = __import__(mdName)
+            cardMd = getattr(mdObj,mdName)
+            aW = cardMd(self, tModel = self.dcModel)
+            aW.setObjectName(mdName)
+            self.tabWidget_Configuration.addTab( aW, dF.namelistDefine[mdName]['ShowName'])
+            
+#        for mdName in self.widgetNameList.keys():
+#            aW = mdName(tModel = self.dcModel)
+#            aW.setObjectName(self.widgetNameList[mdName][0] )
+#            self.tabWidget_Configuration.addTab( aW, self.widgetNameList[mdName][1])
             
     
     @pyqtSlot(int)

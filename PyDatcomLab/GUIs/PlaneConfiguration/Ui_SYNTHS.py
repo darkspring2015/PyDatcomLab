@@ -2,21 +2,21 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\SYNTHS.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(1171, 696)
-        self.horizontalLayout_18 = QtWidgets.QHBoxLayout(Form)
+class Ui_SYNTHS(object):
+    def setupUi(self, SYNTHS):
+        SYNTHS.setObjectName("SYNTHS")
+        SYNTHS.resize(1171, 632)
+        self.horizontalLayout_18 = QtWidgets.QHBoxLayout(SYNTHS)
         self.horizontalLayout_18.setObjectName("horizontalLayout_18")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout()
         self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.groupBoxCG = QtWidgets.QGroupBox(Form)
+        self.groupBoxCG = QtWidgets.QGroupBox(SYNTHS)
         self.groupBoxCG.setObjectName("groupBoxCG")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.groupBoxCG)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -53,7 +53,7 @@ class Ui_Form(object):
         self.horizontalLayout_2.addWidget(self.ZCG)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.verticalLayout_7.addWidget(self.groupBoxCG)
-        self.groupBox = QtWidgets.QGroupBox(Form)
+        self.groupBox = QtWidgets.QGroupBox(SYNTHS)
         self.groupBox.setObjectName("groupBox")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.groupBox)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -106,7 +106,7 @@ class Ui_Form(object):
         self.horizontalLayout_5.addWidget(self.ALIW)
         self.verticalLayout_2.addLayout(self.horizontalLayout_5)
         self.verticalLayout_7.addWidget(self.groupBox)
-        self.groupBox_HorizontalTail = QtWidgets.QGroupBox(Form)
+        self.groupBox_HorizontalTail = QtWidgets.QGroupBox(SYNTHS)
         self.groupBox_HorizontalTail.setObjectName("groupBox_HorizontalTail")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.groupBox_HorizontalTail)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
@@ -175,7 +175,7 @@ class Ui_Form(object):
         self.horizontalLayout_9.addWidget(self.HINAX)
         self.verticalLayout_3.addLayout(self.horizontalLayout_9)
         self.verticalLayout_7.addWidget(self.groupBox_HorizontalTail)
-        self.groupBox_VerticalTail = QtWidgets.QGroupBox(Form)
+        self.groupBox_VerticalTail = QtWidgets.QGroupBox(SYNTHS)
         self.groupBox_VerticalTail.setObjectName("groupBox_VerticalTail")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.groupBox_VerticalTail)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
@@ -212,7 +212,7 @@ class Ui_Form(object):
         self.horizontalLayout_11.addWidget(self.ZV)
         self.verticalLayout_4.addLayout(self.horizontalLayout_11)
         self.verticalLayout_7.addWidget(self.groupBox_VerticalTail)
-        self.groupBox_2 = QtWidgets.QGroupBox(Form)
+        self.groupBox_2 = QtWidgets.QGroupBox(SYNTHS)
         self.groupBox_2.setObjectName("groupBox_2")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.groupBox_2)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -249,7 +249,7 @@ class Ui_Form(object):
         self.horizontalLayout_13.addWidget(self.ZVF)
         self.verticalLayout_5.addLayout(self.horizontalLayout_13)
         self.verticalLayout_7.addWidget(self.groupBox_2)
-        self.groupBox_3 = QtWidgets.QGroupBox(Form)
+        self.groupBox_3 = QtWidgets.QGroupBox(SYNTHS)
         self.groupBox_3.setObjectName("groupBox_3")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.groupBox_3)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
@@ -294,7 +294,7 @@ class Ui_Form(object):
         spacerItem15 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_7.addItem(spacerItem15)
         self.horizontalLayout_18.addLayout(self.verticalLayout_7)
-        self.tabWidget = QtWidgets.QTabWidget(Form)
+        self.tabWidget = QtWidgets.QTabWidget(SYNTHS)
         self.tabWidget.setObjectName("tabWidget")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
@@ -310,66 +310,40 @@ class Ui_Form(object):
         self.textBrowser.setObjectName("textBrowser")
         self.horizontalLayout_16.addWidget(self.textBrowser)
         self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.horizontalLayout_17 = QtWidgets.QHBoxLayout(self.tab_2)
-        self.horizontalLayout_17.setObjectName("horizontalLayout_17")
-        self.scrollArea = QtWidgets.QScrollArea(self.tab_2)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setObjectName("scrollArea")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(-310, -120, 1215, 736))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.horizontalLayout_19 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
-        self.horizontalLayout_19.setObjectName("horizontalLayout_19")
-        self.pictureSYNTHS = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pictureSYNTHS.sizePolicy().hasHeightForWidth())
-        self.pictureSYNTHS.setSizePolicy(sizePolicy)
-        self.pictureSYNTHS.setText("")
-        self.pictureSYNTHS.setPixmap(QtGui.QPixmap(":/card/rc_card/SYNTHS.png"))
-        self.pictureSYNTHS.setScaledContents(False)
-        self.pictureSYNTHS.setObjectName("pictureSYNTHS")
-        self.horizontalLayout_19.addWidget(self.pictureSYNTHS)
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.horizontalLayout_17.addWidget(self.scrollArea)
-        self.tabWidget.addTab(self.tab_2, "")
         self.horizontalLayout_18.addWidget(self.tabWidget)
 
-        self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(1)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(SYNTHS)
+        self.tabWidget.setCurrentIndex(0)
+        QtCore.QMetaObject.connectSlotsByName(SYNTHS)
 
-    def retranslateUi(self, Form):
+    def retranslateUi(self, SYNTHS):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "飞机综合参数"))
-        self.groupBoxCG.setTitle(_translate("Form", "质心"))
-        self.label.setText(_translate("Form", "XCG ：重心纵向位置"))
-        self.label_2.setText(_translate("Form", "ZCG ：重心垂向位置"))
-        self.groupBox.setTitle(_translate("Form", "机翼参数"))
-        self.label_3.setText(_translate("Form", "XW  ：机翼理论顶端的纵向位置"))
-        self.label_4.setText(_translate("Form", "ZW  ：机翼理论顶端的垂向位置"))
-        self.label_5.setText(_translate("Form", "ALIW：机翼安装角"))
-        self.groupBox_HorizontalTail.setTitle(_translate("Form", "平尾参数"))
-        self.label_6.setText(_translate("Form", "XH  ：平尾理论顶端的纵向位置"))
-        self.label_7.setText(_translate("Form", "ZH  ：平尾理论顶端的纵向位置"))
-        self.label_8.setText(_translate("Form", "ALIH：平尾安装角"))
-        self.checkBox_HINAX.setText(_translate("Form", "HINAX：平尾铰链轴的纵向位置"))
-        self.groupBox_VerticalTail.setTitle(_translate("Form", "垂尾参数"))
-        self.label_9.setText(_translate("Form", "XV  ：垂尾理论顶端的纵向位置"))
-        self.label_10.setText(_translate("Form", "ZV  ：垂尾理论顶端的垂向位置"))
-        self.groupBox_2.setTitle(_translate("Form", "腹鳍参数(Ventral Tail)"))
-        self.label_11.setText(_translate("Form", "XVF ：腹鳍理论顶端的纵向位置"))
-        self.label_12.setText(_translate("Form", "ZVF ：腹鳍理论顶端的垂向位置"))
-        self.groupBox_3.setTitle(_translate("Form", "其他配置"))
-        self.label_14.setText(_translate("Form", "SCALE：缩放因子"))
-        self.label_13.setText(_translate("Form", "VERTUP：垂直面与参考面关系"))
-        self.VERTUP.setCurrentText(_translate("Form", ".TRUE. 参考面上方"))
-        self.VERTUP.setItemText(0, _translate("Form", ".TRUE. 参考面上方"))
-        self.VERTUP.setItemText(1, _translate("Form", ".FALSE. 参考面下方"))
-        self.textBrowser.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        SYNTHS.setWindowTitle(_translate("SYNTHS", "飞机综合参数"))
+        self.groupBoxCG.setTitle(_translate("SYNTHS", "质心"))
+        self.label.setText(_translate("SYNTHS", "XCG ：重心纵向位置"))
+        self.label_2.setText(_translate("SYNTHS", "ZCG ：重心垂向位置"))
+        self.groupBox.setTitle(_translate("SYNTHS", "机翼参数"))
+        self.label_3.setText(_translate("SYNTHS", "XW  ：机翼理论顶端的纵向位置"))
+        self.label_4.setText(_translate("SYNTHS", "ZW  ：机翼理论顶端的垂向位置"))
+        self.label_5.setText(_translate("SYNTHS", "ALIW：机翼安装角"))
+        self.groupBox_HorizontalTail.setTitle(_translate("SYNTHS", "平尾参数"))
+        self.label_6.setText(_translate("SYNTHS", "XH  ：平尾理论顶端的纵向位置"))
+        self.label_7.setText(_translate("SYNTHS", "ZH  ：平尾理论顶端的纵向位置"))
+        self.label_8.setText(_translate("SYNTHS", "ALIH：平尾安装角"))
+        self.checkBox_HINAX.setText(_translate("SYNTHS", "HINAX：平尾铰链轴的纵向位置"))
+        self.groupBox_VerticalTail.setTitle(_translate("SYNTHS", "垂尾参数"))
+        self.label_9.setText(_translate("SYNTHS", "XV  ：垂尾理论顶端的纵向位置"))
+        self.label_10.setText(_translate("SYNTHS", "ZV  ：垂尾理论顶端的垂向位置"))
+        self.groupBox_2.setTitle(_translate("SYNTHS", "腹鳍参数(Ventral Tail)"))
+        self.label_11.setText(_translate("SYNTHS", "XVF ：腹鳍理论顶端的纵向位置"))
+        self.label_12.setText(_translate("SYNTHS", "ZVF ：腹鳍理论顶端的垂向位置"))
+        self.groupBox_3.setTitle(_translate("SYNTHS", "其他配置"))
+        self.label_14.setText(_translate("SYNTHS", "SCALE：缩放因子"))
+        self.label_13.setText(_translate("SYNTHS", "VERTUP：垂直面与参考面关系"))
+        self.VERTUP.setCurrentText(_translate("SYNTHS", ".TRUE. 参考面上方"))
+        self.VERTUP.setItemText(0, _translate("SYNTHS", ".TRUE. 参考面上方"))
+        self.VERTUP.setItemText(1, _translate("SYNTHS", ".FALSE. 参考面下方"))
+        self.textBrowser.setHtml(_translate("SYNTHS", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
@@ -381,17 +355,16 @@ class Ui_Form(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2. 输入HINAX时，XH和ZH被认为是0安装角（iw=0）</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Tips2：使用双垂尾</p></body></html>"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "参数说明"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Form", "参数示意"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("SYNTHS", "参数说明"))
 
 import card_rc_rc
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    SYNTHS = QtWidgets.QWidget()
+    ui = Ui_SYNTHS()
+    ui.setupUi(SYNTHS)
+    SYNTHS.show()
     sys.exit(app.exec_())
 

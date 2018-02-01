@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\PROPWR.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -260,28 +260,6 @@ class Ui_PROPWR(object):
         self.horizontalLayout_18.addLayout(self.verticalLayout_4)
         self.tabWidget = QtWidgets.QTabWidget(PROPWR)
         self.tabWidget.setObjectName("tabWidget")
-        self.tab = QtWidgets.QWidget()
-        self.tab.setObjectName("tab")
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.tab)
-        self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.label_Pic1 = QtWidgets.QLabel(self.tab)
-        self.label_Pic1.setText("")
-        self.label_Pic1.setPixmap(QtGui.QPixmap(":/card/rc_card/PROPWR-fig.bmp"))
-        self.label_Pic1.setScaledContents(True)
-        self.label_Pic1.setObjectName("label_Pic1")
-        self.verticalLayout_5.addWidget(self.label_Pic1)
-        self.tabWidget.addTab(self.tab, "")
-        self.tab_3 = QtWidgets.QWidget()
-        self.tab_3.setObjectName("tab_3")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab_3)
-        self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.label_pic2 = QtWidgets.QLabel(self.tab_3)
-        self.label_pic2.setText("")
-        self.label_pic2.setPixmap(QtGui.QPixmap(":/card/rc_card/PROWER.bmp"))
-        self.label_pic2.setScaledContents(True)
-        self.label_pic2.setObjectName("label_pic2")
-        self.verticalLayout_6.addWidget(self.label_pic2)
-        self.tabWidget.addTab(self.tab_3, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout(self.tab_2)
@@ -293,7 +271,7 @@ class Ui_PROPWR(object):
         self.horizontalLayout_18.addWidget(self.tabWidget)
 
         self.retranslateUi(PROPWR)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(PROPWR)
 
     def retranslateUi(self, PROPWR):
@@ -332,8 +310,6 @@ class Ui_PROPWR(object):
         self.BWAPR9.setToolTip(_translate("PROPWR", "blade width at 0.9 propeller radius ，0.9螺旋桨半径叶片宽度"))
         self.label_11.setText(_translate("PROPWR", "NOPBPE 发动机的螺旋桨叶片数"))
         self.NOPBPE.setToolTip(_translate("PROPWR", "number of propeller blades per engine ，发动机的螺旋桨叶片数"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("PROPWR", "示意图"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("PROPWR", "原文参数表"))
         self.textBrowser_Para.setHtml(_translate("PROPWR", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

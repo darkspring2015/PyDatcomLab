@@ -549,7 +549,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_right">
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_PARA">
       <attribute name="title">
@@ -583,84 +583,6 @@
          <property name="contextMenuPolicy">
           <enum>Qt::CustomContextMenu</enum>
          </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab__para">
-      <attribute name="title">
-       <string>参数说明</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_16">
-       <item>
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>794</width>
-            <height>836</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_17">
-           <item>
-            <widget class="QLabel" name="label_allVar">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="card_rc.qrc">:/card/rc_card/FLTCON.png</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_paraCombo">
-      <attribute name="title">
-       <string>参数组合说明</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_15">
-       <item>
-        <widget class="QScrollArea" name="scrollArea_2">
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents_2">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>630</width>
-            <height>584</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_18">
-           <item>
-            <widget class="QLabel" name="label_varCombo">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="card_rc.qrc">:/card/rc_card/FLTCON2.png</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
         </widget>
        </item>
       </layout>

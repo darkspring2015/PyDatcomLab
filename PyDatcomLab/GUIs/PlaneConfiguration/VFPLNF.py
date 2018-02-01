@@ -13,7 +13,7 @@ from PyDatcomLab.GUIs.PlaneConfiguration import DatcomCARD as DC
 
 import logging
 
-from .Ui_VFPLNF import Ui_VFPLNF
+from Ui_VFPLNF import Ui_VFPLNF
 
 
 class VFPLNF(QWidget, Ui_VFPLNF):

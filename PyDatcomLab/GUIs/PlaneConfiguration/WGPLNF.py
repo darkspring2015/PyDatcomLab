@@ -13,10 +13,10 @@ from PyDatcomLab.Core import dcModel
 from PyDatcomLab.GUIs.PlaneConfiguration import DatcomCARD as DC
 
 import logging
-from .Ui_WGPLNF import Ui_Form
+from Ui_WGPLNF import Ui_WGPLNF
 
 
-class WGPLNF(QWidget, Ui_Form):
+class WGPLNF(QWidget, Ui_WGPLNF):
     """
     Class documentation goes here.
     """

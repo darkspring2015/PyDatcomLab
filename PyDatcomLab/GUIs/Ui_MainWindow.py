@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\MainWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,6 +13,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1202, 900)
         self.centralWidgetLay = QtWidgets.QWidget(MainWindow)
+        self.centralWidgetLay.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.centralWidgetLay.setObjectName("centralWidgetLay")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralWidgetLay)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -22,6 +23,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Main_widget.sizePolicy().hasHeightForWidth())
         self.Main_widget.setSizePolicy(sizePolicy)
+        self.Main_widget.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.Main_widget.setObjectName("Main_widget")
         self.verticalLayout.addWidget(self.Main_widget)
         MainWindow.setCentralWidget(self.centralWidgetLay)

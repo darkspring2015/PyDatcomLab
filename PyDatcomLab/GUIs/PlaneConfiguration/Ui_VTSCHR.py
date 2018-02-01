@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab/GUIs/PlaneConfiguration/VTSCHR.ui'
+# Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\VTSCHR.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -341,6 +341,8 @@ class Ui_VTSCHR(object):
         self.CLD.setObjectName("CLD")
         self.horizontalLayout_23.addWidget(self.CLD)
         self.verticalLayout_2.addLayout(self.horizontalLayout_23)
+        spacerItem20 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_2.addItem(spacerItem20)
         self.horizontalLayout_20.addLayout(self.verticalLayout_2)
         self.tabWidget = QtWidgets.QTabWidget(VTSCHR)
         self.tabWidget.setObjectName("tabWidget")
@@ -392,23 +394,23 @@ class Ui_VTSCHR(object):
         self.label_22 = QtWidgets.QLabel(self.tab_Airfoil)
         self.label_22.setObjectName("label_22")
         self.horizontalLayout_24.addWidget(self.label_22)
-        spacerItem20 = QtWidgets.QSpacerItem(13, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_24.addItem(spacerItem20)
+        spacerItem21 = QtWidgets.QSpacerItem(13, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_24.addItem(spacerItem21)
         self.comboBox_TYPEIN = QtWidgets.QComboBox(self.tab_Airfoil)
         self.comboBox_TYPEIN.setObjectName("comboBox_TYPEIN")
         self.comboBox_TYPEIN.addItem("")
         self.comboBox_TYPEIN.addItem("")
         self.horizontalLayout_24.addWidget(self.comboBox_TYPEIN)
         self.horizontalLayout_27.addLayout(self.horizontalLayout_24)
-        spacerItem21 = QtWidgets.QSpacerItem(13, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_27.addItem(spacerItem21)
+        spacerItem22 = QtWidgets.QSpacerItem(13, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_27.addItem(spacerItem22)
         self.horizontalLayout_25 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_25.setObjectName("horizontalLayout_25")
         self.label_23 = QtWidgets.QLabel(self.tab_Airfoil)
         self.label_23.setObjectName("label_23")
         self.horizontalLayout_25.addWidget(self.label_23)
-        spacerItem22 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_25.addItem(spacerItem22)
+        spacerItem23 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_25.addItem(spacerItem23)
         self.NPTS = QtWidgets.QLineEdit(self.tab_Airfoil)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -433,26 +435,6 @@ class Ui_VTSCHR(object):
         self.textBrowser_Help.setObjectName("textBrowser_Help")
         self.horizontalLayout.addWidget(self.textBrowser_Help)
         self.tabWidget.addTab(self.tab_para, "")
-        self.tab_tips = QtWidgets.QWidget()
-        self.tab_tips.setObjectName("tab_tips")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.tab_tips)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.scrollArea = QtWidgets.QScrollArea(self.tab_tips)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setObjectName("scrollArea")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1310, 895))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.horizontalLayout_29 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
-        self.horizontalLayout_29.setObjectName("horizontalLayout_29")
-        self.label_Pic = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_Pic.setText("")
-        self.label_Pic.setPixmap(QtGui.QPixmap(":/card/rc_card/ARCL.png"))
-        self.label_Pic.setObjectName("label_Pic")
-        self.horizontalLayout_29.addWidget(self.label_Pic)
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.horizontalLayout_2.addWidget(self.scrollArea)
-        self.tabWidget.addTab(self.tab_tips, "")
         self.horizontalLayout_20.addWidget(self.tabWidget)
         self.actionDeleteRow = QtWidgets.QAction(VTSCHR)
         icon = QtGui.QIcon()
@@ -466,7 +448,7 @@ class Ui_VTSCHR(object):
         self.actionAddRow.setObjectName("actionAddRow")
 
         self.retranslateUi(VTSCHR)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(VTSCHR)
 
     def retranslateUi(self, VTSCHR):
@@ -628,7 +610,6 @@ class Ui_VTSCHR(object):
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_para), _translate("VTSCHR", "参数说明"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_tips), _translate("VTSCHR", "提示信息"))
         self.actionDeleteRow.setText(_translate("VTSCHR", "删除行"))
         self.actionDeleteRow.setToolTip(_translate("VTSCHR", "删除一行"))
         self.actionAddRow.setText(_translate("VTSCHR", "增加行"))

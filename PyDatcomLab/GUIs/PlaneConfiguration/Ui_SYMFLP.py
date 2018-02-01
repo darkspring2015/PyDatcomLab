@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\SYMFLP.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -271,6 +271,8 @@ class Ui_SYMFLP(object):
         self.CMU.setObjectName("CMU")
         self.horizontalLayout_15.addWidget(self.CMU)
         self.verticalLayout.addLayout(self.horizontalLayout_15)
+        spacerItem15 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem15)
         self.horizontalLayout_16.addLayout(self.verticalLayout)
         self.tabWidget_input = QtWidgets.QTabWidget(SYMFLP)
         self.tabWidget_input.setObjectName("tabWidget_input")
@@ -305,48 +307,6 @@ class Ui_SYMFLP(object):
         self.tableWidget_jet.setRowCount(0)
         self.horizontalLayout_20.addWidget(self.tableWidget_jet)
         self.tabWidget_input.addTab(self.tab_5, "")
-        self.tab = QtWidgets.QWidget()
-        self.tab.setObjectName("tab")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.tab)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.scrollArea = QtWidgets.QScrollArea(self.tab)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setObjectName("scrollArea")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 706, 578))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.horizontalLayout_18 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
-        self.horizontalLayout_18.setObjectName("horizontalLayout_18")
-        self.label_16 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_16.setText("")
-        self.label_16.setPixmap(QtGui.QPixmap(":/card/rc_card/SYMFLP-2.png"))
-        self.label_16.setScaledContents(True)
-        self.label_16.setObjectName("label_16")
-        self.horizontalLayout_18.addWidget(self.label_16)
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.verticalLayout_2.addWidget(self.scrollArea)
-        self.tabWidget_input.addTab(self.tab, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.tab_2)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.scrollArea_2 = QtWidgets.QScrollArea(self.tab_2)
-        self.scrollArea_2.setWidgetResizable(True)
-        self.scrollArea_2.setObjectName("scrollArea_2")
-        self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 919, 560))
-        self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.label_17 = QtWidgets.QLabel(self.scrollAreaWidgetContents_2)
-        self.label_17.setText("")
-        self.label_17.setPixmap(QtGui.QPixmap(":/card/rc_card/SYMFLP-para1.png"))
-        self.label_17.setScaledContents(True)
-        self.label_17.setObjectName("label_17")
-        self.verticalLayout_4.addWidget(self.label_17)
-        self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
-        self.verticalLayout_3.addWidget(self.scrollArea_2)
-        self.tabWidget_input.addTab(self.tab_2, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
         self.horizontalLayout_17 = QtWidgets.QHBoxLayout(self.tab_3)
@@ -368,7 +328,7 @@ class Ui_SYMFLP(object):
         self.actionDeleteRow.setObjectName("actionDeleteRow")
 
         self.retranslateUi(SYMFLP)
-        self.tabWidget_input.setCurrentIndex(0)
+        self.tabWidget_input.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(SYMFLP)
 
     def retranslateUi(self, SYMFLP):
@@ -407,8 +367,6 @@ class Ui_SYMFLP(object):
         self.label_15.setText(_translate("SYMFLP", "CMU  二维射流系数"))
         self.tabWidget_input.setTabText(self.tabWidget_input.indexOf(self.tab_4), _translate("SYMFLP", "可变参数"))
         self.tabWidget_input.setTabText(self.tabWidget_input.indexOf(self.tab_5), _translate("SYMFLP", "射流襟翼参数"))
-        self.tabWidget_input.setTabText(self.tabWidget_input.indexOf(self.tab), _translate("SYMFLP", "示意图"))
-        self.tabWidget_input.setTabText(self.tabWidget_input.indexOf(self.tab_2), _translate("SYMFLP", "参数表"))
         self.textBrowser.setHtml(_translate("SYMFLP", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

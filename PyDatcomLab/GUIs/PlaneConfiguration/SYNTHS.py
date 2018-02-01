@@ -11,10 +11,10 @@ from PyQt5.QtGui import QDoubleValidator
 from PyDatcomLab.Core import dcModel
 import logging
 
-from .Ui_SYNTHS import Ui_Form
+from Ui_SYNTHS import Ui_SYNTHS
 
 
-class SYNTHS(QWidget, Ui_Form):
+class SYNTHS(QWidget, Ui_SYNTHS):
     """
     Class documentation goes here.
     SCLAE ：缩放因子，用来适应风洞数据

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\TVTPAN.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -183,7 +183,7 @@ class Ui_TVTPAN(object):
         self.horizontalLayout.addWidget(self.tabWidget)
 
         self.retranslateUi(TVTPAN)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(TVTPAN)
 
     def retranslateUi(self, TVTPAN):

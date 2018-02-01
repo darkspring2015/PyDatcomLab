@@ -32,7 +32,7 @@ class dcModel(object):
 
         self.numForE = 100
         #其他内部需要的结构
-        self.cardlist = [] #记录本模型有效的CARD内容
+        self.cardlist = dF.namelistDefine.keys() #记录本模型有效的CARD内容,默认是全部的选项卡
         
         
     def getDocXMLString(self):
@@ -66,11 +66,20 @@ class dcModel(object):
         self.configuration = tXML.get("Configuration")
         self.createTime = tXML.get("createTime")
         self.modifyTime = tXML.get("modifyTime")
+        #保持CARD信息列表
+        
         #读取实例
         keyLst = dF.reserved_NAMELISTS  #定义了所有Namelist信息的list
         
         for nmlstNode in list(tXML):
-            if nmlstNode.tag not in keyLst:continue #不在Namelist列表中的将被跳过
+            #执行非Namelist节的解析
+            if nmlstNode.tag not in keyLst:
+                if nmlstNode.tag == 'CARDList':
+                    self.cardlist = []
+                    for iC in list(nmlstNode):
+                        self.cardlist.append(iC.tag)
+                
+                continue #不在Namelist列表中的将被跳过
             
             #分析子节点
             for aVar in list(nmlstNode): #遍历所有的子节点
@@ -117,6 +126,12 @@ class dcModel(object):
         root.set('Configuration',self.configuration )
         root.set('createTime',self.createTime )
         root.set('modifyTime',self.modifyTime )
+        
+        #写入CARD的有效性掩码
+        cardListNode = ET.SubElement(root, 'CARDList', {'dcType':'Other'})
+        for iC in self.cardlist:
+            ET.SubElement(cardListNode, iC, {'dcType':'Other'})
+        
         
         #循环写入NameList        
         if self.doc is None:   

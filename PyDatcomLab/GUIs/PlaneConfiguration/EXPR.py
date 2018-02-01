@@ -9,12 +9,12 @@ from PyQt5.QtWidgets import QWidget, QMenu, QTableWidgetItem, QLineEdit, QComboB
 from PyQt5.QtWidgets import QAction, QCheckBox 
 from PyQt5.QtGui import QDoubleValidator, QIntValidator, QIcon, QPixmap, QValidator
 
-from .Ui_EXPR import Ui_Form
+from Ui_EXPR import Ui_EXPR
 
 from PyDatcomLab.Core import dcModel 
 import logging
 
-class EXPR(QWidget, Ui_Form):
+class EXPR(QWidget, Ui_EXPR):
     """
     Class documentation goes here.
     """

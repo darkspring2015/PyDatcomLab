@@ -112,9 +112,6 @@ class Ui_OPTINS(object):
         self.label.setObjectName("label")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label)
         self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.tabWidget.addTab(self.tab_2, "")
         self.horizontalLayout_5.addWidget(self.tabWidget)
 
         self.retranslateUi(OPTINS)
@@ -129,7 +126,6 @@ class Ui_OPTINS(object):
         self.checkBox_CBARR.setText(_translate("OPTINS", "CBARR 纵向参考长度值"))
         self.checkBox_BLREF.setText(_translate("OPTINS", "BLREF 横向参考长度值"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("OPTINS", "粗糙度"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("OPTINS", "Tab 2"))
 
 import card_rc_rc
 

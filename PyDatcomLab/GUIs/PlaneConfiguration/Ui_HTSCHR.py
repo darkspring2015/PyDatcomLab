@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab/GUIs/PlaneConfiguration/HTSCHR.ui'
+# Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\HTSCHR.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -427,26 +427,6 @@ class Ui_HTSCHR(object):
         self.textBrowser_Help.setObjectName("textBrowser_Help")
         self.horizontalLayout.addWidget(self.textBrowser_Help)
         self.tabWidget.addTab(self.tab_para, "")
-        self.tab_tips = QtWidgets.QWidget()
-        self.tab_tips.setObjectName("tab_tips")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.tab_tips)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.scrollArea = QtWidgets.QScrollArea(self.tab_tips)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setObjectName("scrollArea")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 98, 32))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.horizontalLayout_29 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
-        self.horizontalLayout_29.setObjectName("horizontalLayout_29")
-        self.label_Pic = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_Pic.setText("")
-        self.label_Pic.setPixmap(QtGui.QPixmap(":/card/rc_card/ARCL.png"))
-        self.label_Pic.setObjectName("label_Pic")
-        self.horizontalLayout_29.addWidget(self.label_Pic)
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.horizontalLayout_2.addWidget(self.scrollArea)
-        self.tabWidget.addTab(self.tab_tips, "")
         self.horizontalLayout_20.addWidget(self.tabWidget)
         self.actionDeleteRow = QtWidgets.QAction(HTSCHR)
         icon = QtGui.QIcon()
@@ -460,7 +440,7 @@ class Ui_HTSCHR(object):
         self.actionAddRow.setObjectName("actionAddRow")
 
         self.retranslateUi(HTSCHR)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(HTSCHR)
 
     def retranslateUi(self, HTSCHR):
@@ -622,7 +602,6 @@ class Ui_HTSCHR(object):
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_para), _translate("HTSCHR", "参数说明"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_tips), _translate("HTSCHR", "提示信息"))
         self.actionDeleteRow.setText(_translate("HTSCHR", "删除行"))
         self.actionDeleteRow.setToolTip(_translate("HTSCHR", "删除一行"))
         self.actionAddRow.setText(_translate("HTSCHR", "增加行"))

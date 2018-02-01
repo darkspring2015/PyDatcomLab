@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\VTPLNF.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_VTPLNF(object):
     def setupUi(self, VTPLNF):
         VTPLNF.setObjectName("VTPLNF")
-        VTPLNF.resize(845, 577)
+        VTPLNF.resize(845, 433)
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout(VTPLNF)
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -247,6 +247,8 @@ class Ui_VTPLNF(object):
         self.DHDADO.setObjectName("DHDADO")
         self.horizontalLayout_13.addWidget(self.DHDADO)
         self.verticalLayout.addLayout(self.horizontalLayout_13)
+        spacerItem14 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem14)
         self.horizontalLayout_15.addLayout(self.verticalLayout)
         self.tabWidget = QtWidgets.QTabWidget(VTPLNF)
         self.tabWidget.setObjectName("tabWidget")
@@ -269,31 +271,10 @@ class Ui_VTPLNF(object):
         self.plainTextEdit.setObjectName("plainTextEdit")
         self.horizontalLayout_16.addWidget(self.plainTextEdit)
         self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.horizontalLayout_17 = QtWidgets.QHBoxLayout(self.tab_2)
-        self.horizontalLayout_17.setObjectName("horizontalLayout_17")
-        self.label_9 = QtWidgets.QLabel(self.tab_2)
-        self.label_9.setText("")
-        self.label_9.setPixmap(QtGui.QPixmap(":/card/rc_card/WGPLNF.png"))
-        self.label_9.setScaledContents(True)
-        self.label_9.setObjectName("label_9")
-        self.horizontalLayout_17.addWidget(self.label_9)
-        self.tabWidget.addTab(self.tab_2, "")
-        self.tab_3 = QtWidgets.QWidget()
-        self.tab_3.setObjectName("tab_3")
-        self.horizontalLayout_18 = QtWidgets.QHBoxLayout(self.tab_3)
-        self.horizontalLayout_18.setObjectName("horizontalLayout_18")
-        self.label_15 = QtWidgets.QLabel(self.tab_3)
-        self.label_15.setText("")
-        self.label_15.setPixmap(QtGui.QPixmap(":/card/rc_card/WGPLNF_Para.png"))
-        self.label_15.setObjectName("label_15")
-        self.horizontalLayout_18.addWidget(self.label_15)
-        self.tabWidget.addTab(self.tab_3, "")
         self.horizontalLayout_15.addWidget(self.tabWidget)
 
         self.retranslateUi(VTPLNF)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(VTPLNF)
 
     def retranslateUi(self, VTPLNF):
@@ -318,8 +299,6 @@ class Ui_VTPLNF(object):
         self.label_14.setText(_translate("VTPLNF", "DHDADO：外侧板上反角"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_coefficient), _translate("VTPLNF", "垂尾受机翼和平尾的影响"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("VTPLNF", "说明"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("VTPLNF", "示意图"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("VTPLNF", "页"))
 
 import card_rc_rc
 

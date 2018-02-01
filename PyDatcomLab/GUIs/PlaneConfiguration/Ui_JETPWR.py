@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\JETPWR.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -272,16 +272,6 @@ class Ui_JETPWR(object):
         self.label_16.setObjectName("label_16")
         self.verticalLayout_2.addWidget(self.label_16)
         self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.tab_2)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.label_17 = QtWidgets.QLabel(self.tab_2)
-        self.label_17.setText("")
-        self.label_17.setPixmap(QtGui.QPixmap(":/card/rc_card/JETPWR-para.png"))
-        self.label_17.setObjectName("label_17")
-        self.verticalLayout_3.addWidget(self.label_17)
-        self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
         self.horizontalLayout_17 = QtWidgets.QHBoxLayout(self.tab_3)
@@ -293,7 +283,7 @@ class Ui_JETPWR(object):
         self.horizontalLayout_16.addWidget(self.tabWidget)
 
         self.retranslateUi(JETPWR)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(JETPWR)
 
     def retranslateUi(self, JETPWR):
@@ -315,7 +305,6 @@ class Ui_JETPWR(object):
         self.label_10.setText(_translate("JETPWR", "AMBTMP  环境温度 "))
         self.label_14.setText(_translate("JETPWR", "AMBSTP  环境静压"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("JETPWR", "示意图"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("JETPWR", "参数表"))
         self.textBrowser.setHtml(_translate("JETPWR", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

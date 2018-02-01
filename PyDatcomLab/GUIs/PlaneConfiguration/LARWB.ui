@@ -1011,9 +1011,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>98</width>
-            <height>32</height>
+            <y>-158</y>
+            <width>994</width>
+            <height>682</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -1051,8 +1051,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>32</height>
+            <width>1126</width>
+            <height>890</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">

@@ -14,6 +14,12 @@
    <string>Datcom辅助分析软件</string>
   </property>
   <widget class="QWidget" name="centralWidgetLay">
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QWidget" name="Main_widget" native="true">
@@ -22,6 +28,12 @@
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
       </property>
      </widget>
     </item>

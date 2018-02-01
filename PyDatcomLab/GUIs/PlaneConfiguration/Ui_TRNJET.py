@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\Projects\PyDatcomLab\PyDatcomLab\GUIs\PlaneConfiguration\TRNJET.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.1
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -188,7 +188,7 @@ class Ui_TRNJET(object):
         self.actionDeleteRow.setObjectName("actionDeleteRow")
 
         self.retranslateUi(TRNJET)
-        self.tabWidget_input.setCurrentIndex(1)
+        self.tabWidget_input.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(TRNJET)
 
     def retranslateUi(self, TRNJET):
