@@ -42,6 +42,19 @@ reserved_NAMELISTS = [
 dict_ASYFLP=['DELTAL', 'DELTAR', 'DELTAD', 'DELTAS', 'XSOC', 'HSOC', 'STYPE', 'XSPRME', 'NDELTA', 'CHRDFI', 
 'CHRDFO', 'SPANFI', 'SPANFO', 'PHETE']
 
+#定义Datcom中使用的量纲和单位制
+# 认为第一个单位是默认单位
+Dimension = {
+            'AREA':['CM2', 'M2', 'FT2'], 
+            'DEG':['DEG', 'RAD'], 
+            'L':['FT', 'M', 'CM', 'MM'], 
+}
+
+#定义表格使用的常量信息
+groupDefine ={ #组名：{'Name':'widget的名称','ShowName':'显示名称','ToolTips':'组的提示信息'}
+    'ALSCHD':{'Name':'ALSCHD','ShowName':'攻角','ToolTips':'录入攻角信息'}, 
+    'Speed_Atmospheric':{'Name':'Speed_Atmospheric','ShowName':'速度/大气参数','ToolTips':'录入速度/大气参数'}, 
+}
 
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>FLTCON</class>
+ <widget class="QWidget" name="FLTCON">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,9 +15,9 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_14">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_4">
+    <layout class="QVBoxLayout" name="TopLayout">
      <item>
-      <widget class="QGroupBox" name="groupBox1">
+      <widget class="QGroupBox" name="groupBox_flt">
        <property name="title">
         <string>飞行条件</string>
        </property>
@@ -272,7 +272,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox2">
+      <widget class="QGroupBox" name="groupBox_otherFlt">
        <property name="title">
         <string>其他飞行条件</string>
        </property>
@@ -361,7 +361,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox3">
+      <widget class="QGroupBox" name="groupBox_options">
        <property name="title">
         <string>附加配置</string>
        </property>
@@ -547,9 +547,9 @@
     </layout>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="tabWidget_right">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab_PARA">
       <attribute name="title">
@@ -587,7 +587,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="tab__para">
       <attribute name="title">
        <string>参数说明</string>
       </attribute>
@@ -626,7 +626,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tab_paraCombo">
       <attribute name="title">
        <string>参数组合说明</string>
       </attribute>
@@ -665,7 +665,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="tab_help">
       <attribute name="title">
        <string>帮助</string>
       </attribute>

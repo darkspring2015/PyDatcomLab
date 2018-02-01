@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-01-31, 07:41:33 -->
+<!-- Saved: 2018-02-01, 10:54:26 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -33,6 +33,7 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/CONTAB.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomBaseUI.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomCARD.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
