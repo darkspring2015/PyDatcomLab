@@ -1,0 +1,587 @@
+# -*- coding: utf-8 -*-
+
+"""
+Module implementing ModelPreview.
+"""
+
+from PyQt5.QtCore import pyqtSlot, QPoint, Qt,QModelIndex# , QFile, QIODevice
+from PyQt5.QtWidgets import QWidget, QTreeWidgetItem, QFileDialog, QMessageBox, QCheckBox, QHeaderView
+#from PyQt5.QtXml import QDomDocument
+from PyQt5.QtGui import QIcon
+
+import logging, os
+import time
+from xml.etree import ElementTree  as ET
+from PyDatcomLab.Core.dcModel import dcModel 
+from PyDatcomLab.Core.datcomDefine import modelTemplate
+from PyDatcomLab.Core.datcomDefine import reserved_NAMELISTS as allCard
+
+from Ui_ModelPreview import Ui_ModelPreview
+
+
+class ModelPreview(QWidget, Ui_ModelPreview):
+    """
+    Class documentation goes here.
+    """
+    def __init__(self, parent=None):
+        """
+        Constructor
+        
+        @param parent reference to the parent widget
+        @type QWidget
+        """
+        super(ModelPreview, self).__init__(parent)
+        self.setupUi(self)
+        #日志系统        
+        self.logger = logging.getLogger(r'Datcomlogger')
+        #内部变量
+        self.ext = '.dcxml'
+        self.ModelName = "test"
+        self.ModelDir = '.'
+        self.Modelpath = os.path.join(self.ModelDir , self.ModelName +  self.ext)
+        self.Model = dcModel()
+        #配置UI
+        self.treeWidget_model.setColumnCount(2)
+        self.treeWidget_model.setHeaderLabels(['参数', '值'])
+        #self.treeWidget_model.setColumnWidth(0,200)
+        self.treeWidget_model.header().setSectionResizeMode(QHeaderView.ResizeToContents )
+        self.treeWidget_model.header().setStretchLastSection( True)
+#        self.treeWidget_model.setItemsExpandable(True)
+#        self.treeWidget_model.expandAll()
+        self.isPreArray = False # True:'整理Array',False:'不整理Array'
+        #self.isPreArray = True # True:'整理Array',False:'不整理Array'
+        self.itemFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable\
+                        |Qt.ItemIsAutoTristate|Qt.ItemIsUserCheckable #|Qt.ItemIsUserTristate
+
+
+        
+    
+    @pyqtSlot(QPoint)
+    def on_treeView_model_customContextMenuRequested(self, pos):
+        """
+        Slot documentation goes here.
+        
+        @param pos DESCRIPTION
+        @type QPoint
+        """
+        # TODO: not implemented yet
+        #raise NotImplementedError
+        
+    def listDom(self, docElem, pItem):
+        """ 
+        遍历添加到docElem到pItem节点
+        """
+        #添加本节点和属性
+        if pItem:
+            tItem = QTreeWidgetItem(pItem)
+        else:
+            tItem = QTreeWidgetItem(self.treeWidget_model)
+            tItem.setIcon(0, QIcon(":/img/images/airplaneUp.png"))
+        #写入当前节点的名称
+        tItem.setText(0, docElem.tag)        
+        tItem.setCheckState(0, Qt.Checked)
+        tItem.setFlags(self.itemFlags )
+        
+        #根据节点类型设置图标                    
+        if 'dcType' in docElem.attrib:
+           if  docElem.attrib['dcType']=='NAMELIST':
+                tItem.setIcon(0, QIcon(":/img/images/content.png"))
+        #判断是否是叶节点            
+        if len(docElem.getchildren()) == 0:
+            tItem.setText(1, docElem.text) 
+            tItem.setIcon(0, QIcon(":/img/images/variable.png"))
+
+
+            
+        #写入节点的属性信息
+        if  docElem.attrib :
+            tAttrItem = QTreeWidgetItem(tItem)
+            tAttrItem.setText(0, '属性')
+            tAttrItem.setIcon(0, QIcon(":/img/images/type.png"))
+            tAttrItem.setCheckState(0, Qt.Checked)
+            tAttrItem.setFlags(self.itemFlags )
+            for iAttr in docElem.attrib:
+                subAttr = QTreeWidgetItem(tAttrItem)
+                subAttr.setText(0, iAttr)
+                subAttr.setText(1, docElem.attrib[iAttr]) 
+                subAttr.setIcon(0, QIcon(":/img/images/type.png"))
+                #subAttr.setFlags(self.itemFlags )
+                subAttr.setCheckState(0, Qt.Checked)
+            
+        #判断是否有子节点
+        if self.isPreArray and docElem.findall('value'):
+            tValueItem = QTreeWidgetItem(tItem)
+            #tValueItem.setFlags(self.itemFlags )
+            tValueItem.setText(0, 'value')
+            vList =[]
+            for iVal in docElem.findall('value'):
+                vList.append(iVal.text)
+            tValueItem.setText(1, ',  '.join(vList))
+            tValueItem.setIcon(0, QIcon(":/img/images/variable.png"))
+            tValueItem.setCheckState(0, Qt.Checked)
+            
+        else:
+            for iChild in docElem.getchildren():            
+                self.listDom(iChild, tItem)            
+    
+    #END listDom
+        
+    def openXML(self, fileName)  :  
+        """
+        """
+        root = ET.parse(fileName).getroot()
+        if root is None:return
+        #清理控件
+        self.treeWidget_model.clear()
+        
+        #递归添加所有元素
+        self.listDom(root, None)
+        
+        #展开控件
+        self.treeWidget_model.expandToDepth(2)
+
+        
+    
+    def loadModel(self, tFile):
+        """
+        从tFile指定的dcxml文件中加载模型
+        """
+        if not os.path.exists(tFile):
+            self.logger.error("tFile：%s,不存在"%tFile)
+            return
+        #加载
+        self.Model = dcModel()
+        self.Model.loadXML(tFile)
+        self.lineEdit_ModelName.setText(self.Model.aerocraftName)
+        self.lineEdit_DirPath.setText(tFile)
+        for iC in allCard:
+            tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
+            if tWidget is None:
+                self.logger.error("CARD:%s并不在Datcom的Namelist中"%iC)
+                continue
+            else:
+                if iC in self.Model.cardlist:
+                    tWidget.setCheckState(Qt.Checked)
+                else:
+                    tWidget.setCheckState(Qt.Unchecked)
+        #开始加载详细逻辑
+        self.openXML( tFile) 
+    
+    @pyqtSlot()
+    def on_pushButton_ChoiseDir_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        fN = QFileDialog.getExistingDirectory(self, "创建模型文件", "", QFileDialog.DontUseNativeDialog)      
+
+        if not os.path.exists (fN):
+            self.logger.error("目录：%s 不存在！"%fN)
+            return
+        #
+        self.ModelDir = fN
+        self.lineEdit_DirPath.setText(fN)
+    
+    @pyqtSlot()
+    def on_pushButton_New_clicked(self):
+        """
+        此处保存修改过的模型信息到文件
+        """
+        if self.lineEdit_ModelName.text() == "":
+            QMessageBox.information(self, '请指定模型名称', '模型名称不能为空')
+            return
+        self.ModelName = self.lineEdit_ModelName.text()
+        self.Model.aerocraftName = self.ModelName 
+        if self.lineEdit_DirPath.text() == '':
+            QMessageBox.information(self, '警告', '请模型名称不能为空')
+            return
+        self.ModelDir = self.lineEdit_DirPath.text()
+        if not os.path.exists(self.ModelDir):
+            os.mkdirs(self.ModelDir)
+        if not os.path.isfile(self.ModelDir):
+            self.Modelpath = os.path.join(self.ModelDir, self.ModelName+self.ext )   
+        else:
+            self.Modelpath = self.ModelDir
+        self.Model.configuration = self.comboBox_template.currentText()        
+        #tModel = dcModel(self.ModelName, self.comboBox_template.currentText())
+        #获得配置
+        tCARDList = []
+        for iC in allCard:
+            tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
+            if tWidget and tWidget.checkState() == Qt.Checked:
+                tCARDList.append(iC)
+        self.Model.setCARDList(tCARDList)
+        #遍历XML文档Tree将修改进行刷新到模型
+        resXMl = self.recursiveTreeToXML(self.treeWidget_model.topLevelItem(0), None)
+        #ET.dump(self.indent(resXMl, level=0))
+        self.Model.doc = {}
+        self.Model.SetDocByXML(resXMl)        
+        self.Model.writeToXML(self.Modelpath)   
+        QMessageBox.information(self,'修改模型文件', '已经将修改写入到模型文件：%s'%self.Modelpath)
+        
+        
+    def recursiveTreeToXML(self, item, etElem):
+        """
+        通过遍历的方法将QTreeWidget中的信息抽取到XML中
+        @param item 待分析的Tree节点
+        @type QTreeWidgetItem
+        
+        @param etElem 父节点XML
+        @type ET.ETElement
+        """
+        if item is None:
+            self.logger.error("输入的Item无效！")
+            return None
+        if etElem is None:
+            etElem = ET.Element('AerocraftInfo')
+            
+        #处理当前树节点的信息
+        if item.text(0) == 'AerocraftInfo':
+            #这是根节点
+            for iD in range(0, item.childCount()):
+                if item.child(iD).checkState(0) != Qt.Unchecked:
+                    self.recursiveTreeToXML(item.child(iD), etElem)
+            return etElem
+            
+        #进入非根节点处理过程
+        #处理属性节点        
+        if item.text(0) == "属性":
+            for iD in range(0, item.childCount()):
+                if item.child(iD).checkState(0) == Qt.Unchecked:
+                    continue
+                else:
+                    etElem.attrib[item.child(iD).text(0)] = item.child(iD).text(1)
+        #遍历所有子节点
+        else:
+            if item.childCount() <= 0: #没有子节点的情况 value
+                #y叶节点
+                if item.checkState(0) != Qt.Unchecked:
+                    if item.text(0) == 'value' and self.isPreArray: #进行了压缩显示的情况
+                        #该节点为值节点
+                        for iVar in item.text(1).split(','):
+                            aValue = ET.SubElement(etElem, 'value')
+                            aValue.text = iVar.strip()
+                    elif item.text(0) == 'value' and not self.isPreArray: #未进行压缩存储
+                        aValue = ET.SubElement(etElem, 'value')
+                        aValue.text = item.text(1).strip()
+                    else : #
+                        aElem = ET.SubElement(etElem, item.text(0))
+                        aElem.text = item.text(1)
+        
+            elif item.childCount() > 0:
+                #处理非属性节点
+                if item.checkState(0) != Qt.Unchecked:
+                    subElem = ET.SubElement(etElem,item.text(0) )
+                    if item.text(1)!= "":
+                        subElem.text = item.text(1).strip()
+                    for iD in range(0, item.childCount()):
+                        self.recursiveTreeToXML(item.child(iD), subElem)
+                        
+        return  etElem
+    
+    @pyqtSlot(int)
+    def on_comboBox_template_currentIndexChanged(self, index):
+        """
+        Slot documentation goes here.
+        
+        @param index DESCRIPTION
+        @type int
+        """
+        
+        tKey = '%d.0'%(index+1)
+        tList = []
+        if tKey in modelTemplate.keys():
+            tList = modelTemplate[tKey]['CARDList']
+        else:
+            self.logger.error('尝试的Index：%s并不存在对应的基础定义'%tKey)
+            return
+        #遍历所有的选项卡执行
+        for iC in allCard:
+            tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
+            if not tWidget: 
+                self.logger.error('并不存在对应的CARD复选框：%s'%iC)
+                continue
+            #执行包括
+            if iC in tList:
+                tNodes = self.treeWidget_model.findItems(iC, Qt.MatchFixedString|Qt.MatchRecursive, 0)
+                if len(tNodes) == 0 :
+                    tWidget.setCheckState(Qt.Unchecked)
+                else:
+                    tWidget.setCheckState(Qt.Checked)
+            else:
+                tWidget.setCheckState(Qt.Unchecked)
+                
+    def ModelNodeCheckstateChanged(self, cardName, state):
+        """
+        响应两侧的逻辑交换.
+        @param cardName Datcom CARD的名称
+        @type str
+        
+        @param state 复选状态 Qt::Unchecked	0	Qt::PartiallyChecked	1	Qt::Checked	2	
+        @type int
+        """
+        #修改对应的checkbox对象
+        tWidget = self.findChild(QCheckBox, 'checkBox_%s'%cardName)
+        if tWidget:
+            if state in [Qt.Checked, Qt.PartiallyChecked]:
+                tWidget.setCheckState(Qt.Checked)
+            else:
+                tWidget.setCheckState(Qt.Unchecked)
+        else:
+            self.logger.error('不存在%s对应的Checkbox对象'%cardName)
+        #修改对应的Node
+        for tNode in self.treeWidget_model.findItems(cardName, Qt.MatchFixedString|Qt.MatchRecursive, 0):
+            if tNode.checkState(0) != state :
+                tNode.setCheckState(0, state)
+        #修改CARDList对应的Node
+        tCARDItem = self.treeWidget_model.findItems('', Qt.MatchFixedString|Qt.MatchRecursive, 0)
+        
+        
+    
+    @pyqtSlot(int)
+    def on_checkBox_FLTCON_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('FLTCON', p0)
+
+    
+    @pyqtSlot(int)
+    def on_checkBox_OPTINS_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('OPTINS', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_SYNTHS_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('SYNTHS', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_BODY_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('BODY', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_WGPLNF_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('WGPLNF', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_WGSCHR_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('WGSCHR', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_HTPLNF_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('HTPLNF', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_HTSCHR_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('HTSCHR', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_VTPLNF_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('VTPLNF', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_VTSCHR_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('VTSCHR', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_VFPLNF_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('VFPLNF', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_VFSCHR_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('VFSCHR', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_EXPR_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('EXPR', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_PROPWR_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('PROPWR', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_JETPWR_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('JETPWR', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_GRNDEF_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('GRNDEF', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_TRNJET_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('TRNJET', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_HYPEFF_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('HYPEFF', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_LARWB_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('LARWB', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_CONTAB_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('CONTAB', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_SYMFLP_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('SYMFLP', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_ASYFLP_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('ASYFLP', p0)
+    
+    @pyqtSlot(int)
+    def on_checkBox_TVTPAN_stateChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        self.ModelNodeCheckstateChanged('TVTPAN', p0)
+    
+    @pyqtSlot(QTreeWidgetItem, int)
+    def on_treeWidget_model_itemChanged(self, item, column):
+        """
+        Slot documentation goes here.
+        响应checkstate的变化，同步修改左侧的checkBox控件
+        
+        @param item 发生变化的QTreeWidgetItem对象
+        @type QTreeWidgetItem
+        @param column 发生变化的列
+        @type int
+        """
+        cardName = item.text(0)
+        if cardName in allCard:
+            self.ModelNodeCheckstateChanged(cardName, item.checkState(0))
+            
+
+

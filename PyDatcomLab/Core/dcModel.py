@@ -25,7 +25,7 @@ class dcModel(object):
         
         #定义XML结构
         self.xmlTemplete ="""\
-<AerocraftInfo AircraftName='AircraftName' Configuration='常规布局' createTime='' modifyTime = '' >
+<AerocraftInfo AerocraftName='AircraftName' Configuration='常规布局' createTime='' modifyTime = '' >
 </AerocraftInfo>
         """
         self.xmlDoc = ET.ElementTree(ET.XML(self.xmlTemplete))  #Tree Object
@@ -62,15 +62,17 @@ class dcModel(object):
         """
         if tXML is None: return
         #修改表头
-        self.aerocraftName = tXML.get("AircraftName")
+        self.aerocraftName = tXML.get("AerocraftName")
         self.configuration = tXML.get("Configuration")
         self.createTime = tXML.get("createTime")
         self.modifyTime = tXML.get("modifyTime")
+        #清理自身数据
+        #self.doc = {}
         #保持CARD信息列表
         
         #读取实例
         keyLst = dF.reserved_NAMELISTS  #定义了所有Namelist信息的list
-        
+        tCARDList = []
         for nmlstNode in list(tXML):
             #执行非Namelist节的解析
             if nmlstNode.tag not in keyLst:
@@ -80,6 +82,10 @@ class dcModel(object):
                         self.cardlist.append(iC.tag)
                 
                 continue #不在Namelist列表中的将被跳过
+            #记录信息
+            if nmlstNode.tag in dF.reserved_NAMELISTS :
+                tCARDList.append(nmlstNode.tag)                
+                
             
             #分析子节点
             for aVar in list(nmlstNode): #遍历所有的子节点
@@ -97,6 +103,9 @@ class dcModel(object):
                         self.setNamelist( nmlstNode.tag , aVar.tag, aVar.text)
                     else:
                         self.setNamelist( nmlstNode.tag , aVar.tag, float(aVar.text))
+        #分析CARDList与tCARDList的差异
+        if self.cardlist != tCARDList:
+            self.cardlist = tCARDList
         #解析结束
 
 

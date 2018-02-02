@@ -67,7 +67,8 @@ class NewModelDlg(QDialog, Ui_Dialog):
         tCARDList = []
         for iC in allCard:
             tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
-            if tWidget: tCARDList.append(iC)
+            if tWidget and tWidget.checkState() == Qt.Checked:
+                tCARDList.append(iC)
         tModel.setCARDList(tCARDList)
         tModel.writeToXML(self.Modelpath)
         
@@ -106,7 +107,7 @@ class NewModelDlg(QDialog, Ui_Dialog):
         @param index DESCRIPTION
         @type int
         """
-        # TODO: not implemented yet
+
         tKey = '%d.0'%(index+1)
         tList = []
         if tKey in modelTemplate.keys():
