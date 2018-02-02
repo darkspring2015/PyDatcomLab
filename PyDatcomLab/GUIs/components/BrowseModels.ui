@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>BrowseModel</class>
+ <widget class="QDialog" name="BrowseModel">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>模型浏览</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
@@ -55,14 +55,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="textEdit_Dir">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="comboBox_Dirs"/>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_ChoiseDir">
@@ -118,6 +111,18 @@
    </property>
    <property name="text">
     <string>移除模型</string>
+   </property>
+  </action>
+  <action name="actionPreviewModel">
+   <property name="icon">
+    <iconset resource="../MainWindow.qrc">
+     <normaloff>:/icos/sharedEditConnected.png</normaloff>:/icos/sharedEditConnected.png</iconset>
+   </property>
+   <property name="text">
+    <string>预览修改</string>
+   </property>
+   <property name="toolTip">
+    <string>修改预览模型</string>
    </property>
   </action>
  </widget>

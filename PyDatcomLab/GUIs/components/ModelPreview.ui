@@ -58,7 +58,7 @@
        <item>
         <widget class="QLabel" name="label_ModelDir">
          <property name="text">
-          <string>模型目录</string>
+          <string>模型路径</string>
          </property>
         </widget>
        </item>
@@ -70,12 +70,15 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_ChoiseDir">
          <property name="text">
-          <string>...</string>
+          <string>选择模型文件</string>
          </property>
         </widget>
        </item>

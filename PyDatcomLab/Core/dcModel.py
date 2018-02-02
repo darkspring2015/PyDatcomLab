@@ -137,9 +137,10 @@ class dcModel(object):
         root.set('modifyTime',self.modifyTime )
         
         #写入CARD的有效性掩码
-        cardListNode = ET.SubElement(root, 'CARDList', {'dcType':'Other'})
+        cardListNode = ET.SubElement(root, 'CARDList') #, {'dcType':'Other'} #影响美观
         for iC in self.cardlist:
-            ET.SubElement(cardListNode, iC, {'dcType':'Other'})
+            #ET.SubElement(cardListNode, iC, {'dcType':'Other'})
+            ET.SubElement(cardListNode, iC)
         
         
         #循环写入NameList        

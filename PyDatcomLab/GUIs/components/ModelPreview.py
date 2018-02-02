@@ -4,13 +4,13 @@
 Module implementing ModelPreview.
 """
 
-from PyQt5.QtCore import pyqtSlot, QPoint, Qt,QModelIndex# , QFile, QIODevice
+from PyQt5.QtCore import pyqtSlot, QPoint, Qt #,QModelIndex# , QFile, QIODevice
 from PyQt5.QtWidgets import QWidget, QTreeWidgetItem, QFileDialog, QMessageBox, QCheckBox, QHeaderView
 #from PyQt5.QtXml import QDomDocument
 from PyQt5.QtGui import QIcon
 
 import logging, os
-import time
+#import time
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core.dcModel import dcModel 
 from PyDatcomLab.Core.datcomDefine import modelTemplate
@@ -52,6 +52,8 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         #self.isPreArray = True # True:'整理Array',False:'不整理Array'
         self.itemFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable\
                         |Qt.ItemIsAutoTristate|Qt.ItemIsUserCheckable #|Qt.ItemIsUserTristate
+        self.isCopy = False         #表示本对话框是否是Copy目的
+        
 
 
         
@@ -154,6 +156,8 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         self.Model.loadXML(tFile)
         self.lineEdit_ModelName.setText(self.Model.aerocraftName)
         self.lineEdit_DirPath.setText(tFile)
+        self.currentModelPath = tFile
+        #开始界面逻辑刷新过程
         for iC in allCard:
             tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
             if tWidget is None:
@@ -172,14 +176,20 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         """
         Slot documentation goes here.
         """
-        fN = QFileDialog.getExistingDirectory(self, "创建模型文件", "", QFileDialog.DontUseNativeDialog)      
-
+        #fN = QFileDialog.getExistingDirectory(self, "创建模型文件", "", QFileDialog.DontUseNativeDialog)
+        tPath = self.lineEdit_DirPath.text()
+        if not os.path.isfile(tPath):
+            tPath =""
+        fN , fType = QFileDialog.getOpenFileName(self, "模型文件路径",tPath,
+                            "Datcom Model Files (*.dcxml *.xml )" , QFileDialog.DontUseNativeDialog)
         if not os.path.exists (fN):
             self.logger.error("目录：%s 不存在！"%fN)
             return
-        #
-        self.ModelDir = fN
+        #配置信息
+        self.ModelDir = os.path.dirname(fN)
         self.lineEdit_DirPath.setText(fN)
+        #加载模型
+        self.loadModel
     
     @pyqtSlot()
     def on_pushButton_New_clicked(self):
@@ -189,20 +199,24 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         if self.lineEdit_ModelName.text() == "":
             QMessageBox.information(self, '请指定模型名称', '模型名称不能为空')
             return
-        self.ModelName = self.lineEdit_ModelName.text()
-        self.Model.aerocraftName = self.ModelName 
+        self.Model.aerocraftName = self.lineEdit_ModelName.text() 
+        self.Model.configuration = self.comboBox_template.currentText()   
+        #输处目录不能为空
         if self.lineEdit_DirPath.text() == '':
             QMessageBox.information(self, '警告', '请模型名称不能为空')
             return
-        self.ModelDir = self.lineEdit_DirPath.text()
-        if not os.path.exists(self.ModelDir):
-            os.mkdirs(self.ModelDir)
-        if not os.path.isfile(self.ModelDir):
+        #目标文件不存在
+        if not os.path.exists(self.lineEdit_DirPath.text() ) : 
+            fN, fType = QFileDialog.getSaveFileName(self, '选择新的文件名',self.ModelDir, 
+                               "Datcom Model Files (*.dcxml *.xml )" )
+            self.lineEdit_DirPath.setText(fN)
+        tObPath = self.lineEdit_DirPath.text()
+        self.ModelDir = os.path.dirname(tObPath) 
+        if not os.path.isfile(tObPath):
             self.Modelpath = os.path.join(self.ModelDir, self.ModelName+self.ext )   
         else:
-            self.Modelpath = self.ModelDir
-        self.Model.configuration = self.comboBox_template.currentText()        
-        #tModel = dcModel(self.ModelName, self.comboBox_template.currentText())
+            self.Modelpath = tObPath        
+
         #获得配置
         tCARDList = []
         for iC in allCard:
@@ -214,9 +228,13 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         resXMl = self.recursiveTreeToXML(self.treeWidget_model.topLevelItem(0), None)
         #ET.dump(self.indent(resXMl, level=0))
         self.Model.doc = {}
-        self.Model.SetDocByXML(resXMl)        
-        self.Model.writeToXML(self.Modelpath)   
-        QMessageBox.information(self,'修改模型文件', '已经将修改写入到模型文件：%s'%self.Modelpath)
+        self.Model.SetDocByXML(resXMl)  
+        tObjpath =  self.Modelpath
+        if self.isCopy :
+            tObjpath, fType = QFileDialog.getSaveFileName(self, '选择新的文件名',self.ModelDir,  "Datcom Model Files (*.dcxml *.xml )" )
+            
+        self.Model.writeToXML(tObjpath)   
+        QMessageBox.information(self,'修改模型文件', '已经将修改写入到模型文件：%s'%tObjpath)
         
         
     def recursiveTreeToXML(self, item, etElem):

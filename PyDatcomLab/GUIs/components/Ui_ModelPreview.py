@@ -43,6 +43,7 @@ class Ui_ModelPreview(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lineEdit_DirPath.sizePolicy().hasHeightForWidth())
         self.lineEdit_DirPath.setSizePolicy(sizePolicy)
+        self.lineEdit_DirPath.setReadOnly(True)
         self.lineEdit_DirPath.setObjectName("lineEdit_DirPath")
         self.horizontalLayout_2.addWidget(self.lineEdit_DirPath)
         self.pushButton_ChoiseDir = QtWidgets.QPushButton(ModelPreview)
@@ -172,8 +173,8 @@ class Ui_ModelPreview(object):
         _translate = QtCore.QCoreApplication.translate
         ModelPreview.setWindowTitle(_translate("ModelPreview", "模型预览"))
         self.label_ModelName.setText(_translate("ModelPreview", "模型名称"))
-        self.label_ModelDir.setText(_translate("ModelPreview", "模型目录"))
-        self.pushButton_ChoiseDir.setText(_translate("ModelPreview", "..."))
+        self.label_ModelDir.setText(_translate("ModelPreview", "模型路径"))
+        self.pushButton_ChoiseDir.setText(_translate("ModelPreview", "选择模型文件"))
         self.label_templete.setText(_translate("ModelPreview", "模型模板"))
         self.comboBox_template.setItemText(0, _translate("ModelPreview", "常规模型"))
         self.groupBox_2.setTitle(_translate("ModelPreview", "CARD1"))

@@ -13,10 +13,7 @@ from PyQt5.QtGui import  QStandardItem, QStandardItemModel
 from .Ui_MainWindow import Ui_MainWindow
 #from PyDatcomLab.GUIs  import   
 
-from PyDatcomLab.GUIs.components import BrowseModels , NewModel, logForm
-from PyDatcomLab.GUIs.components import ProjectsManager
-from PyDatcomLab.GUIs.components import ImageTips
-from PyDatcomLab.GUIs.components import PlaneConfiguration, AddProject
+from PyDatcomLab.GUIs.components import *
 from PyDatcomLab.Core import projectManager as PM
 from PyDatcomLab.Core import  datcomRunner  
 
@@ -113,7 +110,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         # TODO: not implemented yet
         
         #遍历目录，获得所有的模型
-        self.ModelBrowseDlg = BrowseModels.DlgBrowseModels()
+        self.ModelBrowseDlg = BrowseModels.BrowseModels()
         #self.ModelBrowseDlg.setModal(True)
         self.ModelBrowseDlg.show()
         #raise NotImplementedError
@@ -121,13 +118,26 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_actionCopyModel_triggered(self):
         """
-        Slot documentation goes here.
+        复制模型
         """
-        # TODO: not implemented yet
-        
+        tSourceModel = ""
+        tModelBrowse = self.docksConfig['模型预览窗口'].widget()
+        if tModelBrowse :
+            tPath = tModelBrowse.getCurrentModelPath()
+            if os.path.exists(tPath):
+                tSourceModel = tPath
+      
         #获得当前模型的信息
-        
-        raise NotImplementedError
+        if not os.path.exists(tSourceModel):
+            tSourceModel = r"~/"
+        button, fType = QFileDialog.getOpenFileName(self,"选择源模型的配置文件", 
+                    tSourceModel, "Datcom Model Files (*.dcxml *.xml )")
+        if os.path.exists(button):
+            self.PreViewdlg = ModelPreview.ModelPreview()
+            self.PreViewdlg.loadModel(button)
+            self.PreViewdlg.isCopy = True
+            self.PreViewdlg.show()
+            
     
     @pyqtSlot()
     def on_actionCopyCASE_triggered(self):
@@ -310,7 +320,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         # TODO: not implemented yet
         if '模型预览窗口'  not in self.docksConfig.keys():
             #create ProjectsManager
-            browseMod = BrowseModels.DlgBrowseModels()
+            browseMod = BrowseModels.BrowseModels()
             #创建日志窗口并添加
             self.dock_BrowseModels = QtWidgets.QDockWidget('模型预览窗口', self)             
             self.dock_BrowseModels.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea|QtCore.Qt.BottomDockWidgetArea)          

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-02-02, 16:55:16 -->
+<!-- Saved: 2018-02-02, 21:30:03 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -103,6 +103,7 @@
     <Source>PyDatcomLab/GUIs/components/Ui_ProjectsManager.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_Reference.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_logForm.py</Source>
+    <Source>PyDatcomLab/GUIs/components/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/components/img_rc.py</Source>
     <Source>PyDatcomLab/GUIs/components/logForm.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
@@ -153,7 +154,6 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
-    <Form>PyDatcomLab/GUIs/components/ModelPreview.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>
@@ -181,6 +181,7 @@
     <Form>PyDatcomLab/GUIs/components/AddProject.ui</Form>
     <Form>PyDatcomLab/GUIs/components/BrowseModels.ui</Form>
     <Form>PyDatcomLab/GUIs/components/ImageTips.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/ModelPreview.ui</Form>
     <Form>PyDatcomLab/GUIs/components/NewModel.ui</Form>
     <Form>PyDatcomLab/GUIs/components/PlaneConfiguration.ui</Form>
     <Form>PyDatcomLab/GUIs/components/ProjectsManager.ui</Form>
