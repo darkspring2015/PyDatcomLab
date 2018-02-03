@@ -35,20 +35,21 @@ class ASYFLP(QWidget, Ui_ASYFLP):
         #开始核心数据的定义
         self.NameList = 'ASYFLP'
         self.VariableList = {
-                'STYPE':{  'TYPE':'List'  ,'Range':['1.0', '2.0', '3.0','4.0', '5.0'], 'Default':'1.0'},         
-                'NDELTA':{ 'TYPE':'INT'   ,'Range':[0, 9 ] }, 
-                'SPANFI':{ 'TYPE':'REAL'  },    
-                'SPANFO':{ 'TYPE':'REAL'  },
-                'PHETE':{  'TYPE':'REAL'  },               
-                'CHRDFI':{ 'TYPE':'REAL'  },    
-                'CHRDFO':{ 'TYPE':'REAL'  },  
-                'XSPRME':{ 'TYPE':'REAL'  },   
-                'DELTAL':{ 'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input'}, 
-                'DELTAR':{ 'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input'}, 
-                'DELTAD':{ 'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input'}, 
-                'DELTAS':{ 'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input'},
-                'XSOC':{   'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input'}, 
-                'HSOC':{   'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input'},
+                'STYPE':{  'TYPE':'List'  ,'Range':['1.0', '2.0', '3.0','4.0', '5.0'], 'Default':'1.0'
+                        , 'DisplayName':'STYPE  类别'},         
+                'NDELTA':{ 'TYPE':'INT'   ,'Range':[0, 9 ] , 'DisplayName':'NDELTA 偏转角数量'}, 
+                'SPANFI':{ 'TYPE':'REAL'  , 'DisplayName':'SPANFI  内侧端的横向距离'},    
+                'SPANFO':{ 'TYPE':'REAL'  , 'DisplayName':'SPANFO  外侧端的横向距离'},
+                'PHETE':{  'TYPE':'REAL'  , 'DisplayName':'PHETE  翼型后缘角正切值(90,99)'},               
+                'CHRDFI':{ 'TYPE':'REAL'  , 'DisplayName':'CHRDFI  内侧弦长'},    
+                'CHRDFO':{ 'TYPE':'REAL'  , 'DisplayName':'CHRDFO  外侧弦长'},  
+                'XSPRME':{ 'TYPE':'REAL'  , 'DisplayName':'XSPRME  扰流板铰链到机翼前延的距离'},   
+                'DELTAL':{ 'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input', 'DisplayName':''}, 
+                'DELTAR':{ 'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input', 'DisplayName':''}, 
+                'DELTAD':{ 'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input', 'DisplayName':''}, 
+                'DELTAS':{ 'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input', 'DisplayName':''},
+                'XSOC':{   'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input', 'DisplayName':''}, 
+                'HSOC':{   'TYPE':'Array', 'Limit':[0, 9] , 'Group':'input', 'DisplayName':''},
         }  
         #self.NMACHLinkTable = []
         self.RuleNumToCount = [{'Num':'NDELTA' , 'Group':'input'}, 

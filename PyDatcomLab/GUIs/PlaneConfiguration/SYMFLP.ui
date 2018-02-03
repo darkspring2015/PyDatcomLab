@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_FTYPE">
          <property name="text">
           <string>FTYPE  襟翼类型</string>
          </property>
@@ -101,7 +101,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_NDELTA">
          <property name="text">
           <string>NDELTA 偏转角数量</string>
          </property>
@@ -144,7 +144,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_PHETE">
          <property name="text">
           <string>PHETE  翼型后缘角正切值(90,99)</string>
          </property>
@@ -187,7 +187,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_PHETEP">
          <property name="text">
           <string>PHETEP  翼型后缘角正切值(95,99)</string>
          </property>
@@ -230,7 +230,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="label_CHRDFI">
          <property name="text">
           <string>CHRDFI  襟翼内侧襟翼弦 </string>
          </property>
@@ -273,7 +273,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_CHRDFO">
          <property name="text">
           <string>CHRDFO  襟翼外侧襟翼弦</string>
          </property>
@@ -316,7 +316,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="label_SPANFI">
          <property name="text">
           <string>SPANFI  襟翼内侧端的横向距离</string>
          </property>
@@ -359,7 +359,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="label_SPANFO">
          <property name="text">
           <string>SPANFO  襟翼外侧端的横向距离</string>
          </property>
@@ -402,7 +402,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="label_DOBCIN">
          <property name="text">
           <string>DOBCIN</string>
          </property>
@@ -445,7 +445,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_10">
        <item>
-        <widget class="QLabel" name="label_10">
+        <widget class="QLabel" name="label_DOBCOT">
          <property name="text">
           <string>DOBCOT</string>
          </property>
@@ -488,7 +488,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QLabel" name="label_11">
+        <widget class="QLabel" name="label_CB">
          <property name="text">
           <string>CB  平衡的平均弦长</string>
          </property>
@@ -531,7 +531,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_12">
        <item>
-        <widget class="QLabel" name="label_12">
+        <widget class="QLabel" name="label_TC">
          <property name="text">
           <string>TC  铰链处平均厚度</string>
          </property>
@@ -574,7 +574,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_13">
        <item>
-        <widget class="QLabel" name="label_13">
+        <widget class="QLabel" name="label_NTYPE">
          <property name="text">
           <string>NTYPE  鼻型</string>
          </property>
@@ -626,7 +626,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="QLabel" name="label_14">
+        <widget class="QLabel" name="label_JETFLP">
          <property name="text">
           <string>JETFLP  喷气襟翼类型 </string>
          </property>
@@ -677,7 +677,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <widget class="QLabel" name="label_15">
+        <widget class="QLabel" name="label_CMU">
          <property name="text">
           <string>CMU  二维射流系数</string>
          </property>
@@ -735,7 +735,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_input">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">

@@ -25,7 +25,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="label_XCG">
             <property name="text">
              <string>XCG ：重心纵向位置</string>
             </property>
@@ -62,7 +62,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="label_ZCG">
             <property name="text">
              <string>ZCG ：重心垂向位置</string>
             </property>
@@ -108,7 +108,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="label_XW">
             <property name="text">
              <string>XW  ：机翼理论顶端的纵向位置</string>
             </property>
@@ -145,7 +145,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="label_ZW">
             <property name="text">
              <string>ZW  ：机翼理论顶端的垂向位置</string>
             </property>
@@ -182,7 +182,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QLabel" name="label_5">
+           <widget class="QLabel" name="label_ALIW">
             <property name="text">
              <string>ALIW：机翼安装角</string>
             </property>
@@ -228,7 +228,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
-           <widget class="QLabel" name="label_6">
+           <widget class="QLabel" name="label_XH">
             <property name="text">
              <string>XH  ：平尾理论顶端的纵向位置</string>
             </property>
@@ -265,7 +265,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QLabel" name="label_7">
+           <widget class="QLabel" name="label_ZH">
             <property name="text">
              <string>ZH  ：平尾理论顶端的纵向位置</string>
             </property>
@@ -302,7 +302,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="label_ALIH">
             <property name="text">
              <string>ALIH：平尾安装角</string>
             </property>
@@ -385,7 +385,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_10">
           <item>
-           <widget class="QLabel" name="label_9">
+           <widget class="QLabel" name="label_XV">
             <property name="text">
              <string>XV  ：垂尾理论顶端的纵向位置</string>
             </property>
@@ -422,7 +422,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
-           <widget class="QLabel" name="label_10">
+           <widget class="QLabel" name="label_ZV">
             <property name="text">
              <string>ZV  ：垂尾理论顶端的垂向位置</string>
             </property>
@@ -468,7 +468,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <widget class="QLabel" name="label_11">
+           <widget class="QLabel" name="label_XVF">
             <property name="text">
              <string>XVF ：腹鳍理论顶端的纵向位置</string>
             </property>
@@ -505,7 +505,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_13">
           <item>
-           <widget class="QLabel" name="label_12">
+           <widget class="QLabel" name="label_ZVF">
             <property name="text">
              <string>ZVF ：腹鳍理论顶端的垂向位置</string>
             </property>
@@ -551,7 +551,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_15">
           <item>
-           <widget class="QLabel" name="label_14">
+           <widget class="QLabel" name="label_SCALE">
             <property name="text">
              <string>SCALE：缩放因子</string>
             </property>
@@ -588,7 +588,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_14">
           <item>
-           <widget class="QLabel" name="label_13">
+           <widget class="QLabel" name="label_VERTUP">
             <property name="text">
              <string>VERTUP：垂直面与参考面关系</string>
             </property>

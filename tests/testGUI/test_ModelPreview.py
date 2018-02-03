@@ -20,7 +20,7 @@ class parserTest(unittest.TestCase):
         app = QtWidgets.QApplication(sys.argv)
         mainWin = self.tClass()
         mainWin.logger.info("启动了NewModelDlg")
-        mainWin.loadModel(r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\Datcomv3_b6pv2.dcxml')
+        mainWin.loadModel(r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\datcomDefine.xml')
         mainWin.show()
         self.assertEqual(app.exec_(), 0)
         

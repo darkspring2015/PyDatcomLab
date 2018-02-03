@@ -25,7 +25,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="label_LOOP">
             <property name="text">
              <string>LOOP 循环模式</string>
             </property>
@@ -160,7 +160,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_10">
           <item>
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="label_NMACH">
             <property name="text">
              <string>NMACH  马赫数</string>
             </property>
@@ -197,7 +197,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <widget class="QLabel" name="label_5">
+           <widget class="QLabel" name="label_NALT">
             <property name="text">
              <string>NALT   大气条件个数</string>
             </property>
@@ -234,7 +234,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="label_NALPHA">
             <property name="text">
              <string>NALPHA 攻角数</string>
             </property>

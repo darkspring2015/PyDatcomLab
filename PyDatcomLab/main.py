@@ -64,7 +64,8 @@ sys.path.append(os.path.abspath(os.path.join(mainPath, 'Core')))
 #建立项目文件夹 ~\.PyDatcomLab
 configPath = os.path.join(os.path.expanduser('~'), '.PyDatcom')
 dirList = {'PyDatcomLab':os.path.join(os.path.expanduser('~'), '.PyDatcom') , 
-           'LogDirectory':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'log') 
+           'LogDirectory':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'log') , 
+           'SQliteDB':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'DB') , 
 }
 for tDir in dirList.keys():
     if  not os.path.exists(dirList[tDir]):
@@ -79,6 +80,14 @@ logfile = os.path.abspath(os.path.join(dirList['LogDirectory'], logFileName))
 logChannel = r'Datcomlogger'
 logLevel = logging.INFO
 logger = InitLogger(tlogFile =logfile, tlogName = logChannel , tlogLevel = logLevel)
+
+#创建基础数据库
+#import sqlite3
+dbFile = os.path.join(dirList['SQliteDB'], 'datcom.db')
+#if not os.path.exists(dbFile):
+    
+
+
 
 
 #导入主要的窗体

@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QMessageBox, QFileDialog
 from PyQt5 import  QtCore,  QtWidgets
 from PyQt5.QtGui import  QStandardItem, QStandardItemModel
 
-from .Ui_MainWindow import Ui_MainWindow
+from Ui_MainWindow import Ui_MainWindow
 #from PyDatcomLab.GUIs  import   
 
 from PyDatcomLab.GUIs.components import *

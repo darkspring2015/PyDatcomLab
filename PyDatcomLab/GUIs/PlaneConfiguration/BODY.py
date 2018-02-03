@@ -38,15 +38,15 @@ class BODY(QWidget, Ui_Form):
         self.NameList = 'BODY'
         self.VariableList = {
                 #
-                'NX':{     'TYPE':'INT'},
-                'ELLIP':{  'TYPE':'REAL'},
-                'BNOSE':{  'TYPE':'List','Range':['1.0', '2.0']          , 'Default':'1.0'},
-                'BTAIL':{  'TYPE':'List','Range':['1.0', '2.0']          , 'Default':'1.0'},
-                'BLN':{    'TYPE':'REAL'},
-                'BLA':{    'TYPE':'REAL'}, 
-                'DS':{     'TYPE':'REAL'}, 
-                'ITYPE':{  'TYPE':'List','Range':['1.0', '2.0', '3.0']   , 'Default':'2.0'},
-                'METHOD':{ 'TYPE':'List','Range':['1.0', '2.0']          , 'Default':'1.0'},
+                'NX':{     'TYPE':'INT', 'DisplayName':'NX：机身横截面的个数'},
+                'ELLIP':{  'TYPE':'REAL', 'DisplayName':'ELLIP：机身高宽比'},
+                'BNOSE':{  'TYPE':'List','Range':['1.0', '2.0']          , 'Default':'1.0', 'DisplayName':'BNOSE：机头样式'},
+                'BTAIL':{  'TYPE':'List','Range':['1.0', '2.0']          , 'Default':'1.0', 'DisplayName':'BTAIL：机尾样式'},
+                'BLN':{    'TYPE':'REAL', 'DisplayName':'BLN：机身头部长度'},
+                'BLA':{    'TYPE':'REAL', 'DisplayName':'BLA：机身后部长度'}, 
+                'DS':{     'TYPE':'REAL', 'DisplayName':'DS：机头钝度'}, 
+                'ITYPE':{  'TYPE':'List','Range':['1.0', '2.0', '3.0']   , 'Default':'2.0', 'DisplayName':'ITYPE:跨音速阻力分量马赫数计算方法'},
+                'METHOD':{ 'TYPE':'List','Range':['1.0', '2.0']          , 'Default':'1.0', 'DisplayName':'METHOD：计算方法'},
              
                 #Body参数定义
                 'X':{  'TYPE':'Array' , 'Limit':[0, 20]  , 'Group':'BODY'}  , 

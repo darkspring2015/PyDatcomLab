@@ -18,9 +18,9 @@ class Ui_GRNDEF(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label_2 = QtWidgets.QLabel(GRNDEF)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout_2.addWidget(self.label_2)
+        self.label_NGH = QtWidgets.QLabel(GRNDEF)
+        self.label_NGH.setObjectName("label_NGH")
+        self.horizontalLayout_2.addWidget(self.label_NGH)
         spacerItem = QtWidgets.QSpacerItem(55, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.NGH = QtWidgets.QLineEdit(GRNDEF)
@@ -72,7 +72,7 @@ class Ui_GRNDEF(object):
     def retranslateUi(self, GRNDEF):
         _translate = QtCore.QCoreApplication.translate
         GRNDEF.setWindowTitle(_translate("GRNDEF", "GRNDEF"))
-        self.label_2.setText(_translate("GRNDEF", "NGH  地面高度的计算点数"))
+        self.label_NGH.setText(_translate("GRNDEF", "NGH  地面高度的计算点数"))
         self.textBrowser.setHtml(_translate("GRNDEF", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

@@ -74,11 +74,25 @@ modelTemplate ={
 ]}, #'1.0
 
 }
-#dictNamelist ={
-#{'ASYFLP', 'DELTAL', 9 , 'deflection angle for left hand plain flap aileron or left hand panel all moveable horizontal tail, measured in vertical plane of symmetry', 'deg'}, 
-#{'ASYFLP2', 'DELTAR', 9 , 'deflection angle for left hand plain flap aileron or left hand panel all moveable horizontal tail, measured in vertical plane of symmetry', 'deg'}, 
-# 
-#}
+
+#定义datcom中变量应当具有的属性字段
+datcomVarAttriList = {
+    'VarName':'',       #Datcom变量名
+    'NameList':'',      #Datcom NAMELIST
+    'DisplayName':'',   #显示名
+    'Tooltips':'',      #提示信息
+    'TYPE':'REAL',      #变量类型  ['INT','REAL','Array','List']
+    'SubType':'',       #变量子类型 对于['INT','REAL']为空,对于['Array','List']指定元素的类型 ['REAL','STR',]
+    'Group':'',         #分组名   对于['INT','REAL','List']对应Group控件，对于'Array'对应table控件
+    'Range':'',         #取值范围 对于['INT','REAL','Array'] 限制为 min,max，对于['List']为所有可能的值
+    'DisplayRange':'' , #取值范围的显示值 对['List']有效，为所有可能显示值
+    'Default':'',       #默认值   对于['INT','REAL','Array']为item的默认值，对于['List']为默认索引
+    'Limit':'',         #数量     对于['INT','REAL','List']为空，对 ['Array']为min，max
+    'Dimension':'',     #量纲     ['L','DEG',...] in Dimension.keys()
+    'MustInput':'' ,    #是否是必须输入的量 ['MustInput','UserCheck','HasDefault'],如果为UserCheck应该创建checkbox
+    'Relation':'',      #其他关联信息 rule规则暂定
+              }
+
 
 #'ASYFLP'
 dict_ASYFLP=['DELTAL', 'DELTAR', 'DELTAD', 'DELTAS', 'XSOC', 'HSOC', 'STYPE', 'XSPRME', 'NDELTA', 'CHRDFI', 

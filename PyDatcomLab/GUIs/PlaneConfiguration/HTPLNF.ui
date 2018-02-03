@@ -71,7 +71,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_CHRDTP">
          <property name="text">
           <string>CHRDTP：稍弦长</string>
          </property>
@@ -108,7 +108,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_CHRDBP">
          <property name="text">
           <string>CHRDBP：断点弦长</string>
          </property>
@@ -145,7 +145,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="label_CHRDR">
          <property name="text">
           <string>CHRDR：根弦长</string>
          </property>
@@ -182,7 +182,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_SSPNOP">
          <property name="text">
           <string>SSPNOP：外侧板半展长</string>
          </property>
@@ -219,7 +219,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_SSPNE">
          <property name="text">
           <string>SSPNE：外露板半展长</string>
          </property>
@@ -256,7 +256,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="label_SSPN">
          <property name="text">
           <string>SSPN：理论根弦的理论半展长</string>
          </property>
@@ -293,7 +293,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="label_SAVSI">
          <property name="text">
           <string>SAVSI：内侧板掠角</string>
          </property>
@@ -367,7 +367,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_10">
        <item>
-        <widget class="QLabel" name="label_11">
+        <widget class="QLabel" name="label_TWISTA">
          <property name="text">
           <string>TWISTA：扭转角</string>
          </property>
@@ -407,7 +407,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <widget class="QLabel" name="label_10">
+        <widget class="QLabel" name="label_CHSTAT">
          <property name="text">
           <string>CHSTAT：内外侧板掠角的参考弦点</string>
          </property>
@@ -444,7 +444,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QLabel" name="label_12">
+        <widget class="QLabel" name="label_SSPNDD">
          <property name="text">
           <string>SSPNDD：内上反角的外侧板半展长</string>
          </property>
@@ -484,7 +484,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_12">
        <item>
-        <widget class="QLabel" name="label_13">
+        <widget class="QLabel" name="label_DHDADI">
          <property name="text">
           <string>DHDADI：内侧板上反角</string>
          </property>
@@ -524,7 +524,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_13">
        <item>
-        <widget class="QLabel" name="label_14">
+        <widget class="QLabel" name="label_DHDADO">
          <property name="text">
           <string>DHDADO：外侧板上反角</string>
          </property>

@@ -53,6 +53,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         self.itemFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable\
                         |Qt.ItemIsAutoTristate|Qt.ItemIsUserCheckable #|Qt.ItemIsUserTristate
         self.isCopy = False         #表示本对话框是否是Copy目的
+        self.isDcModel = True         #表示本对话加载的是否是Datcom模型
         
 
 
@@ -153,7 +154,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
             return
         #加载
         self.Model = dcModel()
-        self.Model.loadXML(tFile)
+        self.isDcModel = self.Model.loadXML(tFile)
         self.lineEdit_ModelName.setText(self.Model.aerocraftName)
         self.lineEdit_DirPath.setText(tFile)
         self.currentModelPath = tFile
@@ -174,14 +175,15 @@ class ModelPreview(QWidget, Ui_ModelPreview):
     @pyqtSlot()
     def on_pushButton_ChoiseDir_clicked(self):
         """
-        Slot documentation goes here.
+        选择模型文件并重新夹杂
+        
         """
         #fN = QFileDialog.getExistingDirectory(self, "创建模型文件", "", QFileDialog.DontUseNativeDialog)
         tPath = self.lineEdit_DirPath.text()
         if not os.path.isfile(tPath):
             tPath =""
-        fN , fType = QFileDialog.getOpenFileName(self, "模型文件路径",tPath,
-                            "Datcom Model Files (*.dcxml *.xml )" , QFileDialog.DontUseNativeDialog)
+        fN , fType = QFileDialog.getOpenFileName(self, "模型文件路径",os.path.dirname(tPath),
+                            "Datcom Model Files (*.dcxml *.xml )" )
         if not os.path.exists (fN):
             self.logger.error("目录：%s 不存在！"%fN)
             return
@@ -189,7 +191,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         self.ModelDir = os.path.dirname(fN)
         self.lineEdit_DirPath.setText(fN)
         #加载模型
-        self.loadModel
+        self.loadModel(fN)
     
     @pyqtSlot()
     def on_pushButton_New_clicked(self):
@@ -226,15 +228,23 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         self.Model.setCARDList(tCARDList)
         #遍历XML文档Tree将修改进行刷新到模型
         resXMl = self.recursiveTreeToXML(self.treeWidget_model.topLevelItem(0), None)
-        #ET.dump(self.indent(resXMl, level=0))
-        self.Model.doc = {}
-        self.Model.SetDocByXML(resXMl)  
-        tObjpath =  self.Modelpath
-        if self.isCopy :
-            tObjpath, fType = QFileDialog.getSaveFileName(self, '选择新的文件名',self.ModelDir,  "Datcom Model Files (*.dcxml *.xml )" )
-            
-        self.Model.writeToXML(tObjpath)   
-        QMessageBox.information(self,'修改模型文件', '已经将修改写入到模型文件：%s'%tObjpath)
+        #判断是否需要刷新到dcModel
+        if not self.isDcModel: #加载的不是dcModel对应XML则直接保存
+            from PyDatcomLab.Core.tools import xml_Indent as indent
+            indent(resXMl, 0)
+            ET.ElementTree(resXMl).write(self.Modelpath, encoding="UTF-8" )
+            QMessageBox.information(self,'修改模型文件', '已经将修改写入到模型文件：%s'%self.Modelpath)
+        else:            
+            self.Model.doc = {}
+            self.Model.SetDocByXML(resXMl)  
+            tObjpath =  self.Modelpath
+            #判断是否需要另存
+            if self.isCopy :
+                tObjpath, fType = QFileDialog.getSaveFileName(self, '选择新的文件名',self.ModelDir,
+                                                "Datcom Model Files (*.dcxml *.xml )" )
+            #写入到xml文件    
+            self.Model.writeToXML(tObjpath)   
+            QMessageBox.information(self,'修改模型文件', '已经将修改写入到模型文件：%s'%tObjpath)
         
         
     def recursiveTreeToXML(self, item, etElem):
@@ -250,10 +260,11 @@ class ModelPreview(QWidget, Ui_ModelPreview):
             self.logger.error("输入的Item无效！")
             return None
         if etElem is None:
-            etElem = ET.Element('AerocraftInfo')
+            etElem = ET.Element(item.text(0))
             
-        #处理当前树节点的信息
-        if item.text(0) == 'AerocraftInfo':
+        #处理当前树节点的信息        
+        #if item.text(0) == 'AerocraftInfo':
+        if self.treeWidget_model.itemAbove(item) is None: #判断其为根节点
             #这是根节点
             for iD in range(0, item.childCount()):
                 if item.child(iD).checkState(0) != Qt.Unchecked:
@@ -283,7 +294,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
                         aValue.text = item.text(1).strip()
                     else : #
                         aElem = ET.SubElement(etElem, item.text(0))
-                        aElem.text = item.text(1)
+                        aElem.text = '' if item.text(1) is None else item.text(1)
         
             elif item.childCount() > 0:
                 #处理非属性节点

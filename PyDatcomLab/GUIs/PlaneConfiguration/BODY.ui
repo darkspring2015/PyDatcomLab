@@ -95,7 +95,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="label_NX">
             <property name="text">
              <string>NX：机身横截面的个数</string>
             </property>
@@ -221,7 +221,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="label_METHOD">
             <property name="text">
              <string>METHOD：计算方法</string>
             </property>
@@ -575,7 +575,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">

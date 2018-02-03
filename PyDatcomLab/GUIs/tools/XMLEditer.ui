@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>XMLEditer</class>
+ <widget class="QMainWindow" name="XMLEditer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>926</width>
+    <height>585</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>XMl编辑器</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="tools.qrc">
+    <normaloff>:/tools/res/configure.png</normaloff>:/tools/res/configure.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTreeWidget" name="treeWidget_xml">
+      <column>
+       <property name="text">
+        <string>节点</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>值</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>926</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLoadXML"/>
+    <addaction name="actionUnload"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_XML"/>
+    <addaction name="actionSave_as_XML"/>
+    <addaction name="actionReload"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionReadOnlyMode"/>
+    <addaction name="actionValueOnlyMode"/>
+    <addaction name="actionAllMode"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuTools"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>工具栏</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionLoadXML"/>
+   <addaction name="actionUnload"/>
+   <addaction name="actionReload"/>
+   <addaction name="actionSave_XML"/>
+   <addaction name="actionSave_as_XML"/>
+   <addaction name="separator"/>
+   <addaction name="actionReadOnlyMode"/>
+   <addaction name="actionValueOnlyMode"/>
+   <addaction name="actionAllMode"/>
+  </widget>
+  <action name="actionLoadXML">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/tools/res/dirOpen.png</normaloff>:/tools/res/dirOpen.png</iconset>
+   </property>
+   <property name="text">
+    <string>加载XML</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_XML">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/tools/res/fileSave.png</normaloff>:/tools/res/fileSave.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSave_as_XML">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/tools/res/fileSaveAs.png</normaloff>:/tools/res/fileSaveAs.png</iconset>
+   </property>
+   <property name="text">
+    <string>另存为</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionUnload">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/tools/res/close.png</normaloff>:/tools/res/close.png</iconset>
+   </property>
+   <property name="text">
+    <string>关闭</string>
+   </property>
+  </action>
+  <action name="actionReload">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/tools/res/reload.png</normaloff>:/tools/res/reload.png</iconset>
+   </property>
+   <property name="text">
+    <string>重新加载</string>
+   </property>
+  </action>
+  <action name="actionReadOnlyMode">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/tools/res/documentFind.png</normaloff>:/tools/res/documentFind.png</iconset>
+   </property>
+   <property name="text">
+    <string>只读模式</string>
+   </property>
+  </action>
+  <action name="actionValueOnlyMode">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/tools/res/deleteShape.png</normaloff>:/tools/res/deleteShape.png</iconset>
+   </property>
+   <property name="text">
+    <string>值可编辑模式</string>
+   </property>
+  </action>
+  <action name="actionAllMode">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/tools/res/compareFiles.png</normaloff>:/tools/res/compareFiles.png</iconset>
+   </property>
+   <property name="text">
+    <string>完全可编辑模式</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="tools.qrc"/>
+ </resources>
+ <connections/>
+</ui>

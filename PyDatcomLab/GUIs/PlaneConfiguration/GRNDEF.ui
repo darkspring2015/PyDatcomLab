@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_NGH">
          <property name="text">
           <string>NGH  地面高度的计算点数</string>
          </property>

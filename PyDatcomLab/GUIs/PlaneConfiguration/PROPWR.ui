@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_AIETLP">
          <property name="text">
           <string>AIETLP  引擎推力轴的入射角</string>
          </property>
@@ -59,7 +59,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_NENGSP">
          <property name="text">
           <string>NENGSP  引擎数</string>
          </property>
@@ -99,7 +99,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_THSTCP">
          <property name="text">
           <string>THSTCP  推力系数</string>
          </property>
@@ -139,7 +139,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_PHALOC">
          <property name="text">
           <string>PHALOC  螺旋桨轮毂轴向位置</string>
          </property>
@@ -179,7 +179,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="label_PHVLOC">
          <property name="text">
           <string>PHVLOC  螺旋桨轮毂垂直位置</string>
          </property>
@@ -219,7 +219,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_PRPRAD">
          <property name="text">
           <string>PRPRAD  螺旋桨半径</string>
          </property>
@@ -259,7 +259,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_12">
        <item>
-        <widget class="QLabel" name="label_12">
+        <widget class="QLabel" name="label_YP">
          <property name="text">
           <string>YP 发动机横向位置  </string>
          </property>
@@ -305,7 +305,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_14">
           <item>
-           <widget class="QLabel" name="label_14">
+           <widget class="QLabel" name="label_BAPR75">
             <property name="text">
              <string>BAPR75  0.75螺旋桨半径叶片角 </string>
             </property>
@@ -345,7 +345,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_13">
           <item>
-           <widget class="QLabel" name="label_13">
+           <widget class="QLabel" name="label_CROT">
             <property name="text">
              <string>CROT 螺旋桨转向</string>
             </property>
@@ -398,7 +398,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <item>
-              <widget class="QLabel" name="label_7">
+              <widget class="QLabel" name="label_ENGFCT">
                <property name="text">
                 <string>ENGFCT  经验法向力因子</string>
                </property>
@@ -453,7 +453,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_8">
              <item>
-              <widget class="QLabel" name="label_8">
+              <widget class="QLabel" name="label_BWAPR3">
                <property name="text">
                 <string>BWAPR3 0.3螺旋桨半径叶片宽度</string>
                </property>
@@ -493,7 +493,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_9">
              <item>
-              <widget class="QLabel" name="label_9">
+              <widget class="QLabel" name="label_BWAPR6">
                <property name="text">
                 <string>BWAPR6 0.6螺旋桨半径叶片宽度</string>
                </property>
@@ -533,7 +533,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
-              <widget class="QLabel" name="label_10">
+              <widget class="QLabel" name="label_BWAPR9">
                <property name="text">
                 <string>BWAPR9 0.9螺旋桨半径叶片宽度</string>
                </property>
@@ -573,7 +573,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_11">
              <item>
-              <widget class="QLabel" name="label_11">
+              <widget class="QLabel" name="label_NOPBPE">
                <property name="text">
                 <string>NOPBPE 发动机的螺旋桨叶片数</string>
                </property>

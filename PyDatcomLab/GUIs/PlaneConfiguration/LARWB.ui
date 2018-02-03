@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_25">
        <item>
-        <widget class="QLabel" name="label_24">
+        <widget class="QLabel" name="label_XCENSB">
          <property name="text">
           <string>XCENSB  投影侧面质心到机头的距离</string>
          </property>
@@ -65,7 +65,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_23">
        <item>
-        <widget class="QLabel" name="label_22">
+        <widget class="QLabel" name="label_SBS">
          <property name="text">
           <string>SBS     投影侧面积</string>
          </property>
@@ -111,7 +111,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_BLF">
          <property name="text">
           <string>BLF     底部与升力面关系</string>
          </property>
@@ -161,7 +161,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_26">
        <item>
-        <widget class="QLabel" name="label_25">
+        <widget class="QLabel" name="label_XCENW">
          <property name="text">
           <string>XCENW   投影平面质心到构型鼻部的距离</string>
          </property>
@@ -207,7 +207,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_24">
        <item>
-        <widget class="QLabel" name="label_23">
+        <widget class="QLabel" name="label_SBSLB">
          <property name="text">
           <string>SBSLB   前20%机身的投影侧面积</string>
          </property>
@@ -253,7 +253,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_ZB">
          <property name="text">
           <string>ZB      质心垂直距离</string>
          </property>
@@ -299,7 +299,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_SREF">
          <property name="text">
           <string>SREF    平面面积</string>
          </property>
@@ -345,7 +345,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="label_DELTEP">
          <property name="text">
           <string>DELTEP  尖前缘参数</string>
          </property>
@@ -391,7 +391,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_SFRONT">
          <property name="text">
           <string>SFRONT  最大投影截面积(0法向力)</string>
          </property>
@@ -437,7 +437,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="label_AR">
          <property name="text">
           <string>AR      表面纵横比</string>
          </property>
@@ -483,7 +483,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="label_R3LEOB">
          <property name="text">
           <string>R3LEOB  圆前缘参数</string>
          </property>
@@ -529,7 +529,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QLabel" name="label_11">
+        <widget class="QLabel" name="label_DELTAL">
          <property name="text">
           <string>DELTAL  圆前缘参数</string>
          </property>
@@ -575,7 +575,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_12">
        <item>
-        <widget class="QLabel" name="label_12">
+        <widget class="QLabel" name="label_L">
          <property name="text">
           <string> L      机身长度</string>
          </property>
@@ -621,7 +621,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_13">
        <item>
-        <widget class="QLabel" name="label_13">
+        <widget class="QLabel" name="label_SWET">
          <property name="text">
           <string>SWET    湿区</string>
          </property>
@@ -667,7 +667,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="QLabel" name="label_14">
+        <widget class="QLabel" name="label_PERBAS">
          <property name="text">
           <string>PERBAS  基底周长</string>
          </property>
@@ -713,7 +713,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <widget class="QLabel" name="label_15">
+        <widget class="QLabel" name="label_SBASE">
          <property name="text">
           <string>SBASE   基底面积</string>
          </property>
@@ -759,7 +759,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_16">
        <item>
-        <widget class="QLabel" name="label_18">
+        <widget class="QLabel" name="label_HB">
          <property name="text">
           <string>HB      基底最大高度</string>
          </property>
@@ -805,7 +805,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_20">
        <item>
-        <widget class="QLabel" name="label_19">
+        <widget class="QLabel" name="label_BB">
          <property name="text">
           <string>BB      基底最大宽度</string>
          </property>
@@ -851,7 +851,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_21">
        <item>
-        <widget class="QLabel" name="label_20">
+        <widget class="QLabel" name="label_XCG">
          <property name="text">
           <string>XCG     重心纵向距离</string>
          </property>
@@ -897,7 +897,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_22">
        <item>
-        <widget class="QLabel" name="label_21">
+        <widget class="QLabel" name="label_THETAD">
          <property name="text">
           <string>THETAD  机翼半顶角</string>
          </property>
@@ -943,7 +943,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_ROUNDN">
          <property name="text">
           <string>ROUNDN  鼻型</string>
          </property>
@@ -1011,9 +1011,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-158</y>
-            <width>994</width>
-            <height>682</height>
+            <y>0</y>
+            <width>98</width>
+            <height>32</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -1051,8 +1051,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1126</width>
-            <height>890</height>
+            <width>98</width>
+            <height>32</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">

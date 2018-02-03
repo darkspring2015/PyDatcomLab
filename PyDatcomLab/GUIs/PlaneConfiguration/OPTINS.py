@@ -41,6 +41,14 @@ class OPTINS(QWidget, Ui_OPTINS):
             tModel = dcModel.dcModel('J6', '常规布局')
             #tModel.setNamelist('OPTIONS', 'ROUGFC', 0)            
         self.model = tModel   
+        #开始核心数据的定义
+        self.NameList = 'OPTINS'
+        self.VariableList = {
+                'ROUGFC':{    'TYPE':'REAL' , 'DisplayName':'ROUGFC 表面粗糙度' },    
+                'SREF':{      'TYPE':'REAL' , 'DisplayName':'SREF 参考面积' },
+                'CBARR':{     'TYPE':'REAL' , 'DisplayName':'CBARR 纵向参考长度值' },               
+                'BLREF':{     'TYPE':'REAL' , 'DisplayName':'BLREF 横向参考长度值'  },
+        }  
 
         #初始化数据和内容
         self.InitDoc()

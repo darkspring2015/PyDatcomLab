@@ -41,6 +41,26 @@ class SYNTHS(QWidget, Ui_SYNTHS):
  
         #初始化界面
         self.initUI()
+        #开始核心数据的定义
+        self.NameList = 'SYNTHS'
+        self.VariableList = {
+                'VERTUP':{  'TYPE':'List'  ,'Range':['1.0', '2.0'], 'Default':'1.0'
+                        , },         
+                'XCG':{ 'TYPE':'REAL'   ,  }, 
+                'ZCG':{ 'TYPE':'REAL'  , },    
+                'XW':{ 'TYPE':'REAL'  , },
+                'ZW':{  'TYPE':'REAL'  , },               
+                'ALIW':{ 'TYPE':'REAL'  ,},    
+                'XH':{ 'TYPE':'REAL'  , },  
+                'ZH':{ 'TYPE':'REAL'  , },   
+                'ALIH':{ 'TYPE':'REAL'  , },  
+                'HINAX':{ 'TYPE':'REAL'  , },  
+                'XV':{ 'TYPE':'REAL'  , },  
+                'ZV':{ 'TYPE':'REAL'  , },   
+                'XVF':{ 'TYPE':'REAL'  , },  
+                'ZVF':{ 'TYPE':'REAL'  , },   
+                'SCALE':{ 'TYPE':'REAL'  , },   
+        }  
         
         
     def setModel(self, tModel):

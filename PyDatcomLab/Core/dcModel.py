@@ -114,14 +114,14 @@ class dcModel(object):
         从XML文件tFile中加载数据
         """
         root = ET.parse(tFile).getroot()
-        if root is None:return 
+        if root is None:return False
         #分析XML文件
         if not root.tag == 'AerocraftInfo': 
             self.logger.error("加载XML文件：%s失败，其中不包含AerocraftInfo节"%tFile)
-            return
+            return False
         #根据节点设置对象信息    
         self.SetDocByXML(root)
-        
+        return True
         
         
     def createXMLDoc(self):

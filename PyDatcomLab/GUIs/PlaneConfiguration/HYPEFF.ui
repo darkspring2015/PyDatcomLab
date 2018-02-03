@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_ALITD">
          <property name="text">
           <string>ALITD  高度</string>
          </property>
@@ -65,7 +65,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_XHL">
          <property name="text">
           <string>XHL  铰链到前缘的距离</string>
          </property>
@@ -111,7 +111,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_TWOTI">
          <property name="text">
           <string>TWOTI  壁温与自由流静态温度之比</string>
          </property>
@@ -157,7 +157,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="label_CF">
          <property name="text">
           <string>CF  控制装置弦长</string>
          </property>
@@ -203,7 +203,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_HNDLTA">
          <property name="text">
           <string>HNDLTA  襟翼偏转角数量</string>
          </property>
@@ -250,7 +250,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="label_LAMNR">
          <property name="text">
           <string>LAMNR  边界层类型</string>
          </property>

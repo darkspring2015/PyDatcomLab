@@ -1,0 +1,20 @@
+<RCC>
+  <qresource prefix="tools">
+    <file>res/compareFiles.png</file>
+    <file>res/deleteShape.png</file>
+    <file>res/documentFind.png</file>
+    <file>res/reload.png</file>
+    <file>res/close.png</file>
+    <file>res/configure.png</file>
+    <file>res/dirClosed.png</file>
+    <file>res/dirOpen.png</file>
+    <file>res/fileSave.png</file>
+    <file>res/fileSaveAs.png</file>
+  </qresource>
+  <qresource prefix="nodes">
+    <file>res/qscintilla.png</file>
+    <file>res/comment.png</file>
+    <file>res/defaultIcon.png</file>
+    <file>res/drawFill.png</file>
+  </qresource>
+</RCC>

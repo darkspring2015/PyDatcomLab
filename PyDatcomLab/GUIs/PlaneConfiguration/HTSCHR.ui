@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_TOVC">
          <property name="text">
           <string>TOVC 最大机翼截面厚度</string>
          </property>
@@ -56,7 +56,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_DELTAY">
          <property name="text">
           <string>DELTAY 6.0到.15%弦长处翼型差</string>
          </property>
@@ -93,7 +93,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_XOVC">
          <property name="text">
           <string>XOVC  最大机翼厚度的纵坐标</string>
          </property>
@@ -130,7 +130,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_CLI">
          <property name="text">
           <string>CLI  翼型设计升力系数</string>
          </property>
@@ -167,7 +167,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="label_ALPHAI">
          <property name="text">
           <string>ALPHAI 设计攻角 </string>
          </property>
@@ -204,7 +204,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="label_CMO">
          <property name="toolTip">
           <string>section zero lift pitching moment coefficient</string>
          </property>
@@ -244,7 +244,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_LERI">
          <property name="toolTip">
           <string> airfoil leading edge radius fraction of chard     翼型前缘半径 ，参考弦长</string>
          </property>
@@ -284,7 +284,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="label_LERO">
          <property name="toolTip">
           <string>RLE for outboard panel  fraction of chard </string>
          </property>
@@ -324,7 +324,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_10">
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="label_CAMBER">
          <property name="text">
           <string>CAMBER 弧形翼型截面标志 </string>
          </property>
@@ -365,7 +365,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_13">
        <item>
-        <widget class="QLabel" name="label_11">
+        <widget class="QLabel" name="label_TOVCO">
          <property name="toolTip">
           <string>TOVCO                         t/c for outboard panel</string>
          </property>
@@ -405,7 +405,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_12">
        <item>
-        <widget class="QLabel" name="label_10">
+        <widget class="QLabel" name="label_XOVCO">
          <property name="toolTip">
           <string>(x/c)max for outboard panel</string>
          </property>
@@ -445,7 +445,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="QLabel" name="label_12">
+        <widget class="QLabel" name="label_CMOT">
          <property name="toolTip">
           <string>Cmo for outboard panel</string>
          </property>
@@ -488,7 +488,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <widget class="QLabel" name="label_13">
+        <widget class="QLabel" name="label_CLMAXL">
          <property name="toolTip">
           <string> airfoil maximum lift coefficient at MACH equal Zero</string>
          </property>
@@ -531,7 +531,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_16">
        <item>
-        <widget class="QLabel" name="label_14">
+        <widget class="QLabel" name="label_CLAMO">
          <property name="toolTip">
           <string>airfoil section lift curve slope at MACH equal Zero
 </string>
@@ -575,7 +575,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_21">
        <item>
-        <widget class="QLabel" name="label_19">
+        <widget class="QLabel" name="label_DWASH">
          <property name="toolTip">
           <string>DWASH                         subsonic downwash method flag 
                               =1. use datcom method 1                   
@@ -634,7 +634,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_17">
        <item>
-        <widget class="QLabel" name="label_15">
+        <widget class="QLabel" name="label_TCEFF">
          <property name="toolTip">
           <string> planform effective thickness ratio，fraction of chord</string>
          </property>
@@ -674,7 +674,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_18">
        <item>
-        <widget class="QLabel" name="label_16">
+        <widget class="QLabel" name="label_KSHARP">
          <property name="toolTip">
           <string> wave drag factor for sharp-nosed airfoil section，not input for round nosed airfoil</string>
          </property>
@@ -714,7 +714,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_19">
        <item>
-        <widget class="QLabel" name="label_17">
+        <widget class="QLabel" name="label_ARCL">
          <property name="toolTip">
           <string>aspect ratio classification</string>
          </property>
@@ -754,7 +754,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_22">
        <item>
-        <widget class="QLabel" name="label_20">
+        <widget class="QLabel" name="label_YCM">
          <property name="toolTip">
           <string>airfoil maximum camber， fraction of chord</string>
          </property>
@@ -794,7 +794,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_23">
        <item>
-        <widget class="QLabel" name="label_21">
+        <widget class="QLabel" name="label_CLD">
          <property name="toolTip">
           <string>conical camber design lift coefficient for M=1.0 Design. See-NACA RM A55G19.(Default To 0.0)</string>
          </property>

@@ -17,25 +17,9 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Preferred</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_BVP">
          <property name="text">
           <string>BVP  升力面之上的垂直面跨度 </string>
          </property>
@@ -72,7 +56,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_BV">
          <property name="text">
           <string>BV  垂直面跨度</string>
          </property>
@@ -109,7 +93,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_BDV">
          <property name="text">
           <string>BDV  垂直面四分弦长点处的机身深度</string>
          </property>
@@ -146,7 +130,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="label_BH">
          <property name="text">
           <string>BH  垂直面间的距离 </string>
          </property>
@@ -183,7 +167,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_SV">
          <property name="text">
           <string>SV  单垂直面设计型面积</string>
          </property>
@@ -220,7 +204,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="label_VPHITE">
          <property name="text">
           <string>VPHITE  垂直面翼型截面总后缘角</string>
          </property>
@@ -257,7 +241,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="label_VLP">
          <property name="text">
           <string>VLP  四分弦长点到CG的纵向距离</string>
          </property>
@@ -294,7 +278,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="label_ZP">
          <property name="text">
           <string>ZP  四分弦长点到CG的垂向距离</string>
          </property>

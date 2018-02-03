@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_13">
        <item>
-        <widget class="QLabel" name="label_13">
+        <widget class="QLabel" name="label_TTYPE">
          <property name="text">
           <string>TTYPE 类型</string>
          </property>
@@ -65,7 +65,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="label_CFITC">
          <property name="text">
           <string>CFITC  控制片内侧弦长</string>
          </property>
@@ -108,7 +108,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="label_CFOTC">
          <property name="text">
           <string>CFOTC  控制片外侧弦长</string>
          </property>
@@ -151,7 +151,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_10">
        <item>
-        <widget class="QLabel" name="label_10">
+        <widget class="QLabel" name="label_BITC">
          <property name="text">
           <string>BITC  控制片内侧区域位置</string>
          </property>
@@ -194,7 +194,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QLabel" name="label_11">
+        <widget class="QLabel" name="label_BOTC">
          <property name="text">
           <string>BOTC  控制片外侧区域位置</string>
          </property>
@@ -237,7 +237,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="QLabel" name="label_14">
+        <widget class="QLabel" name="label_CFITT">
          <property name="text">
           <string>CFITT  配平片内侧弦长</string>
          </property>
@@ -280,7 +280,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <widget class="QLabel" name="label_15">
+        <widget class="QLabel" name="label_CFOTT">
          <property name="text">
           <string>CFOTT  配平片外侧弦长</string>
          </property>
@@ -323,7 +323,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_20">
        <item>
-        <widget class="QLabel" name="label_17">
+        <widget class="QLabel" name="label_BITT">
          <property name="text">
           <string>BITT  配平片内侧区域位置</string>
          </property>
@@ -366,7 +366,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_16">
        <item>
-        <widget class="QLabel" name="label_16">
+        <widget class="QLabel" name="label_BOTT">
          <property name="text">
           <string>BOTT  配平片外侧区域位置</string>
          </property>
@@ -409,7 +409,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_24">
        <item>
-        <widget class="QLabel" name="label_21">
+        <widget class="QLabel" name="label_B1">
          <property name="text">
           <string>B1</string>
          </property>
@@ -452,7 +452,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_23">
        <item>
-        <widget class="QLabel" name="label_20">
+        <widget class="QLabel" name="label_B2">
          <property name="text">
           <string>B2</string>
          </property>
@@ -495,7 +495,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_21">
        <item>
-        <widget class="QLabel" name="label_18">
+        <widget class="QLabel" name="label_B3">
          <property name="text">
           <string>B3</string>
          </property>
@@ -538,7 +538,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_22">
        <item>
-        <widget class="QLabel" name="label_19">
+        <widget class="QLabel" name="label_B4">
          <property name="text">
           <string>B4</string>
          </property>
@@ -581,7 +581,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_25">
        <item>
-        <widget class="QLabel" name="label_22">
+        <widget class="QLabel" name="label_D1">
          <property name="text">
           <string>D1</string>
          </property>
@@ -624,7 +624,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_27">
        <item>
-        <widget class="QLabel" name="label_24">
+        <widget class="QLabel" name="label_D2">
          <property name="text">
           <string>D2</string>
          </property>
@@ -667,7 +667,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_26">
        <item>
-        <widget class="QLabel" name="label_23">
+        <widget class="QLabel" name="label_D3">
          <property name="text">
           <string>D3</string>
          </property>
@@ -710,7 +710,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_29">
        <item>
-        <widget class="QLabel" name="label_26">
+        <widget class="QLabel" name="label_CGMAX">
          <property name="text">
           <string>CGMAX</string>
          </property>
@@ -753,7 +753,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_30">
        <item>
-        <widget class="QLabel" name="label_27">
+        <widget class="QLabel" name="label_KS">
          <property name="text">
           <string>KS</string>
          </property>
@@ -796,7 +796,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_28">
        <item>
-        <widget class="QLabel" name="label_25">
+        <widget class="QLabel" name="label_RL">
          <property name="text">
           <string>RL</string>
          </property>
@@ -839,7 +839,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_31">
        <item>
-        <widget class="QLabel" name="label_28">
+        <widget class="QLabel" name="label_BGR">
          <property name="text">
           <string>BGR</string>
          </property>
@@ -882,7 +882,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_32">
        <item>
-        <widget class="QLabel" name="label_29">
+        <widget class="QLabel" name="label_DELR">
          <property name="text">
           <string>DELR</string>
          </property>

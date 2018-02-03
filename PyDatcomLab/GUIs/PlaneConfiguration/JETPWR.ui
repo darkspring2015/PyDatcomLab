@@ -19,7 +19,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_NENGSJ">
          <property name="text">
           <string>NENGSJ  引擎数</string>
          </property>
@@ -56,7 +56,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="label_THSTCJ">
          <property name="text">
           <string>THSTCJ  推力系数 </string>
          </property>
@@ -93,7 +93,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_AIETLJ">
          <property name="text">
           <string>AIETLJ  发动机推力线入射角</string>
          </property>
@@ -130,7 +130,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_12">
        <item>
-        <widget class="QLabel" name="label_12">
+        <widget class="QLabel" name="label_JELLOC">
          <property name="text">
           <string>JELLOC  喷气发动机的横向位置</string>
          </property>
@@ -167,7 +167,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="label_JIALOC">
          <property name="text">
           <string>JIALOC  喷气发动机进气道轴向位置</string>
          </property>
@@ -204,7 +204,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="label_JINLTA">
          <property name="text">
           <string>JINLTA  喷气发动机进气道面积</string>
          </property>
@@ -241,7 +241,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_JEVLOC">
          <property name="text">
           <string>JEVLOC  喷气发动机出口垂直位置</string>
          </property>
@@ -278,7 +278,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_JEALOC">
          <property name="text">
           <string>JEALOC  喷气发动机出口轴向位置</string>
          </property>
@@ -315,7 +315,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <widget class="QLabel" name="label_15">
+        <widget class="QLabel" name="label_JERAD">
          <property name="text">
           <string>JERAD   射流出口半径</string>
          </property>
@@ -352,7 +352,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="label_JEANGL">
          <property name="text">
           <string>JEANGL  射流出射角</string>
          </property>
@@ -389,7 +389,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="label_JEVEJO">
          <property name="text">
           <string>JEVEJO  射流出射速度</string>
          </property>
@@ -426,7 +426,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_13">
        <item>
-        <widget class="QLabel" name="label_13">
+        <widget class="QLabel" name="label_JETOTP">
          <property name="text">
           <string>JETOTP  射流出射总压</string>
          </property>
@@ -463,7 +463,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QLabel" name="label_11">
+        <widget class="QLabel" name="label_JESTMP">
          <property name="text">
           <string>JESTMP  喷口静温</string>
          </property>
@@ -500,7 +500,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_10">
        <item>
-        <widget class="QLabel" name="label_10">
+        <widget class="QLabel" name="label_AMBTMP">
          <property name="text">
           <string>AMBTMP  环境温度 </string>
          </property>
@@ -537,7 +537,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="QLabel" name="label_14">
+        <widget class="QLabel" name="label_AMBSTP">
          <property name="text">
           <string>AMBSTP  环境静压</string>
          </property>
