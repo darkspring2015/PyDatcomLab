@@ -45,6 +45,13 @@ class dcModel(object):
         self.xmlDoc._setroot(root) 
         
         return ET.tostring(root)
+    def getDocRootElement(self):
+        """
+        获得模型的XML根节点，ETreeElement
+        """
+        root = self.createXMLDoc()
+        if root is None:return None
+        else: return root
         
     def setDoc(self, doc):
         """

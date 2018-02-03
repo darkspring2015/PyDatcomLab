@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-02-02, 21:30:03 -->
+<!-- Saved: 2018-02-03, 19:00:45 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -16,6 +16,7 @@
   <Sources>
     <Source>PyDatcomLab/Application.py</Source>
     <Source>PyDatcomLab/Core/__init__.py</Source>
+    <Source>PyDatcomLab/Core/datcomDB.py</Source>
     <Source>PyDatcomLab/Core/datcomDefine.py</Source>
     <Source>PyDatcomLab/Core/datcomRunner.py</Source>
     <Source>PyDatcomLab/Core/dcModel.py</Source>
@@ -106,8 +107,12 @@
     <Source>PyDatcomLab/GUIs/components/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/components/img_rc.py</Source>
     <Source>PyDatcomLab/GUIs/components/logForm.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/Ui_XMLEditer.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLEditer.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/tools_rc.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
     <Source>PyDatcomLab/main.py</Source>
+    <Source>scripts/AnalyseUIDefine.py</Source>
     <Source>tests/__init__.py</Source>
     <Source>tests/parserBuild/Ui_datcomParsermain.py</Source>
     <Source>tests/parserBuild/__init__.py</Source>
@@ -154,6 +159,8 @@
     <Source>tests/testSuite2.py</Source>
   </Sources>
   <Forms>
+    <Form>PyDatcomLab/GUIs/tools/XMLEditer.ui</Form>
+    <Form>PyDatcomLab/GUIs/tools/xmlEditer.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>
@@ -197,6 +204,7 @@
     <Resource>PyDatcomLab/GUIs/PlaneConfiguration/card_ico.qrc</Resource>
     <Resource>PyDatcomLab/GUIs/PlaneConfiguration/card_rc.qrc</Resource>
     <Resource>PyDatcomLab/GUIs/components/img.qrc</Resource>
+    <Resource>PyDatcomLab/GUIs/tools/tools.qrc</Resource>
     <Resource>docs/datcom.zip</Resource>
     <Resource>docs/datcomexec.zip</Resource>
     <Resource>tests/data/PyDatcom-Tests/ASW-20.out</Resource>

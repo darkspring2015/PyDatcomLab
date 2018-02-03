@@ -290,10 +290,6 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             self.dock_ImageTips.setFloating(True)
             self.dock_ImageTips.resize(QtCore.QSize(300, 600))
             self.docksConfig['可视化提示'] = self.dock_ImageTips
-            
-
-            
-            
         else:
             if self.docksConfig['可视化提示'].isHidden() :
                 self.docksConfig['可视化提示'].show()
@@ -328,8 +324,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.dock_BrowseModels)  
             #self.dock_BrowseModels.setFloating(True)
             self.dock_BrowseModels.resize(QtCore.QSize(200, 600))
-            self.docksConfig['模型预览窗口'] = self.dock_BrowseModels
-            
+            self.docksConfig['模型预览窗口'] = self.dock_BrowseModels            
             #设置初始化目录
             browseMod.setPreviewDirectory(self.prjPath)
             
@@ -379,8 +374,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
-        
+       
         #获得当前的CASE
         tPC = self.centralWidget()
         if tPC == 0:

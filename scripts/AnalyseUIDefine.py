@@ -32,7 +32,7 @@ def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
     tlogger = logging.getLogger(r'Datcomlogger')
     tDcModel = dcModel()
     #进入系统的主循环
-    app =QApplication(sys.argv)
+    app = QApplication(sys.argv)
     pWdiget = QWidget()
     root = ET.Element('DatcomVariableDefine')
     #遍历选项卡
@@ -88,7 +88,7 @@ def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
             else:
                 if tWidget.toolTip()!= '':
                     tAttibdict['Tooltips'] = tWidget.toolTip()
-         
+                #分析Group控件
                 
             #写入结果
             tVarNode = ET.SubElement(tNamelistNode, iV,{'dcType':'Variable'})
