@@ -11,12 +11,13 @@
 '''
 
 import os
-import time  
-import uuid
+#import time  
+#import uuid
 #from xml.dom.minidom import Document  
 from PyDatcomLab.Core import tools as tl
-from PyDatcomLab.Core.dcModel import  dcModel
+
 from PyDatcomLab.Core.tools import xml_Indent as indent
+from PyDatcomLab.Core.dcProject import dcProject
 from xml.etree import ElementTree  as ET
 
 import logging
@@ -42,7 +43,9 @@ class projectManager(object):
         初始化创建一个manager对象
         如果 mgrFile 存在，则从磁盘文件加载Manager配置
         """
-        
+        #日志系统        
+        self.logger = logging.getLogger(r'Datcomlogger')
+        #内部参数定义
         self.managerTemplate = """\
 <?xml version="1.0" encoding="utf-8"?>
 <datcomProjectManager>
@@ -114,22 +117,24 @@ class projectManager(object):
             tl.logError(u'无法创建项目目录！dir:%s ,name:%s'%(tParentDir, tProjectName))
         
         #创建基础的工程文件和目录
-        
+        tProjectPath = os.path.join(baseDir, '%s.dcprj'%tProjectName)
         #创建项目
-        prj = dcProject(prjName=tProjectName, 
-                 prjDescribe = prjDescribe, 
-                 tAerocraftName = tAerocraftName)
+        prj = dcProject(tProjectPath)
         if prj is None: 
             tl.logError(u'创建项目失败 %s - %s -%s '%(
                             tProjectName, tAerocraftName,prjDescribe ))
             return None
-            
-            
+        #配置数据
+        tPrjInfo = {     'projectName':tProjectName, 
+                         'projectDescribe':prjDescribe, 
+                         #'projectDirectory':tProjectPath,                         
+                    }
+        prj.setProjectInfo(tPrjInfo)   
         # 将dom对象写入本地xml文件
-        filePath = os.path.join(baseDir, tProjectName+'.dcprj')
-        tXML = ET.ElementTree(prj.doc)
-        #ET.register_namespace('datcom', "https://github.com/darkspring2015/PyDatcomLab/")
-        tXML.write(filePath ,encoding = 'utf-8',xml_declaration=True)  
+   
+        #tXML = ET.ElementTree(prj.doc).getroot()
+        indent(prj.doc, 0)
+        ET.ElementTree(prj.doc).write(tProjectPath ,encoding = 'utf-8',xml_declaration=True)  
         
         # #追加到项目列表
         prjInfo = prj.getProjectInfo()
@@ -142,12 +147,12 @@ class projectManager(object):
         
         tl.logInfo(u'创建项目工程文件 %s - %s'%(tProjectName, tAerocraftName))
         #添加到当前的管理器
-        self.projectSet[filePath] = prj
+        self.projectSet[tProjectPath] = prj
         
-        return filePath
+        return tProjectPath
 
   
-    def AddProject(self, tPath):
+    def addProject(self, tPath):
         """
         将tPath指定的项目添加到项目管理器
         """
@@ -191,231 +196,4 @@ class projectManager(object):
             shutil.rmtree(rootDir)
             tl.logInfo('从磁盘删除：%s  工程！'%tPath)
 
-        
-
-
-        
-class dcProject(object):
-    """
-    Datcom Project的类，负责承载项目信息    
-    """
-    
-    def __init__(self, prjName=u'A Datcom project', prjDescribe =u''):
-        """ 
-        prjName        : 项目名称
-        prjDescribe    : 项目描述        
-        """
-        #日志系统        
-        self.logger = logging.getLogger(r'Datcomlogger')
-        #内部变量
-        self.prjName = prjName
-        self.prjDescribe = prjDescribe   
-        self.uuid = str(uuid.uuid1())
-        #self.model = dcModel() 
-        
-        self.prjTemplete = """\
-<?xml version="1.0" encoding="utf-8"?>
-<datcomProject>
-    <projectInfo>
-        <projectName>A Datcom project</projectName>
-        <projectDescribe> </projectDescribe>
-        <projectUUID> </projectUUID>
-        <createTime/>
-        <modifyTime/>
-    </projectInfo>
-    <casegroup GroupName="default group">
-    </casegroup>
-</datcomProject>
-        """
-        
-        self.doc = ET.fromstring(self.prjTemplete)     #返回的是根root元素    
-        #创建项目名称 
-        self.setNodeText(r'./projectInfo/projectName',     self.prjName)
-        self.setNodeText(r'./projectInfo/projectDescribe', self.prjDescribe)
-        self.setNodeText(r'./projectInfo/projectUUID',     self.uuid )
-        self.setNodeText(r'./projectInfo/createTime', 
-                         time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
-        self.setNodeText(r'./projectInfo/modifyTime', 
-                         time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
-
-
-    def loadProject(self, prjFile):
-        """
-        从prjFile中加载项目
-        prjFile : 工程文件路径 
-        """
-        if  not os.path.exists(prjFile ) or not os.path.isfile(prjFile):
-            self.logger.error(u'输入路径错误 %s 不是有效的路径！'%prjFile)
-            return
-        
-        tmpDoc = ET.parse(prjFile)  #parse是从文件，类名将是字符串
-        if not tmpDoc.getroot().tag == 'datcomProject':
-            self.logger.error(u'错误的工程文件格式 %s'%tmpDoc.tostring())
-            return 
-        self.doc = tmpDoc.getroot()
-        
-    def saveProject(self,prjFile ):
-        """
-        将文件保存到prjFile中
-        """
-        try:
-            root = self.doc
-            indent(root, 0)        
-            ET.ElementTree(root).write(prjFile, encoding="UTF-8" )
-        except IOError as e:
-            self.logger.error("保存文件失败！%s,异常信息%s"%(prjFile, e))
-    
-    def setNodeText(self, tXPath, text):
-        """
-        设置doc中xpath对应节点的text
-        认为是叶节点
-        xpath : r'./projectInfo/projectName'
-        """
-        nodes = self.doc.findall(tXPath)
-        
-        if nodes is None or len(nodes) <= 0:
-            self.logger.error("不存在对应节点：%s" % tXPath )
-            return 
-        if len(nodes) is not 1:
-            self.logger.info(u"查询%s 过程中出错，存在%d个节点！"%(tXPath, len(nodes)))
-            
-        if len(nodes[0].getchildren()) is not 0 :
-            self.logger.info(u"查询%s ,不是叶节点！"%tXPath)          
-        nodes[0].text = text
-        
-        
-    def addCase(self, tModel,tCASEName,  tGroup = 'default group' ):
-        """
-        添加一个CASE/模型到项目中,
-        @param tModel dcModel类型的模型
-        @type dcModel
-        """
-        #参数检查
-        if tModel is None or type(tModel) != dcModel:
-            self.logger.error(u"输入参数tModel无效：%s ！"%type(tModel))
-            return
-        #获得对应的Group节点
-        if tGroup is None or tGroup == '':
-            tGroup = 'default group' 
-        tXPath = r"./casegroup[@GroupName='%s']"%tGroup
-        nodes = self.getNodesByXPath(tXPath)
-        if not nodes : return 
-        #开始复制过程
-        reXML = dcModel.getDocRootElement()
-        if reXML is None:
-            self.logger.error(u"获得模型节点失败！")
-            return 
  
-        #添加
-        #nodes[-1].append(reXML)
-        tUUID = str(uuid.uuid1())
-        if tCASEName is None or tCASEName =='':tCASEName = tUUID
-        tCaseElem = ET.SubElement(nodes[-1], 'CASE', {'CASEName':tCASEName,'UUID':tUUID})
-        tCaseElem.append(reXML)
-        
-    
-    
-    def getProjectInfo(self):
-        """
-        获得项目名称和项目描述 
-        dict.keys = [
-                "projectName"
-                "projectDescribe"
-                ]
-        """
-        tDict = {}
-        for info in self.doc.findall('projectInfo'):
-            for tInfo in info:
-                tDict[tInfo.tag] = tInfo.text
-                
-        return tDict
-        
-    def setProjectInfo(self, info):
-        """
-        设置项目信息 : 
-        info = {
-                "projectName":'new project Name', 
-                "projectDescribe":'new project describe'
-        }
-        """
-        if 'projectName' in info:
-            self.setNodeText(r'/datcomProject/projectInfo/projectName', info['projectName'])
-        if 'projectDescribe' in info :
-            self.setNodeText(r'/datcomProject/projectInfo/projectDescribe', info['projectDescribe'])
- 
-    
-    def getAerocraftInfo(self):
-        """
-        获得飞行器的描述信息 
-        info.keys =[
-        'name','configuration']
-        
-        """
-        dict = {}
-        for info in self.doc.findall('aerocraftInfo'):
-            for tInfo in info:
-                dict[tInfo.tag] = tInfo.text 
-        
-        return dict
-        
-         
-    def getNodeTextByXPath(self, tXPath):
-        """
-        利用xml.etre.ElementTree 实现的xpath，当前仅支持部分功能
-        假设读取最终节点的text值
-        etc r'./aerocraftInfo/aerocraftName'
-        本方法返回所有的Node中的最后一个text值
-        """
-        #转换当前doc   
-        nodes = self.getNodesByXPath(tXPath)    
-        if nodes:
-            return nodes[-1].text
-        else:
-            return None
-
-
-    def getNodesByXPath(self, tXPath):
-        """
-        返回tXPath指定的所有Nodes
-        """
-        nodes = self.doc.findall(tXPath)
-        if nodes is None or len(nodes) <= 0:
-            self.logger.error("不存在对应节点：%s" % tXPath )
-            return None
-            
-        return nodes
-        
-        
-    def newCASE(self, CASEName, groupName , aerocraftName = "", aerocraftDes = ""):
-        """
-        新建一个CASE ,即dcModel模型一发
-        """
-
-        #导入Datcom的定义CASEName,  tGroup
-        self.addCase(dcModel(aerocraftName, aerocraftDes),CASEName,  groupName )
-    
-
-        
-    def addGroup(self, tGroupName):
-        """
-        创建名为 %tGroupName的新计算组
-        """
-        if tGroupName is None or tGroupName =='':
-            tGroupName = str(uuid.uuid1())
-        else:
-            tXPath = "./casegroup[@GroupName='%s']"%tGroupName
-            nodes = self.getNodesByXPath(tXPath)
-            if nodes:
-                self.logger.error("对应的分组已经存在！")
-                return
-        ET.SubElement(self.doc, 'casegroup', {'GroupName':tGroupName})
-    
-    
-        
-    
-
-
-
-        
-        
-

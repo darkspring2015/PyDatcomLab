@@ -81,6 +81,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         self.ProjectsModel.setHeaderData(0,QtCore.Qt.Horizontal,u"项目名称") 
         self.ProjectsModel.setHeaderData(1,QtCore.Qt.Horizontal,u"路径") 
         self.ProjectsModel.setHeaderData(2,QtCore.Qt.Horizontal,u"说明")
+        
     
     def InitModelData(self):
         """
@@ -180,18 +181,18 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        return
+
         
         label = QLabel( 'Action : 创建项目!')
         self.statusBar.addWidget(label)
 
         #创建目录结构        
         aDlg = AddProject.AddProject()
-        aDlg.show()
+        aDlg.exec()
         prj = aDlg.getData()
         
         self.PM = PM.projectManager()
-        prjPath = self.PM.newProject( prj['Path'] , prj['ProjectName'],
+        prjPath = self.PM.CreateProject( prj['Path'] , prj['ProjectName'],
                     prj['ProjectName'],prj['Describe'])
         
         self.ProjectsModel.insertRow(self.ProjectsModel.rowCount(), 
@@ -266,10 +267,12 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         # TODO: not implemented yet
         #模式对话框
-        button = QFileDialog.getOpenFileName(self,"打开项目文件", 
-                    "~/", "Datcom Project Files (*.dcxml *.xml )")
+        button, p = QFileDialog.getOpenFileName(self,"打开项目文件", 
+                    os.path.expanduser("~/.PyDatcom/"), "Datcom Project Files (*.dcxml *.dcprj *.xml ) | all (*.*)")
         if os.path.exists(button):
-            self.ProjectsModel
+            fn, ext = os.path.splitext(os.path.basename(button))
+            self.ProjectsModel.appendRow([QStandardItem(fn), QStandardItem(button), QStandardItem('')])
+            self.docksConfig['项目管理器'].widget().addProject(button)
         
     
     @pyqtSlot()

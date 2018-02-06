@@ -37,3 +37,30 @@ datcomVarAttriList = [
               ]
 ```
 
+### 项目结构约定
+
+1.项目以目录管理方式为基本样式
+
+目录下存放*.dcprj文件作为项目的整体描述文件
+
+​	在项目文件中包含若干的CASE Group ，对应命名为CaseGroupName的文件夹
+
+​	每个CASE group包括若干的CASE， 对应若干命名为CaseName的文件夹
+
+​	每个CASE 一个dcModel模型和计算目录，每个Case包括 dcModel.dcxml文件，*.inp文件和*.out文件
+
+2.项目文件*.dcprj中记录项目的基本信息
+
+​	项目名称：
+
+​	项目描述：
+
+​	修改时间：
+
+​	创建时间：
+
+​	飞行器基本信息：
+
+​	CASE group信息
+
+​		CASE 信息

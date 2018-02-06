@@ -39,6 +39,7 @@ class XMLEditer(QMainWindow, Ui_XMLEditer):
         #初始化相关配置
         self.treeWidget_xml.header().setSectionResizeMode(QHeaderView.ResizeToContents )
         self.treeWidget_xml.header().setStretchLastSection( True)
+        self.treeWidget_xml.setUniformRowHeights(True)  #可以极大加速Tree的加载时间 http://blog.csdn.net/rabinsong/article/details/8452946
         #
         self.EditingMode = 'All' # ['ValueOnly', 'Readonly', 'All']
         self.isSetCheckstate = True

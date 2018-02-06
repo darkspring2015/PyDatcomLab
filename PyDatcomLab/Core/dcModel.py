@@ -19,6 +19,7 @@ class dcModel(object):
         self.configuration = configuration
         self.createTime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
         self.modifyTime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+        self.modelPath =''  #模型文件的路径
         
         #初始化日志系统
         self.logger = logging.getLogger(r'Datcomlogger')
@@ -120,13 +121,19 @@ class dcModel(object):
         """
         从XML文件tFile中加载数据
         """
-        root = ET.parse(tFile).getroot()
+        root = None
+        try:
+            root = ET.parse(tFile).getroot()
+        except Exception as e:
+            self.logger.error("加载模型文件过程中发生异常，%s ：%s"%(repr(e), str(e)))
+            
         if root is None:return False
         #分析XML文件
         if not root.tag == 'AerocraftInfo': 
             self.logger.error("加载XML文件：%s失败，其中不包含AerocraftInfo节"%tFile)
             return False
         #根据节点设置对象信息    
+        self.modelPath = tFile
         self.SetDocByXML(root)
         return True
         

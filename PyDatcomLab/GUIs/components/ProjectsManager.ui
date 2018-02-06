@@ -15,20 +15,28 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
     <item>
-     <widget class="QTreeView" name="treeView_Projects"/>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="pushButton_projectChoise">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>工程</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_project"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTreeView" name="treeView_xml"/>
     </item>
    </layout>
   </widget>
@@ -42,8 +50,115 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNewGroup"/>
+   <addaction name="actionAddGroup"/>
+   <addaction name="actionCopyGroup"/>
+   <addaction name="actionRemoveGroup"/>
+   <addaction name="separator"/>
+   <addaction name="actionNewCase"/>
+   <addaction name="actionAddCase"/>
+   <addaction name="actionCopyCase"/>
+   <addaction name="actionRemoveCase"/>
   </widget>
+  <action name="actionNewCase">
+   <property name="icon">
+    <iconset resource="prjIcos.qrc">
+     <normaloff>:/prjManger/icos/tabNew.png</normaloff>:/prjManger/icos/tabNew.png</iconset>
+   </property>
+   <property name="text">
+    <string>新建CASE</string>
+   </property>
+   <property name="toolTip">
+    <string>新建CASE</string>
+   </property>
+  </action>
+  <action name="actionCopyCase">
+   <property name="icon">
+    <iconset resource="prjIcos.qrc">
+     <normaloff>:/prjManger/icos/tabDuplicate.png</normaloff>:/prjManger/icos/tabDuplicate.png</iconset>
+   </property>
+   <property name="text">
+    <string>复制CASE</string>
+   </property>
+   <property name="toolTip">
+    <string>复制CASE</string>
+   </property>
+  </action>
+  <action name="actionAddCase">
+   <property name="icon">
+    <iconset resource="prjIcos.qrc">
+     <normaloff>:/prjManger/icos/tabManager.png</normaloff>:/prjManger/icos/tabManager.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加CASE</string>
+   </property>
+   <property name="toolTip">
+    <string>添加CASE</string>
+   </property>
+  </action>
+  <action name="actionRemoveCase">
+   <property name="icon">
+    <iconset resource="prjIcos.qrc">
+     <normaloff>:/prjManger/icos/tabCloseOther.png</normaloff>:/prjManger/icos/tabCloseOther.png</iconset>
+   </property>
+   <property name="text">
+    <string>移除Case</string>
+   </property>
+   <property name="toolTip">
+    <string>移除Case</string>
+   </property>
+  </action>
+  <action name="actionNewGroup">
+   <property name="icon">
+    <iconset resource="prjIcos.qrc">
+     <normaloff>:/prjManger/icos/vcsAdd.png</normaloff>:/prjManger/icos/vcsAdd.png</iconset>
+   </property>
+   <property name="text">
+    <string>新建组</string>
+   </property>
+   <property name="toolTip">
+    <string>新建组</string>
+   </property>
+  </action>
+  <action name="actionAddGroup">
+   <property name="icon">
+    <iconset resource="prjIcos.qrc">
+     <normaloff>:/prjManger/icos/vcsCheckout.png</normaloff>:/prjManger/icos/vcsCheckout.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加组</string>
+   </property>
+   <property name="toolTip">
+    <string>添加组</string>
+   </property>
+  </action>
+  <action name="actionCopyGroup">
+   <property name="icon">
+    <iconset resource="prjIcos.qrc">
+     <normaloff>:/prjManger/icos/vcsBranch.png</normaloff>:/prjManger/icos/vcsBranch.png</iconset>
+   </property>
+   <property name="text">
+    <string>复制组</string>
+   </property>
+   <property name="toolTip">
+    <string>复制组</string>
+   </property>
+  </action>
+  <action name="actionRemoveGroup">
+   <property name="icon">
+    <iconset resource="prjIcos.qrc">
+     <normaloff>:/prjManger/icos/vcsAddRemove.png</normaloff>:/prjManger/icos/vcsAddRemove.png</iconset>
+   </property>
+   <property name="text">
+    <string>移除组</string>
+   </property>
+   <property name="toolTip">
+    <string>移除组</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="prjIcos.qrc"/>
+ </resources>
  <connections/>
 </ui>

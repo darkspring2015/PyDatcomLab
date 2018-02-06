@@ -67,7 +67,7 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
+
         tDir = QFileDialog.getExistingDirectory(self,"打开模型目录", ''
                                     , QFileDialog.DontUseNativeDialog) 
         if not os.path.exists(tDir):

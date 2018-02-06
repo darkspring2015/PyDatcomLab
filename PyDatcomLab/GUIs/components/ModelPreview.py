@@ -43,9 +43,9 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         #配置UI
         self.treeWidget_model.setColumnCount(2)
         self.treeWidget_model.setHeaderLabels(['参数', '值'])
-        #self.treeWidget_model.setColumnWidth(0,200)
         self.treeWidget_model.header().setSectionResizeMode(QHeaderView.ResizeToContents )
         self.treeWidget_model.header().setStretchLastSection( True)
+        self.treeWidget_model.setUniformRowHeights(True) #极大加速模型的加载过程
 #        self.treeWidget_model.setItemsExpandable(True)
 #        self.treeWidget_model.expandAll()
         self.isPreArray = False # True:'整理Array',False:'不整理Array'

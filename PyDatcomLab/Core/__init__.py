@@ -3,6 +3,7 @@ __all__=[
         'datcomDefine', 
         'datcomRunner', 
         'dcModel', 
+        'dcProject', 
         'exporter', 
         'projectManager', 
         'tools', 
