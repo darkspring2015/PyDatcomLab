@@ -11,7 +11,8 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox , QHeaderView,
 
 from PyDatcomLab.Core.projectManager import dcProject 
 from PyDatcomLab.GUIs.tools.XMLModel import XMLModel as XM
-from xml.etree import ElementTree  as ET
+#from xml.etree import ElementTree  as ET
+from lxml import etree as ET
 
 from Ui_ProjectsManager import Ui_ProjectsMainWindow
 
@@ -31,9 +32,9 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
         self.setupUi(self)
         #日志系统
         self.logger = logging.getLogger(r'Datcomlogger')
-        #初始化一个项目管理器
+        #初始化一个项目管理器        
         self.nowProject = dcProject(None)
-        self.model = XM(self.nowProject.prjPath)
+        self.model = XM(ET.Element("ceshi"))
         #内部属性
         self.index = QModelIndex() #存储触发右键菜单时候的信息
         self.treeView_xml.header().setSectionResizeMode(QHeaderView.ResizeToContents )
@@ -92,11 +93,13 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
             self.logger.error("读取XML失败:%s"%tPath)
             return
         #添加到项目
-        if self.comboBox_project.findText(tPath) == -1:
-            self.comboBox_project.addItem(tPath)
-        self.comboBox_project.setCurrentIndex(self.comboBox_project.findText(tPath))
-        self.model.setXMLData(tPath)
-        self.treeView_xml.setModel(self.model)        
+        if self.comboBox_project.currentText() != tPath:            
+            if self.comboBox_project.findText(tPath) == -1:
+                self.comboBox_project.addItem(tPath)
+            self.comboBox_project.setCurrentIndex(self.comboBox_project.findText(tPath))
+            
+        #self.model.setXMLData(tPath)
+        #self.treeView_xml.setModel(self.model)        
     
     @pyqtSlot()
     def on_pushButton_projectChoise_clicked(self):
@@ -132,7 +135,8 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
             QMessageBox.information(self, '提示',"文件：%s 不存在！"%tPath)
         #加载
         #进行了模型绑定
-        self.model.setXMLData(tPath)
+        self.model = XM(tPath)
+        #self.model.setXMLData(tPath)
         self.treeView_xml.setModel(self.model)
 
     @pyqtSlot()
