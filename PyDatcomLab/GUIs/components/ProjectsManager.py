@@ -10,7 +10,8 @@ from PyQt5.QtCore import pyqtSlot, QPoint, QModelIndex
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox , QHeaderView, QApplication
 
 from PyDatcomLab.Core.projectManager import dcProject 
-from PyDatcomLab.GUIs.tools.XMLModel import XMLModel as XM
+#from PyDatcomLab.GUIs.tools.XMLModel import XMLModel as XM
+from PyDatcomLab.GUIs.tools.XMLTreeEditer import XMLTreeModel as XM
 #from xml.etree import ElementTree  as ET
 from lxml import etree as ET
 
@@ -138,6 +139,7 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
         self.model = XM(tPath)
         #self.model.setXMLData(tPath)
         self.treeView_xml.setModel(self.model)
+ #       self.treeView_xml.expandAll()
         #self.treeView_xml.e
 
     @pyqtSlot()

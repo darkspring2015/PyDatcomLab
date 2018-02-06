@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-02-06, 02:04:19 -->
+<!-- Saved: 2018-02-06, 22:15:47 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -112,6 +112,7 @@
     <Source>PyDatcomLab/GUIs/tools/Ui_XMLEditer.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLEditer.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLModel.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLTreeEditer.py</Source>
     <Source>PyDatcomLab/GUIs/tools/tools_rc.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
     <Source>PyDatcomLab/main.py</Source>
