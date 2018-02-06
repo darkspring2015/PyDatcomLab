@@ -138,6 +138,7 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
         self.model = XM(tPath)
         #self.model.setXMLData(tPath)
         self.treeView_xml.setModel(self.model)
+        #self.treeView_xml.e
 
     @pyqtSlot()
     def on_actionNewCase_triggered(self):
