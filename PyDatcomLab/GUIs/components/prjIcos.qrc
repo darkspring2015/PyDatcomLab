@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="prjManger">
+    <file>../icos/tabCloseOther.png</file>
+    <file>../icos/tabDuplicate.png</file>
+    <file>../icos/tabManager.png</file>
+    <file>../icos/tabNew.png</file>
+    <file>../icos/vcsAdd.png</file>
+    <file>../icos/vcsAddRemove.png</file>
+    <file>../icos/vcsApplyChangegroup.png</file>
+    <file>../icos/vcsBranch.png</file>
+    <file>../icos/vcsCheckout.png</file>
+  </qresource>
+</RCC>
