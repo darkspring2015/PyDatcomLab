@@ -5,7 +5,7 @@ Module implementing dtXMLTreeWidget.
 子类化QTreeWidget提供对应的封装
 """
 
-from PyQt5.QtCore import  Qt, QRect, QSize
+from PyQt5.QtCore import  Qt,QSize  #,  QRect
 from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem, QHeaderView, QApplication, QStyledItemDelegate
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
 from PyQt5.QtGui import QIcon

@@ -101,15 +101,19 @@ dict_ASYFLP=['DELTAL', 'DELTAR', 'DELTAD', 'DELTAS', 'XSOC', 'HSOC', 'STYPE', 'X
 #定义Datcom中使用的量纲和单位制
 # 认为第一个单位是默认单位
 Dimension = {
-            'AREA':['CM2', 'M2', 'FT2'], 
-            'DEG':['DEG', 'RAD'], 
-            'L':['FT', 'M', 'CM', 'MM'], 
+            'A':['cm2', 'm2', 'ft2', 'in2'],  #A denotes units of area: ft2, in2, m2, or cm2
+            'DEG':['deg', 'rad'],  #Deg denotes angular measure in degrees, or 
+            'TDEG':['℉', '℃', 'K', '°R'] ,  #temperature in degrees Rankine or degrees Kelvin
+            'L':['feet', 'inches', 'meters', 'centimeters'],  #denotes units of length: feet, inches, meters, or centimeters
+            'F':['pounds', 'N'], #F denotes units of force; pounds or Newtons
+            'W':['Kg', 'g', 'pounds'], #W 质量
+            'T':['s', 'min', 'ms'], #t denotes units of time; seconds
 }
 
 #定义表格使用的常量信息
-groupDefine ={ #组名：{'Name':'widget的名称','ShowName':'显示名称','ToolTips':'组的提示信息'}
-    'ALSCHD':{'Name':'ALSCHD','ShowName':'攻角','ToolTips':'录入攻角信息'}, 
-    'Speed_Atmospheric':{'Name':'Speed_Atmospheric','ShowName':'速度/大气参数','ToolTips':'录入速度/大气参数'}, 
+groupDefine ={ #组名：{'Name':'widget的名称','DisplayName':'显示名称','ToolTips':'组的提示信息'}
+    'ALSCHD':{'Name':'ALSCHD','DisplayName':'攻角','ToolTips':'录入攻角信息'}, 
+    'Speed_Atmospheric':{'Name':'Speed_Atmospheric','DisplayName':'速度/大气参数','ToolTips':'录入速度/大气参数'}, 
 }
 
 

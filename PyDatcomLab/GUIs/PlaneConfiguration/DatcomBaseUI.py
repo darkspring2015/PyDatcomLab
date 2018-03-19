@@ -7,9 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-
 from PyDatcomLab.Core.datcomDefine import Dimension , groupDefine
 
 import logging
@@ -43,7 +41,6 @@ class DatcomBaseUI(object):
         self.LiftLayout = QtWidgets.QVBoxLayout(CARD)
         self.LiftLayout.setObjectName("LiftLayout")
 
-
         #循环遍历Group框架定义 
         tWidget = CARD
         tableCache ={}
@@ -75,8 +72,8 @@ class DatcomBaseUI(object):
                         tLabelItem = QtWidgets.QLabel(CARD)
                         tLabelItem.setObjectName("label_%s"%(tVarName))
                     #给Label赋值
-                    if 'Label' in tWidget.VariableList[tVarName].keys():
-                        tLabelItem.setText(tWidget.VariableList[tVarName]['Label'])
+                    if 'DisplayName' in tWidget.VariableList[tVarName].keys():
+                        tLabelItem.setText(tWidget.VariableList[tVarName]['DisplayName'])
                     else:
                         tLabelItem.setText(tVarName)                        
                     aLayout.addWidget(tLabelItem)  
@@ -119,7 +116,11 @@ class DatcomBaseUI(object):
                     elif tWidget.VariableList[tVarName]['TYPE'] == 'List':
                         tVarWidget = QtWidgets.QComboBox(CARD)
                         tVarWidget.setObjectName("comboBox_%s"%(tVarName))
-                        if 'Range' in tWidget.VariableList[tVarName].keys():
+                        #如果存在DisplayRange，优先添加说明信息
+                        if 'DisplayRange' in tWidget.VariableList[tVarName].keys():
+                            for itIndex in tWidget.VariableList[tVarName]['DisplayRange']:
+                                tVarWidget.addItem(itIndex)                         
+                        elif 'Range' in tWidget.VariableList[tVarName].keys():
                             for itIndex in tWidget.VariableList[tVarName]['Range']:
                                 tVarWidget.addItem(itIndex)                        
 
@@ -151,13 +152,8 @@ class DatcomBaseUI(object):
                         aLayout.addWidget(aDimension)   
                     
                 # 结束单值工程量创建
-                    
-                #
-                        
   
-  
-                #添加项目具体输入框 END
-                        
+                #添加项目具体输入框 END                        
                 self.LiftLayout.addLayout(aLayout)
 
         #创建下方的空间分割器
@@ -173,33 +169,37 @@ class DatcomBaseUI(object):
         tabWidget_right = QtWidgets.QTabWidget(CARD)
         tabWidget_right.setObjectName("tabWidget_right")
         
-        #创建多值工程量的输入结构           
-        if len(tableCache) >0:
-            for tGroup in tableCache.keys():
-                tTab = QtWidgets.QWidget(CARD)
-                tTab.setObjectName("tab_%s"%(tGroup))
-                tHorizontalLayout = QtWidgets.QHBoxLayout(tTab)
-                tHorizontalLayout.setObjectName("horizontalLayout_%s"%tGroup)
-                tTabTable = QtWidgets.QTableWidget(tTab)
-                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-                sizePolicy.setHorizontalStretch(0)
-                sizePolicy.setVerticalStretch(0)
-                sizePolicy.setHeightForWidth(tTabTable.sizePolicy().hasHeightForWidth())
-                tTabTable.setSizePolicy(sizePolicy)
-                tTabTable.setMaximumSize(QtCore.QSize(16777215, 16777215))
-                tTabTable.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-                tTabTable.setObjectName("tableWidget_%s"%tGroup)
-                tTabTable.setColumnCount(0)
-                tTabTable.setRowCount(0)
-                tHorizontalLayout.addWidget(tTabTable)
-                if hasattr(CARD,'groupDefine'):
-                    if tGroup in CARD.groupDefine.keys():    
-                        if 'ToolTips' in CARD.groupDefine[tGroup].keys():
-                            tTab.setToolTip(CARD.groupDefine[tGroup]['ToolTips'])
-                        if 'ShowName' in CARD.groupDefine[tGroup].keys():
-                            tabWidget_right.addTab(tTab, CARD.groupDefine[tGroup]['ShowName']) 
-                else:
-                    tabWidget_right.addTab(tTab, tGroup)               
+        #创建多值工程量的输入结构      
+        for tGroup in tableCache.keys():
+            tTab = QtWidgets.QWidget(CARD)
+            tTab.setObjectName("tab_%s"%(tGroup))
+            tHorizontalLayout = QtWidgets.QHBoxLayout(tTab)
+            tHorizontalLayout.setObjectName("horizontalLayout_%s"%tGroup)
+            tTabTable = QtWidgets.QTableWidget(tTab)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(tTabTable.sizePolicy().hasHeightForWidth())
+            tTabTable.setSizePolicy(sizePolicy)
+            tTabTable.setMaximumSize(QtCore.QSize(16777215, 16777215))
+            tTabTable.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+            tTabTable.setObjectName("tableWidget_%s"%tGroup)
+            tTabTable.setColumnCount(0)
+            tTabTable.setRowCount(0)
+            tHorizontalLayout.addWidget(tTabTable)
+            #tTabName     = tGroup
+            tTabTooltips = tGroup
+            tDisplayName = tGroup
+            if hasattr(CARD,'groupDefine'):
+                if not CARD.groupDefine is None and  tGroup in CARD.groupDefine.keys():    
+                    if 'ToolTips' in CARD.groupDefine[tGroup].keys():
+                        tTabTooltips = CARD.groupDefine[tGroup]['ToolTips']
+                        #tTab.setToolTip(CARD.groupDefine[tGroup]['ToolTips'])
+                    if 'DisplayName' in CARD.groupDefine[tGroup].keys():
+                        tDisplayName = CARD.groupDefine[tGroup]['DisplayName']
+                        #tabWidget_right.addTab(tTab, CARD.groupDefine[tGroup]['DisplayName']) 
+            tTab.setToolTip(tTabTooltips)
+            tabWidget_right.addTab(tTab, tDisplayName)
                 
         #创建说明文档结构
         self.tab_Help = QWebEngineView()

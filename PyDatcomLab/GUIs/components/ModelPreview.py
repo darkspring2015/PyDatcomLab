@@ -4,10 +4,10 @@
 Module implementing ModelPreview.
 """
 
-from PyQt5.QtCore import pyqtSlot, QPoint, Qt #,QModelIndex# , QFile, QIODevice
+from PyQt5.QtCore    import pyqtSlot, QPoint, Qt #,QModelIndex# , QFile, QIODevice
 from PyQt5.QtWidgets import QWidget, QTreeWidgetItem, QFileDialog, QMessageBox, QCheckBox, QHeaderView
 #from PyQt5.QtXml import QDomDocument
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui     import QIcon
 
 import logging, os
 #import time

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-02-07, 20:43:19 -->
+<!-- Saved: 2018-03-20, 01:05:04 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -15,6 +15,7 @@
   <Eol index="0"/>
   <Sources>
     <Source>PyDatcomLab/Application.py</Source>
+    <Source>PyDatcomLab/Core/DictionaryLoader.py</Source>
     <Source>PyDatcomLab/Core/__init__.py</Source>
     <Source>PyDatcomLab/Core/datcomDB.py</Source>
     <Source>PyDatcomLab/Core/datcomDefine.py</Source>
@@ -37,6 +38,7 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/CONTAB.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomBaseUI.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomCARD.py</Source>
+    <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomWidgetBase.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/GRNDEF.py</Source>
@@ -125,11 +127,13 @@
     <Source>tests/test.py</Source>
     <Source>tests/testCore.py</Source>
     <Source>tests/testCore/testDcModel.py</Source>
+    <Source>tests/testCore/testDictionaryLoader.py</Source>
     <Source>tests/testCore_Parser.py</Source>
     <Source>tests/testCore_ProjectManager.py</Source>
     <Source>tests/testCore_dcProject.py</Source>
     <Source>tests/testDatcomRunner.py</Source>
     <Source>tests/testFrame.py</Source>
+    <Source>tests/testGUI/testDynamicUI.py</Source>
     <Source>tests/testGUI/test_ASYFLP.py</Source>
     <Source>tests/testGUI/test_BODY.py</Source>
     <Source>tests/testGUI/test_BrowseModels.py</Source>

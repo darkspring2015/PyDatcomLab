@@ -6,7 +6,7 @@
 >>>main.py --prjDir=""
 """
 
-import os, sys, time
+import os, sys, time,shutil
 from PyQt5 import QtWidgets
 import logging #导入日志系统
 
@@ -66,10 +66,13 @@ configPath = os.path.join(os.path.expanduser('~'), '.PyDatcom')
 dirList = {'PyDatcomLab':os.path.join(os.path.expanduser('~'), '.PyDatcom') , 
            'LogDirectory':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'log') , 
            'SQliteDB':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'DB') , 
+           'Config':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'config') 
 }
 for tDir in dirList.keys():
     if  not os.path.exists(dirList[tDir]):
         os.makedirs(dirList[tDir])
+
+    
 
 #配置日志系统  
 logFileName = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
@@ -80,6 +83,16 @@ logfile = os.path.abspath(os.path.join(dirList['LogDirectory'], logFileName))
 logChannel = r'Datcomlogger'
 logLevel = logging.INFO
 logger = InitLogger(tlogFile =logfile, tlogName = logChannel , tlogLevel = logLevel)
+
+#创建配置文件目录
+try:
+    bPath = os.path.join(os.path.expanduser('~'), '.PyDatcom', 'config', 'datcomDefine.xml')
+    if not os.path.exists(bPath):
+        srcfile = os.path.join(mainPath, 'DB', 'datcomDefinitionDefualt.xml')
+        shutil.copyfile(srcfile,bPath) 
+except :
+    logger.error("无法复制配置文件")
+
 
 #创建基础数据库
 #import sqlite3

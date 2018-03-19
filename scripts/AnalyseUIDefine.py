@@ -40,8 +40,11 @@ def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
         mdObj = __import__(iC)
         cardMd = getattr(mdObj,iC)
         aW = cardMd( pWdiget, tModel = tDcModel)
+        #存储Group的定义信息
+        tGroups = {}
         #读取信息
-        tNamelistNode = ET.SubElement(root, iC)  
+        tNamelistNode = ET.SubElement(root, iC,{'dcType':'Namelist'})  
+        
         if not hasattr(aW,'NameList') or not hasattr(aW,'VariableList'):   
             continue   
         tNamelist = aW.NameList
@@ -80,6 +83,10 @@ def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
                         
             elif 'Array'  == tAttibdict['TYPE']:
                 tWidget = aW.findChild(QTableWidget, 'tableWidget_%s'%tAttibdict['Group'])
+                if tAttibdict['Group'] not in tGroups.keys():
+                    tGroups[tAttibdict['Group']] = [tAttibdict['Group']]
+                else:
+                    tGroups[tAttibdict['Group']].append(iV)
             #分析提示信息
             
             if tWidget is None:
@@ -95,6 +102,43 @@ def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
             for iAllAt in tAttibdict.keys():
                 tNode = ET.SubElement(tVarNode, iAllAt)
                 tNode.text = tAttibdict[iAllAt]
+        #追加一个Group定义
+        tInfoNode = ET.SubElement(tNamelistNode, 'AdditionalInfo',{'dcType':'Infomation'})
+        #NMACHLinkTable
+        if hasattr(aW,'NMACHLinkTable'):
+            tNMachLink = ET.SubElement(tInfoNode, 'NMACHLinkTable',{'dcType':'Rule'})
+            tNMachLink.text = str(aW.NMACHLinkTable)
+        #RuleNumToCount
+        if hasattr(aW,'RuleNumToCount'):
+            tRule = ET.SubElement(tInfoNode, 'RuleNumToCount',{'dcType':'Rule'})
+            for iR in aW.RuleNumToCount:
+                #tAtribs = {'dcType':'SubRule', 'Num':iR['Num'], 'Group':iR['Group']}
+                tAtribs = {'Num':iR['Num'], 'Group':iR['Group']}                
+                tSubRule0 = ET.SubElement(tRule, 'Rule',tAtribs)
+
+        #RuleNumToCount
+        if hasattr(aW,'RuleIndexToCombo'):
+            tRule = ET.SubElement(tInfoNode, 'RuleIndexToCombo',{'dcType':'Rule'})
+            for iR in aW.RuleIndexToCombo:
+                tAtribs = {'Index':iR['Index'], 'Group':iR['Group']} 
+                tSubRule0 = ET.SubElement(tRule, 'Rule',tAtribs)
+                #ET.SubElement(tSubRule0, 'Index',{'dcType':'Rule'}).text = iR['Index']
+                #ET.SubElement(tSubRule0, 'Group',{'dcType':'Rule'}).text = iR['Group']
+                #tSubRule = ET.SubElement(tSubRule0, 'HowTo',{'dcType':'Rule'})
+                for iSR in iR['HowTo'].keys():
+                    #遍历新规则
+                    tAttrib2 = {'key':iSR, 'value':str(iR['HowTo'][iSR])} 
+                    ET.SubElement(tSubRule0, 'HowTo',tAttrib2 )
+                    #tCombo = ET.SubElement(tSubRule, iSR)
+                    #tCombo.text = str(iR['HowTo'][iSR])
+        #附加Group的定义信息
+        if len(tGroups) != 0:
+            tRule = ET.SubElement(tInfoNode, 'GroupDefine',{'dcType':'Rule'})
+            for iG in tGroups.keys():
+                tAttrib = {'Name':iG, 'DisplayName':iG, 'ToolTips':iG}
+                ET.SubElement(tRule, 'Group',tAttrib)
+        
+     
         #变量循环结束
     #Namelsit循环结束
     #app.exec_()
