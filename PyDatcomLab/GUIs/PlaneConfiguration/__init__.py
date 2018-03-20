@@ -22,6 +22,6 @@ __all__ = [
     'LARWB', #
     'TRNJET', #
     'TVTPAN', #  
-    'DatcomBaseUI', 
+    #'DatcomBaseUI', 
     'DatcomCARD', 
     ]

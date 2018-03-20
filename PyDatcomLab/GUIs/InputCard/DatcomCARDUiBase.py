@@ -12,7 +12,7 @@ from PyDatcomLab.Core.datcomDefine import Dimension , groupDefine
 
 import logging
 
-class DatcomBaseUI(object):
+class DatcomCARDUIBase(object):
     """
     class DatcomCARD 是提供CARD录入的基础类
     """
@@ -175,7 +175,7 @@ class DatcomBaseUI(object):
             tTab.setObjectName("tab_%s"%(tGroup))
             tHorizontalLayout = QtWidgets.QHBoxLayout(tTab)
             tHorizontalLayout.setObjectName("horizontalLayout_%s"%tGroup)
-            tTabTable = QtWidgets.QTableWidget(tTab)
+            tTabTable = QtWidgets.QTableWidget(CARD)
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
             sizePolicy.setHorizontalStretch(0)
             sizePolicy.setVerticalStretch(0)
@@ -207,6 +207,8 @@ class DatcomBaseUI(object):
         tabWidget_right.addTab(self.tab_Help, "说明文档")
         
         self.horizontalLayout_CARD.addWidget(tabWidget_right)                
+        #调用控件信号槽绑定逻辑
+        QtCore.QMetaObject.connectSlotsByName(CARD)
         
     def retranslateUi(self, CARD):
         _translate = QtCore.QCoreApplication.translate    

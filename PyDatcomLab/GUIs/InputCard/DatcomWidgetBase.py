@@ -10,10 +10,10 @@ from PyQt5.QtWidgets import QWidget, QMenu  #,QMessageBox
 
 from PyDatcomLab.Core import dcModel
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  
-from PyDatcomLab.GUIs.PlaneConfiguration import DatcomCARD as DC
+from PyDatcomLab.GUIs.InputCard import DatcomCARDLogicBase as DCLogic , DatcomCARDUiBase as DCUi
 import logging
 
-from PyDatcomLab.GUIs.PlaneConfiguration.DatcomBaseUI import DatcomBaseUI
+
 
 
 class DatcomWidgetBase(QWidget, DatcomBaseUI):
@@ -94,8 +94,8 @@ if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
     card = DatcomWidgetBase(tCARD = 'FLTCON')    
-    ui = DatcomBaseUI()
-    ui.setupUi(card)
+    #ui = DatcomBaseUI()
+    #ui.setupUi(card)
     card.show()
     sys.exit(app.exec_())
     
