@@ -93,13 +93,14 @@ class DTdictionary():
         if tNmlst not in self.dictAddtional.keys():
             self.dictAddtional[tNmlst]= {}
         for iT in list(elemt):
-            if iT.tag == 'NMACHLinkTable':
+            if iT.tag == 'NMACHLinkTable' :
                 #NMACHLinkTable
-                tNTable = eval(iT.text)
-                if tNTable is None or not type(tNTable)  is list or len(tNTable) == 0:
-                    continue
-                else:
-                    self.dictAddtional[tNmlst]['NMACHLinkTable'] = tNTable
+                if  not iT.text is None:
+                    tNTable = eval(iT.text)
+                    if tNTable is None or not type(tNTable)  is list or len(tNTable) == 0:
+                        continue
+                    else:
+                        self.dictAddtional[tNmlst]['NMACHLinkTable'] = tNTable
                     
             elif iT.tag == 'RuleNumToCount':
                 #RuleNumToCount
@@ -117,7 +118,7 @@ class DTdictionary():
                     tAllComboDict = iR.attrib
                     tAllComboDict['HowTo'] = {}
                     for iHowto in list(iR):
-                        tAllComboDict['HowTo'][iHowto.attrib['key']] = iHowto.attrib['value']
+                        tAllComboDict['HowTo'][iHowto.attrib['key']] = eval(iHowto.attrib['value'])
                     tAllCombo.append(tAllComboDict)
                 self.dictAddtional[tNmlst]['RuleIndexToCombo'] = tAllCombo
                         
@@ -128,7 +129,21 @@ class DTdictionary():
                     tName = iR.attrib['Name']
                     tGroupRules[tName] = iR.attrib
                 self.dictAddtional[tNmlst]['GroupDefine'] = tGroupRules
+            elif iT.tag == 'RuleVariableStatus':
+                tAllCombo = []
+                for iR in list(iT):
+                    #每一条有 index group，howto组成
+                    tAllComboDict = iR.attrib
+                    tAllComboDict['HowTo'] = {}
+                    for iHowto in list(iR):
+                        tSets ={}
+                        tSets['Enabled']  = eval(iHowto.attrib['Enabled'])
+                        tSets['Disabled'] = eval(iHowto.attrib['Disabled'])
+                        tAllComboDict['HowTo'][iHowto.attrib['key']] = tSets
+                    tAllCombo.append(tAllComboDict)
                     
+                self.dictAddtional[tNmlst]['RuleVariableStatus'] = tAllCombo
+                
             else:
                 self.logger.error("解析规则异常：%s"%(tNmlst + " " + iT.tag))
         
@@ -150,7 +165,43 @@ class DTdictionary():
                 return self.dictAddtional[nmlst][ruleName]
 
         return {}
+    def gettRuleNumToCountByGroup(self, nmlst, groupNm):
+        """
+        通过group查询对应的控制变量
+        认为控制变量
+        """
+        tCName = None 
+        if nmlst in self.dictAddtional.keys() and 'RuleNumToCount' in self.dictAddtional[nmlst]:
+            for iR in self.dictAddtional[nmlst]['RuleNumToCount']:
+                if 'Num' in iR.keys() and 'Group' in iR.keys():
+                    if groupNm == iR['Group']:
+                        tCName = iR['Num']        
+        return tCName
 
+    def getRuleIndexToComboByGroup(self, nmlst, groupNm):
+        """
+        获得groupNm对应组的变量组合控制变量的名称
+        """
+        if nmlst in self.dictAddtional.keys() and 'RuleIndexToCombo' in self.dictAddtional[nmlst]:
+            for iR in self.dictAddtional[nmlst]['RuleIndexToCombo']:
+                if 'Group' in iR.keys() and 'Index' in iR.keys() and groupNm == iR['Group']:
+                    return  iR       
+        return None
+        
+        
+    def getGroupVarsByName(self, nmlst, groupNm):
+        """
+        获得nmlistName中对应组的所有变量定义
+        """
+        tVars = {}
+        if nmlst in self.Dictionary.keys():
+            tNmlstDf = self.Dictionary[nmlst]
+            for iV in tNmlstDf.keys():
+                if 'Group' in tNmlstDf[iV].keys() and groupNm  == tNmlstDf[iV]['Group']:
+                    tVars[iV] = tNmlstDf[iV]
+        return tVars
+                    
+        
     def parserArray(self, tStr):
         """
         解析Array的字符串
@@ -181,5 +232,19 @@ class DTdictionary():
             if 'Group' in tCARD[itVar].keys():
                 tGroupList.append(tCARD[itVar]['Group'])
         #返回结果
+        
+    def getGroupLimitByName(self, tNmlst, tGroup):
+        """
+        返回Namelist中某个组的最大数量 对应变量的Limit属性
+        """
+        tVars = self.getGroupVarsByName(tNmlst, tGroup)
+        tL = [0, 0]
+        for iV in tVars.keys():
+            if 'Limit' in tVars[iV].keys() :
+                tLimit = tVars[iV]['Limit']
+                if tL[0] > tLimit[0]:tL[0] = tLimit[0]
+                if tL[1] < tLimit[1]:tL[1] = tLimit[1]
+        return tL
+        
 #导出一个常量
 defaultDatcomDefinition = DTdictionary("")

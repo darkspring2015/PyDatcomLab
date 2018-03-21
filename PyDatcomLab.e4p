@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-03-20, 15:59:27 -->
+<!-- Saved: 2018-03-20, 23:50:31 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -30,6 +30,10 @@
     <Source>PyDatcomLab/Core/plotter.py</Source>
     <Source>PyDatcomLab/Core/projectManager.py</Source>
     <Source>PyDatcomLab/Core/tools.py</Source>
+    <Source>PyDatcomLab/GUIs/InputCard/DatcomCARDLogicBase.py</Source>
+    <Source>PyDatcomLab/GUIs/InputCard/DatcomCARDUiBase.py</Source>
+    <Source>PyDatcomLab/GUIs/InputCard/DatcomTableBase.py</Source>
+    <Source>PyDatcomLab/GUIs/InputCard/DatcomWidgetBase.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
@@ -37,9 +41,7 @@
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/BODY.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/CONTAB.py</Source>
-    <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomBaseUI.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomCARD.py</Source>
-    <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomWidgetBase.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/EXPR.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/FLTCON.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/GRNDEF.py</Source>
@@ -170,6 +172,7 @@
     <Source>tests/testTools/test_XMLModel.py</Source>
   </Sources>
   <Forms>
+    <Form>PyDatcomLab/GUIs/InputCard/datcomTable.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>

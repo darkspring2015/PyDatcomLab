@@ -31,6 +31,8 @@ class DatcomCARDLogicBase(object):
 
         self.Widget       = tWidget                   #界面对象 
         self.model        = dcModel.dcModel()
+        
+        
  
         
     def InitUi(self):
@@ -68,6 +70,8 @@ class DatcomCARDLogicBase(object):
                         tRange = self.Widget.VariableList[varName]['Range']
                         tVd.setRange(tRange[0], tRange[1])
                     tWidget.setValidator(tVd) 
+
+            
                     
     def InitDoc(self):
         """
@@ -140,10 +144,10 @@ class DatcomCARDLogicBase(object):
                 self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
                 continue
             #Widget存在
-            #tWidget.clearContents() #清除内容
-            tWidget.clear() #清除内容和表头
-            tWidget.setColumnCount(len(tableCache[iTb]))
-            tWidget.setHorizontalHeaderLabels( tableCache[iTb])   #绘制表头
+            tWidget.clearContents() #清除内容
+            #tWidget.clear() #清除内容和表头
+            #tWidget.setColumnCount(len(tableCache[iTb]))
+            #tWidget.setHorizontalHeaderLabels( tableCache[iTb])   #绘制表头
             
             #遍历所有的遍历写入到表格中
             for itC in range(len(tableCache[iTb])):
@@ -325,160 +329,168 @@ class DatcomCARDLogicBase(object):
         #自动化循环赋值        
         return self.model
     
-    def UILogic(self):
+    def on_Singal_RuleIndexToCombo(self, tIndex, tName):
         """
-        提供可以标准化的UI自动化部分的代码
+        执行变量组合类的随动触发逻辑
+        tIndex是改变后的Index
+        tName是触发改变的Combo控件Name
         """
-
-        #判断CheckBox的逻辑
-        if hasattr(self.Widget,'VariableList'):
-            for varName in self.Widget.VariableList.keys():
-                #判断checkbox是否存在
-                tWidgetCB = self.Widget.findChild(QCheckBox, 'checkBox_%s'%varName)
-                if self.Widget.VariableList[varName]['TYPE'] == 'INT' or self.Widget.VariableList[varName]['TYPE'] == 'REAL':
-                    tWidget   = self.Widget.findChild(QLineEdit, varName)
-                    if tWidget is None: 
-                        self.logger.error("不存在目标变量%s"%varName)
-                        continue
-                elif  self.Widget.VariableList[varName]['TYPE'] == 'List':
-                    tWidget   = self.Widget.findChild(QComboBox, 'comboBox_%s'%varName)
-                    if tWidget is None: 
-                        self.logger.error("不存在目标变量%s"%varName)
-                        continue
-                elif  self.Widget.VariableList[varName]['TYPE'] == 'Array':
-                    groupName = self.Widget.VariableList[varName]['Group']
-                    tWidget   = self.Widget.findChild(QTableWidget, 'tableWidget_%s'%groupName)
-                    if tWidget is None: 
-                        self.logger.error("不存在目标变量%s对应的表格%s"%(varName , 'tableWidget_%s'%groupName))
-                        continue
-                #执行状态切换
-                if not tWidgetCB is None:
-                    if tWidgetCB.checkState() == Qt.Checked:
-                        tWidget.setEnabled(True)
-                    else:
-                        tWidget.setEnabled(False)
-                    
-        #表格行数联动        
-        #NPTS的联动        
-        #跨越Widget获得NMACH的参数 FLTCON中获得NMACH VINF的数量指定
-        if hasattr(self.Widget,'NMACHLinkTable'):            
-            tNMACH = self.model.getNamelistVar('FLTCON', 'NMACH')
-            if  not tNMACH is None:
-                tNMACH = int(float(tNMACH))
-                for iTab in self.Widget.NMACHLinkTable:
-                    tWidget   = self.Widget.findChild(QTableWidget, 'tableWidget_%s'%iTab)
-                    if tWidget is None: 
-                        self.logger.error("不存在目标变量%s"%varName)
-                        continue
-                    if tNMACH > tWidget.rowCount():
-                        for itR in range(tWidget.rowCount(), tNMACH):
-                            tWidget.insertRow(itR)
-                    elif tNMACH < tWidget.rowCount():
-                        self.logger.error("此处录入的行数%d不等与FLTCON定义的行数%d"%(tNMACH,tWidget.rowCount() ))
-                        
-                        
-        #通用数据与表格行数的逻辑
-        #self.RuleNumToCount =[{'Num':'NX', 'Group':'BODY'}]
-        if hasattr(self.Widget,'RuleNumToCount'):
-            RuleNumToCount = self.Widget.RuleNumToCount
-            WidgetContainer = self.Widget
-            for tRule in RuleNumToCount: 
-                tVarName = tRule['Num']       
-                tNumVar = self.getVariableFromWidget(WidgetContainer,tVarName )
-                if tNumVar is None:
-                    self.logger.error("当前CARD：%s并不存在%s的变量"%(WidgetContainer.objectName(),tVarName ))
-                    continue
-                #存在 Num
-                tGroupName = tRule['Group']
-                tTableWidget = WidgetContainer.findChild(QTableWidget, 'tableWidget_%s'%tGroupName)
-                if tTableWidget is None:
-                    self.logger.error("当前CARD：%s并不存在%s的表单"%(WidgetContainer.objectName(),tGroupName ))
-                    continue
-                #存在 Table
-                #执行 Num to Table row的逻辑            
-                if tNumVar >tTableWidget.rowCount(): #扩增表格行数
-                    for itR in range(tTableWidget.rowCount(), tNumVar):
-                        tTableWidget.insertRow(itR)
-                elif  tNumVar < tTableWidget.rowCount(): #不能表格行数
-                    self.logger.info("CARD： %s尝试直接缩减%s表格行数到现有行数%d之下，重置为%s"%(WidgetContainer.objectName(), 
-                                            tGroupName,tTableWidget.rowCount() , tVarName))
-                    tNumWidget = WidgetContainer.findChild(QLineEdit, tVarName)
-                    tNumWidget.setText(str(tTableWidget.rowCount()))
-        #结束表格逻辑协同操作
-        
-        #表头逻辑协动操作
-        if hasattr(self.Widget,'RuleIndexToCombo'):
-            RuleIndexToCombo = self.Widget.RuleIndexToCombo
-            WidgetContainer = self.Widget
-            for tRule in RuleIndexToCombo:  #遍历所有规则
-                tComboVarName = tRule['Index']
-                tComboWidget = WidgetContainer.findChild(QComboBox, 'comboBox_%s'%tComboVarName)
-                if tComboWidget is None :
-                    self.logger.error("无法找到控件comboBox_%s"%tComboVarName) 
-                    continue
-                tTableWidget = WidgetContainer.findChild(QTableWidget, 'tableWidget_%s'%tRule['Group'])
-                if tTableWidget is None : 
-                    self.logger.error("无法找到控件tableWidget_%s"%tRule['Group']) 
-                    continue
-                tNowIndex = tComboWidget.currentIndex()
-                #检查是否在子规则库中
-                if '%d.0'%(tNowIndex+1) in tRule['HowTo'].keys():
-                    tHeaderRule = tRule['HowTo']['%d.0'%(tNowIndex+1)]
-                    tNowHeader = []
-                    for itC in range(tTableWidget.columnCount()):
-                        tNowHeader.append(tTableWidget.horizontalHeaderItem(itC).text())
-                    #判断标题是否相等
-                    if tHeaderRule == tNowHeader:
-                        continue
-                    else:
-                        if tTableWidget.rowCount() ==0 or tTableWidget.columnCount() ==0:
-                            #空表的情况下
-                            tTableWidget.clear()
-                            tTableWidget.setColumnCount(len(tHeaderRule))
-                            tTableWidget.setHorizontalHeaderLabels(tHeaderRule)
-                            self.logger.info("刷新了%s表格"%('tableWidget_%s'%tRule['Group'])) 
-                        else:
-                            #获取现有数据
-                            oldData = {}
-                            oldRowCount = tTableWidget.rowCount()                        
-                            for itC in range(len(tHeaderRule)):
-                                tOldItc = self.getColumnIndex( tTableWidget, tHeaderRule[itC])
-                                if tOldItc >= 0: #存在有效的数据则移动表格数据
-                                    tList =[]
-                                    for itR in range(tTableWidget.rowCount()):
-                                        tItem = tTableWidget.item(itR, tOldItc)
-                                        if tItem is None:
-                                            tList.append(None)
-                                        else:
-                                            tList.append(tItem.text())
-                                    tTableWidget.removeColumn(tOldItc)
-                                    oldData[itC] = tList
-                                else:
-                                    oldData[itC] = []
-                            #写入现有数据
-                            tTableWidget.clear()
-                            tTableWidget.setColumnCount(len(tHeaderRule))
-                            tTableWidget.setRowCount(oldRowCount)
-                            tTableWidget.setHorizontalHeaderLabels(tHeaderRule)
-                            for itC in range(len(tHeaderRule)):
-                                for itR in range(len(oldData[itC])):
-                                    tTableWidget.setItem(itR, itC, QTableWidgetItem(oldData[itC][itR]))
-                            #
-                            self.logger.info("重构了%s表格"%('tableWidget_%s'%tRule['Group'])) 
+        tWidget = self.Widget.findChild(QComboBox,tName)
+        if tWidget is None:
+            self.logger.error("消息传递机制异常！")
+            return
+        if not hasattr(self.Widget,'RuleIndexToCombo'):
+            return 
+        #执行变量组合控制逻辑
+        #print(tWidget.currentText())
+        tControlVarName = tName.replace('comboBox_', '')  
+        tGroupName = ''
+        tHowTos ={}
+        for iR in  self.Widget.RuleIndexToCombo: #[]
+            if tControlVarName != iR['Index']:
+                continue
+            tGroupName = iR['Group']
+            tHowTos = iR['HowTo']
+        if tGroupName == '' or tHowTos == {}:
+            return 
+        #获得表格对象
+        tTableWidget = self.Widget.findChild(QTableWidget,"tableWidget_%s"%tGroupName)
+        if tTableWidget is None: return 
+        #检查是否在子规则库中
+        tkey = '%d.0'%(tIndex+1)
+        if tkey  in tHowTos.keys():
+            tHeaderRule = tHowTos[tkey]
+            tNowHeader = []
+            for itC in range(tTableWidget.columnCount()):
+                tNowHeader.append(tTableWidget.horizontalHeaderItem(itC).text())
+            #判断标题是否相等
+            if tHeaderRule != tNowHeader:
+                #表头不一致的情况下进行分析
+                if tTableWidget.rowCount() ==0 or tTableWidget.columnCount() ==0:
+                    #空表的情况下
+                    tTableWidget.clear()
+                    tTableWidget.setColumnCount(len(tHeaderRule))
+                    tTableWidget.setHorizontalHeaderLabels(tHeaderRule)
+                    self.logger.info("刷新了%s表格"%('tableWidget_%s'%tGroupName)) 
                 else:
-                    self.logger.error("无法理解的规则模式%d"%tNowIndex) 
-                    
-            #Index控制表头逻辑接触
+                    #获取现有数据
+                    oldData = {}
+                    oldRowCount = tTableWidget.rowCount()                        
+                    for itC in range(len(tHeaderRule)):
+                        tOldItc = self.getColumnIndex( tTableWidget, tHeaderRule[itC])
+                        if tOldItc >= 0: #存在有效的数据则移动表格数据
+                            tList =[]
+                            for itR in range(tTableWidget.rowCount()):
+                                tItem = tTableWidget.item(itR, tOldItc)
+                                if tItem is None:
+                                    tList.append(None)
+                                else:
+                                    tList.append(tItem.text())
+                            tTableWidget.removeColumn(tOldItc)
+                            oldData[itC] = tList
+                        else:
+                            oldData[itC] = []
+                    #写入现有数据
+                    tTableWidget.clear()
+                    tTableWidget.setColumnCount(len(tHeaderRule))
+                    tTableWidget.setRowCount(oldRowCount)
+                    tTableWidget.setHorizontalHeaderLabels(tHeaderRule)
+                    for itC in range(len(tHeaderRule)):
+                        for itR in range(len(oldData[itC])):
+                            tTableWidget.setItem(itR, itC, QTableWidgetItem(oldData[itC][itR]))
+                    #
+                    self.logger.info("重构了%s表格"%('tableWidget_%s'%tGroupName)) 
+        else:
+            self.logger.error("无法理解的规则模式%d"%tIndex)         
+    
+    def on_Singal_CheckboxStateChanged(self, tIndex, tName):
+        """
+        响应CheckBox的StateChanged
+        """
+        tWidget = self.Widget.findChild(QCheckBox,tName)
+        if tWidget is None:
+            self.logger.error("消息传递机制异常！%s不存在"%tName)
+            return
+        tVarName = tName.replace('checkBox_', '')
+        if not hasattr(self.Widget,'VariableList') or tVarName not in self.Widget.VariableList.keys():
+            return 
+        #执行变量组合控制逻辑
+        tVarDefine = self.Widget.VariableList[tVarName]
+        #查找变量的输入控件
+        tInputWidget = None
+        if tVarDefine['TYPE'] in ['INT' , 'REAL']:
+            tInputWidget   = self.Widget.findChild(QLineEdit, tVarName)
+        elif  tVarDefine['TYPE'] in ['List'] :
+            tInputWidget   = self.Widget.findChild(QComboBox, 'comboBox_%s'%tVarName)                
+        elif  tVarDefine['TYPE'] in ['Array'] :
+            groupName = tVarDefine['Group']
+            tInputWidget   = self.Widget.findChild(QTableWidget, 'tableWidget_%s'%groupName)
+        if tInputWidget is None: 
+            self.logger.error("不存在目标变量%s对应的输入变量"%tVarName)
+        #查找变量的单位控件
+        tUnitWidget = None
+        if 'Dimension' in  tVarDefine.keys():
+            tUnitWidget   = self.Widget.findChild(QComboBox, "comboBox_Dimension_%s"%tVarName)
         
-        #变量控制其他变量的有效性
-        #self.RuleVariableStatus = [ {'ControlVar':'ITYPE', 
-        #                       'HowTo':{
-        #                            '1.0':{'Disabled':[], 'Enabled':[]},
-        #                            '2.0':{'Disabled':[], 'Enabled':[]}
-        #                               }
-        #                           }
-        #                          ]
-        # 由变量ControlVar的不同值控制的其他变量和控件的可用和不可用逻辑
+        #执行状态切换
+        if tWidget.checkState() == Qt.Checked:
+            if tInputWidget : tInputWidget.setEnabled(True)
+            if tUnitWidget  : tUnitWidget.setEnabled(True)
+        else:
+            if tInputWidget : tInputWidget.setEnabled(False)
+            if tUnitWidget  : tUnitWidget.setEnabled(False)
+    
+        
+    
+    def on_Singal_TbLength_editingFinished(self, tName ):
+        """
+        处理表格长度控制变量值变化时的基本逻辑
+        """
+        if not hasattr(self.Widget,'RuleNumToCount')  : 
+            return
+        tGroupName  = None
+        for iR in self.Widget.RuleNumToCount: #[]
+            if 'Num' in iR.keys() and tName == iR['Num']:
+                tGroupName = iR['Group']
+        if tGroupName is None : return 
+                
+        #通用数据与表格行数的逻辑
+        tCVar = self.Widget.findChild(QLineEdit, tName)
+        if tCVar is None:
+            self.logger.error("当前CARD：%s并不存在%s的变量"%(self.Widget.objectName(),tName ))
+            return 
+        #存在 Num
+        tNumVar = int(float(tCVar.text()))
+
+        tTableWidget = self.Widget.findChild(QTableWidget, 'tableWidget_%s'%tGroupName)
+        if tTableWidget is None:
+            self.logger.error("当前CARD：%s并不存在%s的表单"%(self.Widget.objectName(),tGroupName ))
+            return 
+            
+        #存在 Table
+        #执行 Num to Table row的逻辑            
+        if tNumVar >tTableWidget.rowCount(): #扩增表格行数
+            for itR in range(tTableWidget.rowCount(), tNumVar):
+                tTableWidget.insertRow(itR)
+        elif  tNumVar < tTableWidget.rowCount(): #不能表格行数
+            self.logger.info("CARD： %s尝试直接缩减%s表格行数到现有行数%d之下，重置为%s"%(self.Widget.objectName(), 
+                                    tGroupName,tTableWidget.rowCount() , tName))            
+            tCVar.setText(str(tTableWidget.rowCount()))
+        #结束表格逻辑协同操作        
+        
+        
+
+    def on_Singal_CommonUIChanged(self, tName):
+        """
+        其他通用UI逻辑处理
+        """
+        self.UILogic()
+        
+    def on_Singal_RuleVariableStatus(self, tName):
+        """
+        处理Singal_RuleVariableStatus的逻辑
+        """
+        
         if hasattr(self.Widget,'RuleVariableStatus'):
             #定义了控制量则扫描控制量
             for itRule in self.Widget.RuleVariableStatus:  
@@ -519,6 +531,35 @@ class DatcomCARDLogicBase(object):
                 #结束遍历状态修改
             #结束所有规则的应用
         #结束状态选择量控制其他状态量的过程
+    def on_Singal_NMACHLinkTable(self, tName):
+        """
+        执行与NMACH进行联动的逻辑
+        """
+        #表格行数联动        
+        #NPTS的联动        
+        #跨越Widget获得NMACH的参数 FLTCON中获得NMACH VINF的数量指定
+        if hasattr(self.Widget,'NMACHLinkTable'):            
+            tNMACH = self.model.getNamelistVar('FLTCON', 'NMACH')
+            if  not tNMACH is None:
+                tNMACH = int(float(tNMACH))
+                for iTab in self.Widget.NMACHLinkTable:
+                    tWidget   = self.Widget.findChild(QTableWidget, 'tableWidget_%s'%iTab)
+                    if tWidget is None: 
+                        self.logger.error("不存在目标变量%s"%iTab)
+                        continue
+                    if tNMACH > tWidget.rowCount():
+                        for itR in range(tWidget.rowCount(), tNMACH):
+                            tWidget.insertRow(itR)
+                    elif tNMACH < tWidget.rowCount():
+                        self.logger.error("此处录入的行数%d不等与FLTCON定义的行数%d"%(tNMACH,tWidget.rowCount() ))
+
+        
+        
+    def UILogic(self):
+        """
+        提供可以标准化的UI自动化部分的代码
+        """
+        #暂时没有其他可以做的了
     
     def getColumnIndex(self, tTable, tHeader):
         """

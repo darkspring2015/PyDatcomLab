@@ -22,7 +22,7 @@ from PyDatcomLab.Core.tools import xml_Indent as indent
 from PyDatcomLab.GUIs.PlaneConfiguration import *
 
 from PyQt5.QtWidgets import QWidget, QApplication, QComboBox, QLineEdit, QTableWidget, QLabel, QCheckBox
-
+from PyQt5.QtCore import Qt
 
 def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
     """
@@ -66,8 +66,11 @@ def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
             if tCheckbox:
                 tAttibdict['DisplayName'] =  tCheckbox.text()
                 if  tCheckbox.toolTip()!= '':
-                    tAttibdict['Tooltips'] =  tCheckbox.toolTip()    
-                tAttibdict['MustInput'] =  'UserCheck'        
+                    tAttibdict['Tooltips'] =  tCheckbox.toolTip()  
+                if tCheckbox.checkState == Qt.Checked:
+                    tAttibdict['MustInput'] =  'Checked'  
+                else:     
+                    tAttibdict['MustInput'] =  'UnChecked' 
             #读取帮助信息
             tWidget = None           
             
@@ -105,11 +108,10 @@ def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
         #追加一个Group定义
         tInfoNode = ET.SubElement(tNamelistNode, 'AdditionalInfo',{'dcType':'Infomation'})
         #NMACHLinkTable
-        if hasattr(aW,'NMACHLinkTable'):
-            tNMachLink = ET.SubElement(tInfoNode, 'NMACHLinkTable',{'dcType':'Rule'})
-            tNMachLink.text = str(aW.NMACHLinkTable)
+        if hasattr(aW,'NMACHLinkTable') and len(aW.NMACHLinkTable) != 0:
+            ET.SubElement(tInfoNode, 'NMACHLinkTable',{'varList':str(aW.NMACHLinkTable)})
         #RuleNumToCount
-        if hasattr(aW,'RuleNumToCount'):
+        if hasattr(aW,'RuleNumToCount') and len(aW.RuleNumToCount)!=0:
             tRule = ET.SubElement(tInfoNode, 'RuleNumToCount',{'dcType':'Rule'})
             for iR in aW.RuleNumToCount:
                 #tAtribs = {'dcType':'SubRule', 'Num':iR['Num'], 'Group':iR['Group']}
@@ -117,20 +119,29 @@ def AnalsyeUI(tPath = '~\.PyDatcom\datcomDefine.xml'):
                 tSubRule0 = ET.SubElement(tRule, 'Rule',tAtribs)
 
         #RuleNumToCount
-        if hasattr(aW,'RuleIndexToCombo'):
+        if hasattr(aW,'RuleIndexToCombo') and len(aW.RuleIndexToCombo)!=0:
             tRule = ET.SubElement(tInfoNode, 'RuleIndexToCombo',{'dcType':'Rule'})
             for iR in aW.RuleIndexToCombo:
                 tAtribs = {'Index':iR['Index'], 'Group':iR['Group']} 
                 tSubRule0 = ET.SubElement(tRule, 'Rule',tAtribs)
-                #ET.SubElement(tSubRule0, 'Index',{'dcType':'Rule'}).text = iR['Index']
-                #ET.SubElement(tSubRule0, 'Group',{'dcType':'Rule'}).text = iR['Group']
-                #tSubRule = ET.SubElement(tSubRule0, 'HowTo',{'dcType':'Rule'})
                 for iSR in iR['HowTo'].keys():
                     #遍历新规则
                     tAttrib2 = {'key':iSR, 'value':str(iR['HowTo'][iSR])} 
                     ET.SubElement(tSubRule0, 'HowTo',tAttrib2 )
-                    #tCombo = ET.SubElement(tSubRule, iSR)
-                    #tCombo.text = str(iR['HowTo'][iSR])
+
+        if hasattr(aW,'RuleVariableStatus') and len(aW.RuleVariableStatus)!=0:
+            #如果包含状态差异性管理节
+            tRule = ET.SubElement(tInfoNode, 'RuleVariableStatus',{'dcType':'Rule'})            
+            for iR in aW.RuleVariableStatus:
+                tAtribs = {'ControlVar':iR['ControlVar']} 
+                tSubRule0 = ET.SubElement(tRule, 'Rule',tAtribs) 
+                for iSR in iR['HowTo'].keys():
+                    #遍历新规则
+                    tAttrib2 = {'key':iSR, 'Disabled':str(iR['HowTo'][iSR]['Disabled']), 
+                                'Enabled':str(iR['HowTo'][iSR]['Enabled']), 
+                    } 
+                    ET.SubElement(tSubRule0, 'HowTo',tAttrib2 )
+      
         #附加Group的定义信息
         if len(tGroups) != 0:
             tRule = ET.SubElement(tInfoNode, 'GroupDefine',{'dcType':'Rule'})
