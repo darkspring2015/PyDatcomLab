@@ -7,6 +7,7 @@
 import os
 import logging
 from xml.etree import ElementTree  as ET
+from PyDatcomLab.Core.datcomDimension import Dimension
 
 class DTdictionary():
     """
@@ -245,6 +246,58 @@ class DTdictionary():
                 if tL[0] > tLimit[0]:tL[0] = tLimit[0]
                 if tL[1] < tLimit[1]:tL[1] = tLimit[1]
         return tL
+
+    def getVariableDimensionByName(self, nmlst, VarName):
+        """
+        获得对应变量的量纲和单位信息
+        """
+        tR = {'Dimension':'', 'Value':0 , 'Unit':'' }
+        if nmlst in self.Dictionary.keys() and VarName in self.Dictionary[nmlst].keys()\
+        and 'Dimension' in self.Dictionary[nmlst][VarName].keys():
+            tR['Dimension'] = self.Dictionary[nmlst][VarName]['Dimension']
+            if tR['Dimension'] in Dimension.keys():
+                tR['Unit'] = Dimension[tR['Dimension']][0]
+        return tR
+
+    def getVariableDefineByName(self, nmlst, VarName):
+        """
+        从定义中获得对应变量的定义信息，包括：
+        1. 变量自身说明
+        2. 涉及的相关规则
+        返回值是字典
+        """
+        tVarDefine = {}
+        if nmlst in self.Dictionary.keys() and VarName in self.Dictionary[nmlst].keys():
+            tVarDefine = self.Dictionary[nmlst][VarName]
+        if tVarDefine is None :return {}
+        #获得附加的定义
+        #RuleIndexToCombo
+        tAddtionInfo = self.getCARDAddtionalInformation(nmlst, 'RuleIndexToCombo')
+        if tAddtionInfo is not None :
+            for iR in tAddtionInfo:
+                if 'Index' in iR.keys() and VarName == iR['Index']:
+                    tVarDefine['RuleIndexToCombo'] = iR
+                    break        
+
+        #RuleVariableStatus
+        tAddtionInfo = self.getCARDAddtionalInformation(nmlst, 'RuleVariableStatus')
+        if tAddtionInfo is not None :
+            for iR in tAddtionInfo:
+                if 'ControlVar' in iR.keys() and VarName == iR['ControlVar']:
+                    tVarDefine['RuleVariableStatus'] = iR
+                    break
+     
+        #RuleNumToCount
+        tAddtionInfo = self.getCARDAddtionalInformation(nmlst, 'RuleNumToCount')
+        if tAddtionInfo is not None :   
+            tRules = []
+            for iR in tAddtionInfo:
+                if 'Num' in iR.keys() and VarName == iR['Num']:
+                    tRules.append(iR)
+            if len(tRules) >0:
+                tVarDefine['RuleNumToCount'] = tRules
+                
         
+        return tVarDefine
 #导出一个常量
 defaultDatcomDefinition = DTdictionary("")

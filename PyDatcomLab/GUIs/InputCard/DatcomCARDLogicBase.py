@@ -39,7 +39,8 @@ class DatcomCARDLogicBase(object):
         """
         该函数必须在SetupUi和给self.Widget.NameList,self.Widget.VariableList 赋值之后才能使用
         """
-        #配置界面 
+        #CWidget  = self.Widget
+        #绑定验证器
         for varName in self.Widget.VariableList.keys():   
             #给REAL类型绑定验证器            
             if self.Widget.VariableList[varName]['TYPE'] == 'REAL':
@@ -70,8 +71,21 @@ class DatcomCARDLogicBase(object):
                         tRange = self.Widget.VariableList[varName]['Range']
                         tVd.setRange(tRange[0], tRange[1])
                     tWidget.setValidator(tVd) 
-
-            
+                    
+            #初始化界面默认值
+            tVarDefine = self.Widget.VariableList[varName]
+            if 'MustInput' in tVarDefine.keys() and tVarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
+                    #存在可选项
+                    tLabelItem = self.Widget.findChild(QCheckBox,"checkBox_%s"%(varName))
+                    if tLabelItem :
+                        #绑定值变换信号到自身信号 先绑定以响应对应的状态确认
+                        tLabelItem.stateChanged.connect(self.Widget.emit_CheckBoxStateChanged) 
+                        if tVarDefine['MustInput' ] == 'UnChecked':
+                            tLabelItem.setCheckState(Qt.Unchecked)
+                        elif  tVarDefine['MustInput' ] == 'Checked':
+                            tLabelItem.setCheckState(Qt.Checked)
+                        else:
+                            tLabelItem.setCheckState(Qt.Unchecked)
                     
     def InitDoc(self):
         """

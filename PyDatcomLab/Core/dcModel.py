@@ -2,6 +2,7 @@
 
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core import datcomDefine as dF  
+from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
 
 import time
 import logging
@@ -307,6 +308,27 @@ class dcModel(object):
             return None
         
         return dic[varName]
+    
+    def getVariableValueByName(self, nmlst, varName):
+        """
+        函数从当前模型中获得变量的值/单位/量纲
+        """
+        tRes = DDefine.getVariableDimensionByName(nmlst,varName )
+        #判断是否存在
+        if nmlst in dF.reserved_NAMELISTS and nmlst  in self.doc.keys() and \
+            varName in self.doc[nmlst].keys():
+            tRes['Value'] = self.doc[nmlst][varName]
+
+        return tRes     
+        
+    def setVariableValueByName(self, nmlst, varName, varValue):
+        """
+        根据变量的值/单位/量纲，写入信息
+        """
+        
+        self.setNamelist(nmlst, varName, varValue['Value'])
+
+
         
     def writeToDatcomInput(self, tPath):
         """

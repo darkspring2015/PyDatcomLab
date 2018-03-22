@@ -12,7 +12,7 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyDatcomLab.Core.datcomDefine import Dimension , groupDefine
 from PyDatcomLab.GUIs.InputCard.DatcomTableBase import DatcomTableBase  as TB
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
-
+from PyDatcomLab.GUIs.InputCard import DatcomInputSingle as SInput
 import logging
 
 class DatcomCARDUIBase(object):
@@ -58,10 +58,7 @@ class DatcomCARDUIBase(object):
         if hasattr(tWidget,'VariableList'):
             #开始参数配置过程
             for tVarName in tWidget.VariableList.keys(): 
-                #创建一个水平布局器
-                aLayout = QtWidgets.QHBoxLayout()
-                aLayout.setObjectName("horizontalLayout_%s"%(tVarName))
-                
+             
                 tVarDefine = tWidget.VariableList[tVarName]
                 #判断类型
                 if tVarDefine['TYPE'] == 'Array':
@@ -71,115 +68,24 @@ class DatcomCARDUIBase(object):
                         tableCache[groupName].append(tVarName)
                     else:
                         tableCache[groupName] =[tVarName]
-                    CARD.HashVaribles[tVarName] = "tableWidget_%s"%(groupName) #保存记录
+                    #CARD.HashVaribles[tVarName] = "tableWidget_%s"%(groupName) #保存记录
                     continue
                 else:
-                    #判断是否需要Check
-                    tLabelItem = None
-                    if 'MustInput' in tVarDefine.keys() and tVarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
-                        #存在可选项
-                        tLabelItem = QtWidgets.QCheckBox(CARD)
-                        tLabelItem.setObjectName("checkBox_%s"%(tVarName))
-                        #绑定值变换信号到自身信号 先绑定以响应对应的状态确认
-                        tLabelItem.stateChanged.connect(self.emit_CheckBoxStateChanged) 
-                        if tVarDefine['MustInput' ] == 'UnChecked':
-                            tLabelItem.setCheckState(Qt.Unchecked)
-                        elif  tVarDefine['MustInput' ] == 'Checked':
-                            tLabelItem.setCheckState(Qt.Checked)
-                        else:
-                            tLabelItem.setCheckState(Qt.Unchecked)
-                       
-                    else: #没有选项卡
-                        tLabelItem = QtWidgets.QLabel(CARD)
-                        tLabelItem.setObjectName("label_%s"%(tVarName))
-                    #给Label赋值
-                    if 'DisplayName' in tWidget.VariableList[tVarName].keys():
-                        tLabelItem.setText(tVarDefine['DisplayName'])
-                    else:
-                        tLabelItem.setText(tVarName)                        
-                    aLayout.addWidget(tLabelItem)  
-                    self.__dict__[tLabelItem.objectName()] =  tLabelItem #向类注册
-                    #增加sprizer
-                    aSpacerItem = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
-                    aLayout.addItem(aSpacerItem)  
-                    
-                    #根据不同的类型添加对应的项目
-                    tVarWidget = None
-                    if tVarDefine['TYPE'] == 'INT':
-                        tVarWidget = QtWidgets.QLineEdit(CARD)
-                        tVarWidget.setObjectName("%s"%(tVarName))
-                        CARD.HashVaribles[tVarName] = tVarName #保存记录
-                        #验证器
-                        tVd = QtGui.QIntValidator(CARD)
-                        tVd.setBottom(0)
-                        if 'Range' in tVarDefine.keys():
-                            tRange = tVarDefine['Range']
-                            tVd.setRange(tRange[0], tRange[1])
-                        tVarWidget.setValidator(tVd) 
-                        #默认值
-                        #查询默认值
-                        if 'Default' in tVarDefine.keys():
-                            tVarWidget.setText(str(tVarDefine['Default'] ))
-                    elif tVarDefine['TYPE'] == 'REAL':
-                        tVarWidget = QtWidgets.QLineEdit(CARD)
-                        tVarWidget.setObjectName("%s"%(tVarName))
-                        CARD.HashVaribles[tVarName] = tVarName #保存记录
-                        #验证器
-                        tVd = QtGui.QDoubleValidator(CARD)
-                        if 'Range' in tVarDefine.keys():
-                            tRange = tVarDefine['Range']
-                            if tRange[0] not in [float('-inf'), float('inf'), float('nan')] :
-                                tVd.setBottom(tRange[0])
-                            if tRange[1] not in [float('-inf'), float('inf'), float('nan')] :
-                                tVd.setTop(tRange[1])
-                        tVarWidget.setValidator(tVd) 
-                        #查询默认值
-                        if 'Default' in tVarDefine.keys():
-                            tVarWidget.setText(str( tVarDefine['Default'] ))
-                    elif tVarDefine['TYPE'] == 'List':
-                        tVarWidget = QtWidgets.QComboBox(CARD)
-                        tVarWidget.setObjectName("comboBox_%s"%(tVarName))
-                        CARD.HashVaribles[tVarName] = "comboBox_%s"%(tVarName) #保存记录
-                        #如果存在DisplayRange，优先添加说明信息
-                        if 'DisplayRange' in tVarDefine.keys():
-                            for itIndex in tVarDefine['DisplayRange']:
-                                tVarWidget.addItem(itIndex)                         
-                        elif 'Range' in tVarDefine.keys():
-                            for itIndex in tVarDefine['Range']:
-                                tVarWidget.addItem(itIndex)   
-
+                    # 开始单值工程量创建
+                    # 'FLTCON', 'NALPHA',  parent=None, DDefinition = DDefine
+                    tVarWidget = SInput.DatcomInputSingle(CARD.NameList, tVarName, parent=CARD )
+                    tVarWidget.setObjectName(tVarName)
+                    tVarWidget.resize(200, 25)
                     #限制var的格式
-                    sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+                    sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
                     sizePolicy.setHorizontalStretch(0)
                     sizePolicy.setVerticalStretch(0)
                     sizePolicy.setHeightForWidth(tVarWidget.sizePolicy().hasHeightForWidth())
                     tVarWidget.setSizePolicy(sizePolicy)
-
-                    #创建ToolTips
-                    if 'ToolTips' in tVarDefine.keys():
-                        tVarWidget.setToolTip(tVarDefine['ToolTips'])
-                    #添加到系统
-                    aLayout.addWidget(tVarWidget)
-                    #self.__dict__[tVarWidget.objectName()] =  tVarWidget #向类注册
-                    
-                    #创建量纲
-                    if 'Dimension' in tVarDefine.keys():
-                        aDimension = QtWidgets.QComboBox(CARD)
-                        aDimension.setObjectName("comboBox_Dimension_%s"%(tVarName))
-                        if tVarDefine['Dimension'] in Dimension.keys():
-                            for itUnit in Dimension[tVarDefine['Dimension']]:
-                                aDimension.addItem(itUnit)
-                        else:
-                            self.logger.error("尝试添加不存在的量纲%s"%(tVarDefine['Dimension']))
-                        #选择默认单位
-                        if aDimension.count() >0: aDimension.setCurrentIndex(0)
-                        aLayout.addWidget(aDimension)   
-                    
-                # 结束单值工程量创建
-  
-                #添加项目具体输入框 END                        
-                self.LiftLayout.addLayout(aLayout)
-                
+                    self.LiftLayout.addWidget(tVarWidget)
+                    # 结束单值工程量创建
+          
+            
         #创建附加控件 如果定义筛选变量组的控件
         if hasattr(tWidget,'RuleIndexToCombo'):
             #逐条创建附加筛选逻辑
