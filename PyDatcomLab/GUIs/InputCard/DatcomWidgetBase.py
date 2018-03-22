@@ -4,7 +4,7 @@
 Module implementing FLTCON.
 """
 
-from PyQt5.QtCore import pyqtSlot, QPoint, QMetaObject
+from PyQt5.QtCore import pyqtSlot, QPoint, QMetaObject, pyqtSignal
 from PyQt5.QtWidgets import QWidget,  QTableWidget , QLineEdit #,QMessageBox
 
 
@@ -23,8 +23,7 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
     """
     
     #定义各个Widget之间进行参数同步的信号
-    #emit_NMACHChanged = pyqtSignal(str, int)  #发送NMACH变化的信息
-    #emit_NACAChanged = pyqtSignal(str, bool)  #发送NACA选项卡的信号
+    Singal_InitializeUI    = pyqtSignal(int)          #用来提供额外的界面初始化逻辑，响应信号对界面进行额外的初始化
     
     
     def __init__(self, parent=None, tCARD = 'FLTCON' , tModel = None):
@@ -126,7 +125,13 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
         self.DatcomCARD.UILogic()
         
     
-
+    def InitializeUI(self):
+        """
+        此函数执行UI的初始化逻辑，确保各个组件定义的初始状态时可靠地
+        此函数应当在SetupUI和connectSlot之后被调用
+        函数最后将触发 Singal_InitializeUI 用来做非公用的的初始化操作
+        """
+        #
     
 if __name__ == "__main__":
     import sys

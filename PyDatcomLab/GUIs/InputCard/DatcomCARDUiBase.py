@@ -80,14 +80,15 @@ class DatcomCARDUIBase(object):
                         #存在可选项
                         tLabelItem = QtWidgets.QCheckBox(CARD)
                         tLabelItem.setObjectName("checkBox_%s"%(tVarName))
+                        #绑定值变换信号到自身信号 先绑定以响应对应的状态确认
+                        tLabelItem.stateChanged.connect(self.emit_CheckBoxStateChanged) 
                         if tVarDefine['MustInput' ] == 'UnChecked':
                             tLabelItem.setCheckState(Qt.Unchecked)
                         elif  tVarDefine['MustInput' ] == 'Checked':
                             tLabelItem.setCheckState(Qt.Checked)
                         else:
                             tLabelItem.setCheckState(Qt.Unchecked)
-                        #绑定值变换信号到自身信号
-                        tLabelItem.stateChanged.connect(self.emit_CheckBoxStateChanged)                        
+                       
                     else: #没有选项卡
                         tLabelItem = QtWidgets.QLabel(CARD)
                         tLabelItem.setObjectName("label_%s"%(tVarName))

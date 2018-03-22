@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-03-20, 23:50:31 -->
+<!-- Saved: 2018-03-22, 09:23:49 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -172,7 +172,6 @@
     <Source>tests/testTools/test_XMLModel.py</Source>
   </Sources>
   <Forms>
-    <Form>PyDatcomLab/GUIs/InputCard/datcomTable.ui</Form>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/ASYFLP.ui</Form>
     <Form>PyDatcomLab/GUIs/PlaneConfiguration/BODY.ui</Form>

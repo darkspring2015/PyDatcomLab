@@ -144,11 +144,12 @@ class DatcomCARDLogicBase(object):
                 self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
                 continue
             #Widget存在
-            tWidget.clearContents() #清除内容
+            #tWidget.clearContents() #清除内容
             #tWidget.clear() #清除内容和表头
             #tWidget.setColumnCount(len(tableCache[iTb]))
             #tWidget.setHorizontalHeaderLabels( tableCache[iTb])   #绘制表头
-            
+            tWidget.setDtModelData(self.model)
+            continue
             #遍历所有的遍历写入到表格中
             for itC in range(len(tableCache[iTb])):
                 varName = tableCache[iTb][itC]

@@ -16,6 +16,8 @@ class DatcomTableBase(QTableWidget):
     """
     Signal_rowCountChanged = pyqtSignal(int,str)      #处理变量组个的同步问题
     Singal_RuleNumToCount  = pyqtSignal(int)          #用来接收外部的表格长度变化时间
+
+    
     def __init__(self, parent = None ):
         """
         初始化所有必需的操作
@@ -150,15 +152,19 @@ class DatcomTableBase(QTableWidget):
                 tHeader.append(iV['VarName'])   
         self.setHorizontalHeaderLabels(tHeader) 
         
-    def setModelData(self, tModel):
+    def setDtModelData(self, tModel):
         """
         从tModel加载数据
         """
         if tModel is None or type(tModel) != dcModel.dcModel:
             return 
+        self.clear()
+        self.InitializeHeader()
         for iC  in range(0, len(self.varsDfList)):
             iV = self.varsDfList[iC]
             tData = tModel.getNamelistVar(self.Namelist,iV['VarName'])
+            if tData is None: continue
+            if self.rowCount() < len(tData): self.setRowCount(len(tData))
             if len(tData) in range(self.minCount, self.maxCount):
                 for iR in range(0, len(tData)):
                     self.setItem(iR, iC, QTableWidgetItem(str(tData[iR])))
@@ -166,7 +172,7 @@ class DatcomTableBase(QTableWidget):
                 self.logger.error("加载表格%s数据越界：%d min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
             
-    def getModelData(self, tModel):
+    def getDtModelData(self, tModel):
         """
         设置tModel中的数据
         考虑两个因素：1变量是否可见，2变量类型
@@ -220,6 +226,9 @@ class DatcomTableBase(QTableWidget):
             else:
                 self.setColumnHidden(iC, True)
         #print("row:%d,col:%d"%(self.rowCount(), self.columnCount()))
+        
+        
+
         
     @pyqtSlot(int)    
     def on_Singal_RuleNumToCount(self, tNum):
