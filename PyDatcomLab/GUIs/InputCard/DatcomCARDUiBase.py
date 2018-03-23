@@ -6,32 +6,28 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSignal, Qt, pyqtSlot
+from PyQt5 import QtCore, QtWidgets
+
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyDatcomLab.Core.datcomDefine import Dimension , groupDefine
+from PyDatcomLab.Core.datcomDefine import groupDefine #,  Dimension 
 from PyDatcomLab.GUIs.InputCard.DatcomTableBase import DatcomTableBase  as TB
+from PyDatcomLab.GUIs.InputCard.DatcomInputComboChooser import DatcomInputComboChooser
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
-from PyDatcomLab.GUIs.InputCard import DatcomInputSingle as SInput
+from PyDatcomLab.GUIs.InputCard import DatcomInputSingle as SInput,  DatcomInputList as LInput
 import logging
 
 class DatcomCARDUIBase(object):
     """
     class DatcomCARD 是提供CARD录入的基础类
     """
-    Singal_RuleIndexToCombo              = pyqtSignal(int,str)      #处理变量组个的同步问题
-    Singal_CheckboxStateChanged          = pyqtSignal(int,str)      #处理checkbox的同步问题
-    Singal_TbLength_editingFinished      = pyqtSignal(str, str, int)          #处理表格长度控制变量的触发逻辑
-    Singal_CommonUIChanged               = pyqtSignal(str)          #通用的输入状态变化规则
-    Singal_RuleVariableStatus            = pyqtSignal(str)          #通用的RuleVariableStatus状态变化规则 
-    Singal_TBRowCountChanged             = pyqtSignal(int, str)     #用于通知表格的行数发生了变化
+
+    
     def __init__(self):
         """
         初始化所有必需的操作
         """    
         #创建日志
-        self.logger = logging.getLogger(r'Datcomlogger') 
-        self.RuleIndexToComboCache =[]   
+        self.logger = logging.getLogger(r'Datcomlogger')  
 
     
     def setupUi(self, CARD):
@@ -53,13 +49,12 @@ class DatcomCARDUIBase(object):
         self.LiftLayout.setObjectName("LiftLayout")
 
         #循环遍历Group框架定义 
-        tWidget = CARD
+
         tableCache ={}
-        if hasattr(tWidget,'VariableList'):
+        if hasattr(CARD,'VariableList'):
             #开始参数配置过程
-            for tVarName in tWidget.VariableList.keys(): 
-             
-                tVarDefine = tWidget.VariableList[tVarName]
+            for tVarName in CARD.VariableList.keys():              
+                tVarDefine = CARD.VariableList[tVarName]
                 #判断类型
                 if tVarDefine['TYPE'] == 'Array':
                     #对于表格类型不在这里创建信息
@@ -70,12 +65,11 @@ class DatcomCARDUIBase(object):
                         tableCache[groupName] =[tVarName]
                     #CARD.HashVaribles[tVarName] = "tableWidget_%s"%(groupName) #保存记录
                     continue
-                else:
+                elif tVarDefine['TYPE'] in ['INT', 'REAL'] :
                     # 开始单值工程量创建
                     # 'FLTCON', 'NALPHA',  parent=None, DDefinition = DDefine
                     tVarWidget = SInput.DatcomInputSingle(CARD.NameList, tVarName, parent=CARD )
                     tVarWidget.setObjectName(tVarName)
-                    tVarWidget.resize(200, 25)
                     #限制var的格式
                     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
                     sizePolicy.setHorizontalStretch(0)
@@ -84,45 +78,36 @@ class DatcomCARDUIBase(object):
                     tVarWidget.setSizePolicy(sizePolicy)
                     self.LiftLayout.addWidget(tVarWidget)
                     # 结束单值工程量创建
-          
+                elif tVarDefine['TYPE'] in ['List'] :
+                    tVarWidget = LInput.DatcomInputList(CARD.NameList, tVarName, parent=CARD )
+                    tVarWidget.setObjectName(tVarName)
+                    #限制var的格式
+                    sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+                    sizePolicy.setHorizontalStretch(0)
+                    sizePolicy.setVerticalStretch(0)
+                    sizePolicy.setHeightForWidth(tVarWidget.sizePolicy().hasHeightForWidth())
+                    tVarWidget.setSizePolicy(sizePolicy)
+                    self.LiftLayout.addWidget(tVarWidget)
             
         #创建附加控件 如果定义筛选变量组的控件
-        if hasattr(tWidget,'RuleIndexToCombo'):
+        if hasattr(CARD,'RuleIndexToCombo'):
             #逐条创建附加筛选逻辑
-            for tCombo in tWidget.RuleIndexToCombo:
+            for tCombo in CARD.RuleIndexToCombo:
                 if  tCombo is None or tCombo == {}:
                     continue
                 if not 'Index'  in tCombo.keys():
                     continue
                 #创建一个水平布局器
                 tVarName   = tCombo['Index']
-                tGroupName = tCombo['Group']
-                aLayout = QtWidgets.QHBoxLayout()
-                aLayout.setObjectName("horizontalLayout_%s"%(tVarName))
-                tLabelItem = QtWidgets.QLabel(CARD)
-                tLabelItem.setObjectName("label_%s"%(tVarName))
-                #给Label赋值
-                if 'DisplayName' in tCombo.keys():
-                    tLabelItem.setText(tCombo['DisplayName'])
-                else:
-                    tLabelItem.setText(tVarName)  
-                aLayout.addWidget(tLabelItem)  
-                aSpacerItem = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
-                aLayout.addItem(aSpacerItem) 
-                #创建Combo对象
-                tVarWidget = QtWidgets.QComboBox(CARD)
-                tVarWidget.setObjectName("comboBox_%s"%(tVarName))
-                CARD.HashVaribles[tVarName] = "comboBox_%s"%(tVarName) #保存记录
-                #如果存在DisplayRange，优先添加说明信息
-                for iR in tCombo['HowTo'].keys():
-                    tVarWidget.addItem('-'.join(tCombo['HowTo'][iR]))  
-                aLayout.addWidget(tVarWidget)
+                #tGroupName = tCombo['Group']
+                tComboWidget = DatcomInputComboChooser(CARD.NameList, tVarName,
+                         parent=CARD, DDefinition = DDefine)  
+                tComboWidget.setObjectName('Chooser_%s'%tVarName) 
+                tComboWidget.varComboChanged.connect(CARD.Singal_RuleIndexToCombo)
+                self.LiftLayout.addWidget(tComboWidget)
                 #绑定值变换信号到自身信号 因为尚未创建对象TableWidget无法直接绑定
-                self.RuleIndexToComboCache.append({'Sender':"comboBox_%s"%(tVarName),
-                                               'Receiver':"tableWidget_%s"%(tGroupName)})
-                #tVarWidget.currentIndexChanged.connect(self.emit_currentIndexChanged)
-                #添加到左侧兰  
-                self.LiftLayout.addLayout(aLayout)
+
+
 
         #创建下方的空间分割器
         spacerItem_LiftBottom = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -144,7 +129,7 @@ class DatcomCARDUIBase(object):
             tHorizontalLayout = QtWidgets.QHBoxLayout(tTab)
             tHorizontalLayout.setObjectName("horizontalLayout_%s"%tGroup)
             #tTabTable = QtWidgets.QTableWidget(CARD)
-            tTabTable = TB(CARD)
+            tTabTable = TB(iNameList = CARD.NameList, iGroup = tGroup , iDefine = CARD.DDefine, parent = CARD)
             tTabTable.setDefinition( CARD.NameList, tGroup, DDefine)
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
             sizePolicy.setHorizontalStretch(0)
@@ -156,6 +141,10 @@ class DatcomCARDUIBase(object):
             tTabTable.setObjectName("tableWidget_%s"%tGroup)
             tTabTable.setColumnCount(0)
             tTabTable.setRowCount(0)
+            #连接信号和槽
+            #连接变量组合变化信号
+            CARD.Singal_RuleIndexToCombo.connect(tTabTable.on_Singal_RuleIndexToCombo)
+            #长度控制信号和长度变化信号在RuleNumToCount中绑定
             tHorizontalLayout.addWidget(tTabTable)
             #tTabName     = tGroup
             tTabTooltips = tGroup
@@ -173,7 +162,7 @@ class DatcomCARDUIBase(object):
                 
         #创建说明文档结构
         self.tab_Help = QWebEngineView()
-        self.tab_Help.load(QtCore.QUrl("https://github.com/darkspring2015/PyDatcomLab/blob/master/wiki/%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E%E6%96%87%E4%BB%B6.md"))
+        self.tab_Help.load(QtCore.QUrl(CARD.HelpUrl))
         tabWidget_right.addTab(self.tab_Help, "说明文档")
         
         self.horizontalLayout_CARD.addWidget(tabWidget_right)     
@@ -187,76 +176,39 @@ class DatcomCARDUIBase(object):
         """
         根据定义的Rule来绑定对应的信号槽
         """
-        
-        #执行附加的信号绑定关系
-        for iCn in self.RuleIndexToComboCache:
-            tSWidget = tCARD.findChild(QtWidgets.QComboBox   ,iCn['Sender']) 
-            tRWidget = tCARD.findChild(QtWidgets.QTableWidget,iCn['Receiver']) 
-            if tSWidget is None or tRWidget is None:
-                self.logger.error("尝试绑定tRuleIndexToComboCache逻辑失败")
-                continue
-            tSWidget.currentIndexChanged.connect(tRWidget.on_Singal_RuleIndexToCombo)
-            
+           
         #添加变量组合控制逻辑
         if hasattr(tCARD,'RuleVariableStatus'):
             for iR in tCARD.RuleVariableStatus:#[]
-                tCWidget  = tCARD.findChild(QtWidgets.QComboBox, "comboBox_%s"%iR['ControlVar'])
+                tCWidget  = tCARD.findChild(TB, "comboBox_%s"%iR['ControlVar'])
                 if tCWidget is None :
                     self.logger.error("变量%s对应的控件不存在"%(iR['ControlVar']))
                     continue
                 #变量num->Table
-                tCWidget.currentIndexChanged.connect(self.emit_Singal_RuleVariableStatus)   
+                tCWidget.currentIndexChanged.connect(self.emit_Singal_RuleVariableStatus) 
+                
         #添加表格长度控制逻辑
         if hasattr(tCARD,'RuleNumToCount'):
             for iR in tCARD.RuleNumToCount:#[]
-                tCWidget  = tCARD.findChild(QtWidgets.QLineEdit, iR['Num'])
-                tTbWidget = tCARD.findChild(QtWidgets.QTableWidget,'tableWidget_%s'%iR['Group'])
+                tCWidget  = tCARD.findChild(SInput.DatcomInputSingle, iR['Num'])
+                tTbWidget = tCARD.findChild(TB,'tableWidget_%s'%iR['Group'])
                 if tCWidget is None or tTbWidget is None:
                     self.logger.error("变量%s对应的控件不存在"%(iR['Num']))
                     continue
                 #变量num->Table
-                tCWidget.editingFinished.connect(lambda : self.emit_TbLength_editingFinished(
-                                       iR['Num'], 'tableWidget_%s'%iR['Group']))
+                #直接进行绑定不经过Mainwindo的转发了
+                tCWidget.editingFinished.connect(tTbWidget.on_TbLength_editingFinished) 
                 #表格长度到-NUM
-                tTbWidget.Signal_rowCountChanged.connect(self.Singal_TBRowCountChanged)
+                tTbWidget.Signal_rowCountChanged.connect(tCWidget.on_Signal_rowCountChanged)
 
     
         
-    def emit_currentIndexChanged(self, tIndex):
-        """
-        用来触发新的信号函数
-        """
-        tName = self.sender().objectName()
-        self.Singal_RuleIndexToCombo.emit(tIndex, tName)
-        
-    def emit_CheckBoxStateChanged(self,tIndex ):
-        """
-        用来触发新的信号函数,转发所有的checkbox状态变化的
-        """
-        tName = self.sender().objectName()
-        self.Singal_CheckboxStateChanged.emit(tIndex, tName)
-        
-    #@pyqtSlot(str, str)        
-    def emit_TbLength_editingFinished(self , sName, rName):
-        """
-        用来触发新的信号函数,转发影响表格长度的变量的变化
-        """
-        tNum = 0 if self.sender().text() == "" else int(float(self.sender().text()))
-        self.Singal_TbLength_editingFinished.emit( sName, rName, tNum)
-        
-    def emit_Singal_RuleVariableStatus(self ):
-        """
-        用来触发新的信号函数,转发Singal_RuleVariableStatus
-        """
-        tName = self.sender().objectName()
-        self.Singal_RuleVariableStatus.emit( tName)
-
-
 
 
       
     def retranslateUi(self, CARD):
-        _translate = QtCore.QCoreApplication.translate    
+        """"""
+        #_translate = QtCore.QCoreApplication.translate    
         
         
         

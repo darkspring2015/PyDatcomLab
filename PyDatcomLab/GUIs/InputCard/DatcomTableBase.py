@@ -3,9 +3,9 @@ Module implementing DatcomTableBase.
 可以作为所有CARD的基类，提供DatcomTableBase操作
 """
 from PyQt5.QtCore import  Qt, pyqtSlot, QPoint , QMetaObject, pyqtSignal
-from PyQt5.QtWidgets import QAction , QTableWidgetItem,  QLineEdit, QComboBox, QTableWidget, QCheckBox, QMenu
-from PyQt5.QtGui import QDoubleValidator, QIntValidator, QValidator, QIcon, QPixmap
-#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+from PyQt5.QtWidgets import QAction , QTableWidgetItem, QTableWidget, QMenu
+from PyQt5.QtGui import  QIcon, QPixmap#,QDoubleValidator, QIntValidator, QValidator
+from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
 import logging
 from PyDatcomLab.Core import dcModel
 from PyDatcomLab.GUIs.PlaneConfiguration import card_ico_rc, card_rc_rc
@@ -14,11 +14,11 @@ class DatcomTableBase(QTableWidget):
     """
     class DatcomCARD 是提供CARD录入的基础类
     """
-    Signal_rowCountChanged = pyqtSignal(int,str)      #处理变量组个的同步问题
-    Singal_RuleNumToCount  = pyqtSignal(int)          #用来接收外部的表格长度变化时间
+    Signal_rowCountChanged = pyqtSignal(str,int)      #处理变量组个的同步问题
+    Singal_RuleNumToCount  = pyqtSignal(int)          #用来接收外部的表格长度变化信号
 
     
-    def __init__(self, parent = None ):
+    def __init__(self, iNameList, iGroup , iDefine = DDefine, parent = None ):
         """
         初始化所有必需的操作
         """    
@@ -26,19 +26,13 @@ class DatcomTableBase(QTableWidget):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger') 
         #验证输入
-        #self.insertRow(1)
-        self.varsDf   = {}
-        self.groupDf  = {}
-        self.varsDfList = []  #顺序保存的所有变量的定义，用以关联表头
-        self.maxCount = 20
-        self.minCount = 0
-        self.CountVar = None  #表格行数对应的变量名
-        self.ComboVar = None  #表格列组合对应的附加变量名
-        self.ComboRule = None #表格列组合对应的规则
-        self.Namelist  = None #对应NameList的名称
-        self.GroupName = None #对应的变量组的名称
+
+ 
         #界面参数
         self.curPos = QPoint(0, 0)
+        #读取配置文件
+        self.setDefinition( iNameList, iGroup, iDefine )
+        
         
         #附加初始化过程
         self.InitializeContextMenu() #配置内容菜单
@@ -106,10 +100,19 @@ class DatcomTableBase(QTableWidget):
         #判断定义有效性
         if tDefine is None or tNameList is None or tGroup is None: return  
         self.DDefine   = tDefine    
-        self.GroupName = tGroup
-        self.Namelist  = tNameList
-        tVariableDf = self.DDefine.getGroupVarsByName(tNameList, tGroup) #对应数组的定义
-   
+        self.GroupName = tGroup      #对应的变量组的名称  
+        self.Namelist  = tNameList   #对应NameList的名称
+        self.varsDf   = {}
+        self.groupDf  = {}
+        self.varsDfList = []  #顺序保存的所有变量的定义，用以关联表头
+        self.maxCount = 20
+        self.minCount = 0
+        self.CountVar = None  #表格行数对应的变量名
+        self.ComboVar = None  #表格列组合对应的附加变量名
+        self.ComboRule = None #表格列组合对应的规则
+    
+        #分析组定义
+        tVariableDf = self.DDefine.getGroupVarsByName(tNameList, tGroup) #对应数组的定义   
         #分析组定义
         if len(tVariableDf) == 0 :
             self.logger.error("不包含%s对应的定义信息"%(tNameList))
@@ -131,7 +134,9 @@ class DatcomTableBase(QTableWidget):
         self.minCount  = self.DDefine.getGroupLimitByName(tNameList, tGroup)[0]
         #分析表格行数控制变量的结果
         tCountVar       = self.DDefine.gettRuleNumToCountByGroup(tNameList, tGroup)
-        if tCountVar : self.CountVar = tCountVar
+        if tCountVar : 
+            self.CountVar = tCountVar
+        self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
         #分析表头协同变量结果
         tComboVar       = self.DDefine.getRuleIndexToComboByGroup(tNameList, tGroup)
         if tComboVar is not None and  len(tComboVar) > 0: 
@@ -162,8 +167,9 @@ class DatcomTableBase(QTableWidget):
         self.InitializeHeader()
         for iC  in range(0, len(self.varsDfList)):
             iV = self.varsDfList[iC]
-            tData = tModel.getNamelistVar(self.Namelist,iV['VarName'])
-            if tData is None: continue
+            tDataVar = tModel.getNamelistVar(self.Namelist,iV['VarName'])            
+            if tDataVar is None: continue
+            tData = tDataVar['Value']
             if self.rowCount() < len(tData): self.setRowCount(len(tData))
             if len(tData) in range(self.minCount, self.maxCount):
                 for iR in range(0, len(tData)):
@@ -171,6 +177,8 @@ class DatcomTableBase(QTableWidget):
             else:
                 self.logger.error("加载表格%s数据越界：%d min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
+        #发送行变更消息
+        self.Signal_rowCountChanged.emit(self.CountVarUrl , self.rowCount())
             
     def getDtModelData(self, tModel):
         """
@@ -207,11 +215,12 @@ class DatcomTableBase(QTableWidget):
                 tModel.setNamelist( self.Namelist , iV['VarName'],{'Index':1, 'Value':tVarlist} )
         #读取数据完成
        
-    def on_Singal_RuleIndexToCombo(self, tIndex):
+    def on_Singal_RuleIndexToCombo(self, nmlst, vCombo,  tIndex):
         """
         将tIndex对应的列隐藏
         """        
-        if self.ComboRule is None :return
+        if self.ComboRule is None or self.Namelist  != nmlst or self.ComboVar != vCombo :
+            return
         tKey = '%d.0'%(tIndex + 1)
         if tKey not in self.ComboRule.keys():
             self.logger.info("尝试不存在的组合关系！%s"%tKey)
@@ -226,8 +235,20 @@ class DatcomTableBase(QTableWidget):
             else:
                 self.setColumnHidden(iC, True)
         #print("row:%d,col:%d"%(self.rowCount(), self.columnCount()))
-        
-        
+    
+    @pyqtSlot(str, str)     
+    def on_TbLength_editingFinished(self, vUrl, vCount):
+        """
+        响应表格长度变化事件
+        也可以用来设置表格长度
+        """
+        tUrl = "%s/%s"%(self.Namelist, self.CountVar)
+        if tUrl == vUrl:
+            try:
+                tNum = int(vCount)
+                self.on_Singal_RuleNumToCount(tNum)
+            except Exception as e1:
+                self.logger.error("变量：%s 的值：%s ，无法转换为Int"%(vUrl, vCount))
 
         
     @pyqtSlot(int)    
@@ -238,7 +259,7 @@ class DatcomTableBase(QTableWidget):
             self.setRowCount(tNum)
         else:
             self.logger.error("无法将表格的行数设置为%d,当前%d"%(tNum,self.rowCount() ))
-            self.Signal_rowCountChanged.emit(self.rowCount(), self.CountVar)
+            self.Signal_rowCountChanged.emit(self.CountVarUrl, self.rowCount())
 
         
         
@@ -263,7 +284,7 @@ class DatcomTableBase(QTableWidget):
             self.logger.info("%s已经达到最大行数不能添加"%self.objectName())
             
         #self.curN.setText(str(self.rowCount()))
-        self.Signal_rowCountChanged.emit(self.rowCount(), self.CountVar)
+        self.Signal_rowCountChanged.emit(self.CountVarUrl, self.rowCount())
 
     @pyqtSlot()
     def on_actionAddRowToMax_triggered(self):
@@ -274,7 +295,7 @@ class DatcomTableBase(QTableWidget):
         if self.rowCount() < self.maxCount:
             self.setRowCount(self.maxCount)
 
-        self.Signal_rowCountChanged.emit(self.rowCount(), self.CountVar)        
+        self.Signal_rowCountChanged.emit(self.CountVarUrl, self.rowCount())        
 
     
     @pyqtSlot()
@@ -289,7 +310,7 @@ class DatcomTableBase(QTableWidget):
         else:
             self.logger.info("没有命中任何行")
         
-        self.Signal_rowCountChanged.emit(self.rowCount(), self.CountVar)
+        self.Signal_rowCountChanged.emit(self.CountVarUrl, self.rowCount())
 
     @pyqtSlot()
     def on_actionClearRows_triggered(self):
@@ -299,7 +320,7 @@ class DatcomTableBase(QTableWidget):
         # TODO: not implemented yet
         #self.clear()
         self.setRowCount(self.minCount)        
-        self.Signal_rowCountChanged.emit(self.rowCount(), self.CountVar)         
+        self.Signal_rowCountChanged.emit(self.CountVarUrl, self.rowCount())         
         
             
     @pyqtSlot(QPoint)

@@ -144,8 +144,10 @@ class DTdictionary():
                     tAllCombo.append(tAllComboDict)
                     
                 self.dictAddtional[tNmlst]['RuleVariableStatus'] = tAllCombo
+            elif iT.tag == 'HelpDoc':
+                self.dictAddtional[tNmlst]['HelpDoc'] = iT.attrib              
                 
-            else:
+            else:                
                 self.logger.error("解析规则异常：%s"%(tNmlst + " " + iT.tag))
         
                 
@@ -166,6 +168,19 @@ class DTdictionary():
                 return self.dictAddtional[nmlst][ruleName]
 
         return {}
+        
+    def getCARDHelpDoc(self, nmlist):
+        """
+        获得对应nmlist的帮助文档
+        nmlist str 是选项卡的名称
+        """
+        tHelp = self.getCARDAddtionalInformation(nmlist, 'HelpDoc')
+        if tHelp is not None and 'Url' in tHelp.keys():
+            return tHelp['Url']
+        return "https://github.com/darkspring2015/PyDatcomLab/blob/master/"
+            
+        
+
     def gettRuleNumToCountByGroup(self, nmlst, groupNm):
         """
         通过group查询对应的控制变量
@@ -189,6 +204,15 @@ class DTdictionary():
                     return  iR       
         return None
         
+    def getRuleIndexToComboByComboVariable(self, nmlst, comboVar):
+        """
+        获得groupNm对应组的变量组合控制变量的名称
+        """
+        if nmlst in self.dictAddtional.keys() and 'RuleIndexToCombo' in self.dictAddtional[nmlst]:
+            for iR in self.dictAddtional[nmlst]['RuleIndexToCombo']:
+                if 'Group' in iR.keys() and 'Index' in iR.keys() and comboVar == iR['Index']:
+                    return  iR       
+        return None        
         
     def getGroupVarsByName(self, nmlst, groupNm):
         """
@@ -222,7 +246,8 @@ class DTdictionary():
         groupDefine ={ #组名：{'Name':'widget的名称','ShowName':'显示名称','ToolTips':'组的提示信息'}
     'ALSCHD':{'Name':'ALSCHD','ShowName':'攻角','ToolTips':'录入攻角信息'}, 
     'Speed_Atmospheric':{'Name':'Speed_Atmospheric','ShowName':'速度/大气参数','ToolTips':'录入速度/大气参数'}, 
-}
+} 
+       返回的是组名的序列 ,错误的返回空序列，否则导致程序异常
         """
         tGroupList = []
         tCARD = self.getNamelistDefineByName(tNmlst)
@@ -233,6 +258,7 @@ class DTdictionary():
             if 'Group' in tCARD[itVar].keys():
                 tGroupList.append(tCARD[itVar]['Group'])
         #返回结果
+        return tGroupList
         
     def getGroupLimitByName(self, tNmlst, tGroup):
         """

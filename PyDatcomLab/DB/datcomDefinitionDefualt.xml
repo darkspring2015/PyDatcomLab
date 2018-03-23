@@ -76,8 +76,8 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension >W</Dimension>
-      <MustInput>UserCheck</MustInput>
+      <Dimension>W</Dimension>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </WT>
     <GAMMA dcType="Variable">
@@ -88,12 +88,12 @@
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
-      <Range />
+      <Range>[-180, 180]</Range>
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension >DEG</Dimension>
-      <MustInput>UserCheck</MustInput>
+      <Dimension />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </GAMMA>
     <STMACH dcType="Variable">
@@ -105,11 +105,12 @@
       <SubType />
       <Group />
       <Range>[0.6, 0.99]</Range>
+	  <Decimals>2</Decimals>
       <DisplayRange />
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </STMACH>
     <TSMACH dcType="Variable">
@@ -118,6 +119,7 @@
       <DisplayName>TSMACH 超音速下限</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
+	  <Decimals>2</Decimals>
       <SubType />
       <Group />
       <Range>[1.01, 1.4]</Range>
@@ -125,7 +127,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </TSMACH>
     <HYPERS dcType="Variable">
@@ -141,29 +143,29 @@
       <Default>.TRUE.</Default>
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </HYPERS>
     <TR dcType="Variable">
       <VarName>TR</VarName>
       <NameList>FLTCON</NameList>
       <DisplayName>TR 效应分析</DisplayName>
-      <Tooltips ></Tooltips>
+      <Tooltips />
       <TYPE>List</TYPE>
       <SubType />
       <Group />
       <Range>['0.0', '1.0']</Range>
-      <DisplayRange>['没有过渡(默认)', '全尺寸飞行过渡带']</DisplayRange>
+      <DisplayRange>['1.0', '0.0']</DisplayRange>
       <Default>0.0</Default>
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </TR>
     <ALSCHD dcType="Variable">
       <VarName>ALSCHD</VarName>
       <NameList>FLTCON</NameList>
-      <DisplayName />
+      <DisplayName >攻角</DisplayName >
       <Tooltips>录入攻角</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
@@ -172,7 +174,7 @@
       <DisplayRange />
       <Default />
       <Limit>[0, 20]</Limit>
-      <Dimension >DEG</Dimension>
+      <Dimension />
       <MustInput />
       <Relation />
     </ALSCHD>
@@ -204,7 +206,7 @@
       <DisplayRange />
       <Default />
       <Limit>[0, 20]</Limit>
-      <Dimension >L/T</Dimension>
+      <Dimension />
       <MustInput />
       <Relation />
     </VINF>
@@ -220,14 +222,14 @@
       <DisplayRange />
       <Default />
       <Limit>[0, 20]</Limit>
-      <Dimension >1/L</Dimension>
+      <Dimension />
       <MustInput />
       <Relation />
     </RNNUB>
     <ALT dcType="Variable">
       <VarName>ALT</VarName>
       <NameList>FLTCON</NameList>
-      <DisplayName />
+      <DisplayName >高度</DisplayName >
       <Tooltips />
       <TYPE>Array</TYPE>
       <SubType />
@@ -236,7 +238,7 @@
       <DisplayRange />
       <Default />
       <Limit>[0, 20]</Limit>
-      <Dimension >L</Dimension>
+      <Dimension />
       <MustInput />
       <Relation />
     </ALT>
@@ -252,14 +254,14 @@
       <DisplayRange />
       <Default />
       <Limit>[0, 20]</Limit>
-      <Dimension >F/A</Dimension>
+      <Dimension />
       <MustInput />
       <Relation />
     </PINF>
     <TINF dcType="Variable">
       <VarName>TINF</VarName>
       <NameList>FLTCON</NameList>
-      <DisplayName />
+      <DisplayName>无限流静温</DisplayName>
       <Tooltips />
       <TYPE>Array</TYPE>
       <SubType />
@@ -268,18 +270,17 @@
       <DisplayRange />
       <Default />
       <Limit>[0, 20]</Limit>
-      <Dimension >TDEG</Dimension>
+      <Dimension />
       <MustInput />
       <Relation />
     </TINF>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">[]</NMACHLinkTable>
       <RuleNumToCount dcType="Rule">
         <Rule Group="Speed_Atmospheric" Num="NMACH" />
         <Rule Group="ALSCHD" Num="NALPHA" />
       </RuleNumToCount>
       <RuleIndexToCombo dcType="Rule">
-        <Rule Group="Speed_Atmospheric" Index="Variables">
+        <Rule Group="Speed_Atmospheric" Index="Variables" DisplayName="变量组合">
           <HowTo key="1.0" value="['MACH', 'RNNUB']" />
           <HowTo key="2.0" value="['MACH', 'ALT', 'PINF', 'TINF', 'RNNUB']" />
           <HowTo key="3.0" value="['VINF', 'ALT', 'PINF', 'TINF', 'MACH', 'RNNUB']" />
@@ -288,9 +289,10 @@
         </Rule>
       </RuleIndexToCombo>
       <GroupDefine dcType="Rule">
-        <Group DisplayName="攻角输入" Name="ALSCHD" ToolTips="攻角输入" />
-        <Group DisplayName="速度输入" Name="Speed_Atmospheric" ToolTips="攻角输入" />
+        <Group DisplayName="攻角输入" Name="ALSCHD" ToolTips="ALSCHD" />
+        <Group DisplayName="飞行大气条件" Name="Speed_Atmospheric" ToolTips="Speed_Atmospheric" />
       </GroupDefine>
+	  <HelpDoc Url="https://github.com/darkspring2015/PyDatcomLab/blob/master/wiki/%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E%E6%96%87%E4%BB%B6.md" />
     </AdditionalInfo>
   </FLTCON>
   <OPTINS dcType="Namelist">
@@ -307,7 +309,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ROUGFC>
     <SREF dcType="Variable">
@@ -323,7 +325,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </SREF>
     <CBARR dcType="Variable">
@@ -339,7 +341,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CBARR>
     <BLREF dcType="Variable">
@@ -355,7 +357,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </BLREF>
     <AdditionalInfo dcType="Infomation" />
@@ -373,8 +375,8 @@
       <DisplayRange />
       <Default>1.0</Default>
       <Limit />
-      <Dimension />
-      <MustInput />
+      <Dimension>L</Dimension>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </VERTUP>
     <XCG dcType="Variable">
@@ -389,7 +391,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </XCG>
@@ -405,7 +407,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </ZCG>
@@ -421,7 +423,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </XW>
@@ -437,7 +439,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </ZW>
@@ -453,7 +455,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>DEG</Dimension>
       <MustInput />
       <Relation />
     </ALIW>
@@ -469,7 +471,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </XH>
@@ -485,7 +487,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </ZH>
@@ -501,7 +503,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>DEG</Dimension>
       <MustInput />
       <Relation />
     </ALIH>
@@ -517,8 +519,8 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <Dimension>L</Dimension>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </HINAX>
     <XV dcType="Variable">
@@ -533,7 +535,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </XV>
@@ -549,7 +551,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </ZV>
@@ -565,7 +567,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </XVF>
@@ -581,7 +583,7 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
+      <Dimension>L</Dimension>
       <MustInput />
       <Relation />
     </ZVF>
@@ -598,7 +600,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </SCALE>
     <AdditionalInfo dcType="Infomation" />
@@ -633,7 +635,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ELLIP>
     <BNOSE dcType="Variable">
@@ -649,7 +651,7 @@
       <Default>1.0</Default>
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </BNOSE>
     <BTAIL dcType="Variable">
@@ -665,7 +667,7 @@
       <Default>1.0</Default>
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </BTAIL>
     <BLN dcType="Variable">
@@ -680,8 +682,8 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <Dimension>L</Dimension>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </BLN>
     <BLA dcType="Variable">
@@ -696,8 +698,8 @@
       <DisplayRange />
       <Default />
       <Limit />
-      <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <Dimension>L</Dimension>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </BLA>
     <DS dcType="Variable">
@@ -713,7 +715,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </DS>
     <ITYPE dcType="Variable">
@@ -729,7 +731,7 @@
       <Default>2.0</Default>
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ITYPE>
     <METHOD dcType="Variable">
@@ -745,7 +747,7 @@
       <Default>1.0</Default>
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </METHOD>
     <X dcType="Variable">
@@ -845,12 +847,11 @@
       <Relation />
     </ZL>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">[]</NMACHLinkTable>
       <RuleNumToCount dcType="Rule">
         <Rule Group="BODY" Num="NX" />
       </RuleNumToCount>
       <RuleIndexToCombo dcType="Rule">
-        <Rule Group="BODY" Index="VarCombo">
+        <Rule Group="BODY" Index="VarCombo" DisplayName="机身几何尺寸定义变量组合">
           <HowTo key="1.0" value="['X', 'R', 'ZU', 'ZL']" />
           <HowTo key="2.0" value="['X', 'S', 'ZU', 'ZL']" />
           <HowTo key="3.0" value="['X', 'S', 'R', 'P', 'ZU', 'ZL']" />
@@ -1086,11 +1087,7 @@
       <MustInput />
       <Relation />
     </TYPE>
-    <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">[]</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
-    </AdditionalInfo>
+    <AdditionalInfo dcType="Infomation" />
   </WGPLNF>
   <HTPLNF dcType="Namelist">
     <CHRDTP dcType="Variable">
@@ -1366,9 +1363,7 @@
       <Relation />
     </RLPH>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">['HTArea']</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
+      <NMACHLinkTable varList="['HTArea']" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="HTArea" Name="HTArea" ToolTips="HTArea" />
       </GroupDefine>
@@ -1584,9 +1579,7 @@
       <Relation />
     </SVHB>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">['VTArea']</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
+      <NMACHLinkTable varList="['VTArea']" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="VTArea" Name="VTArea" ToolTips="VTArea" />
       </GroupDefine>
@@ -1802,9 +1795,7 @@
       <Relation />
     </SVHB>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">['VTArea']</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
+      <NMACHLinkTable varList="['VTArea']" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="VTArea" Name="VTArea" ToolTips="VTArea" />
       </GroupDefine>
@@ -2180,7 +2171,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit>[6, 6]</Limit>
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </SLOPE>
     <CLALPA dcType="Variable">
@@ -2312,9 +2303,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Relation />
     </THICK>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">['Lift']</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
+      <NMACHLinkTable varList="['Lift']" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="SLOPE" Name="SLOPE" ToolTips="SLOPE" />
         <Group DisplayName="Lift" Name="Lift" ToolTips="Lift" />
@@ -2776,9 +2765,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Relation />
     </THICK>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">['Lift']</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
+      <NMACHLinkTable varList="['Lift']" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="Lift" Name="Lift" ToolTips="Lift" />
         <Group DisplayName="AirfoilSection" Name="AirfoilSection" ToolTips="AirfoilSection" />
@@ -3078,9 +3065,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Relation />
     </THICK>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">['Lift']</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
+      <NMACHLinkTable varList="['Lift']" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="Lift" Name="Lift" ToolTips="Lift" />
         <Group DisplayName="AirfoilSection" Name="AirfoilSection" ToolTips="AirfoilSection" />
@@ -3380,9 +3365,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Relation />
     </THICK>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">['Lift']</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
+      <NMACHLinkTable varList="['Lift']" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="Lift" Name="Lift" ToolTips="Lift" />
         <Group DisplayName="AirfoilSection" Name="AirfoilSection" ToolTips="AirfoilSection" />
@@ -3403,7 +3386,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CDV>
     <ALPOW dcType="Variable">
@@ -3419,7 +3402,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ALPOW>
     <ALPLW dcType="Variable">
@@ -3435,7 +3418,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ALPLW>
     <ACLMW dcType="Variable">
@@ -3451,7 +3434,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ACLMW>
     <CLMW dcType="Variable">
@@ -3467,7 +3450,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CLMW>
     <ALPOH dcType="Variable">
@@ -3483,7 +3466,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ALPOH>
     <ALPLH dcType="Variable">
@@ -3499,7 +3482,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ALPLH>
     <ACLMH dcType="Variable">
@@ -3515,7 +3498,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ACLMH>
     <CLMH dcType="Variable">
@@ -3531,7 +3514,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default />
       <Limit />
       <Dimension />
-      <MustInput>UserCheck</MustInput>
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CLMH>
     <CLAB dcType="Variable">
@@ -3903,9 +3886,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Relation />
     </QOQINF>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">['Body', 'Wing', 'HorizontalTail', 'WingBody', 'Downwash']</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
+      <NMACHLinkTable varList="['Body', 'Wing', 'HorizontalTail', 'WingBody', 'Downwash']" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="Body" Name="Body" ToolTips="Body" />
         <Group DisplayName="Wing" Name="Wing" ToolTips="Wing" />
@@ -4140,11 +4121,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <MustInput />
       <Relation />
     </CROT>
-    <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">[]</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
-    </AdditionalInfo>
+    <AdditionalInfo dcType="Infomation" />
   </PROPWR>
   <JETPWR dcType="Namelist">
     <AIETLJ dcType="Variable">
@@ -4371,11 +4348,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <MustInput />
       <Relation />
     </JERAD>
-    <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">[]</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
-    </AdditionalInfo>
+    <AdditionalInfo dcType="Infomation" />
   </JETPWR>
   <CONTAB dcType="Namelist">
     <CFITC dcType="Variable">
@@ -4714,7 +4687,15 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <MustInput />
       <Relation />
     </TTYPE>
-    <AdditionalInfo dcType="Infomation" />
+    <AdditionalInfo dcType="Infomation">
+      <RuleVariableStatus dcType="Rule">
+        <Rule ControlVar="TTYPE">
+          <HowTo Disabled="['CFITT', 'CFOTT', 'BITT', 'BOTT']" Enabled="['TTYPE', 'CFITC', 'CFOTC', 'BITC', 'BOTC', 'B1', 'B2', 'B3', 'B4', 'D1', 'D2', 'D3', 'CGMAX', 'KS', 'RL', 'BGR', 'DELR']" key="1.0" />
+          <HowTo Disabled="['CFITC', 'CFOTC', 'BITC', 'BOTC']" Enabled="['TTYPE', 'CFITT', 'CFOTT', 'BITT', 'BOTT', 'B1', 'B2', 'B3', 'B4', 'D1', 'D2', 'D3', 'CGMAX', 'KS', 'RL', 'BGR', 'DELR']" key="2.0" />
+          <HowTo Disabled="[]" Enabled="['TTYPE', 'CFITC', 'CFOTC', 'BITC', 'BOTC', 'CFITT', 'CFOTT', 'BITT', 'BOTT', 'B1', 'B2', 'B3', 'B4', 'D1', 'D2', 'D3', 'CGMAX', 'KS', 'RL', 'BGR', 'DELR']" key="3.0" />
+        </Rule>
+      </RuleVariableStatus>
+    </AdditionalInfo>
   </CONTAB>
   <SYMFLP dcType="Namelist">
     <FTYPE dcType="Variable">
@@ -5146,6 +5127,19 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
           <HowTo key="9.0" value="['CPRMEI', 'CPRMEO', 'DELJET', 'EFFJET']" />
         </Rule>
       </RuleIndexToCombo>
+      <RuleVariableStatus dcType="Rule">
+        <Rule ControlVar="FTYPE">
+          <HowTo Disabled="['CPRMEI', 'CPRMEO', 'CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'JETFLP', 'CMU', 'DELJET', 'EFFJET']" Enabled="['FTYPE', 'NDELTA', 'DELTA', 'PHETE', 'PHETEP', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO', 'CB', 'TC', 'NTYPE']" key="1.0" />
+          <HowTo Disabled="['CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'JETFLP', 'CMU', 'DELJET', 'EFFJET', 'CB', 'TC', 'NTYPE']" Enabled="['FTYPE', 'NDELTA', 'DELTA', 'PHETE', 'PHETEP', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO', 'CPRMEI', 'CPRMEO']" key="2.0" />
+          <HowTo Disabled="['CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'CB', 'TC', 'NTYPE', 'JETFLP', 'CMU', 'DELJET', 'EFFJET']" Enabled="['FTYPE', 'NDELTA', 'DELTA', 'PHETE', 'PHETEP', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO', 'CPRMEI', 'CPRMEO']" key="3.0" />
+          <HowTo Disabled="['CB', 'TC', 'NTYPE', 'JETFLP', 'CMU', 'DELJET', 'EFFJET']" Enabled="['FTYPE', 'NDELTA', 'DELTA', 'PHETE', 'PHETEP', 'CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO', 'CPRMEI', 'CPRMEO']" key="4.0" />
+          <HowTo Disabled="['CPRMEI', 'CPRMEO', 'CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'CB', 'TC', 'NTYPE', 'JETFLP', 'CMU', 'DELJET', 'EFFJET']" Enabled="['FTYPE', 'NDELTA', 'DELTA', 'PHETE', 'PHETEP', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO']" key="5.0" />
+          <HowTo Disabled="['PHETE', 'PHETEP', 'CPRMEI', 'CPRMEO', 'CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'CB', 'TC', 'NTYPE', 'JETFLP', 'CMU', 'DELJET', 'EFFJET']" Enabled="['FTYPE', 'NDELTA', 'DELTA', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO']" key="6.0" />
+          <HowTo Disabled="['PHETE', 'PHETEP', 'CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'CB', 'TC', 'NTYPE', 'JETFLP', 'CMU', 'DELJET', 'EFFJET']" Enabled="['FTYPE', 'NDELTA', 'DELTA', 'CPRMEI', 'CPRMEO', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO']" key="7.0" />
+          <HowTo Disabled="['PHETE', 'PHETEP', 'CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'CB', 'TC', 'NTYPE', 'JETFLP', 'CMU', 'DELJET', 'EFFJET']" Enabled="['FTYPE', 'NDELTA', 'DELTA', 'CPRMEI', 'CPRMEO', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO']" key="8.0" />
+          <HowTo Disabled="['DELTA', 'PHETE', 'PHETEP', 'CAPINB', 'CAPOUT', 'DOBDEF', 'DOBCIN', 'DOBCOT', 'CB', 'TC', 'NTYPE']" Enabled="['FTYPE', 'NDELTA', 'CPRMEI', 'CPRMEO', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO', 'JETFLP', 'CMU', 'DELJET', 'EFFJET']" key="9.0" />
+        </Rule>
+      </RuleVariableStatus>
       <GroupDefine dcType="Rule">
         <Group DisplayName="flap" Name="flap" ToolTips="flap" />
         <Group DisplayName="delta" Name="delta" ToolTips="delta" />
@@ -5391,6 +5385,15 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
           <HowTo key="5.0" value="['DELTAL', 'DELTAR']" />
         </Rule>
       </RuleIndexToCombo>
+      <RuleVariableStatus dcType="Rule">
+        <Rule ControlVar="STYPE">
+          <HowTo Disabled="['DELTAL', 'DELTAR', 'CHRDFI', 'CHRDFO', 'DELTAD']" Enabled="['STYPE', 'NDELTA', 'SPANFI', 'SPANFO', 'PHETE', 'XSPRME', 'DELTAS', 'XSOC', 'HSOC']" key="1.0" />
+          <HowTo Disabled="['DELTAL', 'DELTAR', 'CHRDFI', 'CHRDFO', 'DELTAD']" Enabled="['STYPE', 'NDELTA', 'SPANFI', 'SPANFO', 'PHETE', 'XSPRME', 'DELTAS', 'XSOC', 'HSOC']" key="2.0" />
+          <HowTo Disabled="['DELTAL', 'DELTAR', 'CHRDFI', 'CHRDFO', 'XSPRME']" Enabled="['STYPE', 'NDELTA', 'SPANFI', 'SPANFO', 'PHETE', 'DELTAD', 'DELTAS', 'XSOC', 'HSOC']" key="3.0" />
+          <HowTo Disabled="['XSPRME', 'XSOC', 'HSOC', 'DELTAD', 'DELTAS', 'PHETE']" Enabled="['STYPE', 'NDELTA', 'DELTAL', 'DELTAR', 'CHRDFI', 'CHRDFO', 'SPANFI', 'SPANFO']" key="4.0" />
+          <HowTo Disabled="['SPANFI', 'SPANFO', 'XSPRME', 'CHRDFI', 'CHRDFO', 'DELTAD', 'DELTAS', 'XSOC', 'HSOC']" Enabled="['STYPE', 'NDELTA', 'DELTAL', 'DELTAR', 'PHETE']" key="5.0" />
+        </Rule>
+      </RuleVariableStatus>
       <GroupDefine dcType="Rule">
         <Group DisplayName="input" Name="input" ToolTips="input" />
       </GroupDefine>
@@ -5430,11 +5433,9 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Relation />
     </NGH>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">[]</NMACHLinkTable>
       <RuleNumToCount dcType="Rule">
         <Rule Group="GHeight" Num="NGH" />
       </RuleNumToCount>
-      <RuleIndexToCombo dcType="Rule" />
       <GroupDefine dcType="Rule">
         <Group DisplayName="GHeight" Name="GHeight" ToolTips="GHeight" />
       </GroupDefine>
@@ -6232,10 +6233,6 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <MustInput />
       <Relation />
     </ZP>
-    <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable dcType="Rule">[]</NMACHLinkTable>
-      <RuleNumToCount dcType="Rule" />
-      <RuleIndexToCombo dcType="Rule" />
-    </AdditionalInfo>
+    <AdditionalInfo dcType="Infomation" />
   </TVTPAN>
 </DatcomVariableDefine>

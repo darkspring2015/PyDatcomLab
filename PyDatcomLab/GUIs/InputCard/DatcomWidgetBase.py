@@ -4,27 +4,32 @@
 Module implementing FLTCON.
 """
 
-from PyQt5.QtCore import pyqtSlot, QPoint, QMetaObject, pyqtSignal
-from PyQt5.QtWidgets import QWidget,  QTableWidget , QLineEdit #,QMessageBox
+from PyQt5.QtCore import  QPoint, QMetaObject, pyqtSignal#, pyqtSlot,
+from PyQt5.QtWidgets import QWidget #,QMessageBox
 
 
 from PyDatcomLab.Core import dcModel
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  
-from PyDatcomLab.GUIs.InputCard import DatcomCARDLogicBase as DCLogic  
+#from PyDatcomLab.GUIs.InputCard import DatcomCARDLogicBase as DCLogic  
 from PyDatcomLab.GUIs.InputCard.DatcomCARDUiBase import DatcomCARDUIBase 
 import logging
 
 
 
-
 class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
+
     """
     Datcom 输入选项卡的基础类.
     """
     
     #定义各个Widget之间进行参数同步的信号
     Singal_InitializeUI    = pyqtSignal(int)          #用来提供额外的界面初始化逻辑，响应信号对界面进行额外的初始化
-    
+    Singal_RuleIndexToCombo              = pyqtSignal(str,str,int)      #处理变量组个的同步问题
+    Singal_CheckboxStateChanged          = pyqtSignal(int,str)      #处理checkbox的同步问题
+    Singal_TableCountEditingFinished     = pyqtSignal(str, int)     #处理表格长度控制变量的触发逻辑 str Url int :count
+    Singal_CommonUIChanged               = pyqtSignal(str)          #通用的输入状态变化规则
+    Singal_RuleVariableStatus            = pyqtSignal(str)          #通用的RuleVariableStatus状态变化规则 
+    Singal_TBRowCountChanged             = pyqtSignal(int, str)     #用于通知表格的行数发生了变化    
     
     def __init__(self, parent=None, tCARD = 'FLTCON' , tModel = None):
         """
@@ -40,12 +45,14 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
         self.logger = logging.getLogger(r'Datcomlogger')
         #获得Datcom的界面定义
         self.NameList = tCARD
+        self.DDefine            = DDefine
         self.VariableList       = DDefine.getNamelistDefineByName(self.NameList) 
         self.NMACHLinkTable     = DDefine.getCARDAddtionalInformation(self.NameList, 'NMACHLinkTable') 
         self.RuleNumToCount     = DDefine.getCARDAddtionalInformation(self.NameList, 'RuleNumToCount')        
         self.RuleIndexToCombo   = DDefine.getCARDAddtionalInformation(self.NameList, 'RuleIndexToCombo')  
         self.GroupDefine        = DDefine.getCARDAddtionalInformation(self.NameList, 'GroupDefine')  
         self.RuleVariableStatus = DDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableStatus')
+        self.HelpUrl            = DDefine.getCARDHelpDoc(self.NameList)
         self.HashVaribles       = {}
         
         
@@ -53,23 +60,13 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
         self.setupUi(self)
         
         #修改后台的数据
-        if tModel is None:
-            tModel = dcModel.dcModel()  
-        #定义数据
-        self.DatcomCARD = DCLogic.DatcomCARDLogicBase(self)
-        self.DatcomCARD.InitUi()
-        self.DatcomCARD.setModel(tModel)   #设置模型
+        self.model = dcModel.dcModel()   
+        self.setModel( tModel)
+        #self.DatcomCARD.InitUi()
+        #self.DatcomCARD.setModel(tModel)   #设置模型
         
         #绑定处理逻辑
-        self.Singal_RuleIndexToCombo.connect(self.DatcomCARD.on_Singal_RuleIndexToCombo)
-        self.Singal_CheckboxStateChanged.connect(self.DatcomCARD.on_Singal_CheckboxStateChanged)
-        #self.Singal_TbLength_editingFinished.connect(self.DatcomCARD.on_Singal_TbLength_editingFinished)
-        self.Singal_TbLength_editingFinished.connect(self.on_Singal_TbLength_editingFinished)
-        self.Singal_TBRowCountChanged.connect(self.on_Singal_TBRowCountChanged)
-      
-        self.Singal_CommonUIChanged.connect(self.DatcomCARD.on_Singal_CommonUIChanged)
-        self.Singal_RuleVariableStatus.connect(self.DatcomCARD.on_Singal_RuleVariableStatus)   
-        
+
         #界面参数
         self.curPos = QPoint(0, 0)
         self.curWidget = None
@@ -82,47 +79,91 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
         #刷新界面
         self.UILogic()  
         
-    @pyqtSlot(str, str, int) 
-    def on_Singal_TbLength_editingFinished(self, sName, rName, tNum):
-        """
-        响应表格长度控制变量的改变
-        """            
-        tTWidget = self.findChild(QTableWidget, rName)
-        if tTWidget:
-            tTWidget.Singal_RuleNumToCount.emit(tNum)
 
-    @pyqtSlot(int, str)
-    def on_Singal_TBRowCountChanged(self, tNum, rName):
+        
+    def emit_Singal_RuleVariableStatus(self ):
         """
-        响应表格行数变化
+        用来触发新的信号函数,转发Singal_RuleVariableStatus
         """
-        tCWidget = self.findChild(QLineEdit, rName)
-        if  tCWidget : tCWidget.setText(str(tNum))
+        tName = self.sender().objectName()
+        self.Singal_RuleVariableStatus.emit( tName)
+        
         
     def setModel(self, tModel):
         """
         初始化本节点的xml描述文档
         """
+        #修改后台的数据
+        if tModel is None or type(tModel) is not dcModel.dcModel:
+            self.logger.error('传递的参数不是合格的类型：%s'%type(tModel) )
+            tModel = dcModel.dcModel('J6', '常规布局')        
+        self.model = tModel  
         
-        #self.Model = tModel        
-        #执行参数配置过程    
-        self.DatcomCARD.setModel(tModel)      
+        #执行参数配置过程        
+        self.InitDoc()  
+        
+        #触发界面协调
         self.UILogic()
         
+    def InitDoc(self):
+        """
+        分析并初始化后台数据
+        """        
+
+        #自动化循环赋值
+        for varName in self.VariableList.keys():                      
+            if self.VariableList[varName]['TYPE'] in ['REAL', 'INT', 'List'] :
+                #查询默认值
+                tWidget = self.findChild(QWidget,varName)
+                if tWidget is None:
+                    self.logger.error("访问的变量：%s 不在本窗体"%varName)
+                else:
+                    tWidget.setData(self.model)
+        #自动化循环赋值
+        
+        #对于表格类型的数据进行赋值
+        for iTb in self.DDefine.getGroupDefine(self.NameList):
+            tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
+            if tWidget is None:
+                self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
+                continue
+            tWidget.setDtModelData(self.model)
+            #遍历所有的遍历写入到表格中
+        #遍历所有表格控件
+      
     def getDoc(self):
         """
         将界面的内容刷新到变量model
         """
+        #自动化循环赋值
+        for varName in self.VariableList.keys():                      
+            if self.VariableList[varName]['TYPE'] in ['REAL', 'INT', 'List'] :
+                #查询默认值
+                tWidget = self.findChild(QWidget,varName)
+                if tWidget is None:
+                    self.logger.error("访问的变量：%s 不在本窗体"%varName)
+                else:
+                    tWidget.getData(self.model)
+        #自动化循环赋值
         
+        #对于表格类型的数据进行赋值
+        for iTb in self.DDefine.getGroupDefine(self.NameList):
+            tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
+            if tWidget is None:
+                self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
+                continue
+            tWidget.getDtModelData(self.model)
+            #遍历所有的遍历写入到表格中
+        #遍历所有表格控件
         #执行界面刷新
-        return self.DatcomCARD.getModel()        
+        return self.model      
         
         
     def UILogic(self):
         """
         在此刷新UI，需要根据不同的情况执行判断
         """       
-        self.DatcomCARD.UILogic()
+        #self.DatcomCARD.UILogic()
         
     
     def InitializeUI(self):
@@ -137,7 +178,12 @@ if __name__ == "__main__":
     import sys
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
-    card = DatcomWidgetBase(tCARD = 'FLTCON')    
+    tModel = dcModel.dcModel()
+    tModel.loadXML(r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\abcd2.dcxml')
+    #card = DatcomWidgetBase(tCARD = 'FLTCON', tModel = tModel)    
+    #card = DatcomWidgetBase(tCARD = 'OPTINS', tModel = tModel)  
+    #card = DatcomWidgetBase(tCARD = 'SYNTHS', tModel = tModel)  
+    card = DatcomWidgetBase(tCARD = 'BODY', tModel = tModel) 
     #ui = DatcomBaseUI()
     #ui.setupUi(card)
     card.show()

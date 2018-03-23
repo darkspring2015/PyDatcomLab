@@ -309,9 +309,18 @@ class dcModel(object):
         
         return dic[varName]
     
-    def getVariableValueByName(self, nmlst, varName):
+    def getDiscreteVariableValueByName(self, nmlst, varName):
         """
-        函数从当前模型中获得变量的值/单位/量纲
+        函数从当前模型中获得变量的值，对应离散量 List
+        """        
+        if nmlst in dF.reserved_NAMELISTS and nmlst  in self.doc.keys() and \
+            varName in self.doc[nmlst].keys():
+            return self.doc[nmlst][varName]  
+        return None     
+    
+    def getContinuousVariableValueByName(self, nmlst, varName):
+        """
+        函数从当前模型中获得变量的值/单位/量纲，对应连续量 INT REAL
         """
         tRes = DDefine.getVariableDimensionByName(nmlst,varName )
         #判断是否存在
@@ -321,12 +330,23 @@ class dcModel(object):
 
         return tRes     
         
-    def setVariableValueByName(self, nmlst, varName, varValue):
+    def setDiscreteVariableValueByName(self, nmlst, varName, varValue):
         """
-        根据变量的值/单位/量纲，写入信息
+        写入离散量的值，写入信息Discrete的量 对应List类型
+        varValue 直接就是对应的结果
+        """        
+        self.setNamelist(nmlst, varName, varValue)
+    
+    def setContinuousVariableValueByName(self, nmlst, varName, varValue):
         """
-        
-        self.setNamelist(nmlst, varName, varValue['Value'])
+        写入连续量的值，写入信息Continuous的量 对应Int Real类型
+        """
+        if varValue['Value'] is None:
+            self.setNamelist(nmlst, varName, None)
+        #执行量纲规约
+        tValue = varValue['Value']
+        #写入到结果        
+        self.setNamelist(nmlst, varName, tValue)
 
 
         
