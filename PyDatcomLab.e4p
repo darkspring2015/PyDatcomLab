@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-03-23, 00:21:45 -->
+<!-- Saved: 2018-03-23, 12:24:30 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -124,8 +124,6 @@
     <Source>PyDatcomLab/GUIs/tools/tools_rc.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
     <Source>PyDatcomLab/main.py</Source>
-    <Source>extras/SomeTools/DatcomInputSingle.py</Source>
-    <Source>extras/SomeTools/Ui_DatcomInputSingle.py</Source>
     <Source>scripts/AnalyseUIDefine.py</Source>
     <Source>tests/__init__.py</Source>
     <Source>tests/parserBuild/Ui_datcomParsermain.py</Source>
@@ -211,7 +209,6 @@
     <Form>PyDatcomLab/GUIs/components/logForm.ui</Form>
     <Form>PyDatcomLab/GUIs/tools/XMLEditer.ui</Form>
     <Form>PyDatcomLab/GUIs/tools/xmlEditer.ui</Form>
-    <Form>extras/SomeTools/DatcomInputSingle.ui</Form>
     <Form>tests/parserBuild/datcomParsermain.ui</Form>
   </Forms>
   <Resources>
