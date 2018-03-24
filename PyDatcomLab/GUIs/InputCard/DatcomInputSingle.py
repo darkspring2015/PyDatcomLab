@@ -41,6 +41,9 @@ class DatcomInputSingle(QWidget):
         self.VarTooltips    = self.VarDefine['Tooltips'] if 'Tooltips' in  self.VarDefine.keys() else self.VarDisplayName
         self.vDimension     = self.VarDefine['Dimension'] if 'Dimension' in  self.VarDefine.keys() else ''
         self.vCurrentUnit   = ''  #保存当前的单位
+        self.labelIndent    = 20
+        self.baseSize       = [400, 25]
+        self.baseSplitterSize = [200, 200]
         self.vFloatFormat   = '%.f'
         if self.VarDefine['TYPE'] not in ['INT', 'REAL'] : 
             self.logger.error('尝试创建的%s变量不是INT或者REAL类型'%self.vUrl )
@@ -49,16 +52,25 @@ class DatcomInputSingle(QWidget):
         self.InitializeUILogic()
 
     def setupUi(self, Form):
-        Form.setObjectName(self.VarName)
-        self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-
+        """
+        配置界面元素
+        """
+        
+        Form.setObjectName(self.VarName )
+        Form.resize(self.baseSize[0] , self.baseSize [1])
+        self.verticalLayout = QtWidgets.QVBoxLayout(Form)
+        self.verticalLayout.setContentsMargins(1, 1, 1, 1)
+        self.verticalLayout.setSpacing(2)
+        self.verticalLayout.setObjectName("TopLayout")
+        
+        self.splitter_Top = QtWidgets.QSplitter(Form)
+        self.splitter_Top.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter_Top.setObjectName("TopSplitter")
         #添加Label或者checkBox
         #self.LabelItem = None
         if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
             #存在可选项
-            self.LabelItem = QtWidgets.QCheckBox(Form)
+            self.LabelItem = QtWidgets.QCheckBox(self.splitter_Top)
             self.LabelItem.setObjectName("checkBox_Var")
             #绑定值变换信号到自身信号 先绑定以响应对应的状态确认
             self.LabelItem.stateChanged.connect(self.on_checkBox_Var_stateChanged) 
@@ -70,38 +82,36 @@ class DatcomInputSingle(QWidget):
                 self.LabelItem.setCheckState(Qt.Unchecked)
            
         else: #没有选项卡
-            self.LabelItem = QtWidgets.QLabel(Form)
+            self.LabelItem = QtWidgets.QLabel(self.splitter_Top)
             self.LabelItem.setObjectName("label_Var")
+            self.LabelItem.setIndent(self.labelIndent )
         #给Label赋值
         if 'DisplayName' in self.VarDefine.keys():
             self.LabelItem.setText(self.VarDefine['DisplayName'])
         else:
             self.LabelItem.setText(self.VarName)  
-        #调节
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.LabelItem.sizePolicy().hasHeightForWidth())
-        self.LabelItem.setSizePolicy(sizePolicy)
-        self.horizontalLayout.addWidget(self.LabelItem)
-        #添加分割起
-        self.spacerItem = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(self.spacerItem)
+
+        #创建右半部分的结构
+        self.splitter_Inner = QtWidgets.QSplitter(self.splitter_Top)
+        self.splitter_Inner.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter_Inner.setObjectName("InnerSplitter")
         #添加录入框
-        self.InputWidget = QtWidgets.QLineEdit(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
-        self.InputWidget.setSizePolicy(sizePolicy)
+        self.InputWidget = QtWidgets.QLineEdit(self.splitter_Inner)
         self.InputWidget.setObjectName('InputWidget') #设置输入组件的名称为变量名
+        #调节录入框的策略
+#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+#        sizePolicy.setHorizontalStretch(0)
+#        sizePolicy.setVerticalStretch(0)
+#        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
+#        self.InputWidget.setSizePolicy(sizePolicy)
+
         #添加验证器
         if self.VarDefine['TYPE'] == 'REAL':
             #给控件设置属性
             if self.InputWidget is None:
                 self.logger.error("访问的变量：%s 不在本窗体"%self.VarName)
             else:
-                tVd = dtQDoubleValidator(Form)
+                tVd = dtQDoubleValidator()
                 tVd.setObjectName('DoubleValidator')
                 #tVd.setNotation(QtGui.QDoubleValidator.StandardNotation) #否则无法限制
                 if 'Range' in self.VarDefine.keys():
@@ -126,7 +136,7 @@ class DatcomInputSingle(QWidget):
             if self.InputWidget is None:
                 self.logger.error("访问的变量：%s 不在本窗体"%self.VarName)
             else:
-                tVd =  QtGui.QIntValidator(Form)
+                tVd =  QtGui.QIntValidator()
                 tVd.setObjectName('IntValidator')
                 tVd.setBottom(0)
                 if 'Range' in self.VarDefine.keys():
@@ -134,12 +144,11 @@ class DatcomInputSingle(QWidget):
                     tVd.setRange(tRange[0], tRange[1])
                     self.InputWidget.setPlaceholderText('%d - %d'%(tVd.bottom(), tVd.top()))
                 self.InputWidget.setValidator(tVd) 
-        #将输入组件添加到布局
-        self.horizontalLayout.addWidget(self.InputWidget)
+                
+
         #添加单位
-        #self.comboBox_VarUnit = None
         if 'Dimension' in self.VarDefine.keys() and self.VarDefine['Dimension'] not in ['']:
-            self.comboBox_VarUnit = QtWidgets.QComboBox(Form)
+            self.comboBox_VarUnit = QtWidgets.QComboBox(self.splitter_Inner)
             self.comboBox_VarUnit.setObjectName("comboBox_Unit")
             if self.VarDefine['Dimension'] in Dimension.keys():
                 for itUnit in Dimension[self.VarDefine['Dimension']]:
@@ -148,20 +157,38 @@ class DatcomInputSingle(QWidget):
                 self.logger.error("尝试添加不存在的量纲%s"%(self.VarDefine['Dimension']))
             #选择默认单位
             if self.comboBox_VarUnit.count() >0: self.comboBox_VarUnit.setCurrentIndex(0)    
-            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-            sizePolicy.setHorizontalStretch(0)
-            sizePolicy.setVerticalStretch(0)
-            sizePolicy.setHeightForWidth(self.comboBox_VarUnit.sizePolicy().hasHeightForWidth())
-            self.comboBox_VarUnit.setSizePolicy(sizePolicy)    
-            self.comboBox_VarUnit.setMinimumWidth(80)
-            self.comboBox_VarUnit.setMaximumWidth(80)           
-            self.horizontalLayout.addWidget(self.comboBox_VarUnit)
-                
-     
-        #添加单位
-        self.retranslateUi(Form)
+            #调整默认策略
+#            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+#            sizePolicy.setHorizontalStretch(0)
+#            sizePolicy.setVerticalStretch(0)
+#            sizePolicy.setHeightForWidth(self.comboBox_VarUnit.sizePolicy().hasHeightForWidth())
+#            self.comboBox_VarUnit.setSizePolicy(sizePolicy)    
         
+        #添加分裂器
+        self.verticalLayout.addWidget(self.splitter_Top)   
+        
+        #执行分裂期附加配置
+        self.splitter_Top.setStretchFactor(0, self.baseSplitterSize[0])
+        self.splitter_Top.setStretchFactor(1, self.baseSplitterSize[1])
+        self.splitter_Top.setSizes(self.baseSplitterSize)
+
+        #执行其他逻辑
+        self.retranslateUi(Form)        
         QtCore.QMetaObject.connectSlotsByName(Form)
+        
+    def dt_setStretchFactor(self, tIndex, factor = 0):
+        """
+        设置中央分割器的比例关系
+        """
+        self.splitter_Top.setStretchFactor(tIndex, factor)
+        
+    def dt_setSizes(self, tLift, tRight):
+        """
+        设置中央分割器的比例关系
+        tLift  左侧宽度
+        tRight 右侧宽度
+        """ 
+        self.splitter_Top.setSizes([tLift, tRight])
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -344,22 +371,17 @@ class DatcomInputSingleNoLabel(DatcomInputSingle):
         """
         super(DatcomInputSingleNoLabel, self).__init__(CARD, VarName,  parent=None, DDefinition = DDefine)
         #删除对应的控件
-
-
         tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var')
         tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var')
         if tLabel is not None :
             tLabel.setCheckState(Qt.Checked)
-            self.horizontalLayout.removeWidget(tLabel)
             tLabel.deleteLater()
         elif tLabel2 is not None:
-            self.horizontalLayout.removeWidget(tLabel2)
             tLabel2.deleteLater()  
         else:
             self.logger.error("并不存在对应的控件")
         
-        if isRemoveSpacer:
-            self.horizontalLayout.removeItem(self.spacerItem)
+
  
         
 if __name__ == "__main__":

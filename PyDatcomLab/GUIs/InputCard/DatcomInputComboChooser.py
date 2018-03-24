@@ -47,44 +47,66 @@ class DatcomInputComboChooser(QWidget):
         self.ruleVarDisplayName = self.ruleDefine['DisplayName'] if 'DisplayName' in self.ruleDefine.keys() else self.VarName
         self.ruleVarTooltips    = self.ruleDefine['Tooltips'] if 'Tooltips' in  self.ruleDefine.keys() else self.ruleVarDisplayName
         self.ruleGroupName      = self.ruleDefine['Group'] 
+        
+        #基本几何尺寸
+        self.labelIndent    = 20
+        self.baseSize       = [400, 25]
+        self.baseSplitterSize = [200, 200]
+        #初始化界面        
         self.setupUi(self)
 
 
     def setupUi(self, Form):
-        Form.setObjectName(self.VarName)       
-
-        self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        """
+        自动界面构造函数
+        """
+        Form.setObjectName(self.VarName )
+        Form.resize(self.baseSize[0] , self.baseSize [1])
+        self.verticalLayout = QtWidgets.QVBoxLayout(Form)
+        self.verticalLayout.setContentsMargins(1, 1, 1, 1)
+        self.verticalLayout.setSpacing(2)
+        self.verticalLayout.setObjectName("TopLayout")
+        
+        self.splitter_Top = QtWidgets.QSplitter(Form)
+        self.splitter_Top.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter_Top.setObjectName("TopSplitter")
+        
 
         #添加Label或者checkBox
-        self.LabelItem = QtWidgets.QLabel(Form)
+        self.LabelItem = QtWidgets.QLabel(self.splitter_Top)
         self.LabelItem.setObjectName("label_Var")
         #给Label赋值
         self.LabelItem.setText(self.ruleVarDisplayName)  
+        self.LabelItem.setIndent(self.labelIndent)
         #调节
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.LabelItem.sizePolicy().hasHeightForWidth())
-        self.LabelItem.setSizePolicy(sizePolicy)
-        self.horizontalLayout.addWidget(self.LabelItem)
-        #添加分割气
-        self.spacerItem = QtWidgets.QSpacerItem(55, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        #spacerItem.setObjectName('spacerItem')
-        self.horizontalLayout.addItem(self.spacerItem)
-        #添加录入框
-        #self.InputWidget = QtWidgets.QWidget(Form)
+#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+#        sizePolicy.setHorizontalStretch(0)
+#        sizePolicy.setVerticalStretch(0)
+#        sizePolicy.setHeightForWidth(self.LabelItem.sizePolicy().hasHeightForWidth())
+#        self.LabelItem.setSizePolicy(sizePolicy)
 
         #创建Combo对象
-        self.ruleComboWidget = QtWidgets.QComboBox(Form)
+        self.ruleComboWidget = QtWidgets.QComboBox(self.splitter_Top)
         self.ruleComboWidget.setObjectName("comboBox_Variables")
 
         #如果存在DisplayRange，优先添加说明信息
         for iR in self.ruleDefine['HowTo'].keys():
              self.ruleComboWidget.addItem('-'.join(self.ruleDefine['HowTo'][iR]))  
-        self.horizontalLayout.addWidget(self.ruleComboWidget) 
-      
+        #设置风格
+#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+#        sizePolicy.setHorizontalStretch(0)
+#        sizePolicy.setVerticalStretch(0)
+#        sizePolicy.setHeightForWidth(self.ruleComboWidget.sizePolicy().hasHeightForWidth())
+#        self.ruleComboWidget.setSizePolicy(sizePolicy)
+
+        #添加分裂器
+        self.verticalLayout.addWidget(self.splitter_Top)   
+        
+        #执行分裂期附加配置
+        self.splitter_Top.setStretchFactor(0, self.baseSplitterSize[0])
+        self.splitter_Top.setStretchFactor(1, self.baseSplitterSize[1])
+        self.splitter_Top.setSizes(self.baseSplitterSize)
+        
         #添加单位
         self.retranslateUi(Form)
         
@@ -95,7 +117,32 @@ class DatcomInputComboChooser(QWidget):
         Form.setWindowTitle(_translate("Form", self.ruleVarDisplayName))
         self.LabelItem.setText(_translate("Form", self.ruleVarDisplayName))
         self.ruleComboWidget.setToolTip(_translate("Form", self.ruleVarTooltips))
+        
+    def currentIndex(self):
+        """
+        获得当前的选中项
+        """
+        return self.ruleComboWidget.currentIndex()
+    def setCurrentIndex(self, index):
+        """
+        """
+        self.ruleComboWidget.setCurrentIndex(index)
+        #self.varComboChanged.emit(self.CARDName, self.ruleGroupName, index)
 
+    def dt_setStretchFactor(self, tIndex, factor = 0):
+        """
+        设置中央分割器的比例关系
+        """
+        self.splitter_Top.setStretchFactor(tIndex, factor)
+        
+    def dt_setSizes(self, tLift, tRight):
+        """
+        设置中央分割器的比例关系
+        tLift  左侧宽度
+        tRight 右侧宽度
+        """ 
+        self.splitter_Top.setSizes([tLift, tRight])
+        
   
     @pyqtSlot(int)
     def on_comboBox_Variables_currentIndexChanged(self, index):
@@ -106,9 +153,6 @@ class DatcomInputComboChooser(QWidget):
         @type int
         """
         self.varComboChanged.emit(self.CARDName, self.ruleGroupName, index)
-
-
-
 
         
 if __name__ == "__main__":

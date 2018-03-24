@@ -45,8 +45,12 @@ class DatcomInputList(QWidget):
         else:
             self.logger.error("没有有效的配置文件，无法初始化,Range不能为空")
         self.vDisplayRange  = self.VarDefine['DisplayRange'] if 'DisplayRange' in self.VarDefine.keys() else self.vRange
-
+        #基本几何尺寸
+        self.labelIndent    = 20
+        self.baseSize       = [400, 25]
+        self.baseSplitterSize = [200, 200]
         
+        #初始化界面
         self.setupUi(self)
         self.InitializeUILogic()
 
@@ -58,16 +62,22 @@ class DatcomInputList(QWidget):
             self.logger.error("尝试在DatcomInputList控件中录入非List值")
             return
             
-        Form.setObjectName(self.VarName)    
-        self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        Form.setObjectName(self.VarName )
+        Form.resize(self.baseSize[0] , self.baseSize [1])
+        self.verticalLayout = QtWidgets.QVBoxLayout(Form)
+        self.verticalLayout.setContentsMargins(1, 1, 1, 1)
+        self.verticalLayout.setSpacing(2)
+        self.verticalLayout.setObjectName("TopLayout")
+        
+        self.splitter_Top = QtWidgets.QSplitter(Form)
+        self.splitter_Top.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter_Top.setObjectName("TopSplitter")
 
         #添加Label或者checkBox
         #self.LabelItem = None
         if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
             #存在可选项
-            self.LabelItem = QtWidgets.QCheckBox(Form)
+            self.LabelItem = QtWidgets.QCheckBox(self.splitter_Top)
             self.LabelItem.setObjectName("checkBox_Var")
             #绑定值变换信号到自身信号 先绑定以响应对应的状态确认
             self.LabelItem.stateChanged.connect(self.on_checkBox_Var_stateChanged) 
@@ -79,31 +89,33 @@ class DatcomInputList(QWidget):
                 self.LabelItem.setCheckState(Qt.Unchecked)
            
         else: #没有选项卡
-            self.LabelItem = QtWidgets.QLabel(Form)
+            self.LabelItem = QtWidgets.QLabel(self.splitter_Top)
             self.LabelItem.setObjectName("label_Var")
+            self.LabelItem.setIndent(self.labelIndent)
         #给Label赋值
         if 'DisplayName' in self.VarDefine.keys():
             self.LabelItem.setText(self.VarDefine['DisplayName'])
         else:
             self.LabelItem.setText(self.VarName)  
         #调节
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.LabelItem.sizePolicy().hasHeightForWidth())
-        self.LabelItem.setSizePolicy(sizePolicy)
-        self.horizontalLayout.addWidget(self.LabelItem)
-        #添加分割气
-        self.spacerItem = QtWidgets.QSpacerItem(55, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(self.spacerItem)
+#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+#        sizePolicy.setHorizontalStretch(0)
+#        sizePolicy.setVerticalStretch(0)
+#        sizePolicy.setHeightForWidth(self.LabelItem.sizePolicy().hasHeightForWidth())
+#        self.LabelItem.setSizePolicy(sizePolicy)
+
+
+        #创建右半部分的结构
         #添加录入框
-        self.InputWidget = QtWidgets.QComboBox(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
-        self.InputWidget.setSizePolicy(sizePolicy)
-        self.InputWidget.setObjectName("InputWidget") #设置输入组件的名称为变量名  
+        self.InputWidget = QtWidgets.QComboBox(self.splitter_Top)
+        self.InputWidget.setObjectName("InputWidget") #设置输入组件的名称为变量名 
+        #配置策略
+#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+#        sizePolicy.setHorizontalStretch(0)
+#        sizePolicy.setVerticalStretch(0)
+#        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
+#        self.InputWidget.setSizePolicy(sizePolicy)
+ 
         #如果存在DisplayRange，优先添加说明信息
         if 'DisplayRange' in self.VarDefine.keys() and 'Range' in self.VarDefine.keys() and\
             len(self.VarDefine['Range']) == len(self.VarDefine['DisplayRange']):
@@ -118,8 +130,14 @@ class DatcomInputList(QWidget):
             if tIndex >-1:
                 self.InputWidget.setCurrentIndex(tIndex)
             
-        #将输入组件添加到布局
-        self.horizontalLayout.addWidget(self.InputWidget)            
+        #添加分裂器
+        self.verticalLayout.addWidget(self.splitter_Top)   
+        
+        #执行分裂期附加配置
+        self.splitter_Top.setStretchFactor(0, self.baseSplitterSize[0])
+        self.splitter_Top.setStretchFactor(1, self.baseSplitterSize[1])
+        self.splitter_Top.setSizes(self.baseSplitterSize)
+        
         #添加单位
         self.retranslateUi(Form)
         
@@ -130,6 +148,20 @@ class DatcomInputList(QWidget):
         Form.setWindowTitle(_translate("Form", self.VarDisplayName))
         self.LabelItem.setText(_translate("Form", self.VarDisplayName))
         self.InputWidget.setToolTip(_translate("Form", self.VarTooltips))
+
+    def dt_setStretchFactor(self, tIndex, factor = 0):
+        """
+        设置中央分割器的比例关系
+        """
+        self.splitter_Top.setStretchFactor(tIndex, factor)
+        
+    def dt_setSizes(self, tLift, tRight):
+        """
+        设置中央分割器的比例关系
+        tLift  左侧宽度
+        tRight 右侧宽度
+        """ 
+        self.splitter_Top.setSizes([tLift, tRight])
 
     def setData(self, dtModel):
         """
@@ -220,21 +252,17 @@ class DatcomInputListNoLabel(DatcomInputList):
         super(DatcomInputListNoLabel, self).__init__(CARD, VarName,  parent=None, DDefinition = DDefine)
         #删除对应的控件
 
-
         tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var')
         tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var')
         if tLabel is not None :
-            tLabel.setCheckState(Qt.Checked)
-            self.horizontalLayout.removeWidget(tLabel)
+            tLabel.setCheckState(Qt.Checked)            
             tLabel.deleteLater()
-        elif tLabel2 is not None:
-            self.horizontalLayout.removeWidget(tLabel2)
+        elif tLabel2 is not None:            
             tLabel2.deleteLater()  
         else:
             self.logger.error("并不存在对应的控件")
         
-        if isRemoveSpacer:
-            self.horizontalLayout.removeItem(self.spacerItem)
+
             
  
         

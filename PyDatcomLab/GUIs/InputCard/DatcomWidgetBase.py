@@ -76,6 +76,9 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
         #再次执行绑定
         QMetaObject.connectSlotsByName(self)
         
+        
+        #执行附加的界面初始化操作
+        self.InitializeUI
         #刷新界面
         self.UILogic()  
         
@@ -172,7 +175,20 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
         此函数应当在SetupUI和connectSlot之后被调用
         函数最后将触发 Singal_InitializeUI 用来做非公用的的初始化操作
         """
-        #
+        
+        #创建附加控件 如果定义筛选变量组的控件
+        if hasattr(self,'RuleIndexToCombo'):
+            #逐条创建附加筛选逻辑
+            for tCombo in self.RuleIndexToCombo:
+                if  tCombo is None or tCombo == {} or not 'Index'  in tCombo.keys():
+                    continue
+                #创建一个水平布局器
+                tComboWidget = self.findChild(QWidget, tCombo['Index'])
+                if tComboWidget is not None :
+                    tComboWidget.varComboChanged.emit(self.NameList,tCombo['Index'] , tComboWidget.currentIndex())
+
+                
+
     
 if __name__ == "__main__":
     import sys
@@ -180,10 +196,11 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     tModel = dcModel.dcModel()
     tModel.loadXML(r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\abcd2.dcxml')
-    #card = DatcomWidgetBase(tCARD = 'FLTCON', tModel = tModel)    
+    #card = DatcomWidgetBase(tCARD = 'FLTCON', tModel = tModel)  
     #card = DatcomWidgetBase(tCARD = 'OPTINS', tModel = tModel)  
     #card = DatcomWidgetBase(tCARD = 'SYNTHS', tModel = tModel)  
     card = DatcomWidgetBase(tCARD = 'BODY', tModel = tModel) 
+    card.dt_setSizes(600, 400)
     #ui = DatcomBaseUI()
     #ui.setupUi(card)
     card.show()

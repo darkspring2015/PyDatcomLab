@@ -5,9 +5,9 @@ Dimension = {
             'A':['cm2', 'm2', 'ft2', 'in2'],  #A denotes units of area: ft2, in2, m2, or cm2
             'DEG':['deg', 'rad'],  #Deg denotes angular measure in degrees, or 
             'TDEG':['℉', '℃', 'K', '°R'] ,  #temperature in degrees Rankine or degrees Kelvin
-            'L':['feet', 'inches', 'meters', 'centimeters'],  #denotes units of length: feet, inches, meters, or centimeters
+            'L':['feet', 'inch', 'M', 'CM'],  #denotes units of length: feet, inches, meters, or centimeters
             'F':['pounds', 'N'], #F denotes units of force; pounds or Newtons
-            'W':['Kg', 'g', 'pounds'], #W 质量
+            'W':['Kg', 'g', 'p'], #W 质量
             'T':['s', 'min', 'ms'], #t denotes units of time; seconds
 }
 
