@@ -134,13 +134,13 @@ class DatcomTableBase(QTableWidget):
         self.minCount  = self.DDefine.getGroupLimitByName(tNameList, tGroup)[0]
         #分析表格行数控制变量的结果
         tCountVar       = self.DDefine.gettRuleNumToCountByGroup(tNameList, tGroup)
-        if tCountVar : 
+        if tCountVar is not None : 
             self.CountVar = tCountVar
         self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
         #分析表头协同变量结果
         tComboVar       = self.DDefine.getRuleIndexToComboByGroup(tNameList, tGroup)
         if tComboVar is not None and  len(tComboVar) > 0: 
-            self.ComboVar = tComboVar['Group']
+            self.ComboVar  = tComboVar['Index']
             self.ComboRule = tComboVar['HowTo']
 
     def InitializeHeader(self):
@@ -218,6 +218,7 @@ class DatcomTableBase(QTableWidget):
     def on_Singal_RuleIndexToCombo(self, nmlst, vCombo,  tIndex):
         """
         将tIndex对应的列隐藏
+        这里应统一使用vCombo的Range中的值作为索引
         """        
         if self.ComboRule is None or self.Namelist  != nmlst or self.ComboVar != vCombo :
             return

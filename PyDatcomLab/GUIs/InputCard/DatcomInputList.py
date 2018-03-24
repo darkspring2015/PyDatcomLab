@@ -49,6 +49,7 @@ class DatcomInputList(QWidget):
         self.labelIndent    = 20
         self.baseSize       = [400, 25]
         self.baseSplitterSize = [200, 200]
+        self.baseStretchFactor = [1, 1]
         
         #初始化界面
         self.setupUi(self)
@@ -63,7 +64,7 @@ class DatcomInputList(QWidget):
             return
             
         Form.setObjectName(self.VarName )
-        Form.resize(self.baseSize[0] , self.baseSize [1])
+        #Form.resize(self.baseSize[0] , self.baseSize [1])
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setContentsMargins(1, 1, 1, 1)
         self.verticalLayout.setSpacing(2)
@@ -80,7 +81,7 @@ class DatcomInputList(QWidget):
             self.LabelItem = QtWidgets.QCheckBox(self.splitter_Top)
             self.LabelItem.setObjectName("checkBox_Var")
             #绑定值变换信号到自身信号 先绑定以响应对应的状态确认
-            self.LabelItem.stateChanged.connect(self.on_checkBox_Var_stateChanged) 
+            self.LabelItem.stateChanged.connect(self.on_checkBoxWidget_stateChanged) 
             if self.VarDefine['MustInput' ] == 'UnChecked':
                 self.LabelItem.setCheckState(Qt.Unchecked)
             elif  self.VarDefine['MustInput' ] == 'Checked':
@@ -98,11 +99,11 @@ class DatcomInputList(QWidget):
         else:
             self.LabelItem.setText(self.VarName)  
         #调节
-#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-#        sizePolicy.setHorizontalStretch(0)
-#        sizePolicy.setVerticalStretch(0)
-#        sizePolicy.setHeightForWidth(self.LabelItem.sizePolicy().hasHeightForWidth())
-#        self.LabelItem.setSizePolicy(sizePolicy)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.LabelItem.sizePolicy().hasHeightForWidth())
+        self.LabelItem.setSizePolicy(sizePolicy)
 
 
         #创建右半部分的结构
@@ -110,11 +111,12 @@ class DatcomInputList(QWidget):
         self.InputWidget = QtWidgets.QComboBox(self.splitter_Top)
         self.InputWidget.setObjectName("InputWidget") #设置输入组件的名称为变量名 
         #配置策略
-#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-#        sizePolicy.setHorizontalStretch(0)
-#        sizePolicy.setVerticalStretch(0)
-#        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
-#        self.InputWidget.setSizePolicy(sizePolicy)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
+        self.InputWidget.setSizePolicy(sizePolicy)
+        #self.splitter_Top.addWidget(self.InputWidget )
  
         #如果存在DisplayRange，优先添加说明信息
         if 'DisplayRange' in self.VarDefine.keys() and 'Range' in self.VarDefine.keys() and\
@@ -129,19 +131,38 @@ class DatcomInputList(QWidget):
             tIndex =self.vRange.index(self.VarDefine['Default'])
             if tIndex >-1:
                 self.InputWidget.setCurrentIndex(tIndex)
-            
+        #绑定信号槽关系 ,自动绑定机制将导致逻辑混乱的问题
+        self.InputWidget.currentIndexChanged.connect(self.on_ListWidget_currentIndexChanged)
         #添加分裂器
         self.verticalLayout.addWidget(self.splitter_Top)   
         
         #执行分裂期附加配置
-        self.splitter_Top.setStretchFactor(0, self.baseSplitterSize[0])
-        self.splitter_Top.setStretchFactor(1, self.baseSplitterSize[1])
-        self.splitter_Top.setSizes(self.baseSplitterSize)
+        self.splitter_Top.setStretchFactor(0, self.baseStretchFactor[0])
+        self.splitter_Top.setStretchFactor(1, self.baseStretchFactor[1])
+        #self.splitter_Top.setSizes(self.baseSplitterSize)
         
         #添加单位
         self.retranslateUi(Form)
         
         QtCore.QMetaObject.connectSlotsByName(Form)
+        
+
+
+    def InitializeUILogic(self):
+        """
+        执行UI的初始化逻辑同步
+        """
+        #初始化界面默认值
+        #tVarDefine = self.VarDefine
+        tCklabel = self.findChild(QtWidgets.QCheckBox,'checkBox_Var')
+        if tCklabel :
+            if tCklabel.checkState() == Qt.Unchecked:
+                self.InputWidget.setEnabled(False)              
+            elif  tCklabel.checkState() == Qt.Checked:
+                self.InputWidget.setEnabled(True)
+            else:
+                self.InputWidget.setEnabled(False)   
+                
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -162,6 +183,16 @@ class DatcomInputList(QWidget):
         tRight 右侧宽度
         """ 
         self.splitter_Top.setSizes([tLift, tRight])
+
+    def resizeEvent(self, event):
+        """
+        """
+        all = sum(self.baseStretchFactor)
+        if all != 0:
+            tStretchSize = []
+            for iS in self.baseStretchFactor:
+                tStretchSize.append(self.width() * iS/ all)
+            self.splitter_Top.setSizes(tStretchSize)
 
     def setData(self, dtModel):
         """
@@ -197,28 +228,13 @@ class DatcomInputList(QWidget):
             self.logger.error("没有找到%s对应的项目！"%self.vUrl)
         #写入到结果之中
         dtModel.setVariableValueByName(self.CARDName, self.VarName, tValue) 
-
  
-    def InitializeUILogic(self):
-        """
-        执行基本的UI逻辑同步
-        """
-        #初始化界面默认值
-        #tVarDefine = self.VarDefine
-        tCklabel = self.findChild(QtWidgets.QCheckBox,'checkBox_Var')
-        if tCklabel :
-            if tCklabel.checkState() == Qt.Unchecked:
-                self.InputWidget.setEnabled(False)              
-            elif  tCklabel.checkState() == Qt.Checked:
-                self.InputWidget.setEnabled(True)
-            else:
-                self.InputWidget.setEnabled(False)               
-
-    
     @pyqtSlot(int)
-    def on_checkBox_Var_stateChanged(self, p0):
+    def on_checkBoxWidget_stateChanged(self, p0):
         """
         Slot documentation goes here.
+        这里有一个陷阱，on_checkBox_Var_stateChanged 作为函数
+        将导致所有的List之间形成不确定的路由关系，为此不使用和控件名称一致的函数名
         
         @param p0 DESCRIPTION
         @type int
@@ -230,9 +246,11 @@ class DatcomInputList(QWidget):
  
     
     @pyqtSlot(int)
-    def on_InputWidget_currentIndexChanged(self, index):
+    def on_ListWidget_currentIndexChanged(self, index):
         """
         响应量纲变化.
+        这里有一个陷阱，如果使用on_InputWidget_currentIndexChanged 作为函数
+        将导致所有的List之间形成不确定的路由关系，为此不使用和控件名称一致的函数名
         
         @param index 选项的索引
         @type int

@@ -44,6 +44,8 @@ class DatcomInputSingle(QWidget):
         self.labelIndent    = 20
         self.baseSize       = [400, 25]
         self.baseSplitterSize = [200, 200]
+        self.baseStretchFactor = [1, 1]
+        #
         self.vFloatFormat   = '%.f'
         if self.VarDefine['TYPE'] not in ['INT', 'REAL'] : 
             self.logger.error('尝试创建的%s变量不是INT或者REAL类型'%self.vUrl )
@@ -57,7 +59,7 @@ class DatcomInputSingle(QWidget):
         """
         
         Form.setObjectName(self.VarName )
-        Form.resize(self.baseSize[0] , self.baseSize [1])
+        #Form.resize(self.baseSize[0] , self.baseSize [1])
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setContentsMargins(1, 1, 1, 1)
         self.verticalLayout.setSpacing(2)
@@ -99,11 +101,11 @@ class DatcomInputSingle(QWidget):
         self.InputWidget = QtWidgets.QLineEdit(self.splitter_Inner)
         self.InputWidget.setObjectName('InputWidget') #设置输入组件的名称为变量名
         #调节录入框的策略
-#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-#        sizePolicy.setHorizontalStretch(0)
-#        sizePolicy.setVerticalStretch(0)
-#        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
-#        self.InputWidget.setSizePolicy(sizePolicy)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
+        self.InputWidget.setSizePolicy(sizePolicy)
 
         #添加验证器
         if self.VarDefine['TYPE'] == 'REAL':
@@ -144,7 +146,12 @@ class DatcomInputSingle(QWidget):
                     tVd.setRange(tRange[0], tRange[1])
                     self.InputWidget.setPlaceholderText('%d - %d'%(tVd.bottom(), tVd.top()))
                 self.InputWidget.setValidator(tVd) 
-                
+        #调整默认策略
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
+        self.InputWidget.setSizePolicy(sizePolicy)                 
 
         #添加单位
         if 'Dimension' in self.VarDefine.keys() and self.VarDefine['Dimension'] not in ['']:
@@ -158,23 +165,35 @@ class DatcomInputSingle(QWidget):
             #选择默认单位
             if self.comboBox_VarUnit.count() >0: self.comboBox_VarUnit.setCurrentIndex(0)    
             #调整默认策略
-#            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-#            sizePolicy.setHorizontalStretch(0)
-#            sizePolicy.setVerticalStretch(0)
-#            sizePolicy.setHeightForWidth(self.comboBox_VarUnit.sizePolicy().hasHeightForWidth())
-#            self.comboBox_VarUnit.setSizePolicy(sizePolicy)    
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.comboBox_VarUnit.sizePolicy().hasHeightForWidth())
+            self.comboBox_VarUnit.setSizePolicy(sizePolicy)    
         
         #添加分裂器
         self.verticalLayout.addWidget(self.splitter_Top)   
         
         #执行分裂期附加配置
-        self.splitter_Top.setStretchFactor(0, self.baseSplitterSize[0])
-        self.splitter_Top.setStretchFactor(1, self.baseSplitterSize[1])
-        self.splitter_Top.setSizes(self.baseSplitterSize)
+        self.splitter_Top.setStretchFactor(0, self.baseStretchFactor[0])
+        self.splitter_Top.setStretchFactor(1, self.baseStretchFactor[1])
+        #self.splitter_Top.setSizes(self.baseSplitterSize)
 
         #执行其他逻辑
         self.retranslateUi(Form)        
         QtCore.QMetaObject.connectSlotsByName(Form)
+    
+    def resizeEvent(self, event):
+        """
+        """
+        all = sum(self.baseStretchFactor)
+        if all != 0:
+            tStretchSize = []
+            for iS in self.baseStretchFactor:
+                tStretchSize.append(self.width() * iS/ all)
+            self.splitter_Top.setSizes(tStretchSize)
+
+        #super(QWidget, self).resizeEvent(event)
         
     def dt_setStretchFactor(self, tIndex, factor = 0):
         """
