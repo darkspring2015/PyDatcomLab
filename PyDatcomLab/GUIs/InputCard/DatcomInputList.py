@@ -45,6 +45,8 @@ class DatcomInputList(QWidget):
         else:
             self.logger.error("没有有效的配置文件，无法初始化,Range不能为空")
         self.vDisplayRange  = self.VarDefine['DisplayRange'] if 'DisplayRange' in self.VarDefine.keys() else self.vRange
+        
+        
         #基本几何尺寸
         self.labelIndent    = 20
         self.baseSize       = [400, 25]

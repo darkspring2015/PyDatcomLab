@@ -115,10 +115,15 @@ class DatcomCARDUIBase(object):
                 tVarName   = tCombo['Index']
                 tComboWidget = DatcomInputComboChooser(CARD.NameList, tVarName,
                                parent=self.groupBox_lift, DDefinition = DDefine)    
-                tComboWidget.setObjectName('Chooser_%s'%tVarName) 
+                tComboWidget.setObjectName('Chooser_%s'%tVarName)
+                #绑定值变换信号到自身信号 因为尚未创建对象TableWidget无法直接绑定 
+                #连接变量变化信号到本Widget的转发信号
                 tComboWidget.varComboChanged.connect(CARD.Singal_RuleIndexToCombo)
+                #连接当前转发的表格变化信号
+                self.Singal_varComboChangedFromTable.connect(tComboWidget.on_Singal_varComboChangedFromTable)
+                
                 self.LiftLayout.addWidget(tComboWidget)
-                #绑定值变换信号到自身信号 因为尚未创建对象TableWidget无法直接绑定
+                
         #创建下方的空间分割器
         spacerItem_LiftBottom = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.LiftLayout.addItem(spacerItem_LiftBottom)
@@ -139,8 +144,6 @@ class DatcomCARDUIBase(object):
             #创建表单
             tTabTable = TB(iNameList = CARD.NameList, iGroup = tGroup , iDefine = CARD.DDefine, parent = CARD)
             tTabTable.setObjectName("tableWidget_%s"%tGroup)
-            #tTabTable.setDefinition( CARD.NameList, tGroup, DDefine)
-            #tTabTable.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             #设置表格的大小策略
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
             sizePolicy.setHorizontalStretch(0)
@@ -151,6 +154,7 @@ class DatcomCARDUIBase(object):
 
             #连接变量组合变化信号
             CARD.Singal_RuleIndexToCombo.connect(tTabTable.on_Singal_RuleIndexToCombo)
+            tTabTable.Singal_variableComboChanged.connect(self.Singal_varComboChangedFromTable)
             #长度控制信号和长度变化信号在RuleNumToCount中绑定
             #tHorizontalLayout.addWidget(tTabTable)
             #tTabName     = tGroup

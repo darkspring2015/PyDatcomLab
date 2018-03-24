@@ -14,8 +14,9 @@ class DatcomTableBase(QTableWidget):
     """
     class DatcomCARD 是提供CARD录入的基础类
     """
-    Signal_rowCountChanged = pyqtSignal(str,int)      #处理变量组个的同步问题
-    Singal_RuleNumToCount  = pyqtSignal(int)          #用来接收外部的表格长度变化信号
+    Signal_rowCountChanged      = pyqtSignal(str,int)      #向外部通知表格长度发生了变化
+    Singal_RuleNumToCount       = pyqtSignal(int)          #用来接收外部的表格长度变化信号
+    Singal_variableComboChanged = pyqtSignal(str , str)    #向外部通知表格中激活的列组合关系发生变化  <self.vUrl,"[]">
 
     
     def __init__(self, iNameList, iGroup , iDefine = DDefine, parent = None ):
@@ -102,14 +103,16 @@ class DatcomTableBase(QTableWidget):
         self.DDefine   = tDefine    
         self.GroupName = tGroup      #对应的变量组的名称  
         self.Namelist  = tNameList   #对应NameList的名称
+        self.vUrl      = '%s/%s'%(tNameList,tGroup )
         self.varsDf   = {}
         self.groupDf  = {}
         self.varsDfList = []  #顺序保存的所有变量的定义，用以关联表头
         self.maxCount = 20
         self.minCount = 0
-        self.CountVar = None  #表格行数对应的变量名
-        self.ComboVar = None  #表格列组合对应的附加变量名
-        self.ComboRule = None #表格列组合对应的规则
+        self.CountVar = None    #表格行数对应的变量名
+        self.ComboVar = None    #表格列组合对应的附加变量名
+        self.ComboRule = None   #表格列组合对应的规则
+        self.ComboVarUrl = None #表格列组合对应的附加变量的Url
     
         #分析组定义
         tVariableDf = self.DDefine.getGroupVarsByName(tNameList, tGroup) #对应数组的定义   
@@ -142,6 +145,8 @@ class DatcomTableBase(QTableWidget):
         if tComboVar is not None and  len(tComboVar) > 0: 
             self.ComboVar  = tComboVar['Index']
             self.ComboRule = tComboVar['HowTo']
+            self.ComboVarUrl = '%s/%s'%(self.Namelist, self.ComboVar)
+            
 
     def InitializeHeader(self):
         """
@@ -168,18 +173,38 @@ class DatcomTableBase(QTableWidget):
         for iC  in range(0, len(self.varsDfList)):
             iV = self.varsDfList[iC]
             tDataVar = tModel.getNamelistVar(self.Namelist,iV['VarName'])            
-            if tDataVar is None: continue
+            if tDataVar is None:
+                #不存在数据则隐藏对应的列
+                self.setColumnHidden(iC, True)
+                self.logger.info("%s的列%s没有数据，不显示"%(self.vUrl, self.horizontalHeaderItem(iC).text()))
+                continue
             tData = tDataVar['Value']
-            if self.rowCount() < len(tData): self.setRowCount(len(tData))
+            if self.rowCount() != len(tData): 
+                self.logger.info("%s加载数据过程中表格长度%d与数据长度%d不同，修改表格长度"%(self.vUrl,self.rowCount(), len(tData) ))
+                self.setRowCount(len(tData))
             if len(tData) in range(self.minCount, self.maxCount):
                 for iR in range(0, len(tData)):
                     self.setItem(iR, iC, QTableWidgetItem(str(tData[iR])))
+                self.setColumnHidden(iC, False)
             else:
                 self.logger.error("加载表格%s数据越界：%d min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
         #发送行变更消息
-        self.Signal_rowCountChanged.emit(self.CountVarUrl , self.rowCount())
-            
+        self.Signal_rowCountChanged.emit(self.CountVarUrl , self.rowCount())         #向外通知数据加载后的长度
+        self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo())) #向外通知数据列的组合关系发生变换
+
+
+
+    def getColumnCombo(self):
+        """
+        返回当前采用的变量组合关系
+        """
+        tShowColumnList = []
+        for iC in range(0, self.columnCount()):
+            if not self.isColumnHidden(iC):
+                tShowColumnList.append(self.varsDfList[iC]['VarName'])
+        return tShowColumnList
+        
     def getDtModelData(self, tModel):
         """
         设置tModel中的数据
@@ -215,15 +240,18 @@ class DatcomTableBase(QTableWidget):
                 tModel.setNamelist( self.Namelist , iV['VarName'],{'Index':1, 'Value':tVarlist} )
         #读取数据完成
        
-    def on_Singal_RuleIndexToCombo(self, nmlst, vCombo,  tIndex):
+    def on_Singal_RuleIndexToCombo(self, senderUrl,  choisedKey):
         """
         将tIndex对应的列隐藏
         这里应统一使用vCombo的Range中的值作为索引
+        
+        @param senderUrl 发送者的Url用来识别此消息是否需要被处理 对应
+        @type QWidget
         """        
-        if self.ComboRule is None or self.Namelist  != nmlst or self.ComboVar != vCombo :
+        if  self.ComboVarUrl  != senderUrl  :
             return
-        tKey = '%d.0'%(tIndex + 1)
-        if tKey not in self.ComboRule.keys():
+        tKey = choisedKey
+        if self.ComboRule is None or tKey not in self.ComboRule.keys():
             self.logger.info("尝试不存在的组合关系！%s"%tKey)
             return 
         #分析处理

@@ -23,13 +23,14 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
     """
     
     #定义各个Widget之间进行参数同步的信号
-    Singal_InitializeUI    = pyqtSignal(int)          #用来提供额外的界面初始化逻辑，响应信号对界面进行额外的初始化
-    Singal_RuleIndexToCombo              = pyqtSignal(str,str,int)      #处理变量组个的同步问题
+    Singal_InitializeUI    = pyqtSignal(int)                        #用来提供额外的界面初始化逻辑，响应信号对界面进行额外的初始化
+    Singal_RuleIndexToCombo              = pyqtSignal(str,str)      #处理变量组合的选择发生变换时，由ComboCHoose触发 <sender.vUrl,Howto-ChosedKey>
     Singal_CheckboxStateChanged          = pyqtSignal(int,str)      #处理checkbox的同步问题
     Singal_TableCountEditingFinished     = pyqtSignal(str, int)     #处理表格长度控制变量的触发逻辑 str Url int :count
     Singal_CommonUIChanged               = pyqtSignal(str)          #通用的输入状态变化规则
     Singal_RuleVariableStatus            = pyqtSignal(str)          #通用的RuleVariableStatus状态变化规则 
     Singal_TBRowCountChanged             = pyqtSignal(int, str)     #用于通知表格的行数发生了变化    
+    Singal_varComboChangedFromTable      = pyqtSignal(str , str)    #向外部通知表格中激活的列组合关系发生变化 <sender.vUrl,"[]">
     
     def __init__(self, parent=None, tCARD = 'FLTCON' , tModel = None):
         """
@@ -185,7 +186,7 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
                 #创建一个水平布局器
                 tComboWidget = self.findChild(QWidget, 'Chooser_%s'%tCombo['Index'])
                 if tComboWidget is not None :
-                    tComboWidget.varComboChanged.emit(self.NameList,tCombo['Index'] , tComboWidget.currentIndex())
+                    tComboWidget.sendCurrentIndex()
 
                 
 

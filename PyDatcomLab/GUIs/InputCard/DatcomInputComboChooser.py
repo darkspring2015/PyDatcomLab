@@ -9,14 +9,14 @@ from PyQt5.QtWidgets import QWidget
 
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
 import logging
-
+#from collections import OrderedDict
 
 class DatcomInputComboChooser(QWidget):
     """
     Class documentation goes here.
     """
-    varComboChanged = pyqtSignal(str ,str, int)      #将变量组合结构发送出去 Namelist Group Index
-    def __init__(self, CARD, VarName,  parent=None, DDefinition = DDefine ):
+    varComboChanged = pyqtSignal(str, str)      #将变量组合结构发送出去 <self.vUrl,Howto-ChosedKey>
+    def __init__(self, namelist, VarName,  parent=None, DDefinition = DDefine ):
         """
         Constructor
         
@@ -28,25 +28,27 @@ class DatcomInputComboChooser(QWidget):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger')        
         #配置分析
-        if DDefinition is  None or CARD is None or VarName is None:
+        if DDefinition is  None or namelist is None or VarName is None:
             self.logger.error("没有有效的配置文件，无法初始化")
             return
         
-        self.CARDName       = CARD
+        self.Namelist       = namelist
         self.VarName        = VarName
-        self.vUrl           = "%s/%s"%(self.CARDName, self.VarName)
-        self.ruleDefine      = DDefinition.getRuleIndexToComboByComboVariable( self.CARDName, self.VarName)
+        self.vUrl           = "%s/%s"%(self.Namelist, self.VarName)
+        self.ruleDefine     = DDefinition.getRuleIndexToComboByComboVariable( self.Namelist, self.VarName)
         if self.ruleDefine is None or \
                 self.ruleDefine == {} or\
                 'Group' not in self.ruleDefine.keys() or\
                 'Index' not in self.ruleDefine.keys() or\
                 'HowTo' not in self.ruleDefine.keys():
-            self.logger.error("无法查找到对应的定义Namelist：%s，RuleVar：%s"%(self.CARDName, self.VarName))
+            self.logger.error("无法查找到对应的定义Namelist：%s，RuleVar：%s"%(self.Namelist, self.VarName))
             return 
+        self.ruleHowtoKeyList   =  list(self.ruleDefine['HowTo'].keys())
         #显示名称
         self.ruleVarDisplayName = self.ruleDefine['DisplayName'] if 'DisplayName' in self.ruleDefine.keys() else self.VarName
         self.ruleVarTooltips    = self.ruleDefine['Tooltips'] if 'Tooltips' in  self.ruleDefine.keys() else self.ruleVarDisplayName
         self.ruleGroupName      = self.ruleDefine['Group'] 
+        self.objUrl             = '%s/%s'%(self.Namelist,self.ruleGroupName  )
         
         #基本几何尺寸
         self.labelIndent    = 20
@@ -91,7 +93,7 @@ class DatcomInputComboChooser(QWidget):
         self.ruleComboWidget.setObjectName("comboBox_Variables_%s"%self.VarName)
 
         #如果存在DisplayRange，优先添加说明信息
-        for iR in self.ruleDefine['HowTo'].keys():
+        for iR in self.ruleHowtoKeyList:
              self.ruleComboWidget.addItem('-'.join(self.ruleDefine['HowTo'][iR]))  
         #设置风格
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -161,11 +163,48 @@ class DatcomInputComboChooser(QWidget):
         """
         响应量纲变化.
         
-        @param index 单位的索引
+        @param index Combo控件中的索引
         @type int
-        #发出的信号应该包含 Namelist ComboVar Index三部分
+        #发出的信号应该包含 self.vUrl  key 两部分
         """
-        self.varComboChanged.emit(self.CARDName, self.VarName, index) 
+        self.varComboChanged.emit(self.vUrl, self.ruleHowtoKeyList[index])
+    
+    def sendCurrentIndex(self): 
+        """
+        发送当前的选择，用于同步控件逻辑
+        """
+        self.varComboChanged.emit(self.vUrl, self.ruleHowtoKeyList[self.currentIndex()])
+        
+    @pyqtSlot(str, str)
+    def on_Singal_varComboChangedFromTable(self, vUrl, tCombo):
+        """
+        响应表格发来的变量组合关系的变化，此函数应该在加载外部数据文件时被激活，以形成正确选择变量组
+        @param vUrl 发来的
+        @type str        
+        """
+        if vUrl != self.objUrl or tCombo is None or tCombo == '':
+            return 
+        #解析符合要求的
+        tComboList = None
+        try:
+            tComboList = eval(tCombo)
+            if tComboList is  None or not type(tComboList) is list:
+                return
+        except :
+            self.logger.error("解析变量组合出错！%s"%tCombo)
+        #比对该组合属于哪一个分组
+        tIndex = -1
+        for iR in self.ruleHowtoKeyList:
+            tListI = self.ruleDefine['HowTo'][iR]
+            tId = dict(zip(tListI, tListI))
+            tOd = dict(zip(tComboList, tComboList))
+            if tId == tOd:
+                tIndex = self.ruleHowtoKeyList.index(iR)
+                break
+        if tIndex > -1:
+            self.ruleComboWidget.setCurrentIndex(tIndex)
+            
+                
 
         
 if __name__ == "__main__":
