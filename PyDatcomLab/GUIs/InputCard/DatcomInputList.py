@@ -3,7 +3,7 @@
 """
 Module implementing DatcomInputSingle.
 """
-from PyQt5 import QtCore,  QtWidgets 
+from PyQt5 import QtCore,  QtWidgets #, QtGui
 from PyQt5.QtCore import pyqtSlot, Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget
 
@@ -196,6 +196,26 @@ class DatcomInputList(QWidget):
                 tStretchSize.append(self.width() * iS/ all)
             self.splitter_Top.setSizes(tStretchSize)
 
+    def setDelegateData(self, tData):
+        """
+        直接设置数据值，将在作为Delegate是被使用
+        tData发送来的是显示值 DisplayRange的值
+        """
+        tIndex = self.vDisplayRange.index(str(tData))
+        if tIndex < 0 :
+            self.logger.error("传入数据无法通过验证：%s：%s"%(self.vUrl, str(tData)))
+            return 
+        self.InputWidget.setCurrentIndex(tIndex)
+
+
+    def getDelegateData(self):
+        """
+        返回编辑控件当前的显示值，将在作为Delegate是被使用
+        """
+        if self.vRange is None :return None
+        return self.vDisplayRange[self.InputWidget.currentIndex()] 
+
+
     def setData(self, dtModel):
         """
         设置控件的值
@@ -269,7 +289,9 @@ class DatcomInputListNoLabel(DatcomInputList):
     def __init__(self, CARD, VarName,  parent=None, DDefinition = DDefine, isRemoveSpacer = True):
         """
         """
-        super(DatcomInputListNoLabel, self).__init__(CARD, VarName,  parent=None, DDefinition = DDefine)
+        #super(DatcomInputListNoLabel, self).__init__(CARD, VarName,  parent=None, DDefinition = DDefine)
+        #这是一个非常经典的错误
+        super(DatcomInputListNoLabel, self).__init__(CARD, VarName,  parent, DDefinition )
         #删除对应的控件
 
         tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var')

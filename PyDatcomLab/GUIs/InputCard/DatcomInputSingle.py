@@ -106,9 +106,24 @@ class DatcomInputSingle(QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.InputWidget.sizePolicy().hasHeightForWidth())
         self.InputWidget.setSizePolicy(sizePolicy)
+        
+        #增加对Array单值的支持
+        tType = ""
+        if self.VarDefine['TYPE'] in ['REAL','INT' ] :
+            tType = self.VarDefine['TYPE']
+        elif self.VarDefine['TYPE']  == 'Array' :
+            if 'SubType' in self.VarDefine.keys():
+                tType = self.VarDefine['SubType']
+            else:
+                tType = 'REAL'
+        else:
+            self.logger.error("尝试使用DatcomInputSingle来展示非物理量！%s-%s"%(self.vUrl, self.VarDefine['TYPE']))
+                    
+            
+            
 
         #添加验证器
-        if self.VarDefine['TYPE'] == 'REAL':
+        if tType == 'REAL':
             #给控件设置属性
             if self.InputWidget is None:
                 self.logger.error("访问的变量：%s 不在本窗体"%self.VarName)
@@ -133,7 +148,7 @@ class DatcomInputSingle(QWidget):
                         self.InputWidget.setPlaceholderText('%f-%f'%(tVd.bottom(), tVd.top()))
                 self.InputWidget.setValidator(tVd)  
         #给INT类型绑定验证器        
-        elif self.VarDefine['TYPE'] == 'INT':
+        elif tType == 'INT':
             #给控件设置属性
             if self.InputWidget is None:
                 self.logger.error("访问的变量：%s 不在本窗体"%self.VarName)
@@ -224,6 +239,26 @@ class DatcomInputSingle(QWidget):
         not math.isinf(tF) and not math.isnan(tF):
             return True
         return False
+        
+    def setDelegateData(self, tData):
+        """
+        直接设置数据值，将在作为Delegate是被使用
+        """
+        tVd = self.InputWidget.validator()
+        if tVd is None:
+            self.InputWidget.setText(str(tData))
+        else:
+            if tVd.validate(str(tData), 0)[0] == QtGui.QValidator.Acceptable:
+                self.InputWidget.setText(str(tData))
+            else:
+                self.logger.error("传入数据无法通过验证：%s：%s"%(self.vUrl, str(tData)))
+
+    def getDelegateData(self):
+        """
+        返回编辑控件当前的值，将在作为Delegate是被使用
+        """
+        return self.InputWidget.text()
+                
 
     def setData(self, dtModel):
         """
@@ -388,7 +423,7 @@ class DatcomInputSingleNoLabel(DatcomInputSingle):
     def __init__(self, CARD, VarName,  parent=None, DDefinition = DDefine, isRemoveSpacer = True):
         """
         """
-        super(DatcomInputSingleNoLabel, self).__init__(CARD, VarName,  parent=None, DDefinition = DDefine)
+        super(DatcomInputSingleNoLabel, self).__init__(CARD, VarName,  parent, DDefinition)
         #删除对应的控件
         tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var')
         tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var')
@@ -401,7 +436,6 @@ class DatcomInputSingleNoLabel(DatcomInputSingle):
             self.logger.error("并不存在对应的控件")
         
 
- 
         
 if __name__ == "__main__":
     import sys

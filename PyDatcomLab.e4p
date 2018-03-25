@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-03-24, 13:16:53 -->
+<!-- Saved: 2018-03-25, 10:31:08 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -33,6 +33,7 @@
     <Source>PyDatcomLab/Core/tools.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomCARDUiBase.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomInputComboChooser.py</Source>
+    <Source>PyDatcomLab/GUIs/InputCard/DatcomInputDelegate.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomInputList.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomInputSingle.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomTableBase.py</Source>

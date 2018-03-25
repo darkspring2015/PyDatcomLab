@@ -2,6 +2,7 @@
 Module implementing DatcomTableBase.
 可以作为所有CARD的基类，提供DatcomTableBase操作
 """
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import  Qt, pyqtSlot, QPoint , QMetaObject, pyqtSignal
 from PyQt5.QtWidgets import QAction , QTableWidgetItem, QTableWidget, QMenu
 from PyQt5.QtGui import  QIcon, QPixmap#,QDoubleValidator, QIntValidator, QValidator
@@ -9,6 +10,7 @@ from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefin
 import logging
 from PyDatcomLab.Core import dcModel
 from PyDatcomLab.GUIs.PlaneConfiguration import card_ico_rc, card_rc_rc
+from PyDatcomLab.GUIs.InputCard.DatcomInputDelegate import DatcomInputContinuousDelegate as CDelegate
 
 class DatcomTableBase(QTableWidget):
     """
@@ -27,13 +29,14 @@ class DatcomTableBase(QTableWidget):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger') 
         #验证输入
+        self.setHorizontalHeader(dtQHeaderView(Qt.Horizontal, self))
 
  
         #界面参数
         self.curPos = QPoint(0, 0)
         #读取配置文件
         self.setDefinition( iNameList, iGroup, iDefine )
-        
+        self.setDelegate()
         
         #附加初始化过程
         self.InitializeContextMenu() #配置内容菜单
@@ -42,6 +45,9 @@ class DatcomTableBase(QTableWidget):
         
         #绑定执行逻辑 
         self.Singal_RuleNumToCount.connect(self.on_Singal_RuleNumToCount)
+        #self.horizontalHeader().sectionEntered.connect(self.on_sectionEntered)
+        
+
         
         #再次执行绑定
         QMetaObject.connectSlotsByName(self)
@@ -161,6 +167,28 @@ class DatcomTableBase(QTableWidget):
             else:
                 tHeader.append(iV['VarName'])   
         self.setHorizontalHeaderLabels(tHeader) 
+        
+        #添加表格的信息
+        #self.horizontalHeader().sectionHandleDoubleClicked.connect(self.on_sectionEntered)
+        #self.horizontalHeader().setSectionsClickable(True)
+#        for iH in range(0, len(tHeader)):
+#            tBb = QtWidgets.QCheckBox()
+#            tBb.setText(tHeader[iH])
+#            self.horizontalHeader().setIndexWidget(self.horizontalHeader().model().index(0,iH, self.horizontalHeader().rootIndex() ),tBb)
+
+
+ 
+    def setDelegate(self):
+        """
+        为各列设置代理
+        """
+        for iC in range(0, self.columnCount()):            
+            tUrl = '%s/%s'%(self.Namelist, self.varsDfList[iC]['VarName'])
+            self.setItemDelegateForColumn(iC, CDelegate(tUrl, parent = self, tDDefine = self.DDefine ) )
+            
+            
+
+        
         
     def setDtModelData(self, tModel):
         """
@@ -366,4 +394,26 @@ class DatcomTableBase(QTableWidget):
        
         
  
+class dtQHeaderView(QtWidgets.QHeaderView):
+    """
+    自定义Headview提供高级功能
+    """    
+    def __init__(self, orientation = Qt.Horizontal, parent = None):
+        """
+        Qt::Orientation orientation, QWidget *parent = Q_NULLPTR
+        """
+        super(dtQHeaderView, self).__init__(orientation, parent)
+        self.sectionDoubleClicked.connect(self.on_sectionDoubleClicked)
         
+        
+    @pyqtSlot(int)
+    def on_sectionDoubleClicked(self, logicalIndex):
+        """
+        进入
+        """
+        tBb = QtWidgets.QComboBox(self)
+        #tBb.setText("aaa")
+        tBb.addItem("aaa")
+        tBb.addItem("bbb")
+        tBb.addItem("ccc")
+        self.setIndexWidget(self.currentIndex() ,tBb)
