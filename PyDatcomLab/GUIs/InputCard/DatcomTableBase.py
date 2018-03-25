@@ -9,8 +9,11 @@ from PyQt5.QtGui import  QIcon, QPixmap#,QDoubleValidator, QIntValidator, QValid
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
 import logging
 from PyDatcomLab.Core import dcModel
+from PyDatcomLab.Core import datcomDimension as dtDimension
+from PyDatcomLab.Core.datcomDimension import Dimension
 from PyDatcomLab.GUIs.PlaneConfiguration import card_ico_rc, card_rc_rc
 from PyDatcomLab.GUIs.InputCard.DatcomInputDelegate import DatcomInputContinuousDelegate as CDelegate
+
 
 class DatcomTableBase(QTableWidget):
     """
@@ -29,14 +32,15 @@ class DatcomTableBase(QTableWidget):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger') 
         #验证输入
-        self.setHorizontalHeader(dtQHeaderView(Qt.Horizontal, self))
-
  
         #界面参数
         self.curPos = QPoint(0, 0)
         #读取配置文件
         self.setDefinition( iNameList, iGroup, iDefine )
         self.setDelegate()
+        #指定Header的内容菜单
+        #self.horizontalHeader().customContextMenuRequested.connect(self.OnHeaderCustomContextMenuRequested)
+        self.horizontalHeader().sectionClicked.connect(self.ForSectionClicked)
         
         #附加初始化过程
         self.InitializeContextMenu() #配置内容菜单
@@ -45,9 +49,8 @@ class DatcomTableBase(QTableWidget):
         
         #绑定执行逻辑 
         self.Singal_RuleNumToCount.connect(self.on_Singal_RuleNumToCount)
-        #self.horizontalHeader().sectionEntered.connect(self.on_sectionEntered)
-        
-
+        self.itemChanged.connect(self.onItemChanged)
+  
         
         #再次执行绑定
         QMetaObject.connectSlotsByName(self)
@@ -137,6 +140,7 @@ class DatcomTableBase(QTableWidget):
         for iv in tVariableDf.keys():
             self.varsDfList.append(tVariableDf[iv])
         self.groupDf  = tGroupDfSet[tGroup]
+        #设置表头
         self.InitializeHeader()
         #分析表格行数限制
         self.maxCount  = self.DDefine.getGroupLimitByName(tNameList, tGroup)[1]
@@ -157,26 +161,30 @@ class DatcomTableBase(QTableWidget):
     def InitializeHeader(self):
         """
         根据定义初始化表头，添加表格的列消隐关系
+        将表格附加定义信息添加到HorizontalHeader中
         """
         if self.varsDfList == []:return
         self.setColumnCount(len(self.varsDfList))
-        tHeader = []
-        for iV in self.varsDfList:
-            if "DisplayName" in iV.keys():
-                tHeader.append(iV['DisplayName'])
+        #执行表头初始化
+        for iC in range(0, len(self.varsDfList)) :
+
+            tConfig = self.varsDfList[iC]
+            if "DisplayName" in tConfig.keys():
+                tDisplay = tConfig["DisplayName" ]
             else:
-                tHeader.append(iV['VarName'])   
-        self.setHorizontalHeaderLabels(tHeader) 
+                tDisplay = tConfig["VarName" ]
+            tHItem = QTableWidgetItem(tDisplay)
+            if 'Dimension' in  tConfig.keys():
+                tMU = dtDimension.getMainUnitByDimension(tConfig['Dimension'])  
+                tConfig['CurrentUnit'] = tMU
+                tDisplay = '%s %s'%(tDisplay,tMU )   
+            
+            tHItem.setData(Qt.DisplayRole, tDisplay)
+            tHItem.setData(Qt.UserRole, tConfig)
+            self.setHorizontalHeaderItem(iC,tHItem )
+            
         
-        #添加表格的信息
-        #self.horizontalHeader().sectionHandleDoubleClicked.connect(self.on_sectionEntered)
-        #self.horizontalHeader().setSectionsClickable(True)
-#        for iH in range(0, len(tHeader)):
-#            tBb = QtWidgets.QCheckBox()
-#            tBb.setText(tHeader[iH])
-#            self.horizontalHeader().setIndexWidget(self.horizontalHeader().model().index(0,iH, self.horizontalHeader().rootIndex() ),tBb)
-
-
+ 
  
     def setDelegate(self):
         """
@@ -185,19 +193,19 @@ class DatcomTableBase(QTableWidget):
         for iC in range(0, self.columnCount()):            
             tUrl = '%s/%s'%(self.Namelist, self.varsDfList[iC]['VarName'])
             self.setItemDelegateForColumn(iC, CDelegate(tUrl, parent = self, tDDefine = self.DDefine ) )
-            
-            
-
-        
+       
         
     def setDtModelData(self, tModel):
         """
         从tModel加载数据
+        执行setDtModelData将导致所有数据包括表头被重置
         """
         if tModel is None or type(tModel) != dcModel.dcModel:
             return 
+        #清除所有数据
         self.clear()
         self.InitializeHeader()
+        #分析写入数据
         for iC  in range(0, len(self.varsDfList)):
             iV = self.varsDfList[iC]
             tDataVar = tModel.getNamelistVar(self.Namelist,iV['VarName'])            
@@ -206,13 +214,35 @@ class DatcomTableBase(QTableWidget):
                 self.setColumnHidden(iC, True)
                 self.logger.info("%s的列%s没有数据，不显示"%(self.vUrl, self.horizontalHeaderItem(iC).text()))
                 continue
+            #执行表头坐标同步
+            tDimension = ''
+            if 'Dimension' in self.varsDfList[iC]:
+                tDimension = self.varsDfList[iC]['Dimension'] 
+            tUnit = ''
+            if 'Unit' in tDataVar.keys():
+                tUnit = tDataVar['Unit']
+                self.setHorizontalHeaderUnit(iC,tUnit )
+            else:
+                tUnit = dtDimension.getMainUnitByDimension(tDimension)
+                self.logger.error("数据格式异常，缺少单位信息")
+            #定义本列的魔板
+            tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}
+                
+
+            #执行数据写入
             tData = tDataVar['Value']
             if self.rowCount() != len(tData): 
                 self.logger.info("%s加载数据过程中表格长度%d与数据长度%d不同，修改表格长度"%(self.vUrl,self.rowCount(), len(tData) ))
                 self.setRowCount(len(tData))
-            if len(tData) in range(self.minCount, self.maxCount):
+            if len(tData) in range(self.minCount, self.maxCount):                   
                 for iR in range(0, len(tData)):
-                    self.setItem(iR, iC, QTableWidgetItem(str(tData[iR])))
+                    tItem  = QTableWidgetItem(str(tData[iR]))
+                    tDataUserRole = tDataTemplate.copy()
+                    tDataUserRole['Unit']  = tUnit
+                    tDataUserRole['Value'] =  tData[iR]
+                    tItem.setData( Qt.UserRole,tDataUserRole )
+                    #tItem.setData(Qt.DisplayRole,str(tData[iR]) )
+                    self.setItem(iR, iC, tItem)
                 self.setColumnHidden(iC, False)
             else:
                 self.logger.error("加载表格%s数据越界：%d min：%d max：%d"%(self.GroupName,len(tData), 
@@ -237,6 +267,7 @@ class DatcomTableBase(QTableWidget):
         """
         设置tModel中的数据
         考虑两个因素：1变量是否可见，2变量类型
+        
         """
         for iC in range(0, len(self.varsDfList)):
             #遍历所有变量的定义
@@ -260,13 +291,17 @@ class DatcomTableBase(QTableWidget):
                     #值校验认为由控件已经完成了
                     #单位换算认为已经由控件换算完成了
                     for iR in range(0, self.rowCount()):
-                        tText = self.item(iR, iC).text()
-                        if tText == '':
-                            self.logger.error("输入数据%s不合法 R：%d，C：%d"%(tText, iR, iC))
+                        tData = self.item(iR, iC).data(Qt.UserRole)
+                        #这里应该执行一次统一的坐标变换
+                        if tData is None or tData['Value'] is None:
+                            self.logger.error("输入数据%s不合法 R：%d，C：%d"%(self.item(iR, iC).text(), iR, iC))
                         else:                            
-                            tVarlist.append(float(tText))   
-                tModel.setNamelist( self.Namelist , iV['VarName'],{'Index':1, 'Value':tVarlist} )
+                            tVarlist.append(tData['Value']) 
+                #此处传递了CurrentUnit给Model
+                tUnit = self.horizontalHeaderItem(iC).data(Qt.UserRole)['CurrentUnit']
+                tModel.setNamelist( self.Namelist , iV['VarName'],{'Index':1, 'Value':tVarlist, 'Unit':tUnit} )
         #读取数据完成
+       
        
     def on_Singal_RuleIndexToCombo(self, senderUrl,  choisedKey):
         """
@@ -392,28 +427,102 @@ class DatcomTableBase(QTableWidget):
         posG = self.mapToGlobal(pos)
         self.popMenu.exec(posG)
        
+
+
+   
+    def ForSectionClicked(self, vIndex):
+        """
+        设置表头的内容菜单.
         
- 
-class dtQHeaderView(QtWidgets.QHeaderView):
-    """
-    自定义Headview提供高级功能
-    """    
-    def __init__(self, orientation = Qt.Horizontal, parent = None):
+        @param pos DESCRIPTION
+        @type QPoint
+        """   
+        
+        tHItem = self.horizontalHeaderItem(vIndex)
+        tConfig = tHItem.data(Qt.UserRole)
+        tDisplay = tHItem.data(Qt.DisplayRole)
+        #执行表头的单位制变换操作
+        if 'Dimension' in tConfig.keys() and tConfig['Dimension'] in Dimension.keys() \
+        and 'CurrentUnit' in tConfig.keys():
+            #获取当前单位
+            tCUnit = tConfig['CurrentUnit']
+            tUList = dtDimension.getUnitListByDimension(tConfig['Dimension'])
+            tCUnitIndex = tUList.index(tCUnit)
+            tNextUnit = tUList[tCUnitIndex +1] if tCUnitIndex < len(tUList) -1 else tUList[0]
+            tDisplay = tDisplay.split()[0] + ' ' + tNextUnit
+            tConfig['CurrentUnit'] = tNextUnit
+            #更新表头的显示效果
+            tHItem.setData(Qt.DisplayRole, tDisplay )
+            tHItem.setData(Qt.UserRole, tConfig )
+            #更新表格的数据
+            self.unitChanged(vIndex, tNextUnit)
+    
+    def setHorizontalHeaderUnit(self, vIndex, newUnit):
         """
-        Qt::Orientation orientation, QWidget *parent = Q_NULLPTR
+        设置表头的单位属性，以同步数据设置操作
         """
-        super(dtQHeaderView, self).__init__(orientation, parent)
-        self.sectionDoubleClicked.connect(self.on_sectionDoubleClicked)
+        if newUnit is None or newUnit == '': return 
+        #获取数据
+        tHItem = self.horizontalHeaderItem(vIndex)
+        tConfig = tHItem.data(Qt.UserRole)
+        if 'Dimension' not in tConfig.keys() :return 
+        tUList = dtDimension.getUnitListByDimension(tConfig['Dimension'])
+        
+        if tUList is None or newUnit not in  tUList:
+            self.logger.error("想要设置的单位：%s 并不在当前的Dimension:%s定义内"%(newUnit, tConfig['Dimension']))
+            return 
+        tConfig['CurrentUnit'] = newUnit
+        #更新表头的显示效果
+        tHItem.setData(Qt.UserRole, tConfig )
+        tDisplay = tHItem.data(Qt.DisplayRole).split()[0] + ' ' + newUnit
+        tHItem.setData(Qt.DisplayRole, tDisplay )
+
+    
+    def unitChanged(self, column, tNewUnit):
+        """
+        将某一列数据的单位进行变换
+        """
+        if column < 0 : return
+        #遍历所有的行
+        for iR in range(0,  self.rowCount()):
+            tItem = self.item(iR, column)
+            if tItem is None:
+                continue
+            #执行坐标变换
+            tUserData = tItem.data(Qt.UserRole)
+            if tUserData['Unit'] == tNewUnit:
+                continue
+            tNewValue  = dtDimension.unitTransformation(tUserData,tNewUnit )
+            if tNewValue is not None:
+                tItem.setData(Qt.UserRole, tNewValue)
+                tItem.setData(Qt.DisplayRole, str(tNewValue['Value']))
+    
+    @pyqtSlot(QTableWidgetItem)
+    def onItemChanged(self, item):
+        """
+        void QTableWidget::itemChanged(QTableWidgetItem *item)
+This signal is emitted whenever the data of item has changed.
+        在此处协调代理自行变换单位的情况
+        """
+        #判断列结论
+        tConfig = self.horizontalHeaderItem(item.column()).data(Qt.UserRole)
+        if 'Dimension' not in tConfig.keys() or 'CurrentUnit'  not in tConfig.keys():
+            return 
+        #判断值结论
+        tItemData = item.data(Qt.UserRole)
+        if tItemData is None or 'Dimension' not in tItemData.keys()  \
+                    or tItemData['Dimension'] == ''  or\
+                    'Unit' not in tItemData.keys() or \
+                    tItemData['Unit'] == '':
+            return 
+        if tItemData['Unit']  != tConfig['CurrentUnit']:
+            tNewItemData = dtDimension.unitTransformation(tItemData, tConfig['CurrentUnit'])
+            item.setData(Qt.UserRole, tNewItemData)
+            item.setData(Qt.DisplayRole, str(tNewItemData['Value']))
         
         
-    @pyqtSlot(int)
-    def on_sectionDoubleClicked(self, logicalIndex):
-        """
-        进入
-        """
-        tBb = QtWidgets.QComboBox(self)
-        #tBb.setText("aaa")
-        tBb.addItem("aaa")
-        tBb.addItem("bbb")
-        tBb.addItem("ccc")
-        self.setIndexWidget(self.currentIndex() ,tBb)
+        
+
+        
+        
+

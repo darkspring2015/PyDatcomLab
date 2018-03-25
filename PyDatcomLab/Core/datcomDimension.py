@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#from PyDatcomLab.Core.datcomDimension import Dimension
 
 # 认为第一个单位是默认单位
 Dimension = {
@@ -26,3 +27,21 @@ def unitTransformation(tVar, targetUnit):
     #在这里执行对应的坐标转换
    return tNew
    
+def getUnitListByDimension(tDimension):
+    """
+    返回Dimension对应的
+    """
+    if tDimension in Dimension.keys():
+        return Dimension[tDimension]
+    else:
+        return []
+        
+def getMainUnitByDimension(tDimension):
+    """
+    返回Dimension对应的主要单位
+    """
+    if tDimension in Dimension.keys():
+        return Dimension[tDimension][0]
+    else:
+        return ''
+        

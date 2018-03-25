@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QWidget
 
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
 from PyDatcomLab.Core.datcomDimension import Dimension, unitTransformation
+from PyDatcomLab.Core import datcomDimension as dtDimension
 import logging
 import math
 
@@ -171,7 +172,7 @@ class DatcomInputSingle(QWidget):
         #添加单位
         if 'Dimension' in self.VarDefine.keys() and self.VarDefine['Dimension'] not in ['']:
             self.comboBox_VarUnit = QtWidgets.QComboBox(self.splitter_Inner)
-            self.comboBox_VarUnit.setObjectName("comboBox_Unit")
+            self.comboBox_VarUnit.setObjectName("comboBox_Unit_%s"%self.VarName)
             if self.VarDefine['Dimension'] in Dimension.keys():
                 for itUnit in Dimension[self.VarDefine['Dimension']]:
                     self.comboBox_VarUnit.addItem(itUnit)
@@ -243,21 +244,50 @@ class DatcomInputSingle(QWidget):
     def setDelegateData(self, tData):
         """
         直接设置数据值，将在作为Delegate是被使用
+        tData 是包含量纲和单位的单值、多值中的一个 etc：{'Dimension': 'L', 'Unit': 'feet', 'Value': 11111.0}
         """
+        
+        if type(tData) is  dict and 'Value' in  tData.keys():
+            tDValue = tData
+        else :
+            tDValue = {'Dimension': '', 'Unit': '', 'Value': tData}
+        #写入到结论中
+        self.delegateData = tDValue
+        #验证器
         tVd = self.InputWidget.validator()
         if tVd is None:
-            self.InputWidget.setText(str(tData))
+            self.InputWidget.setText(str(tDValue['Value']))
         else:
-            if tVd.validate(str(tData), 0)[0] == QtGui.QValidator.Acceptable:
-                self.InputWidget.setText(str(tData))
+            if tVd.validate(str(tDValue['Value']), 0)[0] == QtGui.QValidator.Acceptable:
+                self.InputWidget.setText(str(tDValue['Value']))
             else:
-                self.logger.error("传入数据无法通过验证：%s：%s"%(self.vUrl, str(tData)))
+                self.logger.error("传入数据无法通过验证：%s：%s"%(self.vUrl, str(tDValue['Value'])))
+            tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
+            if tUWidget is not None :
+                tIndex = tUWidget.findText(tData['Unit'])
+                if tIndex >=0 : tUWidget.setCurrentIndex(tIndex)
+     
 
     def getDelegateData(self):
         """
         返回编辑控件当前的值，将在作为Delegate是被使用
         """
-        return self.InputWidget.text()
+        
+        
+        if self.VarDefine['TYPE'] == 'INT':
+            self.delegateData['Value'] = int(self.InputWidget.text())
+        elif self.VarDefine['TYPE'] == 'REAL' :
+            self.delegateData['Value'] = float(self.InputWidget.text())
+        elif self.VarDefine['TYPE'] == 'Array' and ('SubType' not in self.VarDefine.keys() or\
+             self.VarDefine['SubType' ] in ['', 'INT', 'REAL']) :
+                self.delegateData['Value'] = float(self.InputWidget.text())
+        else:
+            self.delegateData['Value'] =  self.InputWidget.text()
+        tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)  
+        self.delegateData['Unit'] = tUWidget.currentText() if tUWidget is not None else ''
+        
+
+        return self.delegateData
                 
 
     def setData(self, dtModel):
