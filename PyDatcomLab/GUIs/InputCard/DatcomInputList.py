@@ -70,18 +70,18 @@ class DatcomInputList(QWidget):
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setContentsMargins(1, 1, 1, 1)
         self.verticalLayout.setSpacing(2)
-        self.verticalLayout.setObjectName("TopLayout")
+        self.verticalLayout.setObjectName("TopLayout_%s"%self.VarName)
         
         self.splitter_Top = QtWidgets.QSplitter(Form)
         self.splitter_Top.setOrientation(QtCore.Qt.Horizontal)
-        self.splitter_Top.setObjectName("TopSplitter")
+        self.splitter_Top.setObjectName("TopSplitter_%s"%self.VarName)
 
         #添加Label或者checkBox
         #self.LabelItem = None
         if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
             #存在可选项
             self.LabelItem = QtWidgets.QCheckBox(self.splitter_Top)
-            self.LabelItem.setObjectName("checkBox_Var")
+            self.LabelItem.setObjectName("checkBox_Var%s"%self.VarName)
             #绑定值变换信号到自身信号 先绑定以响应对应的状态确认
             self.LabelItem.stateChanged.connect(self.on_checkBoxWidget_stateChanged) 
             if self.VarDefine['MustInput' ] == 'UnChecked':
@@ -93,7 +93,7 @@ class DatcomInputList(QWidget):
            
         else: #没有选项卡
             self.LabelItem = QtWidgets.QLabel(self.splitter_Top)
-            self.LabelItem.setObjectName("label_Var")
+            self.LabelItem.setObjectName("label_Var%s"%self.VarName)
             self.LabelItem.setIndent(self.labelIndent)
         #给Label赋值
         if 'DisplayName' in self.VarDefine.keys():
@@ -111,7 +111,7 @@ class DatcomInputList(QWidget):
         #创建右半部分的结构
         #添加录入框
         self.InputWidget = QtWidgets.QComboBox(self.splitter_Top)
-        self.InputWidget.setObjectName("InputWidget") #设置输入组件的名称为变量名 
+        self.InputWidget.setObjectName("InputWidget%s"%self.VarName) #设置输入组件的名称为变量名 
         #配置策略
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -156,7 +156,7 @@ class DatcomInputList(QWidget):
         """
         #初始化界面默认值
         #tVarDefine = self.VarDefine
-        tCklabel = self.findChild(QtWidgets.QCheckBox,'checkBox_Var')
+        tCklabel = self.findChild(QtWidgets.QCheckBox,'checkBox_Var%s'%self.VarName)
         if tCklabel :
             if tCklabel.checkState() == Qt.Unchecked:
                 self.InputWidget.setEnabled(False)              
@@ -270,7 +270,7 @@ class DatcomInputList(QWidget):
     @pyqtSlot(int)
     def on_ListWidget_currentIndexChanged(self, index):
         """
-        响应量纲变化.
+        选项发生变化时触发新的消息
         这里有一个陷阱，如果使用on_InputWidget_currentIndexChanged 作为函数
         将导致所有的List之间形成不确定的路由关系，为此不使用和控件名称一致的函数名
         
@@ -294,8 +294,8 @@ class DatcomInputListNoLabel(DatcomInputList):
         super(DatcomInputListNoLabel, self).__init__(CARD, VarName,  parent, DDefinition )
         #删除对应的控件
 
-        tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var')
-        tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var')
+        tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var%s'%self.VarName)
+        tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var%s'%self.VarName)
         if tLabel is not None :
             tLabel.setCheckState(Qt.Checked)            
             tLabel.deleteLater()

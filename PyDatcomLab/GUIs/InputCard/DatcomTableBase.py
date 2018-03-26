@@ -224,7 +224,7 @@ class DatcomTableBase(QTableWidget):
                 self.setHorizontalHeaderUnit(iC,tUnit )
             else:
                 tUnit = dtDimension.getMainUnitByDimension(tDimension)
-                self.logger.error("数据格式异常，缺少单位信息")
+                #self.logger.info("数据格式异常，缺少单位信息")
             #定义本列的魔板
             tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}
                 

@@ -322,6 +322,7 @@ class dcModel(object):
         """
         函数从当前模型中获得变量的值/单位/量纲，对应连续量 INT REAL
         """
+        #获得对应变量的最基本的定义 {'Dimension':'', 'Value':None , 'Unit':'' }
         tRes = DDefine.getVariableDimensionByName(nmlst,varName )
         #判断是否存在
         if nmlst in dF.reserved_NAMELISTS and nmlst  in self.doc.keys() and \

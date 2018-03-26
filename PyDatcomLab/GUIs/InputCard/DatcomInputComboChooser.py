@@ -68,16 +68,16 @@ class DatcomInputComboChooser(QWidget):
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setContentsMargins(1, 1, 1, 1)
         self.verticalLayout.setSpacing(2)
-        self.verticalLayout.setObjectName("TopLayout")
+        self.verticalLayout.setObjectName("TopLayout_%s"%self.VarName)
         
         self.splitter_Top = QtWidgets.QSplitter(Form)
         self.splitter_Top.setOrientation(QtCore.Qt.Horizontal)
-        self.splitter_Top.setObjectName("TopSplitter")
+        self.splitter_Top.setObjectName("TopSplitter_%s"%self.VarName)
         
 
         #添加Label或者checkBox
         self.LabelItem = QtWidgets.QLabel(self.splitter_Top)
-        self.LabelItem.setObjectName("label_Var")
+        self.LabelItem.setObjectName("label_Var_%s"%self.VarName)
         #给Label赋值
         self.LabelItem.setText(self.ruleVarDisplayName)  
         self.LabelItem.setIndent(self.labelIndent)

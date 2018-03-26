@@ -74,7 +74,7 @@ class DatcomInputSingle(QWidget):
         if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
             #存在可选项
             self.LabelItem = QtWidgets.QCheckBox(self.splitter_Top)
-            self.LabelItem.setObjectName("checkBox_Var")
+            self.LabelItem.setObjectName("checkBox_Var%s"%self.VarName)
             #绑定值变换信号到自身信号 先绑定以响应对应的状态确认
             self.LabelItem.stateChanged.connect(self.on_checkBox_Var_stateChanged) 
             if self.VarDefine['MustInput' ] == 'UnChecked':
@@ -86,7 +86,7 @@ class DatcomInputSingle(QWidget):
            
         else: #没有选项卡
             self.LabelItem = QtWidgets.QLabel(self.splitter_Top)
-            self.LabelItem.setObjectName("label_Var")
+            self.LabelItem.setObjectName("label_Var%s"%self.VarName)
             self.LabelItem.setIndent(self.labelIndent )
         #给Label赋值
         if 'DisplayName' in self.VarDefine.keys():
@@ -100,7 +100,7 @@ class DatcomInputSingle(QWidget):
         self.splitter_Inner.setObjectName("InnerSplitter")
         #添加录入框
         self.InputWidget = QtWidgets.QLineEdit(self.splitter_Inner)
-        self.InputWidget.setObjectName('InputWidget') #设置输入组件的名称为变量名
+        self.InputWidget.setObjectName('InputWidget%s'%self.VarName) #设置输入组件的名称为变量名
         #调节录入框的策略
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -119,9 +119,6 @@ class DatcomInputSingle(QWidget):
                 tType = 'REAL'
         else:
             self.logger.error("尝试使用DatcomInputSingle来展示非物理量！%s-%s"%(self.vUrl, self.VarDefine['TYPE']))
-                    
-            
-            
 
         #添加验证器
         if tType == 'REAL':
@@ -186,6 +183,8 @@ class DatcomInputSingle(QWidget):
             sizePolicy.setVerticalStretch(0)
             sizePolicy.setHeightForWidth(self.comboBox_VarUnit.sizePolicy().hasHeightForWidth())
             self.comboBox_VarUnit.setSizePolicy(sizePolicy)    
+            #在此手动连接slot
+            self.comboBox_VarUnit.currentIndexChanged.connect(self.on_my_currentIndexChanged)
         
         #添加分裂器
         self.verticalLayout.addWidget(self.splitter_Top)   
@@ -198,6 +197,36 @@ class DatcomInputSingle(QWidget):
         #执行其他逻辑
         self.retranslateUi(Form)        
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def InitializeUILogic(self):
+        """
+        执行基本的UI逻辑同步
+        """
+        
+        
+        #初始化界面默认值
+        #tVarDefine = self.VarDefine
+        tCklabel    = self.findChild(QtWidgets.QCheckBox,"checkBox_Var%s"%self.VarName)
+        tUnitWidget = self.findChild(QtWidgets.QComboBox,"comboBox_Unit_%s"%self.VarName)
+        if tCklabel :            
+            if tCklabel.checkState() == Qt.Unchecked:
+                self.InputWidget.setEnabled(False)
+                if tUnitWidget is not None:
+                    tUnitWidget.setEnabled(False)                
+            elif  tCklabel.checkState() == Qt.Checked:
+                self.InputWidget.setEnabled(True)
+                if tUnitWidget is not None:
+                    tUnitWidget.setEnabled(True)
+            else:
+                self.InputWidget.setEnabled(False)
+                if tUnitWidget is not None:
+                    tUnitWidget.setEnabled(False)
+        
+        #配置变量的缺省值
+        #tUnitWidget = self.findChild(QtWidgets.QWidget,"comboBox_Unit_%s"%self.VarName)
+        if tUnitWidget is not None :
+            self.vCurrentUnit = tUnitWidget.currentText()
+            
     
     def resizeEvent(self, event):
         """
@@ -230,7 +259,7 @@ class DatcomInputSingle(QWidget):
         Form.setWindowTitle(_translate("Form", self.VarDisplayName))
         self.LabelItem.setText(_translate("Form", self.VarDisplayName))
         self.InputWidget.setToolTip(_translate("Form", self.VarTooltips))
-        tUnitWidget = self.findChild(QtWidgets.QComboBox,'comboBox_Unit')
+        tUnitWidget = self.findChild(QtWidgets.QComboBox,'comboBox_Unit_%s'%self.VarName)
         if tUnitWidget :  tUnitWidget.setToolTip(_translate("Form", self.vDimension))
     
     def isNotNanInf(self, tF):
@@ -305,9 +334,9 @@ class DatcomInputSingle(QWidget):
             tIndex = self.comboBox_VarUnit.findText(tVar['Unit'])
             if tIndex >=0 : #匹配的准确性
                 self.comboBox_VarUnit.setCurrentIndex(tIndex)
-                self.comboBox_VarUnit.setEnabled(True)
+                #self.comboBox_VarUnit.setEnabled(True)
             else:
-                self.comboBox_VarUnit.setEnabled(False)
+                #self.comboBox_VarUnit.setEnabled(False)
                 self.logger.error("传递的参数具有错误的量纲信息：%s，U:%s"%(tVar['Dimension'], tVar['Unit']))
         #设置值
         if 'Value' in tVar.keys() and tVar['Value'] is not None:        
@@ -345,29 +374,7 @@ class DatcomInputSingle(QWidget):
         将控件的显示值重置为vText
         """
         if self.vUrl == vUrl and type(self.InputWidget) is QtWidgets.QLineEdit:
-            self.InputWidget.setText(str(vCount))
-            
-        
-
-    def InitializeUILogic(self):
-        """
-        执行基本的UI逻辑同步
-        """
-        #初始化界面默认值
-        #tVarDefine = self.VarDefine
-        tCklabel = self.findChild(QtWidgets.QCheckBox,'checkBox_Var')
-        if tCklabel :
-            tUnitWidget = self.findChild(QtWidgets.QComboBox,'comboBox_Unit')
-            if tCklabel.checkState() == Qt.Unchecked:
-                self.InputWidget.setEnabled(False)
-                if tUnitWidget: tUnitWidget.setEnabled(False)                
-            elif  tCklabel.checkState() == Qt.Checked:
-                self.InputWidget.setEnabled(True)
-                if tUnitWidget: tUnitWidget.setEnabled(True)
-            else:
-                self.InputWidget.setEnabled(False)
-                if tUnitWidget: tUnitWidget.setEnabled(False)
-                
+            self.InputWidget.setText(str(vCount))      
 
     
     @pyqtSlot(int)
@@ -378,7 +385,7 @@ class DatcomInputSingle(QWidget):
         @param p0 DESCRIPTION
         @type int
         """
-        tUnitWidget = self.findChild(QtWidgets.QComboBox,'comboBox_Unit')
+        tUnitWidget = self.findChild(QtWidgets.QComboBox,"comboBox_Unit_%s"%self.VarName)
         if p0 == Qt.Checked:
             self.InputWidget.setEnabled(True)
             if tUnitWidget: tUnitWidget.setEnabled(True)
@@ -398,13 +405,14 @@ class DatcomInputSingle(QWidget):
 
     
     @pyqtSlot(int)
-    def on_comboBox_Unit_currentIndexChanged(self, index):
+    def on_my_currentIndexChanged(self, index):
         """
         响应量纲变化.
         
         @param index 单位的索引
         @type int
         """
+        
 
         tUint = self.comboBox_VarUnit.currentText()
         tValue = None if self.InputWidget.text() == '' else float(self.InputWidget.text())
@@ -455,8 +463,8 @@ class DatcomInputSingleNoLabel(DatcomInputSingle):
         """
         super(DatcomInputSingleNoLabel, self).__init__(CARD, VarName,  parent, DDefinition)
         #删除对应的控件
-        tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var')
-        tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var')
+        tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var%s'%self.VarName)
+        tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var%s'%self.VarName)
         if tLabel is not None :
             tLabel.setCheckState(Qt.Checked)
             tLabel.deleteLater()
@@ -480,6 +488,10 @@ if __name__ == "__main__":
     LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'HYPERS',  parent=tMain, DDefinition = DDefine ))  
     LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON', 'HYPERS',  parent=tMain, DDefinition = DDefine ))  
     LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
+
     LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
     LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'NALPHA',  parent=tMain, DDefinition = DDefine )) 
     LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON', 'NALPHA',  parent=tMain, DDefinition = DDefine , isRemoveSpacer = False)) 

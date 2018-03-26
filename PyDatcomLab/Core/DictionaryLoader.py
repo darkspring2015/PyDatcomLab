@@ -8,6 +8,7 @@ import os
 import logging
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core.datcomDimension import Dimension
+from PyDatcomLab.Core import datcomDimension as DimTools
 
 class DTdictionary():
     """
@@ -239,6 +240,7 @@ class DTdictionary():
             self.logger.error("无法对%s执行eval转化"%(tStr))
         
         return tR
+        
     def getGroupDefine(self, tNmlst):
         """
         获得对应Namelist的组定义
@@ -277,12 +279,14 @@ class DTdictionary():
         """
         获得对应变量的量纲和单位信息
         """
-        tR = {'Dimension':'', 'Value':0 , 'Unit':'' }
+        tR = {'Dimension':'', 'Value':None , 'Unit':'' }
         if nmlst in self.Dictionary.keys() and VarName in self.Dictionary[nmlst].keys()\
         and 'Dimension' in self.Dictionary[nmlst][VarName].keys():
             tR['Dimension'] = self.Dictionary[nmlst][VarName]['Dimension']
             if tR['Dimension'] in Dimension.keys():
                 tR['Unit'] = Dimension[tR['Dimension']][0]
+            else:
+                self.logger.error("获得的定义有问题，有Dimension但没有Unit！ %s-%s"%(nmlst, VarName))
         return tR
 
     def getVariableDefineByName(self, nmlst, VarName):
@@ -325,5 +329,156 @@ class DTdictionary():
                 
         
         return tVarDefine
+        
+        
+    def getNamelistCollection(self):
+        """
+        返回Namelist的全集
+        """
+        return list(self.Dictionary.keys())
+        
+    def getVariableTemplateByUrl(self, tUrl):
+        """
+        返回tUrl对应的变量模板
+            <VARIABLE VarName='LOOP'  Namelist='FLTCON' Url='FLTCON/LOOP' Unit='/'>['1.0']</VARIABLE>
+            <VARIABLE VarName='NMACH' Namelist='FLTCON' Url='FLTCON/NMACH' Unit='/'>[3]</VARIABLE>
+            <VARIABLE VarName='MACH'  Namelist='FLTCON' Url='FLTCON/MACH' Unit='/' SIndex ='1'>[0.15,0.25,0.25]</VARIABLE>
+            <VARIABLE VarName='X'  Namelist='BODY' Url='BODY/X' Unit='L/m' SIndex ='1'>[0.15,0.25,0.25]</VARIABLE>
+        """
+        #获得定义
+        tDf = self.checkUrl(tUrl)
+        if tDf is None :return None
+        #解析并构造变量的结构
+        tRes = {
+            'VarName':tDf['VarName'], 
+            'Namelist':tDf['Namelist'], 
+            'Url':tUrl, 
+            'Unit':'%s/%s'%(tDf['Dimension'], DimTools.getMainUnitByDimension(tDf['Dimension'])),    
+            'Value':None 
+        }
+        if tDf['TYPE'] == 'Array':
+            tRes['SIndex'] = 1
+        return tRes
+            
+        
+        
+    def checkUrl(self, tUrl):
+        """
+        检查tUrl是否指向有效的变量
+        不存在定义返回None
+        存在定义返回Url对应的定义信息，包含自身定义信息和附加的规则定义信息
+        """
+        if tUrl is None or tUrl == "":
+            return None
+        
+        tRes = tUrl.split('/')
+        if len(tRes)< 2: 
+            return None
+        tNamelist = tRes[-2]
+        tVarName  = tRes[-1]
+        tDf = self.getVariableDefineByName( tNamelist, tVarName)
+        if tDf == {}:return None        
+        return tDf
+        
+        
+        
+        
+        
+        
 #导出一个常量
 defaultDatcomDefinition = DTdictionary("")
+
+#####################################################
+#                       定义约束类                           #
+#                                                           #
+######################################################
+
+class datcomConstraint(object):
+    """
+    datcomConstraint 用来加载和记录与基本计算构型相关的datcom配置规则的信息
+    配置规则由特定的xml文件描述
+
+    """
+    def __init__(self, path = '', dtDefine = defaultDatcomDefinition):
+        """
+        初始化
+        """
+        #初始化日志系统
+        self.logger = logging.getLogger(r'Datcomlogger')
+        #定义各种属性
+        self.dtDefine = dtDefine
+        self.Properties = {                           
+                           'Describe':'1',
+                           'CreateTime':self.getNowTime(), 
+                           'ModifyTime':self.getNowTime(), 
+                           'modelPath':lambda path: '' if path is None else path, 
+                           }
+         
+        #定义XML结构
+        self.xmlDoc = self.__createxmldoc()  #Tree Object
+        self.doc    = {}                     #存储解析后的数据报文信息，格式是Url：Value
+        self.additionalDoc = {}              #存储datcom配置之外的信息          
+        #执行path的分析
+        if path is not  None and   os.path.isfile(path):
+            #尝试加载文件并提示错误异常信息
+            try:
+                self.load(path)
+            except Exception as e:
+                self.logger.error("加载算例文件:%s 出现异常:%s"%(path, e.message))
+                
+    
+    def load(self, tFile):
+        """
+        """
+        root = None
+        try:
+            root = ET.parse(tFile).getroot()
+        except Exception as e:
+            self.logger.error("加载模型文件过程中发生异常，%s ：%s"%(repr(e), str(e)))
+            
+        if root is None:return False
+        #分析XML文件
+        if not root.tag == 'CASE': 
+            self.logger.error("加载XML文件：%s失败，其中不包含CASE节"%tFile)
+            return False
+        #根据节点设置对象信息    
+        self.Properties['modelPath'] = tFile
+        #解析信息
+        self.xmlDoc = root
+        self.__analysisXML(root)
+        return True
+        
+    def getNowTime(self):
+        """
+        获得当前的时间
+        """
+        import time
+        return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))  
+        
+    
+    
+    def getVariableComboByConfiguration(self, config):
+        """
+        返回构型的设置
+        不存在对应构型返回空
+        """
+        if config in self.doc.keys():
+            return self.doc[config]
+        else:
+            return None
+            
+    def buildBasicConstraint(self):
+        """
+        从配置文件构建基础的构型约束信息
+        """
+        pass
+    
+    def getBasicVariableComboByNamelist(self, namelist):
+        """
+        返回基本的变量组合关系
+        """
+        tConfig = self.getVariableComboByConfiguration('basicConstraint')
+        
+        return tConfig[namelist]
+        
+        

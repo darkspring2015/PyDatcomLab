@@ -33,3 +33,14 @@ def xml_Indent(elem, level=0):
     else:
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
+
+class dtIOException(Exception):
+    '''
+    读写文件系统导致的异常
+    '''
+    def __init__(self, parameter, para_value):
+        err = 'datcom exception "{0}" ：{1}'.format(parameter, para_value)
+        logInfo(err)
+        Exception.__init__(self, err)
+        self.parameter = parameter
+        self.para_value = para_value

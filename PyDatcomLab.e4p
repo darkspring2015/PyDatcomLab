@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-03-25, 10:31:08 -->
+<!-- Saved: 2018-03-26, 16:02:16 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -20,7 +20,9 @@
     <Source>PyDatcomLab/Core/datcomDB.py</Source>
     <Source>PyDatcomLab/Core/datcomDefine.py</Source>
     <Source>PyDatcomLab/Core/datcomDimension.py</Source>
+    <Source>PyDatcomLab/Core/datcomModel.py</Source>
     <Source>PyDatcomLab/Core/datcomRunner.py</Source>
+    <Source>PyDatcomLab/Core/datcomXMLLoader.py</Source>
     <Source>PyDatcomLab/Core/dcModel.py</Source>
     <Source>PyDatcomLab/Core/dcProject.py</Source>
     <Source>PyDatcomLab/Core/exporter.py</Source>
