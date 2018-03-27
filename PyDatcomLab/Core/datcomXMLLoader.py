@@ -23,14 +23,15 @@ class datcomXMLLoader(object):
         tPath =  '' if path is None else path
         self.Properties = {                           
                            'Describe':'1',
-                           'CreateTime':self.getNowTime(), 
-                           'ModifyTime':self.getNowTime(), 
+                           'CreateTime':dtTool.getNowTime(), 
+                           'ModifyTime':dtTool.getNowTime(), 
                            'modelPath':tPath, 
                            }
         self.exts       = {'ALL':'*.*', 'XML':'.xml'}
         #定义XML结构
         self.xmlDoc = self.createXMLDocBasic()  #Tree Object
-        self.doc    = []                     #存储解析后的数据报文信息，格式是Url：Value            
+        self.doc    = {}
+        self.ParseXmltoDoc()      #存储解析后的数据报文信息，格式是Url：Value            
         #执行path的分析
         
         #尝试加载文件并提示错误异常信息
@@ -73,7 +74,7 @@ class datcomXMLLoader(object):
         dtTool.xml_Indent(root, 0)   
         try:
             root.attrib['modelPath'] = path
-            root.attrib['ModifyTime'] = self.getNowTime()
+            root.attrib['ModifyTime'] = dtTool.getNowTime()
             ET.ElementTree(root).write(path, encoding="UTF-8" )
         except Exception as e:
             tError = "写入XML文件：%s 失败！Message ：%s"%(path, repr(e))
@@ -94,8 +95,10 @@ class datcomXMLLoader(object):
         返回一个xml 的ET根元素
         """
         tRoot  = self.createXMLDocBasic() 
+        if self.doc is None or 'SubNode' not in self.doc.keys():
+            return 
         #递归解释doc
-        for iD in self.doc:
+        for iD in self.doc['SubNode']:
             self.recursiveBuildXML(iD, tRoot)
         return tRoot
         
@@ -120,13 +123,6 @@ class datcomXMLLoader(object):
                 self.recursiveBuildXML(iK, tElem)
         
         
-    def getNowTime(self):
-        """
-        获得当前的时间
-        """
-        import time
-        return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))  
-        
     def ParseXmltoDoc(self):
         """
         将ET.Element元素转化为self.doc,提供xml到字典类型的默认转换行为
@@ -137,11 +133,15 @@ class datcomXMLLoader(object):
         #开始解析
         self.Tag = self.xmlDoc.tag   #刷新根标签
         #刷新标签
-        for iP in self.xmlDoc.attrib.keys():
-            self.Properties[iP] = self.xmlDoc.attrib[iP]
+        self.Properties.update(self.xmlDoc.attrib)
+        self.doc ={}
+        self.doc.update(self.Properties)
+        self.doc['Tag'] = self.Tag 
+        self.doc['SubNode'] =[]
+        
         #将根节点以下的内容递归刷新到self.doc
         for iT in list(self.xmlDoc):
-            self.doc.append(self.recursiveParseElement(iT))
+            self.doc['SubNode'].append(self.recursiveParseElement(iT)) 
     
     def recursiveParseElement(self, elem):
         """
@@ -186,9 +186,10 @@ if __name__=="__main__":
     """
 
     sPath  = r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\datcomDefine2.dcxml'
-    obPath = r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\datcomDefine3.dcxml'
+    obPath = r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\datcomDefine4.xml'
     try:
         aLoader = datcomXMLLoader(sPath)
         aLoader.save(obPath)
     except dtTool.dtIOException as e:
-        print(repr(e))
+        #print(repr(e))
+        pass

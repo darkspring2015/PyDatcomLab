@@ -34,6 +34,14 @@ def xml_Indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
+            
+def getNowTime():
+    """
+    获得当前的时间
+    """
+    import time
+    return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))  
+
 class dtIOException(Exception):
     '''
     读写文件系统导致的异常

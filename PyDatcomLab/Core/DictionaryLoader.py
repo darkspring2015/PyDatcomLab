@@ -289,6 +289,17 @@ class DTdictionary():
                 self.logger.error("获得的定义有问题，有Dimension但没有Unit！ %s-%s"%(nmlst, VarName))
         return tR
 
+    def getVariableDefineByUrl(self, tUrl):
+        """
+        从定义中获得对应变量的定义信息  使用getVariableDefineByName
+        """
+        if tUrl is None or tUrl == "":
+            return None 
+        nmlst   = tUrl.split('/')[-2]
+        VarName = tUrl.split('/')[-1]
+        return self.getVariableDefineByName(nmlst, VarName)
+        
+
     def getVariableDefineByName(self, nmlst, VarName):
         """
         从定义中获得对应变量的定义信息，包括：
@@ -351,16 +362,24 @@ class DTdictionary():
         #解析并构造变量的结构
         tRes = {
             'VarName':tDf['VarName'], 
-            'Namelist':tDf['Namelist'], 
+            'Namelist':tDf['NameList'], 
             'Url':tUrl, 
-            'Unit':'%s/%s'%(tDf['Dimension'], DimTools.getMainUnitByDimension(tDf['Dimension'])),    
+            'Unit':'',    
             'Value':None 
         }
+        #检查单位
+        if 'Dimension' not in  tDf.keys():
+            tRes['Unit'] = DimTools.getMainUnitByDimension(tDf['Dimension'])
+        #检查默认值
+        tVarDefine = self.getVariableDefineByName(tUrl)
+        if 'Default' in tVarDefine.kyes() :
+            tRes['Value'] = tVarDefine['Default']
+        #检查Array类型
         if tDf['TYPE'] == 'Array':
-            tRes['SIndex'] = 1
+            tRes['SIndex'] = '1'
         return tRes
             
-        
+    
         
     def checkUrl(self, tUrl):
         """

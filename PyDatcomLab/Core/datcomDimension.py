@@ -111,3 +111,17 @@ def getMainUnitByDimension(tDimension):
     else:
         return ''
         
+def getDimensionByUnit(tUnit):
+    """
+    利用Unit查询Dimension
+    """
+    if tUnit is None or tUnit in ['', '/']:
+        return ''
+    #tDim = ''
+    for iD in Dimension.keys():
+        tIndex = Dimension[iD].index(tUnit)
+        if tIndex > -1 :
+            return iD
+    return ''
+    
+    
