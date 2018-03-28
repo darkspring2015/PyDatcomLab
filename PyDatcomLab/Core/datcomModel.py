@@ -52,14 +52,16 @@ class dcModel(datcomXMLLoader):
     def __createBasicdoc(self):
         """
         创建一个基本的doc，类型是ET
+        基础空白的模型为了可用默认添加了所有的变量和结果
         """
         #添加最低配置的CASE
         #FLTCON        
-        self.addNamelist('FLTCON')
-        self.addNamelist('SYNTHS')
-        self.addNamelist('BODY')
-        self.addNamelist('WGPLNF')
-        self.addNamelist('WGSCHR')      
+
+        for iN in self.dtDefine.getNamelistCollection():
+            self.addNamelist(iN)
+        #调用验证器修正错误，并给所有量赋初值
+        self.validate()
+    
         
         
     def ParseXmltoDoc(self):
@@ -129,6 +131,7 @@ class dcModel(datcomXMLLoader):
             tVar = self.doc[iV].copy()
             tValue = None if 'Value' not  in tVar.keys() else tVar['Value']
             tVar.pop('Value')
+            if 'Edited' in tVar.keys() : tVar.pop('Edited') #不保存对应的字段
             tElem = ET.SubElement(tRoot, 'VARIABLE', tVar)
             if tValue is not None:
                 tElem.text = str(tValue)
@@ -197,82 +200,114 @@ class dcModel(datcomXMLLoader):
         #写入数据到doc中
         pass
         
+    def validateAVariable(self,tVar ):
+        """
+        验证单个变量是否符合定义要求        
+        """
+        tReport = {'status':'Intermediate', 'Report':[]}
+        tLog = []
+        #验证有效性        
+        if tVar is None or type(tVar) != dict:
+            tReport['status'] = 'Invalid'
+            tReport['Report'].append("模型无效")
+            return tReport
+            
+        #验证字段完整性
+        tMust = ['VarName', 'Namelist', 'Url', 'Unit', 'Value']
+        for iP in tMust:
+            if iP not in tVar.keys():
+                tReport['status'] = 'Invalid'
+                tReport['Report'].append("模型缺少字段%s"%iP)
+        if tReport['status']  == 'Invalid':
+            return tReport
+        #获得定义
+        tUrl = tVar['Url']
+        tDf = self.dtDefine.getVariableDefineByUrl(tUrl)
+        #检查单位问题
+        if  'Dimension' in tDf.keys() and tDf['Dimension'] not in [None, '', '/']\
+        and  tVar['Unit'] not in dtDimension.getUnitListByDimension(tDf['Dimension']):
+            tLog.append("变量的单位与定义的单位/量纲%s不对应"%(tDf['Dimension']))  
+        
+        #进行值类型
+        #INT
+        if tDf['TYPE'] == 'INT' :
+            if type(tVar['Value']) != int: 
+                tLog.append('变量的类型应当为INT实际是%s'%(type(tVar['Value']))) 
+            elif 'Range' in tDf.keys() :
+                if tVar['Value'] < tDf['Range'][0] or tVar['Value'] > tDf['Range'][1]:
+                    tLog.append('变量的类型INT,值：%d,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))                
+        #REAL
+        if tDf['TYPE'] == 'REAL' :
+            if  type(tVar['Value'])  != float:
+                tLog.append('变量的类型应当为REAL实际是%s'%(type(tVar['Value']))) 
+            elif 'Range' in tDf.keys() :
+                if tVar['Value'] < tDf['Range'][0] or tVar['Value'] > tDf['Range'][1]:
+                    tLog.append('变量的类型REAL,值：%f,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))             
+            
+        if tDf['TYPE'] == 'Array' :
+            if type(tVar['Value']) != list:
+                tLog.append('变量的类型应当为Array实际是%s'%(type(tVar['Value']))) 
+            elif 'Range' in tDf.keys() :
+                for iV in tVar['Value']:
+                    if ('SubType' in tDf.keys() and tDf['SubType'] in ['INT', 'REAL']) or\
+                        'SubType' not  in tDf.keys() :
+                        if iV < tDf['Range'][0] or iV > tDf['Range'][1]:
+                            tLog.append('变量的类型Array,值：%s,超出Range：%s '%(str(iV), str(tDf['Range'])))  
+                    if 'SubType' in tDf.keys() and tDf['SubType'] in ['List']:
+                         if iV not in  tDf['Range']:
+                            tLog.append('变量的类型Array,元素类型%s,值：%s,超出Range：%s '%(tDf['SubType'] , 
+                            str(iV), str(tDf['Range'])))  
+
+                    
+        if tDf['TYPE'] == 'List' :
+            if type(tVar['Value'])  != str:
+                tLog.append('变量的类型应当为List 实际是%s'%(type(tVar['Value'])))
+            elif 'Range' in tDf.keys() :
+                if tVar['Value'] not in  tDf['Range']:
+                    tLog.append('变量的类型List,值：%s,超出Range：%s '%(str(tVar['Value']), str(tDf['Range'])))                  
+        #形成总报告
+        if len(tLog) ==0:
+            tReport = {'status':'Acceptable', 'Report':[]}
+        else:
+            tReport = {'status':'Invalid', 'Report':tLog}   
+        return tReport
+        
     def validate(self):
         """
         验证当前的配置是否是一个可以执行的配置，并返回报告信息
         返回值为当前配置的错误报告
         """
-        tReport = {'status':'Intermediate', 'Report':[]}
-        tLog = []
-        
+        tReport = {'status':'Acceptable', 'Report':[]}        
         #开始内容分析机制,        
         tAllInfo = self.getNamelistCollection()
         if tAllInfo is None or len(tAllInfo) == 0 :
             tReport['Report'].append("模型内并没有信息/n")
-            tReport['status'] = 'Invalid'
-        
+            tReport['status'] = 'Invalid'       
             
         for iN in tAllInfo.keys():#循环Namelist 
+            #Namelist 级别
+            tNMExcept = {}
             for iV in tAllInfo[iN]:
                 tUrl = '%s/%s'%(iN,  iV)
-                tVarDf = self.dtDefine.getVariableDefineByUrl(tUrl)
-                tVar  = self.doc[tUrl]
-                
-                #修正默认值问题
-                if  'Value' in tVar.keys() and tVar['Value'] is None and  'Default' in tVarDf.keys() :
-                    tVar['Value'] = tVarDf['Default']
-                    tLog.append({'key':tUrl, 'work':'设置默认值 :%s'%(str(tVar['Value']))})
-                #修正单位问题
-                if  'Dimension' in tVarDf.keys() and tVarDf['Dimension'] not in [None, '', '/']\
-                and  tVar['Unit'] not in dtDimension.getUnitListByDimension(tVarDf['Dimension']):
-                    tVar['Unit'] = dtDimension.getMainUnitByDimension(tVarDf['Dimension'])
-                    tLog.append({'key':tUrl, 'work':'修正了没有合理坐标的问题，注意这可能是错误的举措'})
-                #进行值验证问题
-                if tVarDf['TYPE'] == 'INT' and not type(tVar['Value'])  is int: 
-                    try:
-                        #if tVar['Value'] 
-                        tVar['Value'] = int(float(tVar['Value']))  #此处认为 默认值修正已经排除了None的情况
-                        tLog.append({'key':tUrl, 'work':'修正INT类型变量的Value问题，设置为:%s'%(str(tVar['Value']))})
-                    except Exception as e:
-                        tVar['Value'] = 1  #Linger for debug ,must be drop
-                        tLog.append({'key':tUrl, 'work':'修正INT类型变量的Value问题','Error':'%s'%repr(e)})
-
-                        
-                elif tVarDf['TYPE'] == 'REAL' and not type(tVar['Value'])  is float:
-                    try:
-                        tVar['Value'] = float(tVar['Value'])  #此处认为 默认值修正已经排除了None的情况
-                        tLog.append({'key':tUrl, 'work':'修正REAL类型变量的Value问题，设置为:%s'%(str(tVar['Value']))})
-                    except Exception as e:
-                        tVar['Value'] = 1.0  #Linger for debug ,must be drop
-                        tLog.append({'key':tUrl, 'work':'修正REAL类型变量的Value问题','Error':'%s'%repr(e)})
-                        
-                elif tVarDf['TYPE'] == 'Array' and not type(tVar['Value'])  is list:
-                    if tVar['Value'] is None :  
-                        tVar['Value'] = []
-                    else:
-                        tVar['Value'] = [tVar['Value']]                    
-                    tLog.append({'key':tUrl, 'work':'修正Array类型变量的Value问题，设置为:%s'%(str(tVar['Value']))})
-                    if  'SIndex' not in tVar.keys():
-                       tVar['SIndex']  = '1'
-                       tLog.append({'key':tUrl, 'work':'修正Array类型变量的SIndex问题，设置为:1'})
-                elif tVarDf['TYPE'] == 'List' and not type(tVar['Value'])  is str:
-                    if tVar['Value'] is not  None : 
-                        tVar['Value'] = str(tVar['Value'])
-                        tLog.append({'key':tUrl, 'work':'修正Value的类型List问题，转化为Str '})
-                else:
-                    pass
+                #变量本身值得验证
+                tVarReport = self.validateAVariable(self.doc[tUrl])
+                if tVarReport['status'] != 'Acceptable':
+                    self.logger.error("变量%s不合规，%s"%(tUrl,tVarReport['Report'] ))
+                    #尝试修复或者跳过
+                    tNMExcept[tUrl] = tVarReport['Report']
+                    continue
+                #附加规则验证
+                #pass
+            if len(tNMExcept) == 0:
+                tReport['Report'].append({'Namelist':iN, 'status':'Acceptable', 'Report':[]}) 
+            else:
+                tReport['Report'].append({'Namelist':iN, 'status':'Intermediate', 'Report':tNMExcept})
                     
         #形成总报告
-        if len(tLog) ==0:
-            tReport = {'status':'Acceptable', 'Report':[]}
-        else:
-            tState = 'Intermediate'
-            for iL in tLog:
-                if 'Error' in iL.keys():
-                    tState = 'Invalid'
-                    break
-            tReport = {'status':tState, 'Report':tLog}        
-        
+        for iN in tReport['Report']:
+            if iN['status'] != 'Acceptable':
+                tReport['status'] = 'Invalid'
+                break   
         return tReport
         
     def buildDatcomInputFile(self, path):
@@ -287,10 +322,11 @@ class dcModel(datcomXMLLoader):
         tReport = self.validate()    
         if tReport['status'] != 'Acceptable':
             self.logger.info(str(tReport))
+            return 
         #获得doc的全部定义
         tAllInfo = self.getNamelistCollection()
         if tAllInfo is None or len(tAllInfo) == 0 :
-            return 
+            return tReport
         #将信息格式化为输出文件 要求列宽为80
         TStr = []
         tCASEDes = ''
@@ -354,8 +390,6 @@ class dcModel(datcomXMLLoader):
             f.write(LastResult)
             
         return LastResult
-  
-        
         
    
     def getVariableByUrl(self, tUrl):

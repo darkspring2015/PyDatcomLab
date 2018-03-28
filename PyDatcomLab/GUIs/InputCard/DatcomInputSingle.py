@@ -328,7 +328,7 @@ class DatcomInputSingle(QWidget):
             self.logger.error('尝试创建的%s变量不是INT或者REAL类型'%self.vUrl )
             return 
             
-        tVar = dtModel.getContinuousVariableValueByName(self.CARDName, self.VarName)
+        tVar = dtModel.getContinuousVariableValueByName(self.vUrl)
         #设置单位           
         if 'Unit' in tVar.keys() and tVar['Unit'] not in ['']:
             tIndex = self.comboBox_VarUnit.findText(tVar['Unit'])

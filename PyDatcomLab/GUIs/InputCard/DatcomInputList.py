@@ -218,16 +218,18 @@ class DatcomInputList(QWidget):
 
     def setData(self, dtModel):
         """
-        设置控件的值
+        设置控件的值,采用的是datcomModel的接口
         """
         if dtModel is None : return 
         #获得变量的值 
-        tVar = dtModel.getDiscreteVariableValueByName(self.CARDName, self.VarName)
+        tVar = dtModel.getDiscreteVariableValueByName(self.vUrl)
         if tVar is not None :
             if type(tVar) in [float, int]:
                 tKey = '%.1f'%(float(tVar))
             elif type(tVar) is str:
                 tKey =tVar
+            elif type(tVar) is dict and 'Value' in tVar.keys():
+                tKey = tVar['Value']
             else:
                 self.loggger.error("值类型错误")
   

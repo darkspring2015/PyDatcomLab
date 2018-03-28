@@ -77,6 +77,16 @@ class DTdictionary():
                         tDicElememt['DisplayRange'] = eval(tDicElememt['DisplayRange'])
                     if 'Limit' in tDicElememt.keys():
                         tDicElememt['Limit'] = self.parserArray(tDicElememt['Limit'])
+                    if 'Default' in tDicElememt.keys():
+                        if ('TYPE' in tDicElememt.keys() and tDicElememt['TYPE']  == 'REAL') or\
+                        ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and 'SubType' not in tDicElememt.keys() )or\
+                        ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and\
+                        'SubType' in tDicElememt.keys() and tDicElememt['SubType']  == 'REAL'):
+                            tDicElememt['Default'] = float(tDicElememt['Default'])
+                        if ('TYPE' in tDicElememt.keys() and tDicElememt['TYPE']  == 'INT ') or\
+                        ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and\
+                        'SubType' in tDicElememt.keys() and tDicElememt['SubType']  == 'INT'):
+                            tDicElememt['Default'] = int(float(tDicElememt['Default']))
                 except Exception as e:
                     self.logger.error("转换类型出错，%s ：%s"%(repr(e), str(e)))
                 #将定义添加到变量的表达之中
@@ -355,6 +365,7 @@ class DTdictionary():
             <VARIABLE VarName='NMACH' Namelist='FLTCON' Url='FLTCON/NMACH' Unit='/'>[3]</VARIABLE>
             <VARIABLE VarName='MACH'  Namelist='FLTCON' Url='FLTCON/MACH' Unit='/' SIndex ='1'>[0.15,0.25,0.25]</VARIABLE>
             <VARIABLE VarName='X'  Namelist='BODY' Url='BODY/X' Unit='L/m' SIndex ='1'>[0.15,0.25,0.25]</VARIABLE>
+            #将保证List是由string型组成的
         """
         #获得定义
         tDf = self.checkUrl(tUrl)
@@ -368,18 +379,43 @@ class DTdictionary():
             'Value':None 
         }
         #检查单位
-        if 'Dimension' not in  tDf.keys():
+        if 'Dimension' in  tDf.keys():
             tRes['Unit'] = DimTools.getMainUnitByDimension(tDf['Dimension'])
-        #检查默认值
-        tVarDefine = self.getVariableDefineByName(tUrl)
-        if 'Default' in tVarDefine.kyes() :
-            tRes['Value'] = tVarDefine['Default']
+        #检查默认值        
+        if 'Default' in tDf.keys() :
+            tRes['Value'] = tDf['Default']
+        else:
+            #进行值类型
+            #INT 默认0或者range的下限
+            if tDf['TYPE'] == 'INT' : 
+                if 'Range' in tDf.keys() :
+                    tRes['Value'] = tDf['Range'][0]  
+                else:
+                    tRes['Value'] = 0                    
+            #REAL 默认0或者range的下限
+            elif tDf['TYPE'] == 'REAL' :
+                if 'Range' in tDf.keys() :
+                    tRes['Value'] = float(tDf['Range'][0] ) 
+                else:
+                    tRes['Value'] = 0.0             
+            #Array 默认[]
+            elif tDf['TYPE'] == 'Array' :
+                tRes['Value'] = []    
+            #List 默认            
+            elif tDf['TYPE'] == 'List' :                
+                if 'Range' in tDf.keys() :
+                    tRes['Value'] = str(tDf['Range'][0])  #将保证List是由string型组成的
+                else:
+                    self.logger.error('%s对应的Define存在问题，list没有range，无法推定初始值！'%tUrl)
+                
         #检查Array类型
         if tDf['TYPE'] == 'Array':
             tRes['SIndex'] = '1'
+            #tRes['Value'] = []
+        #设置标志位
+        tRes['Edited'] = False
+        
         return tRes
-            
-    
         
     def checkUrl(self, tUrl):
         """

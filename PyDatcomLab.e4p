@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-03-27, 21:40:16 -->
+<!-- Saved: 2018-03-28, 09:24:07 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language></Language>
@@ -32,13 +32,13 @@
     <Source>PyDatcomLab/Core/parser_DatcomParser_parsetab.py</Source>
     <Source>PyDatcomLab/Core/plotter.py</Source>
     <Source>PyDatcomLab/Core/projectManager.py</Source>
-    <Source>PyDatcomLab/GUIs/InputCard/DatcomCARDUiBase.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomInputComboChooser.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomInputDelegate.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomInputList.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomInputSingle.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomTableBase.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/DatcomWidgetBase.py</Source>
+    <Source>PyDatcomLab/GUIs/InputCard/DatcomWidgetBaseUi.py</Source>
     <Source>PyDatcomLab/GUIs/InputCard/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>

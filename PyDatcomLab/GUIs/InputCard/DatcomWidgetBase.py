@@ -8,15 +8,16 @@ from PyQt5.QtCore import  QPoint, QMetaObject, pyqtSignal#, pyqtSlot,
 from PyQt5.QtWidgets import QWidget #,QMessageBox
 
 
-from PyDatcomLab.Core import dcModel
+#from PyDatcomLab.Core import dcModel
+from PyDatcomLab.Core import datcomModel as dcModel
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  
 #from PyDatcomLab.GUIs.InputCard import DatcomCARDLogicBase as DCLogic  
-from PyDatcomLab.GUIs.InputCard.DatcomCARDUiBase import DatcomCARDUIBase 
+from PyDatcomLab.GUIs.InputCard.DatcomWidgetBaseUi import DatcomWidgetBaseUi 
 import logging
 
 
 
-class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
+class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
 
     """
     Datcom 输入选项卡的基础类.
@@ -100,7 +101,8 @@ class DatcomWidgetBase(QWidget, DatcomCARDUIBase):
         #修改后台的数据
         if tModel is None or type(tModel) is not dcModel.dcModel:
             self.logger.error('传递的参数不是合格的类型：%s'%type(tModel) )
-            tModel = dcModel.dcModel('J6', '常规布局')        
+            #tModel = dcModel.dcModel('J6', '常规布局')     
+            tModel = dcModel.dcModel()   
         self.model = tModel  
         
         #执行参数配置过程        
@@ -195,8 +197,9 @@ if __name__ == "__main__":
     import sys
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
+    #tModel = dcModel.dcModel(r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\abcd2.dcxml')
     tModel = dcModel.dcModel()
-    tModel.loadXML(r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\abcd2.dcxml')
+    #tModel.loadXML()
     #card = DatcomWidgetBase(tCARD = 'FLTCON', tModel = tModel)  
     #card = DatcomWidgetBase(tCARD = 'OPTINS', tModel = tModel)  
     card = DatcomWidgetBase(tCARD = 'SYNTHS', tModel = tModel)  
