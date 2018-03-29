@@ -33,11 +33,11 @@ class DatcomInputSingle(QWidget):
         if DDefinition is  None or CARD is None or VarName is None:
             self.logger.error("没有有效的配置文件，无法初始化")
             return
-        
+        self.dtDefine       = DDefinition
         self.CARDName       = CARD
         self.VarName        = VarName
         self.vUrl           = "%s/%s"%(self.CARDName, self.VarName)
-        self.VarDefine      = DDefinition.getVariableDefineByName( self.CARDName, self.VarName)            
+        self.VarDefine      = self.dtDefine.getVariableDefineByName( self.CARDName, self.VarName)            
         self.VarDisplayName = self.VarDefine['DisplayName'] if 'DisplayName' in self.VarDefine.keys() else self.VarName
         self.VarTooltips    = self.VarDefine['Tooltips'] if 'Tooltips' in  self.VarDefine.keys() else self.VarDisplayName
         self.vDimension     = self.VarDefine['Dimension'] if 'Dimension' in  self.VarDefine.keys() else ''
@@ -317,7 +317,78 @@ class DatcomInputSingle(QWidget):
         
 
         return self.delegateData
-                
+     
+    def setDataByVariable(self, tVar):
+        """
+        设置控件的值，
+        tVar 是dict型的变量，是dcModel的成员
+        """     
+        tMust = ['VarName','Namelist', 'Url', 'Unit', 'Value' ]
+        if tVar is None or type(tVar) != dict  :
+            self.logger.error("设置%s的参数类型不合法"%self.vUrl)
+            return 
+        for iK in tMust:
+            if iK not in tVar.keys():
+                self.logger.error("设置%s的参数类型不合法,缺少%s"%(self.vUrl, iK))
+                return 
+        if tVar['Url'] != self.vUrl:
+            self.logger.error("设置%s的参数目标不正确%s"%(self.vUrl, tVar['Url']))
+            return 
+        tVarTp = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
+        #开始执行设置
+        if 'Dimension' in tVarTp.keys():
+            if tVar['Unit'] not in dtDimension.getUnitListByDimension(tVarTp['Dimension']):
+                self.logger.error("设置%s的参数的单位：%s 不合适"%(self.vUrl, tVar['Unit']))
+                return 
+            else:
+                tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
+                if tUWidget is None : 
+                    self.logger.error("控件并未设置单位控件：%s "%(self.vUrl))
+                    return 
+                tIndex = tUWidget.findText(tVar['Unit'])
+                if tIndex <0 : 
+                    self.logger.error("设置的%s单位%s,并不在当前单位控件列表中"%(self.vUrl,tVar['Unit'] ))
+                    return 
+                tUWidget.setCurrentIndex(tIndex)
+        #设置值
+        if tVar['Value'] is None :
+            self.logger.error("传递的变量%s值为None,忽略设置过程"%self.vUrl)
+        else:
+            self.InputWidget.setText(str(tVar['Value']))
+        
+    def getDataByVariable(self):
+        """
+        获得当前控制的值
+        如果当前值无法通过验证返回None
+        
+        """
+        tVd = self.InputWidget.validator()
+        if tVd is not None  and tVd.validate(self.InputWidget.text()) != Qt.Acceptable:
+            self.logger.error("%s录入控件的的当前值：%s，无法通过验证"%(self.vUrl,self.InputWidget.text() ))
+            return None
+        #获得数据
+        tDefault = self.dtDefine.getVariableTemplateByUrl(self.vUrl) #每次都是独立的实例
+        tDf      = self.VarDefine
+        if not self.InputWidget.isEnabled():
+            tDefault.update({'InUsed':'False'})
+        else:
+            tDefault.update({'InUsed':'True'})
+            if  self.InputWidget.text() not in [None, '']:
+                try:
+                    if tDf['TYPE'] == 'INT':
+                        tDefault.update({'Value':int(float(self.InputWidget.text()))})
+                    if tDf['TYPE'] == 'REAL':
+                        tDefault.update({'Value':float(self.InputWidget.text())})
+                except Exception as e:
+                    self.logger.error("进行类型转换时失败，text：%s!"%self.InputWidget.text())
+        #更新单位
+        tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
+        if tUWidget is not None:
+            tDefault.update({'Unit':tUWidget.currentText()})
+        
+        return tDefault
+        
+        
 
     def setData(self, dtModel):
         """
@@ -330,7 +401,7 @@ class DatcomInputSingle(QWidget):
             
         tVar = dtModel.getContinuousVariableValueByName(self.vUrl)
         #设置单位           
-        if 'Unit' in tVar.keys() and tVar['Unit'] not in ['']:
+        if 'Unit' in tVar.keys() and tVar['Unit'] not in ['', '/']:
             tIndex = self.comboBox_VarUnit.findText(tVar['Unit'])
             if tIndex >=0 : #匹配的准确性
                 self.comboBox_VarUnit.setCurrentIndex(tIndex)
@@ -360,13 +431,19 @@ class DatcomInputSingle(QWidget):
         """
         将控件的值写入到模型中
         """
-        tV = {'Dimension':self.vDimension, 'Value':'' , 'Unit':self.vCurrentUnit }
-        if self.InputWidget.isEnabled():
-            tV = {'Dimension':self.vDimension, 'Value':float(self.InputWidget.text()) , 'Unit':self.vCurrentUnit }            
-        else:
-            tV = {'Dimension':self.vDimension, 'Value':None , 'Unit':self.vCurrentUnit }
+        #tV = {'Dimension':self.vDimension, 'Value':'' , 'Unit':self.vCurrentUnit }
+        tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
+        if self.InputWidget.isEnabled() and self.InputWidget.text() not in [None, '']:
+            try:
+                tV.update({'Value':float(self.InputWidget.text())})
+            except Exception as e:
+                self.logger.error("进行类型转换时失败，text：%s!"%self.InputWidget.text())
+        tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
+        if tUWidget is not None:
+            tV.update({'Unit':self.vCurrentUnit})
+
         #写入到响应的数据中
-        dtModel.setContinuousVariableValueByName(self.CARDName, self.VarName, tV)  
+        dtModel.setContinuousVariableValueByName(self.vUrl, tV)  
         
     @pyqtSlot(str, int)  #标示和值
     def on_Signal_rowCountChanged(self, vUrl, vCount):

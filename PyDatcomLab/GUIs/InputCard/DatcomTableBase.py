@@ -298,7 +298,11 @@ class DatcomTableBase(QTableWidget):
                         else:                            
                             tVarlist.append(tData['Value']) 
                 #此处传递了CurrentUnit给Model
-                tUnit = self.horizontalHeaderItem(iC).data(Qt.UserRole)['CurrentUnit']
+                
+                if 'CurrentUnit' in self.horizontalHeaderItem(iC).data(Qt.UserRole).keys():
+                    tUnit = self.horizontalHeaderItem(iC).data(Qt.UserRole)['CurrentUnit']
+                else:
+                    tUnit = ''
                 tModel.setNamelist( self.Namelist , iV['VarName'],{'Index':1, 'Value':tVarlist, 'Unit':tUnit} )
         #读取数据完成
        

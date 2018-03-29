@@ -32,11 +32,11 @@ class DatcomInputList(QWidget):
         if DDefinition is  None or CARD is None or VarName is None:
             self.logger.error("没有有效的配置文件，无法初始化")
             return
-        
+        self.dtDefine       = DDefinition
         self.CARDName       = CARD
         self.VarName        = VarName
         self.vUrl           = "%s/%s"%(self.CARDName, self.VarName)
-        self.VarDefine      = DDefinition.getVariableDefineByName( self.CARDName, self.VarName)
+        self.VarDefine      = self.dtDefine.getVariableDefineByName( self.CARDName, self.VarName)
         self.VarDisplayName = self.VarDefine['DisplayName'] if 'DisplayName' in self.VarDefine.keys() else self.VarName
         self.VarTooltips    = self.VarDefine['Tooltips'] if 'Tooltips' in  self.VarDefine.keys() else self.VarDisplayName
         self.vRange         = []
@@ -216,6 +216,63 @@ class DatcomInputList(QWidget):
         return self.vDisplayRange[self.InputWidget.currentIndex()] 
 
 
+    def setDataByVariable(self, tVar):
+        """
+        设置控件的值，
+        tVar 是dict型的变量，是dcModel的成员
+        """     
+        tMust = ['VarName','Namelist', 'Url',  'Value' ]
+        if tVar is None or type(tVar) != dict  :
+            self.logger.error("设置%s的参数类型不合法"%self.vUrl)
+            return 
+        for iK in tMust:
+            if iK not in tVar.keys():
+                self.logger.error("设置%s的参数类型不合法,缺少%s"%(self.vUrl, iK))
+                return 
+        if tVar['Url'] != self.vUrl:
+            self.logger.error("设置%s的参数目标不正确%s"%(self.vUrl, tVar['Url']))
+            return 
+        tVarTp = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
+        #开始执行设置
+        #设置值
+        if tVar['Value'] is None :
+            self.logger.error("传递的变量%s值为None,忽略设置过程"%self.vUrl)
+        else:
+            self.InputWidget.setText(str(tVar['Value']))
+        
+    def getDataByVariable(self):
+        """
+        获得当前控制的值
+        如果当前值无法通过验证返回None
+        
+        """
+        tVd = self.InputWidget.validator()
+        if tVd is not None  and tVd.validate(self.InputWidget.text()) != Qt.Acceptable:
+            self.logger.error("%s录入控件的的当前值：%s，无法通过验证"%(self.vUrl,self.InputWidget.text() ))
+            return None
+        #获得数据
+        tDefault = self.dtDefine.getVariableTemplateByUrl(self.vUrl) #每次都是独立的实例
+        tDf      = self.VarDefine
+        if not self.InputWidget.isEnabled():
+            tDefault.update({'InUsed':'False'})
+        else:
+            tDefault.update({'InUsed':'True'})
+            if  self.InputWidget.text() not in [None, '']:
+                try:
+                    if tDf['TYPE'] == 'INT':
+                        tDefault.update({'Value':int(float(self.InputWidget.text()))})
+                    if tDf['TYPE'] == 'REAL':
+                        tDefault.update({'Value':float(self.InputWidget.text())})
+                except Exception as e:
+                    self.logger.error("进行类型转换时失败，text：%s!"%self.InputWidget.text())
+        #更新单位
+        tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
+        if tUWidget is not None:
+            tDefault.update({'Unit':tUWidget.currentText()})
+        
+        return tDefault
+
+
     def setData(self, dtModel):
         """
         设置控件的值,采用的是datcomModel的接口
@@ -247,11 +304,16 @@ class DatcomInputList(QWidget):
         """
         将控件的值写入到模型中
         """
-        tValue = self.__getIndex()
-        if tValue is None:
+        tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
+        tValue = self.vRange[self.InputWidget.currentIndex()]
+        if tValue is not None:
+            tV.update({'Value':tValue})
+        else:
             self.logger.error("没有找到%s对应的项目！"%self.vUrl)
-        #写入到结果之中
-        dtModel.setVariableValueByName(self.CARDName, self.VarName, tValue) 
+        #写入到结果之中        
+        dtModel.setDiscreteVariableValueByName(self.vUrl, tValue) 
+        
+
  
     @pyqtSlot(int)
     def on_checkBoxWidget_stateChanged(self, p0):

@@ -366,6 +366,7 @@ class DTdictionary():
             <VARIABLE VarName='MACH'  Namelist='FLTCON' Url='FLTCON/MACH' Unit='/' SIndex ='1'>[0.15,0.25,0.25]</VARIABLE>
             <VARIABLE VarName='X'  Namelist='BODY' Url='BODY/X' Unit='L/m' SIndex ='1'>[0.15,0.25,0.25]</VARIABLE>
             #将保证List是由string型组成的
+            每次返回的都是独立的实例
         """
         #获得定义
         tDf = self.checkUrl(tUrl)

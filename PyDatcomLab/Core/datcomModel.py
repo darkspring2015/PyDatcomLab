@@ -28,7 +28,9 @@ class dcModel(datcomXMLLoader):
         self.logger = logging.getLogger(r'Datcomlogger')
         #定义各种属性
         self.dtDefine = dtDefine
-        self.Properties.update({'CASEID':'1',  
+        self.Properties.update({
+                                'CName':'AerocraftName CASE', 
+                                'CASEID':'1',  
                                 'Describe':'2', 
                                 'AerocraftName':'AerocraftName', 
                                 'Configuration':'wing-body' , 
@@ -462,6 +464,13 @@ class dcModel(datcomXMLLoader):
                 self.doc[tUrl].update(varValue)
             else:
                 self.logger.error("无法处理的类型信息%s"%(str()))   
+    
+    def removeVariable(self, tUrl):
+        """
+        将从模型中移除tUrl的相关数据
+        """
+        
+        #self.doc.pop(tUrl)
 
 
         
