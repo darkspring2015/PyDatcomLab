@@ -132,14 +132,24 @@ datcomConstraint 用来加载和记录与基本计算构型相关的datcom配置
 描述文件示例如下：
 
 ```XML
-<>
+<ConfigurationCollection CreateTime="2018-03-26 19:32:33" Describe="some" ModifyTime="2018-03-27 19:26:09" modelPath=".\case3.xml">
+    <Configuration CName='Wing-Body' DisplayName='机身机翼分析' HelpUrl='' Namelists="FLTCON ，OPTINS">        
+        <VARIABLE Url='FLTCON/LOOP' VarName='LOOP'  Namelist='FLTCON'  Unit='/'>'1.0'</VARIABLE>
+    </Configuration>
+</ConfigurationCollection>
 ```
 
 
 
 描述文件遵循如下的约定：
 
-​	1.
+​	 1.根节点Tag ：ConfigurationCollection
+
+ 	2. 其下包含多个Configuration，每个Configuration由若干VARIABLE作为子节点
+ 	3. VARIABLE的指定了特殊的初始化规则,其值将被用来修改模型
+ 	4. Configuration的Namelists属性指定了该配置必需包含的选项卡的名称
+
+
 
  #### datcomConstraint  主要接口
 

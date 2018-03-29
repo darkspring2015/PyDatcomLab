@@ -10,8 +10,9 @@ from PyQt5.QtWidgets import QDialog, QWidget
 from .Ui_PlaneConfiguration import Ui_Dialog
 
 from PyDatcomLab.Core import  dcModel, datcomDefine as dF
-
+#from PyDatcomLab.Core import  datcomDefine as dF
 from PyDatcomLab.GUIs.PlaneConfiguration import *
+#from PyDatcomLab.Core import datcomModel as dcModel
 
 import logging
 

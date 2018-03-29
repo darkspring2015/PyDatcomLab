@@ -7,9 +7,9 @@
 # 
 
 from xml.etree import ElementTree  as ET
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DtDefine , datcomConstraint
+from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DtDefine  #, datcomConstraint
 from PyDatcomLab.Core.datcomXMLLoader import datcomXMLLoader
-from PyDatcomLab.Core import datcomTools as dtTools
+#from PyDatcomLab.Core import datcomTools as dtTools
 from PyDatcomLab.Core import datcomDimension as dtDimension
 
 import  os
@@ -63,7 +63,7 @@ class dcModel(datcomXMLLoader):
         self.validate()
     
         
-        
+    #下面是必须重载的函数    
     def ParseXmltoDoc(self):
         """
         用来覆盖父类的ParseXmltoDoc方法，提供不同的解释器功能
@@ -188,7 +188,16 @@ class dcModel(datcomXMLLoader):
         namelist str：选项卡的名称
         Notice 不承诺数据的完整性
         """
-        pass
+ 
+        if namelist not in self.dtDefine.getNamelistCollection():
+            self.logger.error("NAMELIST : %s并没有在配置中定义！"%namelist)
+            return 
+        #遍历执行，删除Namelist对应的所有变量
+        for iV in self.doc.keys():
+            if self.doc[iV]['Namelist'] == namelist:
+                self.doc.pop(iV) 
+        
+        
         
     def setVariable(self, variable):
         """
@@ -469,9 +478,69 @@ class dcModel(datcomXMLLoader):
         else :
             tStrBuffer.append(' '*newLineStartPos + beAddStr)
             
-
-
-            
+    
+    def Variable_ETElementToDict(self, elem):
+        """
+        将一个Variable的ET.Element节点翻译成一个dict
+        elem ET.Element 是保存该变量的XML节点
+        """
+        if elem is None or type(elem) != ET.Element:
+            return {}
+        #开始翻译
+        tVAttrib = elem.attrib #获得变量的属性
+        tDf = self.dtDefine.getVariableDefineByUrl(tVAttrib['Url'])
+        #获取值
+        if elem.text != None or elem.text.strip() != '':
+            if tDf['TYPE'] == 'INT':
+                tVAttrib['Value'] = int(float(elem.text))
+            elif tDf['TYPE'] == 'REAL':
+                tVAttrib['Value'] = float(elem.text)
+            elif tDf['TYPE'] == 'Array':
+                tVAttrib['Value'] = eval(elem.text)
+            elif tDf['TYPE'] == 'List':
+                tVAttrib['Value'] = elem.text
+            else:
+                self.logger.error("异常类型信息：%s"%tDf['TYPE'])
+        else:            
+            #强制为该参数的默认值
+            tVAttrib['Value'] = tDf.getVariableTemplateByUrl(tVAttrib['Url'])
+        #添加到子节点中
+        return tVAttrib
+        
+    def Variable_DictToETElement(self, tDict, tRoot = None):
+        """
+        将tDict转化为一个elem描述
+        
+        """
+        tMust = ['VarName', 'Namelist', 'Url', 'Unit', 'Value']
+        if tDict is None or type(tDict) != dict:
+            return None
+        isOk = True
+        for iP in tMust:
+            if iP not in tDict.keys():
+                isOk = False
+                break
+        if not isOk:
+           return None
+        tValue = str(tDict['Value'])
+        tElemAttrib = tDict.copy()
+        tElemAttrib.pop('Value')
+        
+        #开始转换
+        if tRoot is None :
+            tNode = ET.Element('VARIABLE', tElemAttrib)
+        else:
+            tNode = ET.SubElement(tRoot, 'VARIABLE', tElemAttrib)
+        tNode.text = tValue
+        return tNode
+        
+    def getVariableCollection(self):
+        """
+        返回模型中定义的所有的变量 {url：variable}
+        返回的变量组合不再影响该模型的值 self.doc.copy()
+        """
+        return self.doc.copy()
+ 
 
 if __name__=="__main__":
     """
