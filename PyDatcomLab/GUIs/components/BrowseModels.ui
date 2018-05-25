@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BrowseModel</class>
+ <widget class="QDialog" name="BrowseModel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>460</width>
+    <height>374</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>模型浏览</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_ModelDir">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>模型目录</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_Dirs"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_ChoiseDir">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="ModelSet"/>
+   </item>
+  </layout>
+  <action name="actionNewModel">
+   <property name="icon">
+    <iconset resource="../MainWindow.qrc">
+     <normaloff>:/icos/pluginInstall.png</normaloff>:/icos/pluginInstall.png</iconset>
+   </property>
+   <property name="text">
+    <string>新建模型</string>
+   </property>
+   <property name="toolTip">
+    <string>新建一个模型</string>
+   </property>
+  </action>
+  <action name="actionAddModel">
+   <property name="icon">
+    <iconset resource="../MainWindow.qrc">
+     <normaloff>:/icos/pluginRepository.png</normaloff>:/icos/pluginRepository.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加模型</string>
+   </property>
+  </action>
+  <action name="actionRemoveModel">
+   <property name="icon">
+    <iconset resource="../MainWindow.qrc">
+     <normaloff>:/icos/syncToc.png</normaloff>:/icos/syncToc.png</iconset>
+   </property>
+   <property name="text">
+    <string>移除模型</string>
+   </property>
+  </action>
+  <action name="actionPreviewModel">
+   <property name="icon">
+    <iconset resource="../MainWindow.qrc">
+     <normaloff>:/icos/sharedEditConnected.png</normaloff>:/icos/sharedEditConnected.png</iconset>
+   </property>
+   <property name="text">
+    <string>预览修改</string>
+   </property>
+   <property name="toolTip">
+    <string>修改预览模型</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../MainWindow.qrc"/>
+ </resources>
+ <connections/>
+</ui>
