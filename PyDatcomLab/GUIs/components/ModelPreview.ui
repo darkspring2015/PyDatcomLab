@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>模型预览</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../PyDatcomLab.qrc">
+    <normaloff>:/mainwindow/images/mainwindow/model-edit.png</normaloff>:/mainwindow/images/mainwindow/model-edit.png</iconset>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_4">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -315,6 +319,10 @@
          <property name="text">
           <string>修改模型</string>
          </property>
+         <property name="icon">
+          <iconset resource="../PyDatcomLab.qrc">
+           <normaloff>:/mainwindow/images/mainwindow/modelsave.png</normaloff>:/mainwindow/images/mainwindow/modelsave.png</iconset>
+         </property>
         </widget>
        </item>
        <item row="0" column="2">
@@ -369,7 +377,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="img.qrc"/>
+  <include location="../PyDatcomLab.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -41,7 +41,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../PlaneConfiguration/card_rc.qrc">:/card/rc_card/Body_SuperSonic all.png</pixmap>
+        <pixmap>:/card/rc_card/Body_SuperSonic all.png</pixmap>
        </property>
       </widget>
      </widget>
@@ -50,7 +50,8 @@
   </layout>
  </widget>
  <resources>
-  <include location="../PlaneConfiguration/card_rc.qrc"/>
+  <include location="../PyDatcomLab.qrc"/>
+  <include location="../PyDatcomLab.qrc"/>
  </resources>
  <connections/>
 </ui>

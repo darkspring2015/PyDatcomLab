@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>250</height>
+    <width>422</width>
+    <height>319</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>日志窗口</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../PyDatcomLab.qrc">
+    <normaloff>:/mainwindow/images/mainwindow/logger.png</normaloff>:/mainwindow/images/mainwindow/logger.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
@@ -37,7 +41,7 @@
      <property name="minimumSize">
       <size>
        <width>174</width>
-       <height>25</height>
+       <height>38</height>
       </size>
      </property>
      <property name="features">
@@ -80,6 +84,10 @@
           <property name="text">
            <string>...</string>
           </property>
+          <property name="icon">
+           <iconset resource="../PyDatcomLab.qrc">
+            <normaloff>:/mainwindow/images/mainwindow/clear.png</normaloff>:/mainwindow/images/mainwindow/clear.png</iconset>
+          </property>
          </widget>
         </item>
         <item>
@@ -98,6 +106,10 @@
           </property>
           <property name="text">
            <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../PyDatcomLab.qrc">
+            <normaloff>:/mainwindow/images/mainwindow/error.png</normaloff>:/mainwindow/images/mainwindow/error.png</iconset>
           </property>
          </widget>
         </item>
@@ -118,6 +130,10 @@
           <property name="text">
            <string>...</string>
           </property>
+          <property name="icon">
+           <iconset resource="../PyDatcomLab.qrc">
+            <normaloff>:/mainwindow/images/mainwindow/warning.png</normaloff>:/mainwindow/images/mainwindow/warning.png</iconset>
+          </property>
          </widget>
         </item>
         <item>
@@ -136,6 +152,10 @@
           </property>
           <property name="text">
            <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../PyDatcomLab.qrc">
+            <normaloff>:/mainwindow/images/mainwindow/info.png</normaloff>:/mainwindow/images/mainwindow/info.png</iconset>
           </property>
          </widget>
         </item>
@@ -163,7 +183,7 @@
   </layout>
   <action name="actionClearLog">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
+    <iconset>
      <normaloff>:/icos/cBreak.png</normaloff>:/icos/cBreak.png</iconset>
    </property>
    <property name="text">
@@ -175,7 +195,7 @@
   </action>
   <action name="actionDebugLevel">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
+    <iconset>
      <normaloff>:/icos/debug48.png</normaloff>:/icos/debug48.png</iconset>
    </property>
    <property name="text">
@@ -187,7 +207,7 @@
   </action>
   <action name="actionInfoLevel">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
+    <iconset>
      <normaloff>:/icos/preferences-calltips.png</normaloff>:/icos/preferences-calltips.png</iconset>
    </property>
    <property name="text">
@@ -199,7 +219,7 @@
   </action>
   <action name="actionErrorLevel">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
+    <iconset>
      <normaloff>:/icos/exceptions.png</normaloff>:/icos/exceptions.png</iconset>
    </property>
    <property name="text">
@@ -211,7 +231,7 @@
   </action>
  </widget>
  <resources>
-  <include location="MainWindow.qrc"/>
+  <include location="../PyDatcomLab.qrc"/>
  </resources>
  <connections/>
 </ui>

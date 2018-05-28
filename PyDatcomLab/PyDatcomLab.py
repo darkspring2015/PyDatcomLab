@@ -59,12 +59,12 @@ sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'components')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'Core')))
 
 #建立项目文件夹 ~\.PyDatcomLab
-configPath = os.path.join(os.path.expanduser('~'), '.PyDatcom')
-dirList = {'PyDatcomLab':os.path.join(os.path.expanduser('~'), '.PyDatcom') , 
-           'LogDirectory':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'log') , 
-           'SQliteDB':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'DB') , 
-           'Config':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'config') , 
-           #'extras':os.path.join(os.path.expanduser('~'), '.PyDatcom', 'extras')
+configPath = os.path.join(os.path.expanduser('~'), '.PyDatcomLab')
+dirList = {'PyDatcomLab':os.path.join(configPath) , 
+           'LogDirectory':os.path.join(configPath, 'log') , 
+           'SQliteDB':os.path.join(configPath, 'DB') , 
+           'Config':os.path.join(configPath, 'config') , 
+           #'extras':os.path.join(configPath, 'extras')
 }
 for tDir in dirList.keys():
     if  not os.path.exists(dirList[tDir]):
@@ -83,18 +83,19 @@ logger = InitLogger(tlogFile =logfile, tlogName = logChannel , tlogLevel = logLe
 
 #创建配置文件目录
 try:
-    bPath = os.path.join(os.path.expanduser('~'), '.PyDatcom', 'config', 'datcomDefine.xml')
+    bPath = os.path.join(dirList['Config'], 'datcomDefine.xml')
     if not os.path.exists(bPath):
-        srcfile = os.path.join(mainPath, 'DB', 'datcomDefinitionDefualt.xml')
+        srcfile = os.path.join(mainPath, 'config', 'datcomDefinitionDefualt.xml')
         shutil.copyfile(srcfile,bPath) 
 except :
-    logger.error("无法复制配置文件")
+    logger.error("复制配置文件%s异常:无法复制配置文件"%srcfile)
     
-#copy extras to ~/.PyDatcom for tests 
+#copy extras to ~/.PyDatcomLab for tests 
 try:
-    bPath = os.path.join(os.path.expanduser('~'), '.PyDatcom', 'extras')    
+    bPath = os.path.join(dirList['PyDatcomLab'], 'extras')    
     sPath = os.path.abspath(os.path.join(mainPath, '..', 'extras'))
-    shutil.copytree(sPath,os.path.join(os.path.expanduser('~'), '.PyDatcom', 'extras/')) 
+    if not os.path.exists(bPath):
+        shutil.copytree(sPath,bPath) 
 except :
     logger.error("无法复制test文件")
 

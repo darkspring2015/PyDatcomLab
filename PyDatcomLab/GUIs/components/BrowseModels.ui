@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>模型浏览</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../PyDatcomLab.qrc">
+    <normaloff>:/mainwindow/images/mainwindow/modelpreview.png</normaloff>:/mainwindow/images/mainwindow/modelpreview.png</iconset>
+  </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
   </property>
@@ -85,7 +89,7 @@
   </layout>
   <action name="actionNewModel">
    <property name="icon">
-    <iconset resource="../MainWindow.qrc">
+    <iconset>
      <normaloff>:/icos/pluginInstall.png</normaloff>:/icos/pluginInstall.png</iconset>
    </property>
    <property name="text">
@@ -97,7 +101,7 @@
   </action>
   <action name="actionAddModel">
    <property name="icon">
-    <iconset resource="../MainWindow.qrc">
+    <iconset>
      <normaloff>:/icos/pluginRepository.png</normaloff>:/icos/pluginRepository.png</iconset>
    </property>
    <property name="text">
@@ -106,7 +110,7 @@
   </action>
   <action name="actionRemoveModel">
    <property name="icon">
-    <iconset resource="../MainWindow.qrc">
+    <iconset>
      <normaloff>:/icos/syncToc.png</normaloff>:/icos/syncToc.png</iconset>
    </property>
    <property name="text">
@@ -115,7 +119,7 @@
   </action>
   <action name="actionPreviewModel">
    <property name="icon">
-    <iconset resource="../MainWindow.qrc">
+    <iconset>
      <normaloff>:/icos/sharedEditConnected.png</normaloff>:/icos/sharedEditConnected.png</iconset>
    </property>
    <property name="text">
@@ -127,7 +131,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../MainWindow.qrc"/>
+  <include location="../PyDatcomLab.qrc"/>
  </resources>
  <connections/>
 </ui>

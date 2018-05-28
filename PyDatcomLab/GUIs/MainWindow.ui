@@ -122,12 +122,20 @@
      <property name="title">
       <string>分析向导</string>
      </property>
+     <property name="icon">
+      <iconset resource="PyDatcomLab.qrc">
+       <normaloff>:/mainwindow/images/mainwindow/analsyeGuide.ico</normaloff>:/mainwindow/images/mainwindow/analsyeGuide.ico</iconset>
+     </property>
      <addaction name="actionNewSubPlot"/>
      <addaction name="actionDeletePlot"/>
     </widget>
     <widget class="QMenu" name="menu_7">
      <property name="title">
       <string>曲线窗口布局</string>
+     </property>
+     <property name="icon">
+      <iconset resource="PyDatcomLab.qrc">
+       <normaloff>:/mainwindow/images/mainwindow/imglayout.jpg</normaloff>:/mainwindow/images/mainwindow/imglayout.jpg</iconset>
      </property>
      <addaction name="actionOnlyOnePlot"/>
      <addaction name="actionTwoOneLayout"/>
@@ -185,8 +193,8 @@
   </widget>
   <action name="actionDocs">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/ircEditTopic.png</normaloff>:/icos/ircEditTopic.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/docs.png</normaloff>:/mainwindow/images/mainwindow/docs.png</iconset>
    </property>
    <property name="text">
     <string>文档</string>
@@ -194,8 +202,8 @@
   </action>
   <action name="actionHelp">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/help.png</normaloff>:/icos/help.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/help.png</normaloff>:/mainwindow/images/mainwindow/help.png</iconset>
    </property>
    <property name="text">
     <string>帮助</string>
@@ -203,8 +211,8 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/preferences-mail_generic.png</normaloff>:/icos/preferences-mail_generic.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/BostenAI.png</normaloff>:/mainwindow/images/mainwindow/BostenAI.png</iconset>
    </property>
    <property name="text">
     <string>关于我们</string>
@@ -212,8 +220,8 @@
   </action>
   <action name="actionNewProject">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/projectUserProps.png</normaloff>:/icos/projectUserProps.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/projectNew.png</normaloff>:/mainwindow/images/mainwindow/projectNew.png</iconset>
    </property>
    <property name="text">
     <string>新建项目</string>
@@ -221,8 +229,8 @@
   </action>
   <action name="actionOpenProject">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/dirOpen.png</normaloff>:/icos/dirOpen.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/projectOpen.png</normaloff>:/mainwindow/images/mainwindow/projectOpen.png</iconset>
    </property>
    <property name="text">
     <string>打开项目</string>
@@ -230,8 +238,8 @@
   </action>
   <action name="actionSaveProject">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/fileSave.png</normaloff>:/icos/fileSave.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/projectSave.png</normaloff>:/mainwindow/images/mainwindow/projectSave.png</iconset>
    </property>
    <property name="text">
     <string>保存项目</string>
@@ -239,8 +247,8 @@
   </action>
   <action name="actionSettings">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/configureShortcuts.png</normaloff>:/icos/configureShortcuts.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/configureShortcuts.png</normaloff>:/mainwindow/images/mainwindow/configureShortcuts.png</iconset>
    </property>
    <property name="text">
     <string>设置</string>
@@ -248,8 +256,8 @@
   </action>
   <action name="actionImportSettings">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/bookmarkPrevious.png</normaloff>:/icos/bookmarkPrevious.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/configureImport.png</normaloff>:/mainwindow/images/mainwindow/configureImport.png</iconset>
    </property>
    <property name="text">
     <string>导入设置</string>
@@ -257,8 +265,8 @@
   </action>
   <action name="actionExportSettings">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/bookmarkNext.png</normaloff>:/icos/bookmarkNext.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/configureExport.png</normaloff>:/mainwindow/images/mainwindow/configureExport.png</iconset>
    </property>
    <property name="text">
     <string>导出设置</string>
@@ -266,8 +274,8 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/close.png</normaloff>:/icos/close.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/exit.png</normaloff>:/mainwindow/images/mainwindow/exit.png</iconset>
    </property>
    <property name="text">
     <string>退出</string>
@@ -275,8 +283,8 @@
   </action>
   <action name="actionBrowse">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/pluginRepository.png</normaloff>:/icos/pluginRepository.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/modelpreview.png</normaloff>:/mainwindow/images/mainwindow/modelpreview.png</iconset>
    </property>
    <property name="text">
     <string>浏览</string>
@@ -284,8 +292,8 @@
   </action>
   <action name="actionNewModel">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/pluginInstall.png</normaloff>:/icos/pluginInstall.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/model-new.png</normaloff>:/mainwindow/images/mainwindow/model-new.png</iconset>
    </property>
    <property name="text">
     <string>新建模型</string>
@@ -293,8 +301,8 @@
   </action>
   <action name="actionSaveModel">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/issueFixed.png</normaloff>:/icos/issueFixed.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/modelsave.png</normaloff>:/mainwindow/images/mainwindow/modelsave.png</iconset>
    </property>
    <property name="text">
     <string>保存模型</string>
@@ -305,8 +313,8 @@
   </action>
   <action name="actionExportModel">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/bookmarkToggle.png</normaloff>:/icos/bookmarkToggle.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/model-export.png</normaloff>:/mainwindow/images/mainwindow/model-export.png</iconset>
    </property>
    <property name="text">
     <string>导出模型</string>
@@ -314,8 +322,8 @@
   </action>
   <action name="actionImportModel">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/outgoingBookmark.png</normaloff>:/icos/outgoingBookmark.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/model-import.png</normaloff>:/mainwindow/images/mainwindow/model-import.png</iconset>
    </property>
    <property name="text">
     <string>导入模型</string>
@@ -323,8 +331,8 @@
   </action>
   <action name="actionCopyModel">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/moveBookmark.png</normaloff>:/icos/moveBookmark.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/modelcopy.png</normaloff>:/mainwindow/images/mainwindow/modelcopy.png</iconset>
    </property>
    <property name="text">
     <string>复制模型</string>
@@ -332,8 +340,8 @@
   </action>
   <action name="actionManageModelTemplete">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/preferences-api.png</normaloff>:/icos/preferences-api.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/model-edit.png</normaloff>:/mainwindow/images/mainwindow/model-edit.png</iconset>
    </property>
    <property name="text">
     <string>管理模型模板</string>
@@ -341,8 +349,8 @@
   </action>
   <action name="actionNewCASE">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/tabNew.png</normaloff>:/icos/tabNew.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/case-new.png</normaloff>:/mainwindow/images/mainwindow/case-new.png</iconset>
    </property>
    <property name="text">
     <string>新建CASE</string>
@@ -350,8 +358,8 @@
   </action>
   <action name="actionCopyCASE">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/importShortcuts.png</normaloff>:/icos/importShortcuts.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/case-copy.png</normaloff>:/mainwindow/images/mainwindow/case-copy.png</iconset>
    </property>
    <property name="text">
     <string>复制CASE</string>
@@ -359,8 +367,8 @@
   </action>
   <action name="actionDeleteCASE">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/cBreak.png</normaloff>:/icos/cBreak.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/case-delete.png</normaloff>:/mainwindow/images/mainwindow/case-delete.png</iconset>
    </property>
    <property name="text">
     <string>删除CASE</string>
@@ -368,8 +376,8 @@
   </action>
   <action name="actionRunning">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/1rightarrow.png</normaloff>:/icos/1rightarrow.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/case-run.png</normaloff>:/mainwindow/images/mainwindow/case-run.png</iconset>
    </property>
    <property name="text">
     <string>运行当前CASE</string>
@@ -377,8 +385,8 @@
   </action>
   <action name="actionRunAllCASE">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/2rightarrow.png</normaloff>:/icos/2rightarrow.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/case-runall.png</normaloff>:/mainwindow/images/mainwindow/case-runall.png</iconset>
    </property>
    <property name="text">
     <string>运行所有CASE</string>
@@ -386,8 +394,8 @@
   </action>
   <action name="actionProjectManager">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/projectOpen.png</normaloff>:/icos/projectOpen.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/project-manger.png</normaloff>:/mainwindow/images/mainwindow/project-manger.png</iconset>
    </property>
    <property name="text">
     <string>项目管理器</string>
@@ -395,8 +403,8 @@
   </action>
   <action name="actionNACA">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/fileIDL.png</normaloff>:/icos/fileIDL.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/nasa.jpg</normaloff>:/mainwindow/images/mainwindow/nasa.jpg</iconset>
    </property>
    <property name="text">
     <string>NACA定义</string>
@@ -404,8 +412,8 @@
   </action>
   <action name="actionModelPreview">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/preferences-search.png</normaloff>:/icos/preferences-search.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/model-manager.png</normaloff>:/mainwindow/images/mainwindow/model-manager.png</iconset>
    </property>
    <property name="text">
     <string>模型预览窗口</string>
@@ -413,8 +421,8 @@
   </action>
   <action name="actionReportWindow">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/drawFill.png</normaloff>:/icos/drawFill.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/report-manager.png</normaloff>:/mainwindow/images/mainwindow/report-manager.png</iconset>
    </property>
    <property name="text">
     <string>报表窗口</string>
@@ -422,8 +430,8 @@
   </action>
   <action name="actionExportUserLayout">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/pullBookmark.png</normaloff>:/icos/pullBookmark.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/layout-import.jpg</normaloff>:/mainwindow/images/mainwindow/layout-import.jpg</iconset>
    </property>
    <property name="text">
     <string>导出用户布局</string>
@@ -431,8 +439,8 @@
   </action>
   <action name="actionReloadLayout">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/updateLocal.png</normaloff>:/icos/updateLocal.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/layout.jpg</normaloff>:/mainwindow/images/mainwindow/layout.jpg</iconset>
    </property>
    <property name="text">
     <string>恢复默认布局</string>
@@ -440,8 +448,8 @@
   </action>
   <action name="actionImportUserLayout">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/pushBookmark.png</normaloff>:/icos/pushBookmark.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/layout-export.jpg</normaloff>:/mainwindow/images/mainwindow/layout-export.jpg</iconset>
    </property>
    <property name="text">
     <string>导入用户布局</string>
@@ -449,8 +457,8 @@
   </action>
   <action name="actionNewSubPlot">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/preferences-shell.png</normaloff>:/icos/preferences-shell.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/img-new.png</normaloff>:/mainwindow/images/mainwindow/img-new.png</iconset>
    </property>
    <property name="text">
     <string>新建图表</string>
@@ -458,8 +466,8 @@
   </action>
   <action name="actionDeletePlot">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/deleteShape.png</normaloff>:/icos/deleteShape.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/img-delete.png</normaloff>:/mainwindow/images/mainwindow/img-delete.png</iconset>
    </property>
    <property name="text">
     <string>删除图表</string>
@@ -467,8 +475,8 @@
   </action>
   <action name="actionOnlyOnePlot">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/plot1.png</normaloff>:/icos/plot1.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/1-1.png</normaloff>:/mainwindow/images/mainwindow/1-1.png</iconset>
    </property>
    <property name="text">
     <string>1行1列</string>
@@ -476,8 +484,8 @@
   </action>
   <action name="actionTwoOneLayout">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/plot1-2.png</normaloff>:/icos/plot1-2.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/1-2.png</normaloff>:/mainwindow/images/mainwindow/1-2.png</iconset>
    </property>
    <property name="text">
     <string>1行2列</string>
@@ -485,8 +493,8 @@
   </action>
   <action name="actionTwoTwoPlot">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/icons.png</normaloff>:/icos/icons.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/2-2.png</normaloff>:/mainwindow/images/mainwindow/2-2.png</iconset>
    </property>
    <property name="text">
     <string>2行2列</string>
@@ -494,8 +502,8 @@
   </action>
   <action name="actionCustomPlot">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/grid.png</normaloff>:/icos/grid.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/DIY.png</normaloff>:/mainwindow/images/mainwindow/DIY.png</iconset>
    </property>
    <property name="text">
     <string>自定义</string>
@@ -503,8 +511,8 @@
   </action>
   <action name="actionLogWindow">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/compareFiles.png</normaloff>:/icos/compareFiles.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/logger.png</normaloff>:/mainwindow/images/mainwindow/logger.png</iconset>
    </property>
    <property name="text">
     <string>日志窗口</string>
@@ -512,8 +520,8 @@
   </action>
   <action name="actionImageTips">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/icos/siteinfo-media.png</normaloff>:/icos/siteinfo-media.png</iconset>
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/img-manger.png</normaloff>:/mainwindow/images/mainwindow/img-manger.png</iconset>
    </property>
    <property name="text">
     <string>可视化提示窗口</string>
@@ -521,7 +529,7 @@
   </action>
  </widget>
  <resources>
-  <include location="MainWindow.qrc"/>
+  <include location="PyDatcomLab.qrc"/>
  </resources>
  <connections/>
 </ui>

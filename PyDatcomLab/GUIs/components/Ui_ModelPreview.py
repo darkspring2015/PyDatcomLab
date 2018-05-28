@@ -12,6 +12,9 @@ class Ui_ModelPreview(object):
     def setupUi(self, ModelPreview):
         ModelPreview.setObjectName("ModelPreview")
         ModelPreview.resize(876, 582)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/mainwindow/images/mainwindow/model-edit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        ModelPreview.setWindowIcon(icon)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(ModelPreview)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -149,6 +152,9 @@ class Ui_ModelPreview(object):
         self.gridLayout_4 = QtWidgets.QGridLayout()
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.pushButton_New = QtWidgets.QPushButton(ModelPreview)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/mainwindow/images/mainwindow/modelsave.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_New.setIcon(icon1)
         self.pushButton_New.setObjectName("pushButton_New")
         self.gridLayout_4.addWidget(self.pushButton_New, 0, 0, 1, 1)
         self.pushButton_close = QtWidgets.QPushButton(ModelPreview)
@@ -206,7 +212,7 @@ class Ui_ModelPreview(object):
         self.pushButton_New.setText(_translate("ModelPreview", "修改模型"))
         self.pushButton_close.setText(_translate("ModelPreview", "关闭"))
 
-import img_rc
+import PyDatcomLab_rc
 
 if __name__ == "__main__":
     import sys

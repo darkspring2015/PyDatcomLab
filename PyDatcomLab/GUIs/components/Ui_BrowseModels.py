@@ -12,6 +12,9 @@ class Ui_BrowseModel(object):
     def setupUi(self, BrowseModel):
         BrowseModel.setObjectName("BrowseModel")
         BrowseModel.resize(460, 374)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/mainwindow/images/mainwindow/modelpreview.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        BrowseModel.setWindowIcon(icon)
         BrowseModel.setSizeGripEnabled(True)
         self.verticalLayout = QtWidgets.QVBoxLayout(BrowseModel)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -54,24 +57,24 @@ class Ui_BrowseModel(object):
         self.ModelSet.setRowCount(0)
         self.verticalLayout.addWidget(self.ModelSet)
         self.actionNewModel = QtWidgets.QAction(BrowseModel)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icos/pluginInstall.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionNewModel.setIcon(icon)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/icos/pluginInstall.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionNewModel.setIcon(icon1)
         self.actionNewModel.setObjectName("actionNewModel")
         self.actionAddModel = QtWidgets.QAction(BrowseModel)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/icos/pluginRepository.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionAddModel.setIcon(icon1)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/icos/pluginRepository.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionAddModel.setIcon(icon2)
         self.actionAddModel.setObjectName("actionAddModel")
         self.actionRemoveModel = QtWidgets.QAction(BrowseModel)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/icos/syncToc.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionRemoveModel.setIcon(icon2)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/icos/syncToc.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionRemoveModel.setIcon(icon3)
         self.actionRemoveModel.setObjectName("actionRemoveModel")
         self.actionPreviewModel = QtWidgets.QAction(BrowseModel)
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/icos/sharedEditConnected.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionPreviewModel.setIcon(icon3)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/icos/sharedEditConnected.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionPreviewModel.setIcon(icon4)
         self.actionPreviewModel.setObjectName("actionPreviewModel")
 
         self.retranslateUi(BrowseModel)
@@ -89,7 +92,7 @@ class Ui_BrowseModel(object):
         self.actionPreviewModel.setText(_translate("BrowseModel", "预览修改"))
         self.actionPreviewModel.setToolTip(_translate("BrowseModel", "修改预览模型"))
 
-import MainWindow_rc
+import PyDatcomLab_rc
 
 if __name__ == "__main__":
     import sys

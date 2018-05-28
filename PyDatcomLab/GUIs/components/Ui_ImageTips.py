@@ -35,7 +35,7 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
 
-import card_rc_rc
+import PyDatcomLab_rc
 
 if __name__ == "__main__":
     import sys

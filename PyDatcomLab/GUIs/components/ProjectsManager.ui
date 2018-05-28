@@ -62,7 +62,7 @@
   </widget>
   <action name="actionNewCase">
    <property name="icon">
-    <iconset resource="prjIcos.qrc">
+    <iconset>
      <normaloff>:/prjManger/icos/tabNew.png</normaloff>:/prjManger/icos/tabNew.png</iconset>
    </property>
    <property name="text">
@@ -74,7 +74,7 @@
   </action>
   <action name="actionCopyCase">
    <property name="icon">
-    <iconset resource="prjIcos.qrc">
+    <iconset>
      <normaloff>:/prjManger/icos/tabDuplicate.png</normaloff>:/prjManger/icos/tabDuplicate.png</iconset>
    </property>
    <property name="text">
@@ -86,7 +86,7 @@
   </action>
   <action name="actionAddCase">
    <property name="icon">
-    <iconset resource="prjIcos.qrc">
+    <iconset>
      <normaloff>:/prjManger/icos/tabManager.png</normaloff>:/prjManger/icos/tabManager.png</iconset>
    </property>
    <property name="text">
@@ -98,7 +98,7 @@
   </action>
   <action name="actionRemoveCase">
    <property name="icon">
-    <iconset resource="prjIcos.qrc">
+    <iconset>
      <normaloff>:/prjManger/icos/tabCloseOther.png</normaloff>:/prjManger/icos/tabCloseOther.png</iconset>
    </property>
    <property name="text">
@@ -110,7 +110,7 @@
   </action>
   <action name="actionNewGroup">
    <property name="icon">
-    <iconset resource="prjIcos.qrc">
+    <iconset>
      <normaloff>:/prjManger/icos/vcsAdd.png</normaloff>:/prjManger/icos/vcsAdd.png</iconset>
    </property>
    <property name="text">
@@ -122,7 +122,7 @@
   </action>
   <action name="actionAddGroup">
    <property name="icon">
-    <iconset resource="prjIcos.qrc">
+    <iconset>
      <normaloff>:/prjManger/icos/vcsCheckout.png</normaloff>:/prjManger/icos/vcsCheckout.png</iconset>
    </property>
    <property name="text">
@@ -134,7 +134,7 @@
   </action>
   <action name="actionCopyGroup">
    <property name="icon">
-    <iconset resource="prjIcos.qrc">
+    <iconset>
      <normaloff>:/prjManger/icos/vcsBranch.png</normaloff>:/prjManger/icos/vcsBranch.png</iconset>
    </property>
    <property name="text">
@@ -146,7 +146,7 @@
   </action>
   <action name="actionRemoveGroup">
    <property name="icon">
-    <iconset resource="prjIcos.qrc">
+    <iconset>
      <normaloff>:/prjManger/icos/vcsAddRemove.png</normaloff>:/prjManger/icos/vcsAddRemove.png</iconset>
    </property>
    <property name="text">
@@ -158,7 +158,7 @@
   </action>
  </widget>
  <resources>
-  <include location="prjIcos.qrc"/>
+  <include location="../PyDatcomLab.qrc"/>
  </resources>
  <connections/>
 </ui>

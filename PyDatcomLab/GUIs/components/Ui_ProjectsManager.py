@@ -112,7 +112,7 @@ class Ui_ProjectsMainWindow(object):
         self.actionRemoveGroup.setText(_translate("ProjectsMainWindow", "移除组"))
         self.actionRemoveGroup.setToolTip(_translate("ProjectsMainWindow", "移除组"))
 
-import prjIcos_rc
+import PyDatcomLab_rc
 
 if __name__ == "__main__":
     import sys
