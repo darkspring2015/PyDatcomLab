@@ -17,10 +17,16 @@ class DatcomInputList(QWidget):
     """
     currentIndexChanged = pyqtSignal(str , str)  #将编辑结构发送出去 (Url,index在Range中的具体值）
     
-    def __init__(self, CARD, VarName,  parent=None, DDefinition = DDefine ):
+    def __init__(self, iUrl,  parent=None, iDefinition = DDefine ):
         """
         Constructor
-        
+        DatcomInputList是一个QWidget控件，用来输出和显示一个List类型的值,list的内容默认为str
+        @param parent reference to the parent widget
+        @type QWidget
+        @param iUrl 是需要显示的变量的Url限定符 NAMELIST/VARIABLE
+        @type str
+        @param iDefinition reference to DTdictionary的默认实例defaultDatcomDefinition
+        @type DTdictionary
         @param parent reference to the parent widget
         @type QWidget
         """
@@ -29,14 +35,19 @@ class DatcomInputList(QWidget):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger')        
         #配置分析
-        if DDefinition is  None or CARD is None or VarName is None:
-            self.logger.error("没有有效的配置文件，无法初始化")
+        
+        if iDefinition is  None or iUrl is None:
+            self.logger.error("无效的配置，无法初始化！ DTdictionary ：%s；Url：%s"%(str(iDefinition), str(iUrl)))
             return
-        self.dtDefine       = DDefinition
-        self.CARDName       = CARD
-        self.VarName        = VarName
-        self.vUrl           = "%s/%s"%(self.CARDName, self.VarName)
-        self.VarDefine      = self.dtDefine.getVariableDefineByName( self.CARDName, self.VarName)
+        self.dtDefine       = iDefinition   #设置Datcom配置文件
+        self.vUrl             = iUrl
+        #获得变量定义
+        self.VarDefine     = self.dtDefine.checkUrl(self.vUrl )  
+        if self.VarDefine is None :
+            self.logger.error("无法处理不存在的定义，URL：%s"%iUrl)
+            return
+        self.CARDName , self.VarName    =    iUrl.split('/')[-2:]        
+        #分析其他的附加信息
         self.VarDisplayName = self.VarDefine['DisplayName'] if 'DisplayName' in self.VarDefine.keys() else self.VarName
         self.VarTooltips    = self.VarDefine['Tooltips'] if 'Tooltips' in  self.VarDefine.keys() else self.VarDisplayName
         self.vRange         = []
@@ -273,9 +284,10 @@ class DatcomInputList(QWidget):
         return tDefault
 
 
-    def setData(self, dtModel):
+    def loadData(self, dtModel):
         """
         设置控件的值,采用的是datcomModel的接口
+        从dtModel中加载控件的值
         """
         if dtModel is None : return 
         #获得变量的值 
@@ -300,9 +312,9 @@ class DatcomInputList(QWidget):
             else:
                 self.logger.error("没有为该List传递的有效的参数，而控件又是必须录入信息的控件！")
     
-    def getData(self, dtModel):
+    def saveData(self, dtModel):
         """
-        将控件的值写入到模型中
+        将控件的值写入到模型dtModel中
         """
         tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
         tValue = self.vRange[self.InputWidget.currentIndex()]
@@ -350,14 +362,13 @@ class DatcomInputListNoLabel(DatcomInputList):
     """
     没有Label栏的输入框的List输入控件
     """
-    def __init__(self, CARD, VarName,  parent=None, DDefinition = DDefine, isRemoveSpacer = True):
+    def __init__(self, iUrl,  parent=None, iDefinition = DDefine, isRemoveSpacer = True):
         """
         """
         #super(DatcomInputListNoLabel, self).__init__(CARD, VarName,  parent=None, DDefinition = DDefine)
         #这是一个非常经典的错误
-        super(DatcomInputListNoLabel, self).__init__(CARD, VarName,  parent, DDefinition )
+        super(DatcomInputListNoLabel, self).__init__(iUrl,  parent, iDefinition )
         #删除对应的控件
-
         tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var%s'%self.VarName)
         tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var%s'%self.VarName)
         if tLabel is not None :
@@ -380,8 +391,8 @@ if __name__ == "__main__":
     #LiftLayout.setContentsMargins(5, 0, 0, 5)
     tMain.setLayout(LiftLayout)
 
-    LiftLayout.addWidget(DatcomInputList(        'FLTCON', 'HYPERS',  parent=tMain, DDefinition = DDefine ))  
-    LiftLayout.addWidget(DatcomInputListNoLabel( 'FLTCON', 'HYPERS',  parent=tMain, DDefinition = DDefine ))  
+    LiftLayout.addWidget(DatcomInputList(        'FLTCON/HYPERS',  parent=tMain, iDefinition = DDefine ))  
+    LiftLayout.addWidget(DatcomInputListNoLabel( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DDefine ))  
  
     tMain.show()
     sys.exit(app.exec_())

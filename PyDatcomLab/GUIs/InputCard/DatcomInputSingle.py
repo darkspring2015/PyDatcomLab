@@ -18,26 +18,36 @@ class DatcomInputSingle(QWidget):
     Class documentation goes here.
     """
     editingFinished = pyqtSignal(str ,str)      #将编辑结构发送出去
-    def __init__(self, CARD, VarName,  parent=None, DDefinition = DDefine ):
+    def __init__(self, iUrl, parent=None, iDefinition = DDefine ):
         """
         Constructor
-        
+        DatcomInputSingle是一个QWidget控件，用来输出和显示一个REAL、INT类型的值
         @param parent reference to the parent widget
         @type QWidget
+        @param iUrl 是需要显示的变量的Url限定符 NAMELIST/VARIABLE
+        @type str
+        @param iDefinition reference to DTdictionary的默认实例defaultDatcomDefinition
+        @type DTdictionary
         """
+        #创建父类初始化
         super(DatcomInputSingle, self).__init__( parent = parent)
         
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger')        
         #配置分析
-        if DDefinition is  None or CARD is None or VarName is None:
-            self.logger.error("没有有效的配置文件，无法初始化")
+        
+        if iDefinition is  None or iUrl is None:
+            self.logger.error("无效的配置，无法初始化！ DTdictionary ：%s；Url：%s"%(str(iDefinition), str(iUrl)))
             return
-        self.dtDefine       = DDefinition
-        self.CARDName       = CARD
-        self.VarName        = VarName
-        self.vUrl           = "%s/%s"%(self.CARDName, self.VarName)
-        self.VarDefine      = self.dtDefine.getVariableDefineByName( self.CARDName, self.VarName)            
+        self.dtDefine       = iDefinition   #设置Datcom配置文件
+        self.vUrl             = iUrl
+        #获得变量定义
+        self.VarDefine     = self.dtDefine.checkUrl(self.vUrl )  
+        if self.VarDefine is None :
+            self.logger.error("无法处理不存在的定义，URL：%s"%iUrl)
+            return
+        #分析其他的附加信息
+        self.namelist , self.VarName    =    iUrl.split('/')[-2:]                 
         self.VarDisplayName = self.VarDefine['DisplayName'] if 'DisplayName' in self.VarDefine.keys() else self.VarName
         self.VarTooltips    = self.VarDefine['Tooltips'] if 'Tooltips' in  self.VarDefine.keys() else self.VarDisplayName
         self.vDimension     = self.VarDefine['Dimension'] if 'Dimension' in  self.VarDefine.keys() else ''
@@ -390,9 +400,9 @@ class DatcomInputSingle(QWidget):
         
         
 
-    def setData(self, dtModel):
+    def loadData(self, dtModel):
         """
-        设置控件的值
+        设置控件的值，从dtModel中加载对应值
         """
         if dtModel is None : return         
         if self.VarDefine['TYPE'] not in ['INT', 'REAL']:
@@ -427,7 +437,7 @@ class DatcomInputSingle(QWidget):
 
                 
     
-    def getData(self, dtModel):
+    def saveData(self, dtModel):
         """
         将控件的值写入到模型中
         """
@@ -530,10 +540,10 @@ class DatcomInputSingleNoLabel(DatcomInputSingle):
     """
     没有Label栏的输入框
     """
-    def __init__(self, CARD, VarName,  parent=None, DDefinition = DDefine, isRemoveSpacer = True):
+    def __init__(self, iUrl,  parent=None, iDefinition = DDefine, isRemoveSpacer = True):
         """
         """
-        super(DatcomInputSingleNoLabel, self).__init__(CARD, VarName,  parent, DDefinition)
+        super(DatcomInputSingleNoLabel, self).__init__(iUrl,  parent, iDefinition)
         #删除对应的控件
         tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var%s'%self.VarName)
         tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var%s'%self.VarName)
@@ -548,25 +558,27 @@ class DatcomInputSingleNoLabel(DatcomInputSingle):
 
         
 if __name__ == "__main__":
-    import sys
+    import sys, os
+    from PyDatcomLab.Core import  datcomModel as dcModel
     app = QtWidgets.QApplication(sys.argv)
     tMain = QtWidgets.QWidget()  
     LiftLayout = QtWidgets.QVBoxLayout()
     #LiftLayout.setContentsMargins(5, 0, 0, 5)
     tMain.setLayout(LiftLayout)
+    tMPath = os.path.join(os.path.expanduser('~'), r'.PyDatcomLab\extras\PyDatcomProjects\1\case2.xml')
+    tModel = dcModel.dcModel(tMPath)
 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'TSMACH',  parent=tMain, DDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON', 'TSMACH',  parent=tMain, DDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'HYPERS',  parent=tMain, DDefinition = DDefine ))  
-    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON', 'HYPERS',  parent=tMain, DDefinition = DDefine ))  
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
-
-    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON', 'WT'    ,  parent=tMain, DDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON', 'NALPHA',  parent=tMain, DDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON', 'NALPHA',  parent=tMain, DDefinition = DDefine , isRemoveSpacer = False)) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/TSMACH',  parent=tMain, iDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/TSMACH',  parent=tMain, iDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DDefine ))  
+    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DDefine ))  
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/NALPHA',  parent=tMain, iDefinition = DDefine )) 
+    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/NALPHA',  parent=tMain, iDefinition = DDefine , isRemoveSpacer = False)) 
 
     tMain.show()
     sys.exit(app.exec_())

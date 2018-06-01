@@ -259,7 +259,8 @@ class DatcomInputTable(QWidget):
         #分析写入数据
         for iC  in range(0, len(self.varsDfList)):
             iV = self.varsDfList[iC]
-            tDataVar = iModel.getNamelistVar(self.Namelist,iV['VarName'])            
+            tUrl = "%s/%s"%(self.Namelist,iV['VarName'])
+            tDataVar = iModel.getVariableByUrl(tUrl)            
             if tDataVar is None:
                 #不存在数据则隐藏对应的列
                 self.table.setColumnHidden(iC, True)
@@ -282,8 +283,8 @@ class DatcomInputTable(QWidget):
 
             #执行数据写入
             tData = tDataVar['Value']
-            if self.rowCount() != len(tData): 
-                self.logger.info("%s加载数据过程中表格长度%d与数据长度%d不同，修改表格长度"%(self.vUrl,self.rowCount(), len(tData) ))
+            if self.table.rowCount() != len(tData): 
+                self.logger.info("%s加载数据过程中表格长度%d与数据长度%d不同，修改表格长度"%(self.vUrl,self.table.rowCount(), len(tData) ))
                 self.table.setRowCount(len(tData))
             if len(tData) in range(self.minCount, self.maxCount):                   
                 for iR in range(0, len(tData)):
@@ -299,7 +300,7 @@ class DatcomInputTable(QWidget):
                 self.logger.error("加载表格%s数据越界：%d min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
         #发送行变更消息
-        self.Signal_rowCountChanged.emit(self.CountVarUrl , self.rowCount())         #向外通知数据加载后的长度
+        self.Signal_rowCountChanged.emit(self.CountVarUrl , self.table.rowCount())         #向外通知数据加载后的长度
         self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo())) #向外通知数据列的组合关系发生变换
         
         
@@ -317,7 +318,7 @@ class DatcomInputTable(QWidget):
         for iC in range(0, len(self.varsDfList)):
             #遍历所有变量的定义
             iV = self.varsDfList[iC]
-            tUrl = '%S\%s'%(self.Namelist , iV['VarName'])
+            tUrl = '%s/%s'%(self.Namelist , iV['VarName'])
             if self.table.isColumnHidden(iC):
                 #True is Hidden Delete the Variable from the Model
                 tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
@@ -351,125 +352,22 @@ class DatcomInputTable(QWidget):
                     tUnit = self.table.horizontalHeaderItem(iC).data(Qt.UserRole)['CurrentUnit']
                 else:
                     tUnit = ''
-                tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
+                tVar = self.DDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Unit']  = tUnit
                 tVar['Value'] = tVarlist
-                iModel.setVariable( tUrl,tVar )
+                iModel.setVariable( tVar )
         #回写iModel完成
-        
-        
-    def setDtModelData(self, iModel):
-        """
-        从iModel加载数据
-        执行setDtModelData将导致所有数据包括表头被重置
-        """
-        if iModel is None or type(iModel) != dcModel.dcModel:
-            return 
-        #清除所有数据
-        self.clear()
-        self.InitializeHeader()
-        #分析写入数据
-        for iC  in range(0, len(self.varsDfList)):
-            iV = self.varsDfList[iC]
-            tDataVar = iModel.getNamelistVar(self.Namelist,iV['VarName'])            
-            if tDataVar is None:
-                #不存在数据则隐藏对应的列
-                self.table.setColumnHidden(iC, True)
-                self.logger.info("%s的列%s没有数据，不显示"%(self.vUrl, self.table.horizontalHeaderItem(iC).text()))
-                continue
-            #执行表头坐标同步
-            tDimension = ''
-            if 'Dimension' in self.varsDfList[iC]:
-                tDimension = self.varsDfList[iC]['Dimension'] 
-            tUnit = ''
-            if 'Unit' in tDataVar.keys():
-                tUnit = tDataVar['Unit']
-                self.setHorizontalHeaderUnit(iC,tUnit )
-            else:
-                tUnit = dtDimension.getMainUnitByDimension(tDimension)
-                #self.logger.info("数据格式异常，缺少单位信息")
-            #定义本列的魔板
-            tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}
-                
-
-            #执行数据写入
-            tData = tDataVar['Value']
-            if self.rowCount() != len(tData): 
-                self.logger.info("%s加载数据过程中表格长度%d与数据长度%d不同，修改表格长度"%(self.vUrl,self.rowCount(), len(tData) ))
-                self.table.setRowCount(len(tData))
-            if len(tData) in range(self.minCount, self.maxCount):                   
-                for iR in range(0, len(tData)):
-                    tItem  = QTableWidgetItem(str(tData[iR]))
-                    tDataUserRole = tDataTemplate.copy()
-                    tDataUserRole['Unit']  = tUnit
-                    tDataUserRole['Value'] =  tData[iR]
-                    tItem.setData( Qt.UserRole,tDataUserRole )
-                    #tItem.setData(Qt.DisplayRole,str(tData[iR]) )
-                    self.table.setItem(iR, iC, tItem)
-                self.table.setColumnHidden(iC, False)
-            else:
-                self.logger.error("加载表格%s数据越界：%d min：%d max：%d"%(self.GroupName,len(tData), 
-                               self.minCount, self.maxCount ))
-        #发送行变更消息
-        self.Signal_rowCountChanged.emit(self.CountVarUrl , self.rowCount())         #向外通知数据加载后的长度
-        self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo())) #向外通知数据列的组合关系发生变换
-
-
 
     def getColumnCombo(self):
         """
         返回当前采用的变量组合关系
         """
         tShowColumnList = []
-        for iC in range(0, self.columnCount()):
-            if not self.isColumnHidden(iC):
+        for iC in range(0, self.table.columnCount()):
+            if not self.table.isColumnHidden(iC):
                 tShowColumnList.append(self.varsDfList[iC]['VarName'])
-        return tShowColumnList
-        
-    def getDtModelData(self, tModel):
-        """
-        设置tModel中的数据
-        考虑两个因素：1变量是否可见，2变量类型
-        
-        """
-        for iC in range(0, len(self.varsDfList)):
-            #遍历所有变量的定义
-            iV = self.varsDfList[iC]
-            if self.table.isColumnHidden(iC):
-                #True is Hidden Delete the Variable from the Model
-                tModel.setNamelist( self.Namelist , iV['VarName'], None)
-            else:
-                #False : warite the data
-                tVarlist = []
-                if 'SubType' in iV.keys() and iV['SubType'] == 'BOOL':
-                    for iR in range(0, self.table.rowCount()):
-                        tText = self.table.item(iR, iC).text()
-                        if tText == '.FALSE.':
-                            tVarlist.append(False)
-                        elif tText == '.TRUE.':
-                            tVarlist.append(True)
-                        else:
-                            self.logger.error("输入数据%s不合法"%tText)
-                else:
-                    #值校验认为由控件已经完成了
-                    #单位换算认为已经由控件换算完成了
-                    for iR in range(0, self.table.rowCount()):
-                        tData = self.table.item(iR, iC).data(Qt.UserRole)
-                        #这里应该执行一次统一的坐标变换
-                        if tData is None or tData['Value'] is None:
-                            self.logger.error("输入数据%s不合法 R：%d，C：%d"%(self.table.item(iR, iC).text(), iR, iC))
-                        else:                            
-                            tVarlist.append(tData['Value']) 
-                #此处传递了CurrentUnit给Model
-                
-                if 'CurrentUnit' in self.table.horizontalHeaderItem(iC).data(Qt.UserRole).keys():
-                    tUnit = self.table.horizontalHeaderItem(iC).data(Qt.UserRole)['CurrentUnit']
-                else:
-                    tUnit = ''
-                tModel.setNamelist( self.Namelist , iV['VarName'],{'Index':1, 'Value':tVarlist, 'Unit':tUnit} )
-        #读取数据完成
-       
-       
+        return tShowColumnList      
+  
     def on_Singal_RuleIndexToCombo(self, senderUrl,  choisedKey):
         """
         将tIndex对应的列隐藏
@@ -691,14 +589,20 @@ This signal is emitted whenever the data of item has changed.
         
         
 if __name__ == "__main__":
-    import sys
+    import sys, os
     app = QtWidgets.QApplication(sys.argv)
     tMain = QtWidgets.QWidget()  
     LiftLayout = QtWidgets.QVBoxLayout()
     #LiftLayout.setContentsMargins(5, 0, 0, 5)
     tMain.setLayout(LiftLayout)
-    LiftLayout.addWidget(DatcomInputTable( 'FLTCON', 'Speed_Atmospheric',  parent=tMain, iDefine = DDefine )) 
+    tTable = DatcomInputTable( 'FLTCON', 'Speed_Atmospheric',  parent=tMain, iDefine = DDefine )
+    LiftLayout.addWidget(tTable) 
+    tMPath = os.path.join(os.path.expanduser('~'), r'.PyDatcomLab\extras\PyDatcomProjects\1\case2.xml')
+    tModel = dcModel.dcModel(tMPath)
+    tTable.loadData(tModel)    
     tMain.show()
+    tTable.saveData(tModel)
+    tModel.save(tMPath)
     sys.exit(app.exec_())
         
         

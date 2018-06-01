@@ -70,6 +70,7 @@ class DatcomWidgetBaseUi(object):
             #开始参数配置过程
             for tVarName in CARD.VariableList.keys():              
                 tVarDefine = CARD.VariableList[tVarName]
+                tUrl = '%s/%s'%(CARD.NameList, tVarName)
                 #判断类型
                 if tVarDefine['TYPE'] == 'Array':
                     #对于表格类型不在这里创建信息
@@ -81,7 +82,7 @@ class DatcomWidgetBaseUi(object):
                     continue
                 elif tVarDefine['TYPE'] in ['INT', 'REAL'] :
                     # 开始单值工程量创建
-                    tVarWidget = SInput.DatcomInputSingle(CARD.NameList, tVarName, parent=self.groupBox_lift )                    
+                    tVarWidget = SInput.DatcomInputSingle(tUrl, parent=self.groupBox_lift )                    
                     tVarWidget.setObjectName(tVarName)
                     #限制var的格式
                     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -92,7 +93,7 @@ class DatcomWidgetBaseUi(object):
                     self.LiftLayout.addWidget(tVarWidget)
                 elif tVarDefine['TYPE'] in ['List'] :
                     # 结束单值工程量创建
-                    tVarWidget = LInput.DatcomInputList(CARD.NameList, tVarName, parent=self.groupBox_lift )
+                    tVarWidget = LInput.DatcomInputList(tUrl, parent=self.groupBox_lift )
                     tVarWidget.setObjectName(tVarName)
                     #限制var的格式
                     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -111,9 +112,10 @@ class DatcomWidgetBaseUi(object):
                     continue
                 if not 'Index'  in tCombo.keys():
                     continue
-                #创建一个水平布局器
+                #创建一个水平布局器                
                 tVarName   = tCombo['Index']
-                tComboWidget = DatcomInputComboChooser(CARD.NameList, tVarName,
+                tUrl = '%s/%s'%(CARD.NameList, tVarName)
+                tComboWidget = DatcomInputComboChooser(tUrl,
                                parent=self.groupBox_lift, DDefinition = DDefine)    
                 tComboWidget.setObjectName('Chooser_%s'%tVarName)
                 #绑定值变换信号到自身信号 因为尚未创建对象TableWidget无法直接绑定 

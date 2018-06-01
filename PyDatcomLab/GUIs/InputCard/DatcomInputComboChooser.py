@@ -13,29 +13,41 @@ import logging
 
 class DatcomInputComboChooser(QWidget):
     """
-    Class documentation goes here.
+    用来显示和选择变量组合关系
     """
     varComboChanged = pyqtSignal(str, str)      #将变量组合结构发送出去 <self.vUrl,Howto-ChosedKey>
-    def __init__(self, namelist, VarName,  parent=None, DDefinition = DDefine ):
+    def __init__(self,iUrl,  parent=None, iDefinition = DDefine ):
         """
         Constructor
-        
+       DatcomInputComboChooser是一个QWidget控件，用来显示和选择变量组合关系
         @param parent reference to the parent widget
         @type QWidget
+        @param iUrl 是需要显示的变量的Url限定符 NAMELIST/VARIABLE
+        @type str
+        @param iDefinition reference to DTdictionary的默认实例defaultDatcomDefinition
+        @type DTdictionary
+        @param parent reference to the parent widget
+        @type QWidget        
+
         """
         super(DatcomInputComboChooser, self).__init__( parent = parent)
         
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger')        
-        #配置分析
-        if DDefinition is  None or namelist is None or VarName is None:
-            self.logger.error("没有有效的配置文件，无法初始化")
+        #配置分析        
+        if iDefinition is  None or iUrl is None:
+            self.logger.error("无效的配置，无法初始化！ DTdictionary ：%s；Url：%s"%(str(iDefinition), str(iUrl)))
             return
-        
-        self.Namelist       = namelist
-        self.VarName        = VarName
-        self.vUrl           = "%s/%s"%(self.Namelist, self.VarName)
-        self.ruleDefine     = DDefinition.getRuleIndexToComboByComboVariable( self.Namelist, self.VarName)
+        self.dtDefine       = iDefinition   #设置Datcom配置文件
+        self.vUrl             = iUrl
+        #获得变量定义
+        self.VarDefine     = self.dtDefine.checkUrl(self.vUrl )  
+        if self.VarDefine is None :
+            self.logger.error("无法处理不存在的定义，URL：%s"%iUrl)
+            return
+        self.Namelist , self.VarName    =    iUrl.split('/')[-2:]            
+
+        self.ruleDefine     = self.dtDefine.getRuleIndexToComboByComboVariable( self.Namelist, self.VarName)
         if self.ruleDefine is None or \
                 self.ruleDefine == {} or\
                 'Group' not in self.ruleDefine.keys() or\
@@ -213,7 +225,7 @@ if __name__ == "__main__":
     tMain = QtWidgets.QWidget()  
     LiftLayout = QtWidgets.QVBoxLayout()
     tMain.setLayout(LiftLayout)
-    tC = DatcomInputComboChooser( 'FLTCON', 'Variables',  parent=tMain, DDefinition = DDefine )
+    tC = DatcomInputComboChooser( 'FLTCON/Variables',  parent=tMain, iDefinition = DDefine )
     LiftLayout.addWidget(tC) 
     tC.varComboChanged.connect(lambda urlA,  index: print("%s-%s"%(urlA,  index)) )
 

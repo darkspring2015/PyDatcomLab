@@ -366,6 +366,12 @@ class DTdictionary():
         """
         return list(self.Dictionary.keys())
         
+    def getBasicNamelistCollection(self):
+        """
+        返回基础Datcom算例的Namelist组合
+        """
+        return ['FLTCON', 'BODY']
+        
     def getVariableTemplateByUrl(self, tUrl):
         """
         返回tUrl对应的变量模板

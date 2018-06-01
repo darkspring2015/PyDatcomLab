@@ -70,7 +70,7 @@ class dcModel(datcomXMLLoader):
         #添加最低配置的CASE
         #FLTCON        
 
-        for iN in self.dtDefine.getNamelistCollection():
+        for iN in self.dtDefine.getBasicNamelistCollection():
             self.addNamelist(iN)
         #调用验证器修正错误，并给所有量赋初值
         self.validate()
@@ -192,6 +192,7 @@ class dcModel(datcomXMLLoader):
             tVtp = self.dtDefine.getVariableTemplateByUrl(tUrl)
             if tVtp is None:
                 self.logger.error("无法创建对应的变量的基本实例%s"%(tUrl))
+                continue
             self.doc[tUrl] = tVtp
        
         

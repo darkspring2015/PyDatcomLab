@@ -21,6 +21,11 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
 
     """
     Datcom 输入选项卡的基础类.
+    DatcomWidgetBase的实例是QWidget对象，将承载一个Datcom的选项卡
+    基本约束：
+    1.必须指定iNamelist；
+    2.如果未给出iModel，将内部创建一个datcomModel对象的实例，并添加默认的变量集合
+    3.可以忽略iDefine输入
     """
     
     #定义各个Widget之间进行参数同步的信号
@@ -33,10 +38,15 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
     Singal_TBRowCountChanged             = pyqtSignal(int, str)     #用于通知表格的行数发生了变化    
     Singal_varComboChangedFromTable      = pyqtSignal(str , str)    #向外部通知表格中激活的列组合关系发生变化 <sender.vUrl,"[]">
     
-    def __init__(self, parent=None, tCARD = 'FLTCON' , tModel = None):
+    def __init__(self, iNamelist, parent=None , iModel = None, iDefine = DDefine ):
         """
         Constructor
-        
+        @param iDefine  DTdictionary的实例，存储Datcom的定义
+        @type DTdictionary   
+        @param iModel  datcomModel的实例，用以加载或者存储数据
+        @type datcomModel        
+        @param iNamelist widget将呈现的Namelist的名称
+        @type str        
         @param parent reference to the parent widget
         @type QWidget
         """
@@ -46,27 +56,27 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger')
         #获得Datcom的界面定义
-        self.NameList = tCARD
-        self.DDefine            = DDefine
-        self.VariableList       = DDefine.getNamelistDefineByName(self.NameList) 
-        self.NMACHLinkTable     = DDefine.getCARDAddtionalInformation(self.NameList, 'NMACHLinkTable') 
-        self.RuleNumToCount     = DDefine.getCARDAddtionalInformation(self.NameList, 'RuleNumToCount')        
-        self.RuleIndexToCombo   = DDefine.getCARDAddtionalInformation(self.NameList, 'RuleIndexToCombo')  
-        self.GroupDefine        = DDefine.getCARDAddtionalInformation(self.NameList, 'GroupDefine')  
-        self.RuleVariableStatus = DDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableStatus')
-        self.HelpUrl            = DDefine.getCARDHelpDoc(self.NameList)
-        self.HashVaribles       = {}
+        if iNamelist is None or iNamelist == '':
+            self.logger.error("未指定Namelist信息：%s!"%str(iNamelist))
+            iNamelist = 'FLTCON'
+        self.NameList            = iNamelist
+        self.dtDefine             = iDefine
+        self.VariableList         = self.dtDefine.getNamelistDefineByName(self.NameList) 
+        self.NMACHLinkTable       = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'NMACHLinkTable') 
+        self.RuleNumToCount      = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleNumToCount')        
+        self.RuleIndexToCombo   = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleIndexToCombo')  
+        self.GroupDefine            = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'GroupDefine')  
+        self.RuleVariableStatus   = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableStatus')
+        self.HelpUrl                   = self.dtDefine.getCARDHelpDoc(self.NameList)
+        self.HashVaribles         = {}
         
         
         #配置完成后再调用界面初始化
         self.setupUi(self)
         
-        #修改后台的数据
-        self.model = dcModel.dcModel()   
-        self.setModel( tModel)
-        #self.DatcomCARD.InitUi()
-        #self.DatcomCARD.setModel(tModel)   #设置模型
-        
+        #修改后台的数据，如果tModel is None 将创建空的datcomModel对象       
+        #将附加指定 InitDoc，InitLogic
+        self.setModel( tModel)        
         #绑定处理逻辑
 
         #界面参数
@@ -103,6 +113,9 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
             self.logger.error('传递的参数不是合格的类型：%s'%type(tModel) )
             #tModel = dcModel.dcModel('J6', '常规布局')     
             tModel = dcModel.dcModel()   
+        #检查是否包含    
+        if self.NameList not in tModel.getNamelistCollection():
+            tModel.addNamelist(self.NameList)
         self.model = tModel  
         
         #执行参数配置过程        
@@ -124,16 +137,16 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 if tWidget is None:
                     self.logger.error("访问的变量：%s 不在本窗体"%varName)
                 else:
-                    tWidget.setData(self.model)
+                    tWidget.loadData(self.model)
         #自动化循环赋值
         
         #对于表格类型的数据进行赋值
-        for iTb in self.DDefine.getGroupDefine(self.NameList):
+        for iTb in self.dtDefine.getGroupDefine(self.NameList):
             tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
             if tWidget is None:
                 self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
                 continue
-            tWidget.setDtModelData(self.model)
+            tWidget.loadData(self.model)
             #遍历所有的遍历写入到表格中
         #遍历所有表格控件
       
@@ -149,16 +162,16 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 if tWidget is None:
                     self.logger.error("访问的变量：%s 不在本窗体"%varName)
                 else:
-                    tWidget.getData(self.model)
+                    tWidget.saveData(self.model)
         #自动化循环赋值
         
         #对于表格类型的数据进行赋值
-        for iTb in self.DDefine.getGroupDefine(self.NameList):
+        for iTb in self.dtDefine.getGroupDefine(self.NameList):
             tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
             if tWidget is None:
                 self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
                 continue
-            tWidget.getDtModelData(self.model)
+            tWidget.saveData(self.model)
             #遍历所有的遍历写入到表格中
         #遍历所有表格控件
         #执行界面刷新
@@ -202,7 +215,7 @@ if __name__ == "__main__":
     #tModel.loadXML()
     #card = DatcomWidgetBase(tCARD = 'FLTCON', tModel = tModel)  
     #card = DatcomWidgetBase(tCARD = 'OPTINS', tModel = tModel)  
-    card = DatcomWidgetBase(tCARD = 'SYNTHS', tModel = tModel)  
+    card = DatcomWidgetBase(iNamelist = 'SYNTHS', iModel = tModel)  
     #card = DatcomWidgetBase(tCARD = 'BODY', tModel = tModel) 
     card.dt_setSizes(400, 600)
     #ui = DatcomBaseUI()
