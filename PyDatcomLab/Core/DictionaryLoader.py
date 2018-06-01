@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 
 """
+DTdictionary类负责加载Datcom的基本定义，包括：
+1.Namelist和Varialbe的关系
+2.variable的类型、取值范围、默认值、单位信息、量纲信息、变量名、显示名、帮助信息、数组长度限制等
+3.variable之间的相互关系（AddtionalInforation），如分组信息，
+DTdictionary类的基本行为：
+1.如果path指定合适的值，从path变量指定的文件中读取Datcom配置信息；
+2.如果path没有指定合适的值，则尝试从~/.Pydatcom/config/datcomDefine.xml中读取配置
+3.内存中使用dict数据结构
 定义Datcom各种类型选项卡加载所需要的组件
 组件将XML定义文件加载到内存，并实例化相关的类
 """

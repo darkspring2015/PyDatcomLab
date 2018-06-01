@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Project SYSTEM "Project-5.1.dtd">
+<!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-05-25, 15:55:15 -->
+<!-- Saved: 2018-05-31, 23:24:09 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
-<Project version="5.1">
+<Project version="6.0">
   <Language>en_US</Language>
   <Hash>2da8e2a3a430557aa37c72cf69f94c22d1b11ab8</Hash>
   <ProgLanguage mixed="0">Python3</ProgLanguage>
@@ -13,7 +13,6 @@
   <Version>0.1</Version>
   <Author>linger</Author>
   <Email>lingo_renlo@qq.com</Email>
-  <Eol index="-1"/>
   <Sources>
     <Source>PyDatcomLab/Core/DictionaryLoader.py</Source>
     <Source>PyDatcomLab/Core/__init__.py</Source>
@@ -39,7 +38,6 @@
     <Source>PyDatcomLab/GUIs/InputCard/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/Logger4GUI.py</Source>
     <Source>PyDatcomLab/GUIs/MainWindow.py</Source>
-    <Source>PyDatcomLab/GUIs/MainWindow_rc.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/DatcomCARD.py</Source>
     <Source>PyDatcomLab/GUIs/PlaneConfiguration/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/PyDatcomLab_rc.py</Source>
@@ -63,9 +61,7 @@
     <Source>PyDatcomLab/GUIs/components/Ui_Reference.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_logForm.py</Source>
     <Source>PyDatcomLab/GUIs/components/__init__.py</Source>
-    <Source>PyDatcomLab/GUIs/components/img_rc.py</Source>
     <Source>PyDatcomLab/GUIs/components/logForm.py</Source>
-    <Source>PyDatcomLab/GUIs/components/prjIcos_rc.py</Source>
     <Source>PyDatcomLab/GUIs/tools/Ui_XMLEditer.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLEditer.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLModel.py</Source>
@@ -74,53 +70,6 @@
     <Source>PyDatcomLab/GUIs/tools/tools_rc.py</Source>
     <Source>PyDatcomLab/PyDatcomLab.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
-    <Source>tests/__init__.py</Source>
-    <Source>tests/parserBuild/Ui_datcomParsermain.py</Source>
-    <Source>tests/parserBuild/__init__.py</Source>
-    <Source>tests/parserBuild/datcomParsermain.py</Source>
-    <Source>tests/test.py</Source>
-    <Source>tests/testCore.py</Source>
-    <Source>tests/testCore/testDcModel.py</Source>
-    <Source>tests/testCore/testDictionaryLoader.py</Source>
-    <Source>tests/testCore_Parser.py</Source>
-    <Source>tests/testCore_ProjectManager.py</Source>
-    <Source>tests/testCore_dcProject.py</Source>
-    <Source>tests/testDatcomRunner.py</Source>
-    <Source>tests/testFrame.py</Source>
-    <Source>tests/testGUI/testDynamicUI.py</Source>
-    <Source>tests/testGUI/test_ASYFLP.py</Source>
-    <Source>tests/testGUI/test_BODY.py</Source>
-    <Source>tests/testGUI/test_BrowseModels.py</Source>
-    <Source>tests/testGUI/test_CONTAB.py</Source>
-    <Source>tests/testGUI/test_EXPR.py</Source>
-    <Source>tests/testGUI/test_FLTCON.py</Source>
-    <Source>tests/testGUI/test_GRNDEF.py</Source>
-    <Source>tests/testGUI/test_HTPLNF.py</Source>
-    <Source>tests/testGUI/test_HTSCHR.py</Source>
-    <Source>tests/testGUI/test_HYPEFF.py</Source>
-    <Source>tests/testGUI/test_ImageTips.py</Source>
-    <Source>tests/testGUI/test_JETPWR.py</Source>
-    <Source>tests/testGUI/test_LARWB.py</Source>
-    <Source>tests/testGUI/test_ModelPreview.py</Source>
-    <Source>tests/testGUI/test_OPTION.py</Source>
-    <Source>tests/testGUI/test_PROPWR.py</Source>
-    <Source>tests/testGUI/test_PlaneConfiguration.py</Source>
-    <Source>tests/testGUI/test_SYMFLP.py</Source>
-    <Source>tests/testGUI/test_TRNJET.py</Source>
-    <Source>tests/testGUI/test_TVTPAN.py</Source>
-    <Source>tests/testGUI/test_VTPLNF.py</Source>
-    <Source>tests/testGUI/test_VTSCHR.py</Source>
-    <Source>tests/testGUI/test_WGPLNF.py</Source>
-    <Source>tests/testGUI/test_WGSCHR.py</Source>
-    <Source>tests/testGUI/test_addProject.py</Source>
-    <Source>tests/testGUI/test_newModel.py</Source>
-    <Source>tests/testLoadFromMoudle.py</Source>
-    <Source>tests/testLogForm.py</Source>
-    <Source>tests/testParser.py</Source>
-    <Source>tests/testProjectsManager.py</Source>
-    <Source>tests/testSuite.py</Source>
-    <Source>tests/testSuite2.py</Source>
-    <Source>tests/testTools/test_XMLModel.py</Source>
   </Sources>
   <Forms>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
@@ -134,24 +83,119 @@
     <Form>PyDatcomLab/GUIs/components/Reference.ui</Form>
     <Form>PyDatcomLab/GUIs/components/logForm.ui</Form>
     <Form>PyDatcomLab/GUIs/tools/XMLEditer.ui</Form>
-    <Form>tests/parserBuild/datcomParsermain.ui</Form>
   </Forms>
-  <Translations/>
   <Resources>
-    <Resource>PyDatcomLab/GUIs/MainWindow.qrc</Resource>
     <Resource>PyDatcomLab/GUIs/PyDatcomLab.qrc</Resource>
-    <Resource>PyDatcomLab/GUIs/components/img.qrc</Resource>
-    <Resource>PyDatcomLab/GUIs/components/prjIcos.qrc</Resource>
     <Resource>PyDatcomLab/GUIs/tools/tools.qrc</Resource>
   </Resources>
-  <Interfaces/>
   <Others>
+    <Other>.gitignore</Other>
     <Other>docs</Other>
     <Other>extras</Other>
   </Others>
   <MainScript>PyDatcomLab/PyDatcomLab.py</MainScript>
   <Vcs>
     <VcsType>Git</VcsType>
+    <VcsOptions>
+      <dict>
+        <key>
+          <string>add</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>checkout</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>commit</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>diff</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>export</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>global</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>history</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>log</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>remove</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>status</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>tag</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>update</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+      </dict>
+    </VcsOptions>
   </Vcs>
   <FiletypeAssociations>
     <FiletypeAssociation pattern="*.idl" type="INTERFACES"/>

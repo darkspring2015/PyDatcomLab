@@ -18,10 +18,21 @@ import logging
 class dcModel(datcomXMLLoader):
     """
     dcModel 定义用于一次计算的完整配置
+    xml文档格式约定：
+    1.文档由若干的VARIABLE节组成，在xml中text字段表示值，在内存中由VALUE的值表示
+    2.内存中使用dict作为存储结构
+    3.如果text经过eval评估是合法的数据则解释成对应float、list等信息，其他的默认为文本
+    4.变量的集合是Datcom定义defaultDatcomDefinition的子集，没有的值或者组合直接从内存中删除
+    5.包含DatcomInput文件的输出，单位信息包含在每一个变量的内存结构中，单位信息应当被持续化到xml文件，在解析输出时统一后由DIM命令指定
+    6.dcModel模型的实例将作为控件的引用参数被直接修改  
+    使用说明：
+    1.该类型派生自datcomXMLLoader类，需要自定义解析关系，请使用xml文档约定来实现函数ParseXmltoDoc
     """
     def __init__(self, path = None, dtDefine = DtDefine):
         """
-        初始化
+        初始化模型类
+        如果指定了path，将加载对应的模型文件，否则创建基础的Datcom模型，基础模型在defaultDatcomDefinition中定义
+        如果指定了dtDefine的值，将使用自定义的Datcom定义        
         """
         super(dcModel, self).__init__()  #使用空初始化以避免加载
         #初始化日志系统
@@ -115,7 +126,7 @@ class dcModel(datcomXMLLoader):
                 #写入结果
                 self.doc[tUrl] = tSet
             else:
-                tDoc = self.recursiveParseElement(iNode)
+                tDoc = self.recursiveParseElement(iNode)  #base class的方法，解析到标准实现中
                 if iNode.tag in self.additionalDoc.keys():
                     #暂时不考虑实现                    
                     self.additionalDoc[iNode.tag].append(tDoc) 
@@ -201,15 +212,69 @@ class dcModel(datcomXMLLoader):
         
         
         
-    def setVariable(self, variable):
+    def setVariable(self, iVar):
         """
         设置实例的某一个变量的值
-        variable是Python的dict类型，包括：{url，unit，value}
-        对于不存在的namelist，将导致创建对应选项卡的操作；<br />对于存在的变量，将修改值和单位等信息<br />如果变量的值为None，将从集合中删除该变量
+        iVar是Python的dict类型，包括：{Url，Unit，Value}
+        url包括namelist和variableName两部分组成：namelist/variableName
+        函数行为：
+        1.对于不存在的namelist，将导致创建对应选项卡的操作；<br />
+        2.对于存在的变量，将修改值和单位等信息<br />
+        3.如果变量的值为None，将从集合中删除该变量
+        4.函数不校验Namelist的完整性，Namelist最低变量组合在其他函数中负责
+        5.对于存在单位的变量不进行单位变换，仅保存单位制信息
         """
         #进行必要的单位变换
         #写入数据到doc中
-        pass
+        
+        #数据校验
+        tResult, tReport = self.checkMustKeys(iVar, ['Url', 'Unit', 'Value'])
+        if tResult is False: 
+            self.logger.error("输入的变量不合法，%s！"%tReport)
+            return False
+        #检查值
+        tUrl = iVar['Url']
+        if self.dtDefine.getVariableDefineByUrl(tUrl) == {}:
+            self.logger.error("Datcom定义中并不包含%s的定义！"%tUrl)
+            return False
+        
+        if tUrl in self.doc.keys() and iVar['Value'] is None :
+            #如果Value为None则删除该变量
+            self.doc.pop(tUrl)
+            return True
+        elif tUrl in self.doc.keys() and iVar['Value'] is not  None:
+            #如果Vlaue不为None则更新信息
+            self.doc[tUrl].update(iVar)
+            return True
+        elif tUrl not in self.doc.keys() and iVar['Value'] is None :
+            return True
+        elif  tUrl not in self.doc.keys() and iVar['Value'] is not None :
+            tVarTem = self.dtDefine.getVariableTemplateByUrl(tUrl)
+            tVarTem.update(iVar)
+            self.doc[tUrl] = tVarTem
+            return True 
+
+
+    def checkMustKeys(self, iDict, iMust=[]):
+        """
+        检查iDict变量是合法的dict类型
+        检查规则：
+        1.iDict是dict类型
+        2.iMust定义的所有key都在iDict中
+        
+        """
+        if iDict is None or not type(iDict):
+            return False, '输出变量不是字典类型：%s'%str(iDict)
+        if iMust == []:
+            return True, ''
+        tReport = []
+        tResult = True
+        for iKey in iMust:
+            if iKey not in iDict.keys():
+                tReport.append('key:%s不在字典中'%iKey)
+                tResult = False
+        return tResult, '\n'.join(tReport)
+
         
     def validateAVariable(self,tVar ):
         """
@@ -560,6 +625,7 @@ if __name__=="__main__":
     dtPath = r'E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1\case3.inp'
     try:
         aLoader = dcModel(sPath)
+        aLoader.setVariable({'Url':'FLTCON/NMACH', 'Value':'20', 'Unit':''})
         #aLoader = dcModel()
         aLoader.save(obPath)
         aLoader.buildDatcomInputFile(dtPath)
