@@ -69,8 +69,10 @@ class DatcomWidgetBaseUi(object):
         if hasattr(CARD,'VariableList'):
             #开始参数配置过程
             for tVarName in CARD.VariableList.keys():              
-                tVarDefine = CARD.VariableList[tVarName]
+                #tVarDefine = CARD.VariableList[tVarName]
+                
                 tUrl = '%s/%s'%(CARD.NameList, tVarName)
+                tVarDefine = CARD.dtDefine.getVariableDefineByUrl(tUrl)
                 #判断类型
                 if tVarDefine['TYPE'] == 'Array':
                     #对于表格类型不在这里创建信息
@@ -116,7 +118,7 @@ class DatcomWidgetBaseUi(object):
                 tVarName   = tCombo['Index']
                 tUrl = '%s/%s'%(CARD.NameList, tVarName)
                 tComboWidget = DatcomInputComboChooser(tUrl,
-                               parent=self.groupBox_lift, DDefinition = DDefine)    
+                               parent=self.groupBox_lift, iDefinition = DDefine)    
                 tComboWidget.setObjectName('Chooser_%s'%tVarName)
                 #绑定值变换信号到自身信号 因为尚未创建对象TableWidget无法直接绑定 
                 #连接变量变化信号到本Widget的转发信号
@@ -144,7 +146,7 @@ class DatcomWidgetBaseUi(object):
         #创建多值工程量的输入结构      
         for tGroup in tableCache.keys():
             #创建表单
-            tTabTable = TB(iNameList = CARD.NameList, iGroup = tGroup , iDefine = CARD.DDefine, parent = CARD)
+            tTabTable = TB(iNameList = CARD.NameList, iGroup = tGroup , iDefine = CARD.dtDefine, parent = CARD)
             tTabTable.setObjectName("tableWidget_%s"%tGroup)
             #设置表格的大小策略
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)

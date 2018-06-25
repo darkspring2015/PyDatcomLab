@@ -173,13 +173,7 @@ class datcomXMLLoader(object):
         """
         return self.Properties
         
-        
 
-
-        
-        
-
-        
         
 if __name__=="__main__":
     """

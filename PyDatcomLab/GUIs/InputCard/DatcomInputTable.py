@@ -321,7 +321,7 @@ class DatcomInputTable(QWidget):
             tUrl = '%s/%s'%(self.Namelist , iV['VarName'])
             if self.table.isColumnHidden(iC):
                 #True is Hidden Delete the Variable from the Model
-                tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
+                tVar = self.DDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Value'] = None
                 iModel.setVariable( tUrl, tVar)
             else:

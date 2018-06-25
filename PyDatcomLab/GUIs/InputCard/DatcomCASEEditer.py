@@ -17,13 +17,14 @@ from PyDatcomLab.Core import datcomModel as dcModel
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  , DTdictionary as dtDefinition
 #from PyDatcomLab.Core.datcomCaseConstraint import  datcomCaseConstraint as dcConstrait
 from PyDatcomLab.GUIs.InputCard.DatcomCASEEditerUi import DatcomCASEEditerUi
+from PyDatcomLab.GUIs.InputCard.DatcomWidgetBase import DatcomWidgetBase
 
 
 class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
     """
     Class documentation goes here.
     """
-    def __init__(self, parent=None, modelpath = None, dtDefine = DDefine):
+    def __init__(self, parent=None, modelpath = None, iDefine = DDefine):
         """
         Constructor
         
@@ -35,10 +36,10 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         #初始化日志系统
         self.logger = logging.getLogger(r'Datcomlogger')
         #创建内部数据结构        
-        if dtDefine is None or type(dtDefine) != dtDefinition:
+        if iDefine is None or type(iDefine) != dtDefinition:
             self.dtDefine = DDefine
         else:
-            self.dtDefine =dtDefine
+            self.dtDefine = iDefine
             
         self.dcModelPath =  modelpath
         if os.path.isfile(modelpath):
@@ -60,18 +61,17 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         初始化所有的page页
         """
         self.tabWidget_Configuration.clear()  
-        for mdName in self.dcModel.getCARDList():
-            mdObj = __import__(mdName)
-            cardMd = getattr(mdObj,mdName)
-            aW = cardMd(self, tModel = self.dcModel)
+        for mdName in self.dcModel.getNamelistCollection():
+            dF               =   self.dtDefine.getNamelistDefineByName(mdName)
+            dFNmlstAtrrib =  self.dtDefine.getNamelistAttributeByName(mdName)
+            if dF == {} :
+                self.logger.error("不存在%s对应的选项卡定义"%mdName)
+                continue    
+            if 'DisplayName' not in dFNmlstAtrrib.keys():
+                dFNmlstAtrrib["DisplayName"] = mdName
+            aW = DatcomWidgetBase(iNamelist = mdName , iModel =  self.dcModel, parent = self)     
             aW.setObjectName(mdName)
-            self.tabWidget_Configuration.addTab( aW, dF.namelistDefine[mdName]['ShowName'])
-            
-#        for mdName in self.widgetNameList.keys():
-#            aW = mdName(tModel = self.dcModel)
-#            aW.setObjectName(self.widgetNameList[mdName][0] )
-#            self.tabWidget_Configuration.addTab( aW, self.widgetNameList[mdName][1])
-            
+            self.tabWidget_Configuration.addTab( aW, dFNmlstAtrrib['DisplayName'])    
     
     @pyqtSlot(int)
     def on_tabWidget_Configuration_currentChanged(self, index):
@@ -127,7 +127,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
 
 if __name__ == "__main__":
     import sys
-    bPath = os.path.join(os.path.expanduser('~'), '.PyDatcom', 'extras')
+    bPath = os.path.join(os.path.expanduser('~'), '.PyDatcomLab', 'extras')
     sPath  = os.path.join(bPath,    '\PyDatcomProjects\1\case2.xml')
     obPath  = os.path.join(bPath,  '\PyDatcomProjects\1\case3.xml')
     dtPath  = os.path.join(bPath,   '\PyDatcomProjects\1\case3.inp')

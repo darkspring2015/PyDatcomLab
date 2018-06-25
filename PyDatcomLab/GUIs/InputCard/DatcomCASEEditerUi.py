@@ -21,15 +21,16 @@ class DatcomCASEEditerUi(object):
         self.tabWidget_Configuration.setObjectName("tabWidget_Configuration")
         tNamelistCollection = self.dcModel.getNamelistCollection()
         for iC in tNamelistCollection.keys():
-            tTab = dtCARD(tCARD = iC, tModel = self.dcModel, parent = Dialog) 
+            tTab = dtCARD(iNamelist = iC, iModel = self.dcModel, parent = Dialog) 
             tTab.setObjectName("tabCARD_%s"%iC)
-            tNDf = Dialog.dtDefine.getNamelistDefineByName(iC)
+            tNDf        = Dialog.dtDefine.getNamelistDefineByName(iC)
+            tNDfAttrib =  Dialog.dtDefine.getNamelistAttributeByName(iC)
             if tNDf is None:
                 Dialog.logger.error("%s的定义无效"%iC)
                 continue
             #检查信息
-            if 'DisplayName' in tNDf.keys():
-                tDisplay = tNDf['DisplayName']
+            if 'DisplayName' in tNDfAttrib.keys():
+                tDisplay = tNDfAttrib['DisplayName']
             else :
                 tDisplay = iC
             self.tabWidget_Configuration.addTab(tTab, tDisplay)

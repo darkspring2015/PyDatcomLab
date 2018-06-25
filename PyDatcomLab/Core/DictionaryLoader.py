@@ -28,13 +28,14 @@ class DTdictionary():
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger') 
         #确认配置文件的正确性
-        self.basePath = os.path.join(os.path.expanduser('~'), '.PyDatcom', 'config', 'datcomDefine.xml')
+        self.basePath = os.path.join(os.path.expanduser('~'), '.PyDatcomLab', 'config', 'datcomDefine.xml')
         if not os.path.exists(path):
             path = self.basePath
         self.dicPath = path
         #定义一个字典存储所有的定义信息
-        self.Dictionary = {}     #按照键值对方式存储所有的信息
-        self.dictAddtional = {}  #以CARD/Namelist为键，保存附加定义信息 NMACHLinkTable  RuleNumToCount RuleIndexToCombo groupDefine
+        self.Dictionary = {}             #按照键值对方式存储所有的信息
+        self.dictAddtional = {}         #以CARD/Namelist为键，保存附加定义信息 NMACHLinkTable  RuleNumToCount RuleIndexToCombo groupDefine
+        self.NamelistAttribute = {}   #存储Namelist自身的属性值信息
         self.docXML = ET.ElementTree().getroot()
         #调用加载
         self.loadDictionory(self.dicPath)
@@ -64,6 +65,7 @@ class DTdictionary():
             #遍历所有的根节点，认为是Namelist节点
             nmlistName = nmlstNode.tag
             self.Dictionary[nmlistName] = {}  #添加Namelist的定义
+            self.NamelistAttribute[nmlistName] = nmlstNode.attrib
             for varNode  in list(nmlstNode):
                 if varNode.get('dcType') == 'Infomation':
                     #如果是变量节则跳过
@@ -172,12 +174,22 @@ class DTdictionary():
                 
     def getNamelistDefineByName(self, nmlst):
         """
-        返回nmlst定义的选项卡
+        返回nmlst定义的选项卡的所有变量的列表
         """
         if nmlst in self.Dictionary.keys():
             return self.Dictionary[nmlst]
         else:
             return {}
+            
+    def getNamelistAttributeByName(self, nmlst):
+        """
+        返回Namelist的自身属性，dcType， displayName等
+        """
+        if nmlst in self.NamelistAttribute.keys():
+            return self.NamelistAttribute[nmlst]
+        else:
+            return {}
+            
     def getCARDAddtionalInformation(self, nmlst, ruleName):
         """
         返回nmlst对应CARD的附加信息

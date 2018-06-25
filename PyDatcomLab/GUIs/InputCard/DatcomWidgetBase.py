@@ -60,8 +60,9 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
             self.logger.error("未指定Namelist信息：%s!"%str(iNamelist))
             iNamelist = 'FLTCON'
         self.NameList            = iNamelist
-        self.dtDefine             = iDefine
-        self.VariableList         = self.dtDefine.getNamelistDefineByName(self.NameList) 
+        self.dtDefine                 = iDefine
+        self.NamelistAttriabute    = self.dtDefine.getNamelistAttributeByName(self.NameList)
+        self.VariableList             = self.dtDefine.getNamelistDefineByName(self.NameList) 
         self.NMACHLinkTable       = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'NMACHLinkTable') 
         self.RuleNumToCount      = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleNumToCount')        
         self.RuleIndexToCombo   = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleIndexToCombo')  
@@ -76,7 +77,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         
         #修改后台的数据，如果tModel is None 将创建空的datcomModel对象       
         #将附加指定 InitDoc，InitLogic
-        self.setModel( tModel)        
+        self.setModel( iModel)        
         #绑定处理逻辑
 
         #界面参数
