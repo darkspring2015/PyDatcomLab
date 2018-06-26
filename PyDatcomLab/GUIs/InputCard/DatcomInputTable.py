@@ -49,17 +49,18 @@ class DatcomInputTable(QWidget):
         #self.InitializeUILogic()        
         #界面参数
         self.curPos = QPoint(0, 0)
-        self.setDelegate()
+
         #设置表头
         self.InitializeHeader()
+        self.setDelegate()  #按列设置代理
         #指定Header的内容菜单
         #self.horizontalHeader().customContextMenuRequested.connect(self.OnHeaderCustomContextMenuRequested)
         self.table.horizontalHeader().sectionClicked.connect(self.ForSectionClicked)
         
         #附加初始化过程
         self.InitializeContextMenu() #配置内容菜单
-        self.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.customContextMenuRequested.connect(self.on_customContextMenuRequested)
+        self.table.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.table.customContextMenuRequested.connect(self.on_customContextMenuRequested)
         
         #绑定执行逻辑 
         self.Singal_RuleNumToCount.connect(self.on_Singal_RuleNumToCount)
@@ -162,7 +163,7 @@ class DatcomInputTable(QWidget):
         #New Row
         self.actionAddRow = QAction(self)
         icon = QIcon()
-        icon.addPixmap(QPixmap(":/input/images/addLine.ico"), QIcon.Normal, QIcon.Off)
+        icon.addPixmap(QPixmap(":/InputCard/images/InputCard/addLine.ico"), QIcon.Normal, QIcon.Off)
         self.actionAddRow.setIcon(icon)
         self.actionAddRow.setObjectName("actionAddRow")
         self.actionAddRow.setText( "增加行")
@@ -172,7 +173,7 @@ class DatcomInputTable(QWidget):
         self.actionDeleteRow.setText("删除行")
         self.actionDeleteRow.setToolTip( "删除一行")
         icon1 = QIcon()
-        icon1.addPixmap(QPixmap(":/input/images/deleteLine.ico"), QIcon.Normal, QIcon.Off)
+        icon1.addPixmap(QPixmap(":/InputCard/images/InputCard/deleteLine.ico"), QIcon.Normal, QIcon.Off)
         self.actionDeleteRow.setIcon(icon1)
         self.actionDeleteRow.setObjectName("actionDeleteRow")  
         #Add All Row
@@ -180,7 +181,7 @@ class DatcomInputTable(QWidget):
         self.actionAddRowToMax.setText("添加所有行")
         self.actionAddRowToMax.setToolTip( "添加到最大行数")
         icon1 = QIcon()
-        icon1.addPixmap(QPixmap(":/input/images/addLine.ico"), QIcon.Normal, QIcon.Off)
+        icon1.addPixmap(QPixmap(":/InputCard/images/InputCard/addLine.ico"), QIcon.Normal, QIcon.Off)
         self.actionAddRowToMax.setIcon(icon1)
         self.actionAddRowToMax.setObjectName("actionAddRowToMax")     
         #Delete all Row
@@ -188,12 +189,12 @@ class DatcomInputTable(QWidget):
         self.actionClearRows.setText("删除所有行")
         self.actionClearRows.setToolTip( "删除所有行")
         icon1 = QIcon()
-        icon1.addPixmap(QPixmap(":/input/images/deleteLine.ico"), QIcon.Normal, QIcon.Off)
+        icon1.addPixmap(QPixmap(":/InputCard/images/InputCard/deleteLine.ico"), QIcon.Normal, QIcon.Off)
         self.actionClearRows.setIcon(icon1)
         self.actionClearRows.setObjectName("actionClearRows")  
         
         #创建菜单
-        self.popMenu = QMenu(self)
+        self.popMenu = QMenu(self.table)
         #定义
         self.popMenu.addAction(self.actionAddRow)
         self.popMenu.addAction(self.actionDeleteRow)
@@ -283,6 +284,7 @@ class DatcomInputTable(QWidget):
 
             #执行数据写入
             tData = tDataVar['Value']
+            if tData is None :continue
             if self.table.rowCount() != len(tData): 
                 self.logger.info("%s加载数据过程中表格长度%d与数据长度%d不同，修改表格长度"%(self.vUrl,self.table.rowCount(), len(tData) ))
                 self.table.setRowCount(len(tData))
@@ -323,7 +325,7 @@ class DatcomInputTable(QWidget):
                 #True is Hidden Delete the Variable from the Model
                 tVar = self.DDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Value'] = None
-                iModel.setVariable( tUrl, tVar)
+                iModel.setVariable( tVar)
             else:
                 #False : warite the data
                 tVarlist = []
@@ -412,7 +414,7 @@ class DatcomInputTable(QWidget):
     def on_Singal_RuleNumToCount(self, tNum):
         """
         """
-        if tNum >= self.minCount and tNum <= self.maxCount  and  tNum >= self.rowCount():
+        if tNum >= self.minCount and tNum <= self.maxCount  and  tNum >= self.table.rowCount():
             self.table.setRowCount(tNum)
         else:
             self.logger.error("无法将表格的行数设置为%d,当前%d"%(tNum,self.table.rowCount() ))
@@ -426,8 +428,6 @@ class DatcomInputTable(QWidget):
         增加新行的代码.
         """
         # TODO: not implemented yet
-        #添加行
-        # TODO :test
         aItem = self.table.indexAt(self.curPos) #认为是表格 ，否则会异常
         rowIndex = 0
         if aItem.row() == -1 :
@@ -463,7 +463,7 @@ class DatcomInputTable(QWidget):
         """
         # TODO: not implemented yet
         aItem = self.table.indexAt(self.curPos)
-        if  aItem.row() >= 0 :            
+        if  aItem.row() >=0 :            
             self.table.removeRow(aItem.row())
         else:
             self.logger.info("没有命中任何行")
@@ -570,6 +570,14 @@ class DatcomInputTable(QWidget):
 This signal is emitted whenever the data of item has changed.
         在此处协调代理自行变换单位的情况
         """
+        #做值判断
+        if item.data(Qt.DisplayRole) is not None and item.data(Qt.UserRole) is None:
+            #tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}
+            pass
+            
+        
+        
+        
         #判断列结论
         tConfig = self.table.horizontalHeaderItem(item.column()).data(Qt.UserRole)
         if 'Dimension' not in tConfig.keys() or 'CurrentUnit'  not in tConfig.keys():

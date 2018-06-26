@@ -207,7 +207,7 @@ class dcModel(datcomXMLLoader):
             self.logger.error("NAMELIST : %s并没有在配置中定义！"%namelist)
             return 
         #遍历执行，删除Namelist对应的所有变量
-        for iV in self.doc.keys():
+        for iV in list(self.doc):       #这里只能使用list而不能使用key，因为会无法删除
             if self.doc[iV]['Namelist'] == namelist:
                 self.doc.pop(iV) 
         

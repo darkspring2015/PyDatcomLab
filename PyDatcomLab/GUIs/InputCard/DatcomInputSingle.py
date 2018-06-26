@@ -58,7 +58,7 @@ class DatcomInputSingle(QWidget):
         self.baseStretchFactor = [1, 1]
         #
         self.vFloatFormat   = '%.f'
-        if self.VarDefine['TYPE'] not in ['INT', 'REAL'] : 
+        if  not self.isValidateType(): 
             self.logger.error('尝试创建的%s变量不是INT或者REAL类型'%self.vUrl )
         #规划界面
         self.setupUi(self)
@@ -111,6 +111,7 @@ class DatcomInputSingle(QWidget):
         #添加录入框
         self.InputWidget = QtWidgets.QLineEdit(self.splitter_Inner)
         self.InputWidget.setObjectName('InputWidget%s'%self.VarName) #设置输入组件的名称为变量名
+        self.InputWidget.editingFinished.connect(self.on_InputWidget_editingFinished)
         #调节录入框的策略
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -207,6 +208,22 @@ class DatcomInputSingle(QWidget):
         #执行其他逻辑
         self.retranslateUi(Form)        
         QtCore.QMetaObject.connectSlotsByName(Form)
+        
+    def isValidateType(self):
+        """
+        验证是否有效的变量类型
+        """
+        tReslut = False
+        if self.VarDefine['TYPE']  in ['INT', 'REAL']:
+            tReslut = True
+        if self.VarDefine['TYPE'] == 'Array' and 'SubType' not in self.VarDefine.keys():
+            tReslut = True
+        if self.VarDefine['TYPE'] == 'Array' and 'SubType'  in self.VarDefine.keys() and self.VarDefine['SubType']  in ['', 'INT', 'REAL']:
+            tReslut = True           
+            
+        return tReslut
+        
+
 
     def InitializeUILogic(self):
         """
@@ -311,7 +328,9 @@ class DatcomInputSingle(QWidget):
         """
         返回编辑控件当前的值，将在作为Delegate是被使用
         """
-        
+        if self.InputWidget.text() is None or self.InputWidget.text() =="":
+            return self.delegateData
+            
         
         if self.VarDefine['TYPE'] == 'INT':
             self.delegateData['Value'] = int(self.InputWidget.text())
@@ -405,11 +424,12 @@ class DatcomInputSingle(QWidget):
         设置控件的值，从dtModel中加载对应值
         """
         if dtModel is None : return         
-        if self.VarDefine['TYPE'] not in ['INT', 'REAL']:
+        if not self.isValidateType() :
             self.logger.error('尝试创建的%s变量不是INT或者REAL类型'%self.vUrl )
             return 
             
         tVar = dtModel.getContinuousVariableValueByName(self.vUrl)
+            
         #设置单位           
         if 'Unit' in tVar.keys() and tVar['Unit'] not in ['', '/']:
             tIndex = self.comboBox_VarUnit.findText(tVar['Unit'])
@@ -433,7 +453,11 @@ class DatcomInputSingle(QWidget):
             finally:
                 self.InputWidget.setText(str(tV))
         else:
-            self.logger.error("传递的参数对应的控件信息异常：！")
+            if 'Default' in  self.VarDefine.keys() and self.VarDefine['Default'] is not None:
+                self.InputWidget.setText(str(self.VarDefine['Default']))
+                self.logger.warning("控件loadData(%s)异常：dcModel中没有有效的值，使用默认值：%s修正！"%(self.vUrl , str(self.VarDefine['Default'])))
+            else:
+                self.logger.error("控件loadData(%s)异常：dcModel中没有有效的值，且没有默认值！"%self.vUrl )
 
                 
     

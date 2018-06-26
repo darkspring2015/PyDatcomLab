@@ -296,16 +296,26 @@ class DatcomInputList(QWidget):
             if type(tVar) in [float, int]:
                 tKey = '%.1f'%(float(tVar))
             elif type(tVar) is str:
-                tKey =tVar
+                tKey = tVar
             elif type(tVar) is dict and 'Value' in tVar.keys():
-                tKey = tVar['Value']
+                if type(tVar['Value']) is str:
+                    tKey = tVar['Value']
+                elif type(tVar['Value']) in [float, int]:
+                    tKey = '%.1f'%(float(tVar['Value']))
+                else:
+                    tKey = tVar['Value']  #None 
+                    self.logger.error("值类型错误: %s "%(str(tVar)))                    
             else:
-                self.loggger.error("值类型错误")
+                self.logger.error("值类型错误")
   
             if tKey in self.VarDefine['Range']:
                 self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(tKey))
             else:
-                self.logger.error("传递的参数具有的值不在预设范围之内：%s"%(tVar['Value'])) 
+                if 'Default' in self.VarDefine.keys():
+                    self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(self.VarDefine['Default']))
+                    self.logger.error("传递的参数具有的值不在预设范围之内：%s,使用默认值修正：%s"%(tKey, self.VarDefine['Default'])) 
+                else:
+                    self.logger.error("传递的参数具有的值不在预设范围之内：%s"%(tVar['Value'])) 
         else:
             if type(self.LabelItem )is QtWidgets.QCheckBox :
                 self.LabelItem.setCheckState(Qt.Unchecked)

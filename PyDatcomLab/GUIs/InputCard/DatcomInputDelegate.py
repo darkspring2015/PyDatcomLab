@@ -46,9 +46,9 @@ class DatcomInputContinuousDelegate(QtWidgets.QStyledItemDelegate ):
             self.logger.info("%s在定义中声明的SubType为%s"%(self.vUrl, self.DDefine['SubType']))
             tType = self.VarDefine['SubType']
         if tType in ['REAL', 'INT']:
-            tTb = SInput(self.Namelist, self.VarName, parent=parent,  DDefinition = self.DDefine )
+            tTb = SInput(self.vUrl, parent=parent,  iDefinition = self.DDefine )
         else:
-            tTb = LInput(self.Namelist, self.VarName, parent=parent,  DDefinition = self.DDefine)        
+            tTb = LInput(self.vUrl, parent=parent,  iDefinition = self.DDefine)        
         return tTb
         
     def setEditorData(self,editor, index ):

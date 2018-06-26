@@ -47,9 +47,9 @@
     <file>images/mainwindow/projectSave.png</file>
     <file>images/mainwindow/projectSaveAs.png</file>
   </qresource>
-  <qresource prefix="Inputcard">
+  <qresource prefix="InputCard">
     <file>images/InputCard/NormalIcon.ico</file>
-    <file alias="deleteLine">images/InputCard/deleteLine.ico</file>
-    <file alias="addLine">images/InputCard/addLine.ico</file>
+    <file>images/InputCard/deleteLine.ico</file>
+    <file>images/InputCard/addLine.ico</file>
   </qresource>
 </RCC>

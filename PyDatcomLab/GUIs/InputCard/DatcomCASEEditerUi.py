@@ -19,25 +19,21 @@ class DatcomCASEEditerUi(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.tabWidget_Configuration = QtWidgets.QTabWidget(Dialog)
         self.tabWidget_Configuration.setObjectName("tabWidget_Configuration")
-        tNamelistCollection = self.dcModel.getNamelistCollection()
-        for iC in tNamelistCollection.keys():
-            tTab = dtCARD(iNamelist = iC, iModel = self.dcModel, parent = Dialog) 
-            tTab.setObjectName("tabCARD_%s"%iC)
-            tNDf        = Dialog.dtDefine.getNamelistDefineByName(iC)
-            tNDfAttrib =  Dialog.dtDefine.getNamelistAttributeByName(iC)
-            if tNDf is None:
-                Dialog.logger.error("%s的定义无效"%iC)
-                continue
-            #检查信息
-            if 'DisplayName' in tNDfAttrib.keys():
-                tDisplay = tNDfAttrib['DisplayName']
-            else :
-                tDisplay = iC
-            self.tabWidget_Configuration.addTab(tTab, tDisplay)
+        self.tabWidget_Configuration.setMovable(True)
+        self.tabWidget_Configuration.setTabsClosable(True)
+        self.tabWidget_Configuration.setTabBarAutoHide(True)
+        self.tabWidget_Configuration.setUsesScrollButtons(True)
+        self.tabWidget_Configuration.setDocumentMode(True)
+        #self.tabWidget_Configuration.tabBar().setExpanding(True)
+        #循环添加表单
+        Dialog.reloadTabs()
+        #添加TabWidget
         self.horizontalLayout.addWidget(self.tabWidget_Configuration)
-
+        #翻译
         self.retranslateUi(Dialog)
+        #设置初始值
         self.tabWidget_Configuration.setCurrentIndex(0)
+        #link slot and signal
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
