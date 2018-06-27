@@ -40,6 +40,16 @@ def getNowTime():
     import time
     return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))  
 
+def isNotNanInf( tF):
+    """
+    判断是否是double的inf和nan值
+    """
+    import math
+    if tF is not  None and  type(tF) in [float, int]  and \
+    not math.isinf(tF) and not math.isnan(tF):
+        return True
+    return False
+
 class dtIOException(Exception):
     '''
     读写文件系统导致的异常

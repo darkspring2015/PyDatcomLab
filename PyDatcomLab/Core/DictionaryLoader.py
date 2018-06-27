@@ -17,6 +17,7 @@ import logging
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core.datcomDimension import Dimension
 from PyDatcomLab.Core import datcomDimension as DimTools
+from PyDatcomLab.Core import datcomTools as tools
 
 class DTdictionary():
     """
@@ -319,6 +320,61 @@ class DTdictionary():
                 self.logger.error("获得的定义有问题，有Dimension但没有Unit！ %s-%s"%(nmlst, VarName))
         return tR
 
+    def getPlaceholderText(self, iUrl):
+        """
+        返回变量iUrl的占位符
+        1.如果是List 类型返回空
+        2.如果是REAL, INT,返回变量范围说明,如果没有定义range，返回空
+        3.如果是Array类型，返回SubType对应变量的返回
+        4.如果iUrl不是合法定义，返回None
+        """
+        tVarDf  = self.getVariableDefineByUrl(iUrl)
+        if tVarDf is None:
+            return ''
+        elif tVarDf['TYPE'] == 'List':
+            return ''
+        elif tVarDf['TYPE'] == 'REAL':
+            #分析上下限
+            if 'Range' in tVarDf.keys():
+                tRange = tVarDf['Range']                    
+                #分析占位符
+                if 'Decimals' in tVarDf.keys():
+                    tDec = int(tVarDf['Decimals'])
+                    tFloatFormat = '%%.%df'%tDec
+                    tFStr  = '%s - %s'%(tFloatFormat, tFloatFormat)
+                    return tFStr%(tRange[0], tRange[1])
+                else:
+                    return '%f-%f'%(tRange[0], tRange[1])
+            else:
+                return ''
+        elif tVarDf['TYPE'] == 'INT':
+            #分析上下限
+            if 'Range' in tVarDf.keys():
+                tRange = tVarDf['Range']     
+                return '%d-%d'%(tRange[0], tRange[1])
+            else:
+                return ''   
+        elif tVarDf['TYPE'] == 'Array':
+            if 'SubType' in tVarDf.keys() and tVarDf['SubType'] in ['BOOL', 'List']:
+                return ''
+            else:
+                #分析上下限
+                if 'Range' in tVarDf.keys():
+                    tRange = tVarDf['Range']                    
+                    #分析占位符
+                    if 'Decimals' in tVarDf.keys():
+                        tDec = int(tVarDf['Decimals'])
+                        tFloatFormat = '%%.%df'%tDec
+                        tFStr  = '%s - %s'%(tFloatFormat, tFloatFormat)
+                        return tFStr%(tRange[0], tRange[1])
+                    else:
+                        return '%f-%f'%(tRange[0], tRange[1])
+                else:
+                    return ''
+        return ''
+
+
+
     def getVariableDefineByUrl(self, tUrl):
         """
         从定义中获得对应变量的定义信息  使用getVariableDefineByName
@@ -328,7 +384,7 @@ class DTdictionary():
         nmlst   = tUrl.split('/')[-2]
         VarName = tUrl.split('/')[-1]
         return self.getVariableDefineByName(nmlst, VarName)
-        
+    
 
     def getVariableDefineByName(self, nmlst, VarName):
         """
@@ -384,7 +440,7 @@ class DTdictionary():
         """
         return ['FLTCON', 'BODY']
         
-    def getVariableTemplateByUrl(self, tUrl):
+    def getVariableTemplateByUrl(self, tUrl, isSubType = False):
         """
         返回tUrl对应的变量模板
             <VARIABLE VarName='LOOP'  Namelist='FLTCON' Url='FLTCON/LOOP' Unit='/'>['1.0']</VARIABLE>
@@ -393,6 +449,7 @@ class DTdictionary():
             <VARIABLE VarName='X'  Namelist='BODY' Url='BODY/X' Unit='L/m' SIndex ='1'>[0.15,0.25,0.25]</VARIABLE>
             #将保证List是由string型组成的
             每次返回的都是独立的实例
+            
         """
         #获得定义
         tDf = self.checkUrl(tUrl)
@@ -410,7 +467,13 @@ class DTdictionary():
             tRes['Unit'] = DimTools.getMainUnitByDimension(tDf['Dimension'])
         #检查默认值        
         if 'Default' in tDf.keys() :
-            tRes['Value'] = tDf['Default']
+            if tDf['TYPE'] == 'Array'  :
+                if  isSubType: #
+                    tRes['Value'] = tDf['Default']
+                else:
+                    tRes['Value'] = []
+            else:
+                tRes['Value'] = tDf['Default']
         else:
             #进行值类型
             #INT 默认0或者range的下限
@@ -427,7 +490,19 @@ class DTdictionary():
                     tRes['Value'] = 0.0             
             #Array 默认[]
             elif tDf['TYPE'] == 'Array' :
-                tRes['Value'] = []    
+                if isSubType : #如果是要求获取Array的子项的默认值
+                    if 'SubType' in tDf.keys() and tDf['SubType'] in ['BOOL', 'LIST'] :  
+                        #当表格输入.TRUE. .FALSE.
+                        if 'Range' in tDf.keys() :
+                            tRes['Value'] = str(tDf['Range'][0])  #将保证List是由string型组成的
+                    else:
+                        #其他没有定义'SubType'和'SubType'不是'BOOL', 'LIST'的情况
+                        if 'Range' in tDf.keys() :
+                            tRes['Value'] = float(tDf['Range'][0] ) 
+                        else:
+                            tRes['Value'] = 0.0   
+                else:
+                    tRes['Value'] = []    
             #List 默认            
             elif tDf['TYPE'] == 'List' :                
                 if 'Range' in tDf.keys() :

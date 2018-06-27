@@ -5,7 +5,7 @@ Module implementing DatcomTableInput
 主要接口包括：
 
 """
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import  Qt, pyqtSlot, QPoint , QMetaObject, pyqtSignal
 from PyQt5.QtWidgets import QAction , QTableWidgetItem, QMenu, QWidget
 from PyQt5.QtGui import  QIcon, QPixmap#,QDoubleValidator, QIntValidator, QValidator
@@ -16,6 +16,7 @@ from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefin
 from PyDatcomLab.Core import  datcomModel as dcModel
 from PyDatcomLab.Core import datcomDimension as dtDimension
 from PyDatcomLab.Core.datcomDimension import Dimension
+from PyDatcomLab.Core import datcomTools as tools
 from PyDatcomLab.GUIs.InputCard.DatcomInputDelegate import DatcomInputContinuousDelegate as CDelegate
 from PyDatcomLab.GUIs  import PyDatcomLab_rc
 
@@ -65,6 +66,7 @@ class DatcomInputTable(QWidget):
         #绑定执行逻辑 
         self.Singal_RuleNumToCount.connect(self.on_Singal_RuleNumToCount)
         self.table.itemChanged.connect(self.onItemChanged) 
+        self.table.cellChanged.connect(self.on_cellChanged)
         
         #再次执行绑定
         QMetaObject.connectSlotsByName(self)
@@ -249,6 +251,7 @@ class DatcomInputTable(QWidget):
         1. 根据Namelist 和 Group的值从iModel中读取对应的信息
         2. 加载所有Group中指定的Variable，从AddtionalInformation设定显示规则
         3. 调整对应变量的单位
+        4. 如果输入值不合法进行背景标红提示
         """
         
         if iModel is None or type(iModel) != dcModel.dcModel:
@@ -265,7 +268,7 @@ class DatcomInputTable(QWidget):
             if tDataVar is None:
                 #不存在数据则隐藏对应的列
                 self.table.setColumnHidden(iC, True)
-                self.logger.info("%s的列%s没有数据，不显示"%(self.vUrl, self.table.horizontalHeaderItem(iC).text()))
+                #self.logger.info("%s的列%s没有数据，不显示"%(self.vUrl, self.table.horizontalHeaderItem(iC).text()))
                 continue
             #执行表头坐标同步
             tDimension = ''
@@ -279,14 +282,14 @@ class DatcomInputTable(QWidget):
                 tUnit = dtDimension.getMainUnitByDimension(tDimension)
                 #self.logger.info("数据格式异常，缺少单位信息")
             #定义本列的魔板
-            tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}
-                
+            tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}                
 
             #执行数据写入
             tData = tDataVar['Value']
             if tData is None :continue
             if self.table.rowCount() != len(tData): 
                 self.logger.info("%s加载数据过程中表格长度%d与数据长度%d不同，修改表格长度"%(self.vUrl,self.table.rowCount(), len(tData) ))
+                #这里应该是比较大的那个值
                 self.table.setRowCount(len(tData))
             if len(tData) in range(self.minCount, self.maxCount):                   
                 for iR in range(0, len(tData)):
@@ -320,7 +323,8 @@ class DatcomInputTable(QWidget):
         for iC in range(0, len(self.varsDfList)):
             #遍历所有变量的定义
             iV = self.varsDfList[iC]
-            tUrl = '%s/%s'%(self.Namelist , iV['VarName'])
+            tUrl = '%s/%s'%(self.Namelist , iV['VarName'])  #
+            #分析
             if self.table.isColumnHidden(iC):
                 #True is Hidden Delete the Variable from the Model
                 tVar = self.DDefine.getVariableTemplateByUrl(tUrl)
@@ -329,25 +333,32 @@ class DatcomInputTable(QWidget):
             else:
                 #False : warite the data
                 tVarlist = []
-                if 'SubType' in iV.keys() and iV['SubType'] == 'BOOL':
-                    for iR in range(0, self.table.rowCount()):
-                        tText = self.table.item(iR, iC).text()
-                        if tText == '.FALSE.':
-                            tVarlist.append(False)
-                        elif tText == '.TRUE.':
-                            tVarlist.append(True)
+                for iR in range(0, self.table.rowCount()): 
+                    #如果没有输入值则利用定义的默认值
+                    if self.table.item(iR, iC) is None:  
+                        self.logger.error("表格%s在R：%d，C：%d的输入不应为空"%(self.vUrl, iR, iC))
+                        tData = self.DDefine.getVariableTemplateByUrl(tUrl, True)  #查询Array的子项的默认值
+                        #self.table.item(iR, iC).setBackground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+                    else:
+                        #如果输入了则使用输入值                    
+                        if 'SubType' in iV.keys() and iV['SubType'] == 'BOOL':
+                            tText = self.table.item(iR, iC).text()
+                            if tText == '.FALSE.':
+                                tVarlist.append(False)
+                            elif tText == '.TRUE.':
+                                tVarlist.append(True)
+                            else:
+                                self.logger.error("DatcomInputTable.saveData()输入数据%s不合法"%tText)
                         else:
-                            self.logger.error("输入数据%s不合法"%tText)
-                else:
-                    #值校验认为由控件已经完成了
-                    #单位换算认为已经由控件换算完成了
-                    for iR in range(0, self.table.rowCount()):
-                        tData = self.table.item(iR, iC).data(Qt.UserRole)
-                        #这里应该执行一次统一的坐标变换
-                        if tData is None or tData['Value'] is None:
-                            self.logger.error("输入数据%s不合法 R：%d，C：%d"%(self.table.item(iR, iC).text(), iR, iC))
-                        else:                            
-                            tVarlist.append(tData['Value']) 
+                            #值校验认为由控件已经完成了
+                            #单位换算认为已经由控件换算完成了
+                            tData = self.table.item(iR, iC).data(Qt.UserRole)
+                        
+                    #将结果写入到序列
+                    if tData is None or tData['Value'] is None:
+                        self.logger.error("DatcomInputTable.saveData()输入数据%s不合法 R：%d，C：%d"%(self.table.item(iR, iC).text(), iR, iC))
+                    else:                            
+                        tVarlist.append(tData['Value']) 
                 #此处传递了CurrentUnit给Model
                 
                 if 'CurrentUnit' in self.table.horizontalHeaderItem(iC).data(Qt.UserRole).keys():
@@ -369,6 +380,46 @@ class DatcomInputTable(QWidget):
             if not self.table.isColumnHidden(iC):
                 tShowColumnList.append(self.varsDfList[iC]['VarName'])
         return tShowColumnList      
+        
+    @pyqtSlot(int, int)    
+    def on_cellChanged(self, row,  column ):  
+        """
+        响应cellChanged，验证新值是否合法
+        """
+        if row <0 or column <0:
+            return
+        #获得变量定义
+        tUrl = '%s/%s'%(self.Namelist ,self.varsDfList[column]['VarName'])  
+        tVarDf = self.DDefine.getVariableDefineByUrl(tUrl)
+        #tVarTmp = self.DDefine.getVariableTemplateByUrl(tUrl, True)
+        tItem = self.table.item( row,  column)
+        if tItem is None :
+            #本身数据是不存在
+            return
+            
+            
+        if 'SubType' in tVarDf.keys() and  tVarDf['SubType'] in ['BOOL', 'LIST']:
+            #如果是离散值的验证
+            pass
+        else:
+            tVd = QtGui.QDoubleValidator()
+            tVd.setObjectName('DoubleValidator')
+            #tVd.setNotation(QtGui.QDoubleValidator.StandardNotation) #否则无法限制
+            if 'Range' in tVarDf.keys():
+                tRange = tVarDf['Range']
+                if  tools.isNotNanInf(tRange[0]) :
+                    tVd.setBottom(tRange[0])                        
+                if  tools.isNotNanInf(tRange[1]):
+                    tVd.setTop(tRange[1])                    
+            #分析占位符
+            if 'Decimals' in tVarDf.keys()and \
+                QtGui.QIntValidator().validate(tVarDf['Decimals'], 0)[0] == QtGui.QValidator.Acceptable:
+                    tVd.setDecimals(int(tVarDf['Decimals']))  
+            if tVd.validate(str(tItem.data(Qt.UserRole)['Value']), 0)[0] != QtGui.QValidator.Acceptable:
+                tItem.setBackground((QtGui.QBrush(QtGui.QColor(255, 0, 0))))
+            else:
+                tItem.setBackground((QtGui.QBrush(QtGui.QColor(25, 255, 0))))
+    
   
     def on_Singal_RuleIndexToCombo(self, senderUrl,  choisedKey):
         """
@@ -492,9 +543,6 @@ class DatcomInputTable(QWidget):
         self.curPos = pos        
         posG = self.mapToGlobal(pos)
         self.popMenu.exec(posG)
-       
-
-
    
     def ForSectionClicked(self, vIndex):
         """
@@ -574,9 +622,6 @@ This signal is emitted whenever the data of item has changed.
         if item.data(Qt.DisplayRole) is not None and item.data(Qt.UserRole) is None:
             #tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}
             pass
-            
-        
-        
         
         #判断列结论
         tConfig = self.table.horizontalHeaderItem(item.column()).data(Qt.UserRole)

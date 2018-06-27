@@ -116,11 +116,14 @@ class dcModel(datcomXMLLoader):
                 if tUrl is None or tUrl == '':
                     self.logger.error("信息结构异常！%s"%(str(tSet))) 
                 tValue = None
-                try:
-                    if iNode.text is not None :
-                        tValue = eval(iNode.text)
+                try:        
+                    if iNode.text is not None :  #此处遇到 .TRUE.
+                        if iNode.text in ['.TRUE.', '.FLASE.']:
+                            tValue = iNode.text
+                        else:
+                            tValue = eval(iNode.text)
                 except Exception as e:
-                    self.logger.error("解析值结构异常！%s"%(str(e)))  
+                    self.logger.error("解析值结构异常！%s - %s"%(e, iNode.text ))  
                 finally:
                     tSet['Value'] = tValue
                 #写入结果
@@ -500,17 +503,26 @@ class dcModel(datcomXMLLoader):
         
     def setDiscreteVariableValueByName(self,tUrl, tVar):
         """
-        写入离散量的值，写入信息Discrete的量 对应List类型
+        写入离散量的值，写入信息Discrete的量 对应List类型 
         varValue 直接就是对应的结果
         """        
         tVarIn = self.getDiscreteVariableValueByName(tUrl)
         if tVarIn is not None :
-            if type(tVar) is str:
+            if type(tVar) is str and tVar != '':
                 tVarIn['Value'] = tVar
             elif type(tVar) is dict :
-                self.doc[tUrl].update(tVar)
+                if 'Value' in tVar.keys() and tVar['Value'] is None:
+                    self.doc.pop(tUrl)   #当变量的值为None是，将删除该变量
+                else:
+                    self.doc[tUrl].update(tVar)  #当变量的值不为None是，将跟新该变量
             else:
-                self.logger.error("无法处理的类型信息%s"%(str()))            
+                self.logger.error("dcModel.setDiscreteVariableValueByName，无法处理的类型信息%s"%(str(tVar))) 
+        else:   #模型中本来就没有该变量
+            if 'Value' in tVar.keys() and tVar['Value'] is not None:
+                self.doc[tUrl] = tVar
+            else :#当原来就没有时直接忽略
+                pass
+        
 
     
     def setContinuousVariableValueByName(self, tUrl, varValue):
@@ -527,15 +539,19 @@ class dcModel(datcomXMLLoader):
                 else:
                     self.logger.error("格式异常")
             elif type(varValue) is dict :
-                self.doc[tUrl].update(varValue)
+                if 'Value' in varValue.keys() and varValue['Value'] is None:
+                    self.doc.pop(tUrl)   #当变量的值为None是，将删除该变量
+                else:
+                    self.doc[tUrl].update(varValue)  #当变量的值不为None是，将跟新该变量
             else:
-                self.logger.error("无法处理的类型信息%s"%(str()))   
+                self.logger.error("dcModel.setContinuousVariableValueByName无法处理的类型信息%s"%(str(varValue)))   
     
     def removeVariable(self, tUrl):
         """
         将从模型中移除tUrl的相关数据
         """
-        
+        if tUrl in self.doc.keys():
+            self.doc.pop(tUrl)
         #self.doc.pop(tUrl)
 
 

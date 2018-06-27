@@ -328,12 +328,16 @@ class DatcomInputList(QWidget):
         """
         tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
         tValue = self.vRange[self.InputWidget.currentIndex()]
-        if tValue is not None:
-            tV.update({'Value':tValue})
-        else:
-            self.logger.error("没有找到%s对应的项目！"%self.vUrl)
+        
+        if not self.InputWidget.isEnabled() or self.InputWidget.currentIndex() < 0:
+            tV['Value'] = None
+        else  :
+            try:
+                tV.update({'Value':tValue})
+            except Exception as e:
+                self.logger.error("DatcomInputList.saveData（）没有找到%s对应的项目索引！"%self.vUrl)
         #写入到结果之中        
-        dtModel.setDiscreteVariableValueByName(self.vUrl, tValue) 
+        dtModel.setDiscreteVariableValueByName(self.vUrl, tV) 
         
 
  

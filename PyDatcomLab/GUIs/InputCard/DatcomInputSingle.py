@@ -229,11 +229,9 @@ class DatcomInputSingle(QWidget):
         """
         执行基本的UI逻辑同步
         """
-        
-        
         #初始化界面默认值
         #tVarDefine = self.VarDefine
-        tCklabel    = self.findChild(QtWidgets.QCheckBox,"checkBox_Var%s"%self.VarName)
+        tCklabel      = self.findChild(QtWidgets.QCheckBox,"checkBox_Var%s"%self.VarName)
         tUnitWidget = self.findChild(QtWidgets.QComboBox,"comboBox_Unit_%s"%self.VarName)
         if tCklabel :            
             if tCklabel.checkState() == Qt.Unchecked:
@@ -317,7 +315,11 @@ class DatcomInputSingle(QWidget):
             if tVd.validate(str(tDValue['Value']), 0)[0] == QtGui.QValidator.Acceptable:
                 self.InputWidget.setText(str(tDValue['Value']))
             else:
-                self.logger.error("传入数据无法通过验证：%s：%s"%(self.vUrl, str(tDValue['Value'])))
+                self.logger.error("传入数据无法通过验证：%s：%s,修正为默认值"%(self.vUrl, str(tDValue['Value'])))
+                #linger 修正算法
+                tVatTmp = self.dtDefine.getVariableTemplateByUrl(self.vUrl, True)
+                tDValue['Value'] = tVatTmp['Value']
+                
             tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
             if tUWidget is not None :
                 tIndex = tUWidget.findText(tData['Unit'])
@@ -429,6 +431,9 @@ class DatcomInputSingle(QWidget):
             return 
             
         tVar = dtModel.getContinuousVariableValueByName(self.vUrl)
+        if tVar is None:  #处理tVar不存在与Model中的情况
+            tVar = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
+            tVar['Value'] = None
             
         #设置单位           
         if 'Unit' in tVar.keys() and tVar['Unit'] not in ['', '/']:
@@ -455,9 +460,11 @@ class DatcomInputSingle(QWidget):
         else:
             if 'Default' in  self.VarDefine.keys() and self.VarDefine['Default'] is not None:
                 self.InputWidget.setText(str(self.VarDefine['Default']))
-                self.logger.warning("控件loadData(%s)异常：dcModel中没有有效的值，使用默认值：%s修正！"%(self.vUrl , str(self.VarDefine['Default'])))
+                if  self.InputWidget.isEnabled():
+                    self.logger.warning("控件loadData(%s)异常：dcModel中没有有效的值，使用默认值：%s修正！"%(self.vUrl , str(self.VarDefine['Default'])))
             else:
-                self.logger.error("控件loadData(%s)异常：dcModel中没有有效的值，且没有默认值！"%self.vUrl )
+                if  self.InputWidget.isEnabled():
+                    self.logger.error("控件loadData(%s)异常：dcModel中没有有效的值，且没有默认值！"%self.vUrl )
 
                 
     
@@ -467,11 +474,13 @@ class DatcomInputSingle(QWidget):
         """
         #tV = {'Dimension':self.vDimension, 'Value':'' , 'Unit':self.vCurrentUnit }
         tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
-        if self.InputWidget.isEnabled() and self.InputWidget.text() not in [None, '']:
+        if not self.InputWidget.isEnabled() or self.InputWidget.text()  in [None, '']:
+            tV['Value'] = None
+        else  :
             try:
                 tV.update({'Value':float(self.InputWidget.text())})
             except Exception as e:
-                self.logger.error("进行类型转换时失败，text：%s!"%self.InputWidget.text())
+                self.logger.error("DatcomInputSingle.saveData() 执行数据识别时异常：%s!"%self.InputWidget.text())
         tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
         if tUWidget is not None:
             tV.update({'Unit':self.vCurrentUnit})
