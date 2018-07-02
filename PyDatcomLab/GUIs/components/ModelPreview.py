@@ -12,7 +12,8 @@ from PyQt5.QtGui     import QIcon
 import logging, os
 #import time
 from xml.etree import ElementTree  as ET
-from PyDatcomLab.Core.dcModel import dcModel 
+from PyDatcomLab.Core.datcomModel import dcModel 
+#from PyDatcomLab.Core.dcModel import dcModel 
 from PyDatcomLab.Core.datcomDefine import modelTemplate
 from PyDatcomLab.Core.datcomDefine import reserved_NAMELISTS as allCard
 

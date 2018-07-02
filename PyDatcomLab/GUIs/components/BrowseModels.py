@@ -19,7 +19,7 @@ from PyDatcomLab.GUIs.components.ModelPreview import ModelPreview as Mp
 
 class BrowseModels(QDialog, Ui_BrowseModel):
     """
-    Class documentation goes here.
+    模型浏览器部分的内容
     """
     
     emit_ModelSelected = pyqtSignal(object)

@@ -13,7 +13,7 @@ from PyDatcomLab.GUIs.InputCard.DatcomWidgetBase import DatcomWidgetBase as dtCA
 class DatcomCASEEditerUi(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("DatcomCASEEditerUi")
-        Dialog.resize(900, 500)
+        #Dialog.resize(900, 500)
         Dialog.setSizeGripEnabled(True)
         self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
         self.horizontalLayout.setObjectName("horizontalLayout")

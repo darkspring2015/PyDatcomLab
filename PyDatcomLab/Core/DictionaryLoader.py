@@ -17,7 +17,7 @@ import logging
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core.datcomDimension import Dimension
 from PyDatcomLab.Core import datcomDimension as DimTools
-from PyDatcomLab.Core import datcomTools as tools
+#from PyDatcomLab.Core import datcomTools as tools
 
 class DTdictionary():
     """

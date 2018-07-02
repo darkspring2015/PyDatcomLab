@@ -10,9 +10,10 @@ from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox, QCheckBox #, QCom
 from .Ui_NewModel import Ui_Dialog
 import logging
 
-from PyDatcomLab.Core.dcModel import dcModel 
+#from PyDatcomLab.Core.dcModel import dcModel 
+from PyDatcomLab.Core.datcomModel import dcModel as dcModel 
 from PyDatcomLab.Core.datcomDefine import modelTemplate
-from PyDatcomLab.Core.datcomDefine import reserved_NAMELISTS as allCard
+#from PyDatcomLab.Core.datcomDefine import reserved_NAMELISTS as allCard
 
 #from xml.etree import ElementTree  as ET
 import os

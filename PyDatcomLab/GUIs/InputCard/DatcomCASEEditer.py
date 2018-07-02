@@ -135,6 +135,14 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         self.actionSaveas.setObjectName("actionSaveas")
         self.actionSaveas.setText( "数据另存为")
         self.actionSaveas.setToolTip( "数据另存为") 
+        #buildDatcomInput
+        self.actionBuildDatcomInput = QtWidgets.QAction(self)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/mainwindow/images/mainwindow/case-run.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionBuildDatcomInput.setIcon(icon)
+        self.actionBuildDatcomInput.setObjectName("actionBuildDatcomInput")
+        self.actionBuildDatcomInput.setText( "运行算例")
+        self.actionBuildDatcomInput.setToolTip( "运行算例") 
         #创建菜单
         self.popMenu = QtWidgets.QMenu(self.tabWidget_Configuration)
         #定义
@@ -188,9 +196,6 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         """
         # TODO     实现
         self.on_tabWidget_Configuration_tabBarDoubleClicked(-1)        
-            
-            
-            
             
     @pyqtSlot(QtCore.QPoint)
     def on_tabBar_customContextMenuRequested(self, pos):

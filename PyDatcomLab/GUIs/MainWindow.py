@@ -14,6 +14,7 @@ from Ui_MainWindow import Ui_MainWindow
 #from PyDatcomLab.GUIs  import   
 
 from PyDatcomLab.GUIs.components import *
+from PyDatcomLab.GUIs.InputCard import *
 from PyDatcomLab.Core import projectManager as PM
 from PyDatcomLab.Core import  datcomRunner  
 
@@ -47,7 +48,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         
         #创建UI逻辑
         self.centralWidgetUsed = False
-        self.nowPlaneConfiguration = None
+
         
         #初始化存储Dock配置信息的位置
         self.docksConfig={}  #key 是dock的name，内容是{}，包括
@@ -106,7 +107,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     def on_actionBrowse_triggered(self):
         """
         Slot documentation goes here.
-        浏览模型
+        响应浏览模型action
         """
         # TODO: not implemented yet
         
@@ -234,7 +235,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         if '项目管理器'  not in self.docksConfig.keys():
             #create ProjectsManager
             prjMgr= ProjectsManager.ProjectsManager()
-            #prjMgr.logger = self.logger
+            prjMgr.logger = self.logger
             actions = [self.actionNewProject , 
                        self.actionOpenProject, 
                        self.actionSaveProject, 
@@ -249,11 +250,14 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             self.dock_Prjmanager = QtWidgets.QDockWidget('项目管理器', self)  
             self.dock_Prjmanager.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea|QtCore.Qt.BottomDockWidgetArea)          
             self.dock_Prjmanager.setWidget(prjMgr)  
+            #linger
+#            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+#            sizePolicy.setHorizontalStretch(0)
+#            sizePolicy.setVerticalStretch(0)
+#            sizePolicy.setHeightForWidth(self.dock_Prjmanager.sizePolicy().hasHeightForWidth())  
+            #linger end
             self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dock_Prjmanager)  
             self.docksConfig['项目管理器'] = self.dock_Prjmanager
-
-            
-            
         else:
             if self.docksConfig['项目管理器'].isHidden() :
                 self.docksConfig['项目管理器'].show()
@@ -344,18 +348,20 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         self.logger.info("当前模型为%s"%modelPath)
         
         #保存当前的模型
-        if  self.nowPlaneConfiguration is not None and self.centralWidgetUsed :
+        if  self.currentCASE is not None and self.centralWidgetUsed :
             #当前模型存在,则提示是否写入到XML
             button = QMessageBox.question(self, r"切换模型",
                                    r"保存当前的Model吗?",
                                    QMessageBox.Yes | QMessageBox.No)
             if button == QMessageBox.Yes:
-                tDoc = self.nowPlaneConfiguration.getDoc()
-                tDoc.writeToXML(self.currentModelPath)
+                tDoc = self.currentCASE.getDoc()
+                #tDoc.writeToXML(self.currentModelPath)
+                tDoc.save(self.currentModelPath)
                 self.logger.info(r"保存模型到：%s"%self.currentModelPath)
         #加载新模型
-        self.nowPlaneConfiguration = PlaneConfiguration.PlaneConfiguration(modelpath = modelPath)
-        self.setCentralWidget(self.nowPlaneConfiguration)
+        #self.currentCASE = PlaneConfiguration.PlaneConfiguration(modelpath = modelPath)
+        self.currentCASE = DatcomCASEEditer.DatcomCASEEditer(modelpath = modelPath)        
+        self.setCentralWidget(self.currentCASE)
         self.currentModelPath = modelPath
         self.centralWidgetUsed = True
     
@@ -415,6 +421,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
                                r"保存当前的Model吗?",
                                QMessageBox.Yes | QMessageBox.No)
         if button == QMessageBox.Yes:
-            tDoc = self.nowPlaneConfiguration.getDoc()
-            tDoc.writeToXML(self.currentModelPath)
+            tDoc = self.currentCASE.getDoc()
+            #tDoc.writeToXML(self.currentModelPath)
+            tDoc.save(self.currentModelPath)
             self.logger.info(r"保存模型到：%s"%self.currentModelPath)        

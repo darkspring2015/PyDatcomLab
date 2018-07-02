@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_ProjectsMainWindow(object):
     def setupUi(self, ProjectsMainWindow):
         ProjectsMainWindow.setObjectName("ProjectsMainWindow")
-        ProjectsMainWindow.resize(300, 600)
+        #ProjectsMainWindow.resize(300, 600)
         self.centralWidget = QtWidgets.QWidget(ProjectsMainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralWidget)

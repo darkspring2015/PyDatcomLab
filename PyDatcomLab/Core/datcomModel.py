@@ -14,6 +14,7 @@ from PyDatcomLab.Core import datcomDimension as dtDimension
 
 import  os
 import logging
+import uuid
 
 class dcModel(datcomXMLLoader):
     """
@@ -51,6 +52,7 @@ class dcModel(datcomXMLLoader):
         #self.numForE  = 100      #使用科学计数法的值
         #定义XML结构
         self.additionalDoc = {}              #存储datcom配置之外的信息          
+        self.isValid =True
         #执行path的分析
         if path is None :
             self.__createBasicdoc()
@@ -60,6 +62,7 @@ class dcModel(datcomXMLLoader):
                 self.load(path)
             except Exception as e:
                 self.logger.error("加载算例文件:%s 出现异常:%s"%(path, e.message))
+                self.isValid = False
 
         
     def __createBasicdoc(self):
@@ -69,7 +72,7 @@ class dcModel(datcomXMLLoader):
         """
         #添加最低配置的CASE
         #FLTCON        
-
+        self.Properties.update({'UUID':str(uuid.uuid1())})
         for iN in self.dtDefine.getBasicNamelistCollection():
             self.addNamelist(iN)
         #调用验证器修正错误，并给所有量赋初值
@@ -154,7 +157,17 @@ class dcModel(datcomXMLLoader):
             
         return tRoot
     
- 
+    def getCASEUUID(self):
+        """
+        获得当前CASE的UUID
+        如果项目不包括UUID则创建一个,并触发保存
+        """
+        if 'UUID' in self.Properties.keys():
+            return self.Properties['UUID']
+        else:
+            self.Properties.update({'UUID':str(uuid.uuid1())})
+            #self.save() #此处存在一定的异常风险，可能导致错误的保存了
+        
     
     def getNamelistCollection(self):
         """

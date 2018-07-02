@@ -4,9 +4,7 @@
 Module implementing dcProject.
 """
 
-import os
-import time  
-import uuid
+import os , time, uuid
 
 from PyDatcomLab.Core.dcModel import  dcModel
 from PyDatcomLab.Core.datcomTools import xml_Indent as indent

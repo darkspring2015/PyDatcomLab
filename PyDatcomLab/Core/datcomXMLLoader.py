@@ -32,8 +32,7 @@ class datcomXMLLoader(object):
         self.xmlDoc = self.createXMLDocBasic()  #Tree Object
         self.doc    = {}
         self.ParseXmltoDoc()      #存储解析后的数据报文信息，格式是Url：Value            
-        #执行path的分析
-        
+        #执行path的分析        
         #尝试加载文件并提示错误异常信息
         if path is not None :
             try:
