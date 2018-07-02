@@ -4,13 +4,11 @@
 Module implementing dcProject.
 """
 
-import os , time, uuid
-
+import os , time, uuid, logging
+from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core.dcModel import  dcModel
 from PyDatcomLab.Core.datcomTools import xml_Indent as indent
-from xml.etree import ElementTree  as ET
 
-import logging
 
 class dcProject(object):
     """

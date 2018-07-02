@@ -26,6 +26,7 @@ class datcomXMLLoader(object):
                            'CreateTime':dtTool.getNowTime(), 
                            'ModifyTime':dtTool.getNowTime(), 
                            'modelPath':tPath, 
+                           #'UUID':'', 
                            }
         self.exts       = {'ALL':'*.*', 'XML':'.xml'}
         #定义XML结构
