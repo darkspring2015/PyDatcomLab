@@ -42,7 +42,7 @@ class XMLModel(QStandardItemModel):
                 if self.doc is None:
                     self.logger.error("解析文件%s 失败!")    
             else:
-                self.logger.error("输入参数错误，文件不存在！%s"%tXML)                
+                self.logger.error("setXMLData()输入参数错误，文件不存在！%s"%tXML)                
         elif type(tXML)  == ET.Element :
             self.doc = tXML
         elif type(tXML)  is ET.ElementTree :            

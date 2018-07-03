@@ -4,7 +4,7 @@ __all__ =[
     'ImageTips',
     'ModelPreview',
     'NewModel', 
-    'PlaneConfiguration',
+    #'PlaneConfiguration',
     'ProjectsManager',
     'Reference',
     'logForm',

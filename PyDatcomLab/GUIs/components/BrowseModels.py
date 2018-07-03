@@ -7,15 +7,16 @@ Module implementing DlgBrowseModels.
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QSize, QPoint, Qt
 from PyQt5.QtWidgets import QDialog, QFileDialog, QMenu, QTableWidgetItem
 from PyQt5.QtGui import QIcon, QPixmap
-
 from Ui_BrowseModels import Ui_BrowseModel
+
 import logging
 import os
+from xml.etree import ElementTree  as ET
 
 from PyDatcomLab.GUIs.components.NewModel import NewModelDlg 
 from PyDatcomLab.GUIs.components.ModelPreview import ModelPreview as Mp
+from PyDatcomLab.Core.PyDatcomConfigLoader import defaultConfig as dtConfig
 
-#import PyDatcomLab.GUIs.PlaneConfiguration.card_rc_rc
 
 class BrowseModels(QDialog, Ui_BrowseModel):
     """
@@ -24,7 +25,7 @@ class BrowseModels(QDialog, Ui_BrowseModel):
     
     emit_ModelSelected = pyqtSignal(object)
     
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, iConfig = dtConfig):
         """
         Constructor
         
@@ -36,14 +37,27 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         #self.splitter.setStretchFactor(1, 4)
         #日志
         self.logger = logging.getLogger(r'Datcomlogger')
+        #加载datcom的配置文件
+        if iConfig is None: 
+            self.dtConfig = dtConfig
+        else:
+            self.dtConfig = iConfig                       
+        #设置模型信息
         self.extList = ['.xml', '.dcXML', '.dcxml']
-        
-        #self 
-        self.ModelSet.setColumnCount(3)
-        self.ModelSet.setHorizontalHeaderLabels(['名称', '路径', '说明'])    
-        self.ModelSet.horizontalHeaderItem(1).setTextAlignment(Qt.AlignRight)        
-        self.ModelSet.setContextMenuPolicy(Qt.CustomContextMenu)    
+        self.libraryKeyWord = 'ModelLibrary'
+        self.rootTag  = self.dtConfig.getLibraryRootTag(self.libraryKeyWord)  #获取库文件的根节点的tag
+        self.MEKeys = list(dtConfig.getLibraryElementTemplate(self.libraryKeyWord ))
+        #装载表头
+        if self.MEKeys is None:
+            self.logger.error("尝试读取ProjectLibrary并不存在定义！")
+        else:
+            self.ModelSet.setColumnCount(len(self.MEKeys))
+            self.ModelSet.setHorizontalHeaderLabels(self.MEKeys)    
+            self.ModelSet.horizontalHeaderItem(1).setTextAlignment(Qt.AlignRight)        
+            self.ModelSet.setContextMenuPolicy(Qt.CustomContextMenu)    
         self.lastEditingRow = -1
+        #刷新模型数据
+        self._resetModel()
         #界面参数
         self.curPos = QPoint(0, 0)
         self.curWidget = None
@@ -54,18 +68,26 @@ class BrowseModels(QDialog, Ui_BrowseModel):
 
     def getCurrentModelPath(self):
         """
-        返回当前的模型
+        返回当前的模型的路径，没有对应行返回None
+        如果找不到对应列，返回None
+        其他返回对应的Path值
         """
         tRow = self.ModelSet.currentRow()
-        if tRow <0 :
-            return ''
+        tPathKey = self.dtConfig.getPathKeyByLibraryName(self.libraryKeyWord)
+        if tRow <0  or tPathKey is None:
+            return None
         else:
-            return self.ModelSet.item(tRow, 1).text()
+            #获得对应的key          
+            tCIndex =  self.MEKeys.index(tPathKey)
+            if tCIndex >= 0:
+                return self.ModelSet.item(tRow, 1).text()
+            else:
+                return None
         
     @pyqtSlot()
     def on_pushButton_ChoiseDir_clicked(self):
         """
-        Slot documentation goes here.
+        点击选择目录按钮的响应函数
         """
 
         tDir = QFileDialog.getExistingDirectory(self,"打开模型目录", ''
@@ -99,44 +121,62 @@ class BrowseModels(QDialog, Ui_BrowseModel):
             self.comboBox_Dirs.setCurrentIndex(tIndex)
         
         #清空当前表格
-        self.ModelSet.clearContents()
-        self.ModelSet.setRowCount(0)
-        # print f_list
         for aFile in os.listdir(tDir):
             # os.path.splitext():分离文件名与扩展名
             if os.path.splitext(aFile)[1] in self.extList :
-                #self.ModelSet.setRowCount(self.ModelSet.rowCount()+1)
                 self.AddModel(tDir, aFile)
-                
+
 
     def AddModel(self,tDir,  tFile):
         """
         添加一个模型
         """
+        #检查文件系统
         fpath = os.path.join(tDir, tFile)
         if not os.path.isfile(fpath):
             return            #    
         fN, extN = os.path.splitext(tFile)
         if extN not in self.extList:
             return 
-        #添加一行    
-        tRow = self.ModelSet.rowCount() 
-        self.ModelSet.insertRow(tRow)
-        pix1 = QPixmap(r":/card/rc_card/亚音速常规布局.jpg")                
-        self.ModelSet.setItem(tRow, 0, QTableWidgetItem(QIcon(pix1.scaled(QSize(100,100))),fN))
-        self.ModelSet.setItem(tRow, 1, QTableWidgetItem(os.path.abspath(fpath)))
-        self.ModelSet.setItem(tRow, 2, QTableWidgetItem(''))
+        #检查内容是否符合XML格式要求
+        tCName = None
+        try:            
+            tRoot = ET.parse(fpath).getroot()
+            if tRoot.tag != self.rootTag:
+                self.logger.info("AddModels()测试模型文件的的根节点Tag，期望%s，实际：%s！忽略该文件"%(self.rootTag, tRoot.tag))
+                return   
+            else:
+                tCName = tRoot.attrib.get('CName', None) #获得CASE Name，使用先验知识
+        except Exception as e:
+            self.logger.error("AddModels()测试模型文件过程中发生异常，%s ：%s"%(repr(e), str(e)))
+        #添加一行 
+        tTemplate =  self.dtConfig.getLibraryElementTemplate(self.libraryKeyWord)
+        tTemplate.update({'ModelName':tCName,
+        'path':fpath, 
+        })
+        if self.dtConfig.addItemToLibrary(self.libraryKeyWord, tTemplate) == '成功添加':
+            #刷新模型
+            self._resetModel()
+            self.ModelSet.setCurrentCell(self.ModelSet.rowCount() -1, 0)   
 
-    def setPreviewDirectory(self, prjDir):
-        """
-        设置预览窗口
-        """
-        if not os.path.exists(prjDir):
-            self.logger.error(r'尝试浏览的目录%s 不存在！'%prjDir)
-            return
         
-        self.AddModels(prjDir)
-        #self.textEdit_Dir.setText(prjDir)
+    def _resetModel(self):
+        """
+        根据config的配置重置QTableWidget的模型数据
+        """
+        if self.dtConfig is None : return 
+        tSet = self.dtConfig.getLibrary(self.libraryKeyWord)
+        self.ModelSet.clearContents()
+        self.ModelSet.setRowCount(0)
+        for iT in tSet:
+            tRowCount = self.ModelSet.rowCount() 
+            self.ModelSet.insertRow(tRowCount)
+            pix1 = QPixmap(r":/card/rc_card/亚音速常规布局.jpg")                
+            self.ModelSet.setItem(tRowCount, 0, QTableWidgetItem(QIcon(pix1.scaled(QSize(100,100))),iT.get('ModelName', '')))
+            self.ModelSet.setItem(tRowCount, 1, QTableWidgetItem(iT.get('path', '.') ))
+            #self.ModelSet.setItem(tRowCount, 2, QTableWidgetItem(''))        
+         
+
     
     @pyqtSlot(QPoint)
     def on_ModelSet_customContextMenuRequested(self, pos):
@@ -146,7 +186,6 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         @param pos DESCRIPTION
         @type QPoint
         """
-        # TODO: not implemented yet
         self.curPos = pos
         self.curWidget = self.ModelSet        
         posG = self.curWidget.mapToGlobal(pos)
@@ -175,24 +214,20 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        baseDir = r"~/"
+        baseDir = os.path.expanduser('~')
         if os.path.exists(self.comboBox_Dirs.currentText() ): 
             baseDir = self.comboBox_Dirs.currentText()
         #打开文件选择对话框
-        aFile, ext = QFileDialog.getOpenFileName(self,"选择模型文件", 
+        tFiles = QFileDialog.getOpenFileNames(self,"选择模型文件", 
                     baseDir, 
                     "Datcom Project Files (*.dcxml *.xml )")
-        if os.path.exists(aFile):
-            fN, extN = os.path.splitext(os.path.basename(aFile))
-            tRow = self.ModelSet.rowCount() 
-            self.ModelSet.insertRow(tRow)
-            pix1 = QPixmap(r":/card/rc_card/亚音速常规布局.jpg")                
-            self.ModelSet.setItem(tRow, 0, QTableWidgetItem(QIcon(pix1.scaled(QSize(100,100))),fN))
-            self.ModelSet.setItem(tRow, 1, QTableWidgetItem(os.path.abspath(aFile)))
-            self.ModelSet.setItem(tRow, 2, QTableWidgetItem(''))
-            
-        #切换模型
-        self.on_ModelSet_itemDoubleClicked( self.ModelSet.item(tRow, 0))
+        for iF in tFiles:
+            if os.path.exists(iF):
+                fN, extN = os.path.splitext(os.path.basename(iF))
+                self.AddModel(os.path.dirname(iF), os.path.basename(iF))
+ 
+        #切换模型,认为AddModel将数据添加到最后一行
+        #self.on_ModelSet_itemDoubleClicked( self.ModelSet.item(self.ModelSet.rowCount() - 1, 0))
         
     @pyqtSlot()
     def on_actionRemoveModel_triggered(self):
@@ -201,7 +236,11 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         """
         
         aItem = self.curWidget.indexAt(self.curPos)
-        if  aItem.row() >= 0 :            
+        if  aItem.row() >= 0 :  
+            tTemplate =  self.dtConfig.getLibraryElementTemplate(self.libraryKeyWord)
+            tTemplate.update({'ModelName':aItem[0],
+            'path':aItem[1],         })
+            self.dtConfig.delItemFromLibrary(self.libraryKeyWord, tTemplate)          
             self.curWidget.removeRow(aItem.row())
         else:
             self.logger.info("没有命中任何行")
@@ -237,9 +276,8 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         @type int
         """
         # 在此处重新加载当前目录的模型
-        tDir = self.comboBox_Dirs.itemText(index)
-        if os.path.exists(tDir):
-            self.setPreviewDirectory(tDir)
+        pass
+
     
     @pyqtSlot()
     def on_actionPreviewModel_triggered(self):

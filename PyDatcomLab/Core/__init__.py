@@ -1,10 +1,10 @@
 __all__=[
-        'datcomDB', 
-        'datcomDefine', 
+        #'datcomDB', 
+        'PyDatcomConfigLoader', 
         'datcomRunner', 
-        'dcModel', 
+        'datcomModel', 
         'dcProject', 
-        'exporter', 
+        #'exporter', 
         'projectManager', 
-        'tools', 
+        'datcomTools', 
 ]

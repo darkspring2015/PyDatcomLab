@@ -6,7 +6,7 @@ Module implementing dcProject.
 
 import os , time, uuid, logging
 from xml.etree import ElementTree  as ET
-from PyDatcomLab.Core.dcModel import  dcModel
+from PyDatcomLab.Core.datcomModel import  dcModel
 from PyDatcomLab.Core.datcomTools import xml_Indent as indent
 
 
@@ -57,7 +57,7 @@ class dcProject(object):
         try: 
             tmpDoc = ET.parse(prjFile)  #parse是从文件，类名将是字符串
         except Exception as e:
-            self.logger.error(u'加载项目文件出错：ErrorType： %s，ErrorMessage :%s不是有效的路径！'%(repr(e), str(e)))
+            self.logger.warning(u'加载项目文件出错：%s！'%(e))
             return False
         #处理信息
         if not tmpDoc.getroot().tag == 'datcomProject':
@@ -80,10 +80,10 @@ class dcProject(object):
         在路径tPojectPath下创建项目结构
         """
         if tPrjFile is None:
-            self.logger.error("输入无效！%s"%tPrjFile)
+            self.logger.error("createProject() 输入无效！%s"%tPrjFile)
             return False
         if os.path.isfile(tPrjFile):
-            self.logger.error("已经存在对应的项目文件！%s"%tPrjFile)
+            self.logger.error("createProject()已经存在对应的项目文件！%s"%tPrjFile)
             return False
         #分析内容
         tDir = os.path.dirname(os.path.realpath(tPrjFile))

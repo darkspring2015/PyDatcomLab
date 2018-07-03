@@ -4,7 +4,7 @@
 Module implementing ReferenceDialog.
 """
 
-from PyQt5.QtCore import pyqtSlot
+#from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QDialog
 
 from .Ui_Reference import Ui_Dialog

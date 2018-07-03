@@ -20,10 +20,10 @@ datcomVarAttriList = {
     'MustInput':'' ,    #是否是必须输入的量 ['MustInput','UserCheck','HasDefault'],如果为UserCheck应该创建checkbox
     'Relation':'',      #其他关联信息 rule规则暂定
               }
+####################################
+##
+####################################
 
-#from PyDatcomLab.Core.datcomXMLLoader import datcomXMLLoader
-#from PyDatcomLab.Core.datcomModel import dcModel
-#from PyDatcomLab.Core.dcProject import dcProject
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core import datcomTools as dtTool
 import  os,  logging, uuid
@@ -160,11 +160,7 @@ class PyDatcomLabConfig():
             tError = "写入XML文件：%s 失败！Message ：%s"%(iPath, repr(e))
             self.logger.error(tError)
             #raise(dtTool.dtIOException('文件写入失败',tError))       
-        
-  
-    ######################################################        
-    ###     Library 操作函数
-    ##################################################begin
+
 
     def getLibrary(self, iLibraryName):
         """
@@ -239,24 +235,35 @@ class PyDatcomLabConfig():
     def  addItemToLibrary(self,iLibraryName, iItem ):
         """
         将iItem添加到iLibraryName对应的库
+        返回值决定是否 ['成功添加','不合规未添加','存在未添加']  
         """
-        tLibNode = self._getLibraryElement(iLibraryName)
+        tResult = '成功添加'
+        tLibNode     = self._getLibraryElement(iLibraryName)
         tMainTag    = self.libraryDefine[iLibraryName][0]['MainTag']
         #检查合规
         if self.checkInfo(iLibraryName, iItem) :
-            tME = ET.SubElement(tLibNode, tMainTag)
-            for iE in iItem.keys():
-                ET.SubElement(tME, iE).text = iItem[iE]
+            #查询当前的库，如果不存在相同项，则添加
+            if self._findItemInLibrary(iLibraryName, iItem ) is None:            
+                tME = ET.SubElement(tLibNode, tMainTag)
+                for iE in iItem.keys():
+                    ET.SubElement(tME, iE).text = iItem[iE]       
+                self.save()
+            else:
+                self.logger.warnning('datcom.addItemToLibrary 待添加的项已经存在，忽略添加!')
+                tResult = '存在未添加'
         else:
+            tResult = '不合规未添加'
             self.logger.error('datcom.addItemToLibrary 的输入iItem不合规!')
-            
-    def  delItemFromLibrary(self,iLibraryName, iItem):
+        
+        return tResult
+    
+    def _findItemInLibrary(self,iLibraryName, iItem  ):
         """
-        将iItem对应的元素从iLibraryName对应的库中删除，通过比对所有的SubElement的{tag:值}实现
-        iItem @TYPE dict
+        在库iLibraryName中查找与iItem内容一致的SubElement ，仅返回第一个ET.SubElement对象
+        没有找到返回None
         """
         tLibNode    = self._getLibraryElement(iLibraryName)
-        tMainTag    = self.libraryDefine[iLibraryName][0]['MainTag']          
+        tMainTag    = self.libraryDefine[iLibraryName][0]['MainTag']      
         #查询删除UUID一致的数据
         for iE in list(tLibNode):
             if iE.tag == tMainTag:
@@ -268,8 +275,25 @@ class PyDatcomLabConfig():
                     if not (iKeys in tSubEDict.keys() and tSubEDict[iKeys] == iItem[iKeys]):
                         tSame = False
                 #判断结果
-                if tSame: tLibNode.remove(iE)              
-                
+                if tSame: 
+                    return iE
+        #如果没有找到返回None            
+        return None
+                    
+        
+            
+    def  delItemFromLibrary(self,iLibraryName, iItem):
+        """
+        将iItem对应的元素从iLibraryName对应的库中删除，通过比对所有的SubElement的{tag:值}实现
+        iItem @TYPE dict
+        """        
+        tNode = self._findItemInLibrary(iLibraryName, iItem  )
+        if tNode is not None:
+            tLibNode    = self._getLibraryElement(iLibraryName)
+            tLibNode.remove(tNode)
+            #保证操作及时的刷新到硬盘
+            self.save()
+ 
     def  delItemFromLibraryByUUID(self,iLibraryName, iItemUUID):
         """
         将iItemUUID对应的玄素从iLibraryName对应的库中删除
@@ -281,6 +305,9 @@ class PyDatcomLabConfig():
         for iE in tLibNode.findall(tXPath):
             if iE['UUID'].text== iItemUUID:
                 tLibNode.remove(iE)
+                
+        #保证操作及时的刷新到硬盘
+        self.save()
 
     def checkInfo(self,iLibraryName,  iModeldict):
         """
@@ -302,7 +329,7 @@ class PyDatcomLabConfig():
             except Exception as e:
                 self.logger.error('datcom.getLibrary 尝试读取配置文件时出错:%s!'%(repr(e)))
             if tRoot is None:
-                tResult = False   
+                return False   
             #检查UUID属性
             if 'UUID' in iModeldict.keys():
                 if 'UUID' not in tRoot.attrib.keys() or tRoot.attrib['UUID'] != iModeldict['UUID']:      
@@ -311,7 +338,7 @@ class PyDatcomLabConfig():
   
             #检查文件的Root元素的Tag，决定是否是要加载的文件类型
             if 'RootTag'  in self.libraryDefine[iLibraryName][0].keys() :
-                tRTag = self.libraryDefine[iLibraryName][0]['RootTag']
+                tRTag = self.getLibraryRootTag(iLibraryName)
                 if tRoot.tag  != tRTag:      
                     self.logger.error('datcom.checkInfo 比对XML文件根节点Tag出错，期望：%s，实际：%s!'%(tRTag,  tRoot.tag))         
                     tResult = False                    
@@ -351,14 +378,29 @@ class PyDatcomLabConfig():
             
         return tTemplate
                 
-    ######################################################        
-    ###     Library 操作函数
-    ##################################################begin
+
     def getConfigurationList(self):
         """
         返回所有的Configuration的列表
         """
         return self.getLibrary('ConfigurationType')
+        
+    def getPathKeyByLibraryName(self, iLibraryName):
+        """
+        获得iLibraryName指定的库的文件路径属性的key，key保存在SubTag中
+        如果定义了Path属性，则返回对应的SubTag，否则返回None        
+        """
+        if 'Path' in self.dtConfig[self.libraryKeyWord][0].keys():
+            return self.libraryDefine[iLibraryName][0]['Path']  
+        else:
+            return None
+            
+    def getLibraryRootTag(self, iLibraryName):
+        """
+        获得库iLibraryName对应XML文件的的根的Tag
+        不存在RootTag返回None
+        """
+        return self.libraryDefine[iLibraryName][0].get('RootTag', None)
         
 defaultConfig = PyDatcomLabConfig(os.path.join(os.path.expanduser('~'), '.PyDatcomLab', 'config', 'PyDatcomLabConfig.xml'))
 

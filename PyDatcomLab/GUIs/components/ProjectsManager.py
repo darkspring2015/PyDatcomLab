@@ -42,6 +42,14 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
         self.treeView_xml.header().setSectionResizeMode(QHeaderView.ResizeToContents )
         self.treeView_xml.header().setStretchLastSection( True)
         self.treeView_xml.uniformRowHeights() 
+
+
+    def hiddenToolBar(self, isHide = True):
+        """
+        隐藏工具栏：True  
+        显示工具栏：False
+        """
+        self.toolBar.setHidden(isHide)
         
         
     def BindingAction(self, tActions = []):
@@ -72,8 +80,9 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
             if os.path.isfile(tModel.prjPath):
                 self.treeView_xml.setModel(tModel.prjPath)
         else:
-            self.logger.error(r'无效的Model输入')
+            self.logger.error(r'BindingModel()无效的Model输入')
             return 
+            
     def addProject(self, tPath):
         """
         向控件添加一个datcom项目，tPath指向项目文件
@@ -118,8 +127,6 @@ class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):
             self.comboBox_project.addItem(tPath)
         self.comboBox_project.setCurrentIndex(self.comboBox_project.findText(tPath))
 
-        
-    
     @pyqtSlot(int)
     def on_comboBox_project_currentIndexChanged(self, index):
         """

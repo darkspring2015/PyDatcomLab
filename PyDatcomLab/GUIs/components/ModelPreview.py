@@ -3,7 +3,7 @@
 """
 Module implementing ModelPreview.
 """
-
+from PyQt5 import QtWidgets #, QtCore, QtGui
 from PyQt5.QtCore    import pyqtSlot, QPoint, Qt #,QModelIndex# , QFile, QIODevice
 from PyQt5.QtWidgets import QWidget, QTreeWidgetItem, QFileDialog, QMessageBox, QCheckBox, QHeaderView
 #from PyQt5.QtXml import QDomDocument
@@ -13,30 +13,47 @@ import logging, os
 #import time
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core.datcomModel import dcModel 
-#from PyDatcomLab.Core.dcModel import dcModel 
-from PyDatcomLab.Core.datcomDefine import modelTemplate
-from PyDatcomLab.Core.datcomDefine import reserved_NAMELISTS as allCard
+from PyDatcomLab.Core.PyDatcomConfigLoader import defaultConfig as dtConfig
+from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+
 
 from Ui_ModelPreview import Ui_ModelPreview
 
 
 class ModelPreview(QWidget, Ui_ModelPreview):
     """
-    Class documentation goes here.
+    模型预览窗口，以Tree样式展示所有的Datcom模型配置信息.
     """
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, iDefine = DDefine, iConfig = dtConfig ):
         """
         Constructor
         
         @param parent reference to the parent widget
         @type QWidget
+        @param iDefine reference to the DatcomDefine
+        @type DTdictionary
+        @param iConfig reference to the PyDatcomLabConfig
+        @type PyDatcomLabConfig
         """
         super(ModelPreview, self).__init__(parent)
         self.setupUi(self)
         #日志系统        
         self.logger = logging.getLogger(r'Datcomlogger')
         #内部变量
-        self.ext = '.dcxml'
+        #加载datcom的配置文件
+        if iConfig is None: 
+            self.dtConfig = dtConfig
+        else:
+            self.dtConfig = iConfig     
+        if iDefine is None: 
+            self.dtDefine = DDefine
+        else:
+            self.dtDefine = iDefine    
+        self.libraryKeyWord = 'ProjectLibrary'
+        self.rootTag  = self.dtConfig.getLibraryRootTag(self.libraryKeyWord)  #获取库文件的根节点的tag
+        self.MEKeys  = list(dtConfig.getLibraryElementTemplate(self.libraryKeyWord ))
+        #配置信息
+        self.ext = '.dcxml'        
         self.ModelName = "test"
         self.ModelDir = '.'
         self.Modelpath = os.path.join(self.ModelDir , self.ModelName +  self.ext)
@@ -53,23 +70,44 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         #self.isPreArray = True # True:'整理Array',False:'不整理Array'
         self.itemFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable\
                         |Qt.ItemIsAutoTristate|Qt.ItemIsUserCheckable #|Qt.ItemIsUserTristate
-        self.isCopy = False         #表示本对话框是否是Copy目的
+        #绑定内容菜单
+        #界面参数
+        self.curPos = QPoint(0, 0)
+        self.curWidget = None
+        self.popMenu = None
+        self._createCustomContextMenu()
+        self.treeWidget_model.setContextMenuPolicy(Qt.CustomContextMenu)   
+
+        #其他状态变量
+        self.isCopy = False             #表示本对话框是否是Copy目的
         self.isDcModel = True         #表示本对话加载的是否是Datcom模型
         
 
-
         
-    
     @pyqtSlot(QPoint)
     def on_treeView_model_customContextMenuRequested(self, pos):
         """
-        Slot documentation goes here.
+        Slot 右键菜单的实现.
         
-        @param pos DESCRIPTION
+        @param pos 菜单位置
         @type QPoint
         """
-        # TODO: not implemented yet
-        #raise NotImplementedError
+        self.curPos = pos
+        self.curWidget = self.treeWidget_model        
+        posG = self.curWidget.mapToGlobal(pos)
+        #执行一些状态检查
+        self.popMenu.exec(posG)
+    
+    def _createCustomContextMenu(self):
+        """
+        创建用于树的内容菜单
+        """
+        self.popMenu = QtWidgets.QMenu(self.curWidget)
+#        self.popMenu.addAction(self.actionNewModel)
+#        self.popMenu.addAction(self.actionAddModel)
+#        self.popMenu.addAction(self.actionRemoveModel)
+#        self.popMenu.addAction(self.actionPreviewModel)
+        
         
     def listDom(self, docElem, pItem):
         """ 
@@ -94,9 +132,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         if len(docElem.getchildren()) == 0:
             tItem.setText(1, docElem.text) 
             tItem.setIcon(0, QIcon(":/img/images/variable.png"))
-
-
-            
+       
         #写入节点的属性信息
         if  docElem.attrib :
             tAttrItem = QTreeWidgetItem(tItem)
@@ -132,6 +168,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         
     def openXML(self, fileName)  :  
         """
+        打开XML文件
         """
         root = ET.parse(fileName).getroot()
         if root is None:return
@@ -160,13 +197,13 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         self.lineEdit_DirPath.setText(tFile)
         self.currentModelPath = tFile
         #开始界面逻辑刷新过程
-        for iC in allCard:
+        for iC in self.dtDefine.getNamelistCollection():
             tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
             if tWidget is None:
                 self.logger.error("CARD:%s并不在Datcom的Namelist中"%iC)
                 continue
             else:
-                if iC in self.Model.cardlist:
+                if iC in self.Model.getNamelistCollection().keys():
                     tWidget.setCheckState(Qt.Checked)
                 else:
                     tWidget.setCheckState(Qt.Unchecked)
@@ -202,11 +239,11 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         if self.lineEdit_ModelName.text() == "":
             QMessageBox.information(self, '请指定模型名称', '模型名称不能为空')
             return
-        self.Model.aerocraftName = self.lineEdit_ModelName.text() 
-        self.Model.configuration = self.comboBox_template.currentText()   
+        self.Model.Properties.update({'AerocraftName':self.lineEdit_ModelName.text() })
+        self.Model.Properties.update({'Configuration':self.comboBox_template.currentText()  })
         #输处目录不能为空
         if self.lineEdit_DirPath.text() == '':
-            QMessageBox.information(self, '警告', '请模型名称不能为空')
+            QMessageBox.information(self, '警告', '模型的目录不能为空')
             return
         #目标文件不存在
         if not os.path.exists(self.lineEdit_DirPath.text() ) : 
@@ -221,12 +258,12 @@ class ModelPreview(QWidget, Ui_ModelPreview):
             self.Modelpath = tObPath        
 
         #获得配置
-        tCARDList = []
-        for iC in allCard:
+        for iC in self.dtDefine.getNamelistCollection():
             tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
             if tWidget and tWidget.checkState() == Qt.Checked:
-                tCARDList.append(iC)
-        self.Model.setCARDList(tCARDList)
+                self.Model.addNamelist(iC)
+            else:
+                self.Model.deleteNamelist(iC)    
         #遍历XML文档Tree将修改进行刷新到模型
         resXMl = self.recursiveTreeToXML(self.treeWidget_model.topLevelItem(0), None)
         #判断是否需要刷新到dcModel

@@ -9,11 +9,12 @@
 from PyQt5 import QtCore, QtWidgets
 
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyDatcomLab.Core.datcomDefine import groupDefine #,  Dimension 
+#from PyDatcomLab.Core.datcomDefine import groupDefine #,  Dimension 
 from PyDatcomLab.GUIs.InputCard.DatcomInputTable import DatcomInputTable  as TB
 from PyDatcomLab.GUIs.InputCard.DatcomInputComboChooser import DatcomInputComboChooser
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
 from PyDatcomLab.GUIs.InputCard import DatcomInputSingle as SInput,  DatcomInputList as LInput
+from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+
 import logging
 
 class DatcomWidgetBaseUi(object):
@@ -251,42 +252,7 @@ class DatcomWidgetBaseUi(object):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    card = QtWidgets.QWidget()
-    card.NameList = 'FLTCON'
-    card.VariableList = {
-                'LOOP':{  'TYPE':'List'  ,'Range':['1.0', '2.0', '3.0']   , 'Default':'1.0'},         
-                'NMACH':{ 'TYPE':'INT'   ,'Range':[0, 20 ] }, 
-                'NALT':{  'TYPE':'INT'   ,'Range':[0, 20 ], 'Dimension':'L' },
-                'NALPHA':{'TYPE':'INT'   ,'Range':[0, 20 ] , 'Dimension':'DEG','Label':'NALPHA：攻角数' },
-                'WT':{    'TYPE':'REAL'  ,'Range':[0, float('inf') ] , 'ToolTips':'飞行器重量'},
-                'GAMMA':{ 'TYPE':'REAL'  },
-                'STMACH':{'TYPE':'REAL'  ,'Range':[0.6, 0.99 ]},    
-                'TSMACH':{'TYPE':'REAL'  ,'Range':[1.01, 1.4 ]},  
-                'HYPERS':{'TYPE':'List'  ,'Range':['.TRUE.', '.FALSE.']  , 'Default':'.TRUE.'}, 
-                'TR':{    'TYPE':'List'  ,'Range':['0.0', '1.0']  , 'Default':'0.0'}, 
-                'ALSCHD':{'TYPE':'Array', 'Limit':[0, 20] , 'Group':'ALSCHD'}, 
-                'MACH':{  'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'}, 
-                'VINF':{  'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'}, 
-                'RNNUB':{ 'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'},
-                'ALT':{   'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'},                
-                'PINF':{  'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'},  
-                'TINF':{  'TYPE':'Array', 'Limit':[0, 20] , 'Group':'Speed_Atmospheric'},
-        }   
-    card.groupDefine = groupDefine
-    card.RuleIndexToCombo = [{'Index':'Variables', 
-                        'HowTo':{'1.0':['MACH', 'RNNUB'], 
-                                 '2.0':['MACH', 'ALT'  ,'PINF', 'TINF' , 'RNNUB'], 
-                                 '3.0':['VINF', 'ALT'  ,'PINF', 'TINF' , 'MACH', 'RNNUB'], 
-                                 '4.0':['PINF', 'TINF', 'VINF', 'RNNUB', 'MACH'], 
-                                 '5.0':['PINF', 'TINF', 'MACH', 'RNNUB', 'VINF'], 
-                                 }, 
-                        'Group':'Speed_Atmospheric'} 
-                        ]    
-    ui = DatcomCARDUIBase()
-    ui.setupUi(card)
-    if hasattr(ui,'NALT'):
-        print(ui.NALT)
-    if card.findChild(QtWidgets.QLineEdit,'NALT'):
-        print(card.findChild(QtWidgets.QLineEdit,'NALT'))
+
+ 
     card.show()
     sys.exit(app.exec_())

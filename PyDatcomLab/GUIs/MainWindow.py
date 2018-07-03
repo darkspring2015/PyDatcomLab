@@ -5,6 +5,7 @@ Module implementing DatcomMainWindow.
 """
 
 import os
+import platform  #判断操作系统
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QMainWindow, QLabel, QMessageBox, QFileDialog
 from PyQt5 import  QtCore,  QtWidgets
@@ -17,6 +18,7 @@ from PyDatcomLab.GUIs.components import *
 from PyDatcomLab.GUIs.InputCard import *
 from PyDatcomLab.Core import projectManager as PM
 from PyDatcomLab.Core import  datcomRunner  
+from PyDatcomLab.Core.PyDatcomConfigLoader import  PyDatcomLabConfig as dtConfig
 
 
 
@@ -24,7 +26,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     """
     Class documentation goes here.
     """
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, iProperties ={}):
         """
         Constructor
         
@@ -33,10 +35,32 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         super(DatcomMainWindow, self).__init__(parent)
         self.setupUi(self)
+        #添加日志系统
+        #添加日志系统
+        self.logForm = logForm.logForm()
+        self.logger = self.logForm.getLogger()
         
         #初始化配置信息
-        self.prjPath = os.path.abspath(r"E:\Projects\PyDatcomLab\extras\PyDatcomProjects\1")
-        self.exePath = os.path.join(os.path.dirname(__file__), r'..\Bin\datcom.exe')
+        tDefaultDir = os.path.join(os.path.expanduser('~'), '.PyDatcomLab')
+        sysstr = platform.system()
+        if(sysstr =="Windows"):
+            tExe = os.path.join(os.path.dirname(__file__), r'..\Bin\datcom.exe')
+        elif(sysstr == "Linux"):
+            tExe = os.path.join(os.path.dirname(__file__), r'..\Bin\datcom.lnx')
+        elif(sysstr == "Mac"): 
+            tExe = os.path.join(os.path.dirname(__file__), r'..\Bin\datcom.mac')
+        else:
+            self.logger.error("DatcomMainWindow()判断操作系统%s，不受支持"%sysstr)
+            
+        #定义属性
+        self.Properties ={'PyDatcomWorkspace':tDefaultDir, 
+                                'ConfigFile':os.path.join(tDefaultDir, 'config', 'PyDatcomLabConfig.xml'), 
+                                'PrjectDirectory':os.path.join(tDefaultDir,  'extras', 'PyDatcomProjects'),      
+                                'DatcomExecute': tExe
+                                }
+        self.Properties.update(iProperties)
+        self.PyDatcomLabConfig = dtConfig(self.Properties['ConfigFile'])  #加载配置到Main
+
         #配置MainWindow的Dock系统信息
         self.setDockNestingEnabled(True)
         
@@ -56,9 +80,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
 #        self.docksConfig['DefaulRight'] = self.dockWidget_Right
 #        self.docksConfig['DefaulBottom'] = self.dockWidget_Bottom
         
-        #添加日志系统
-        self.logForm = logForm.logForm()
-        self.logger = self.logForm.getLogger()
+
         #添加日志窗口到下方dack中
         #self.singal
         self.on_actionLogWindow_triggered()
@@ -66,8 +88,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         self.on_actionModelPreview_triggered()         #模型预览窗口
         
         #连接信号和槽
-        self.docksConfig["模型预览窗口"].widget().emit_ModelSelected.connect(self.currentModelChanged)
-        
+        self.docksConfig["模型预览窗口"].widget().emit_ModelSelected.connect(self.currentModelChanged)        
 
         #全屏显示
         self.showMaximized()
@@ -245,6 +266,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             if self.ProjectsModel is None:
                 self.InitProjectsData()
             prjMgr.BindingModel(self.ProjectsModel)
+            prjMgr.hiddenToolBar(True)
             
             #创建日志窗口并添加
             self.dock_Prjmanager = QtWidgets.QDockWidget('项目管理器', self)  
@@ -318,12 +340,12 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_actionModelPreview_triggered(self):
         """
-        Slot documentation goes here.
+        模型浏览窗口的触发条件
         """
         # TODO: not implemented yet
         if '模型预览窗口'  not in self.docksConfig.keys():
             #create ProjectsManager
-            browseMod = BrowseModels.BrowseModels()
+            browseMod = BrowseModels.BrowseModels( iConfig = self.PyDatcomLabConfig )  #创建时给系统复制
             #创建日志窗口并添加
             self.dock_BrowseModels = QtWidgets.QDockWidget('模型预览窗口', self)             
             self.dock_BrowseModels.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea|QtCore.Qt.BottomDockWidgetArea)          
@@ -333,7 +355,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             self.dock_BrowseModels.resize(QtCore.QSize(200, 600))
             self.docksConfig['模型预览窗口'] = self.dock_BrowseModels            
             #设置初始化目录
-            browseMod.setPreviewDirectory(self.prjPath)
+            #browseMod.setPreviewDirectory(self.Properties['ProjectDirectory'])
             
         else:
             if self.docksConfig['模型预览窗口'].isHidden() :

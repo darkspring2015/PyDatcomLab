@@ -32,6 +32,7 @@ class NewModelDlg(QDialog, Ui_Dialog):
         self.logger = logging.getLogger(r'Datcomlogger')
         self.dtDefine = iDefine
         self.dtConfig = iConfig
+        self.libraryName = 'ConfigurationType'
         self.ext = '.dcxml'
         self.ModelName = "test"
         self.ModelDir = os.path.join(os.path.expanduser('~'), '.PyDatcomLab', 'extras', 'PyDatcomProjects')
@@ -103,10 +104,11 @@ class NewModelDlg(QDialog, Ui_Dialog):
         @param index DESCRIPTION
         @type int
         """
+        if index < 0 : return 
 
         tKey = '%d.0'%(index+1)
         tList = []
-        tSet    = self.dtConfig.getLibrary('ConfigurationType')
+        tSet    = self.dtConfig.getLibrary(self.libraryName)
         allCard = self.dtDefine.getNamelistCollection()
         if 'Namelist' in tSet[index].keys():
             tList = tSet[index]['Namelist']
