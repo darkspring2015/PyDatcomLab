@@ -34,6 +34,7 @@ class NewModelDlg(QDialog, Ui_Dialog):
         self.dtConfig = iConfig
         self.libraryName = 'ConfigurationType'
         self.ext = '.dcxml'
+        self.extFilter = "Datcom Model Files (*.dcxml);;XML Files (*.xml)"
         self.ModelName = "test"
         self.ModelDir = os.path.join(os.path.expanduser('~'), '.PyDatcomLab', 'extras', 'PyDatcomProjects')
         self.Modelpath = os.path.join(self.ModelDir , self.ModelName +  self.ext)
@@ -59,8 +60,14 @@ class NewModelDlg(QDialog, Ui_Dialog):
         self.ModelDir = self.lineEdit_DirPath.text()
         if not os.path.exists(self.ModelDir):
             os.mkdirs(self.ModelDir)
-        self.Modelpath = os.path.join(self.ModelDir, self.ModelName+self.ext )           
+        self.Modelpath = os.path.join(self.ModelDir, self.ModelName+self.ext )      
+        #开始创建对应的DatcomModel
         tModel = dcModel()
+        tModel.Properties.update({'CName': self.ModelName, 
+                                            'Configuration':self.comboBox_template.currentText(), 
+                                            'Describe':self.textEdit_Describe.toPlainText(), 
+                                            'AerocraftName':self.ModelName, 
+        })
         #获得配置
         for iC in self.dtDefine.getNamelistCollection():
             tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
@@ -71,23 +78,22 @@ class NewModelDlg(QDialog, Ui_Dialog):
         #保存文件到
         tModel.save(self.Modelpath)       
         #加载到模型管理器
-        self.close()
+        #self.finished.emit(QDialog.Accepted)
+        #self.setResult(QDialog.Accepted)
+        self.accept()
     
     @pyqtSlot()
-    def on_pushButton_ChoiseDir_clicked(self):
+    def on_pushButton_GetFileName_clicked(self):
         """
-        Slot documentation goes here.
+        打开文件对话框，选在一个文件保存模型
         """
-        # TODO: not implemented yet
-        
-        fN = QFileDialog.getExistingDirectory(self, "创建模型文件", "", QFileDialog.DontUseNativeDialog)      
-
-        if not os.path.exists (fN):
-            self.logger.error("目录：%s 不存在！"%fN)
-            return
-        #
-        self.ModelDir = fN
-        self.lineEdit_DirPath.setText(fN)
+        # 选择文件对话框        
+        #fN = QFileDialog.getSaveFileName(self, "创建模型文件", "",self.extFilter,  QFileDialog.DontUseNativeDialog)     
+        fN , tExt= QFileDialog.getSaveFileName(self, "创建模型文件", self.ModelDir ,self.extFilter, "Datcom Model Files (*.dcxml)",  options=QFileDialog.DontUseNativeDialog)   
+        tFilePath = fN +".dcxml" 
+        if fN !='':
+            self.lineEdit_DirPath.setText(tFilePath)
+            self.Modelpath = tFilePath
                 
 
     def getModelPath(self):

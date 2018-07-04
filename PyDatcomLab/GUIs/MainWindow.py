@@ -408,7 +408,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
        
         #获得当前的CASE
         tPC = self.centralWidget()
-        if tPC == 0:
+        if tPC is None:
             QMessageBox.information(self, '提示', '没有打开任何模型！')
             return
         dcM = tPC.getDoc()
@@ -416,12 +416,12 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         import tempfile
         tmpPath= tempfile.mkdtemp(suffix='',prefix='Datcom')
         tFile = os.path.join(tmpPath, 'ex.inp')
-        dcM.writeToDatcomInput(tFile)
+        dcM.buildDatcomInputFile(tFile)
         
         #执行计算
         aRunner = datcomRunner.runner(problemDir=tmpPath,
-                            execDatcomPath=self.exePath)
-        strRes = aRunner.runningPopen(exePath= self.exePath,
+                            execDatcomPath=self.Properties['DatcomExecute'])
+        strRes = aRunner.runningPopen(exePath= self.Properties['DatcomExecute'],
                             problemFile=tFile,    tcwd =tmpPath  )
         if strRes == "成功执行":
             self.logger.info("完成了当前算例的计算。算例目录：%s"%tmpPath)

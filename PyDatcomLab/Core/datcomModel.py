@@ -324,7 +324,7 @@ class dcModel(datcomXMLLoader):
         #进行值类型
         #INT
         if tDf['TYPE'] == 'INT' :
-            if type(tVar['Value']) != int: 
+            if type(tVar['Value']) not in [ int, float]: 
                 tLog.append('变量的类型应当为INT实际是%s'%(type(tVar['Value']))) 
             elif 'Range' in tDf.keys() :
                 if tVar['Value'] < tDf['Range'][0] or tVar['Value'] > tDf['Range'][1]:
@@ -338,7 +338,7 @@ class dcModel(datcomXMLLoader):
                     tLog.append('变量的类型REAL,值：%f,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))             
             
         if tDf['TYPE'] == 'Array' :
-            if type(tVar['Value']) != list:
+            if type(tVar['Value']) != list or len(tVar['Value']) == 0:
                 tLog.append('变量的类型应当为Array实际是%s'%(type(tVar['Value']))) 
             elif 'Range' in tDf.keys() :
                 for iV in tVar['Value']:
@@ -350,7 +350,6 @@ class dcModel(datcomXMLLoader):
                          if iV not in  tDf['Range']:
                             tLog.append('变量的类型Array,元素类型%s,值：%s,超出Range：%s '%(tDf['SubType'] , 
                             str(iV), str(tDf['Range'])))  
-
                     
         if tDf['TYPE'] == 'List' :
             if type(tVar['Value'])  != str:
@@ -410,12 +409,12 @@ class dcModel(datcomXMLLoader):
         """
         if self.doc is None or len(self.doc ) == 0:
             self.logger.error("模型内并没有信息")
-            return 
+            return False
         #开始内容分析机制
         tReport = self.validate()    
         if tReport['status'] != 'Acceptable':
             self.logger.info(str(tReport))
-            return 
+            return  tReport
         #获得doc的全部定义
         tAllInfo = self.getNamelistCollection()
         if tAllInfo is None or len(tAllInfo) == 0 :
@@ -443,7 +442,7 @@ class dcModel(datcomXMLLoader):
                     #raise(Exception("创建Datcom计算配置文件失败，不能为空值创建结果！%s/%s"%(itr,itVar ))) 
                 tVarDf = self.dtDefine.getVariableDefineByUrl(tURl)
                 if  tVarDf['TYPE'] == 'Array': #对于序列类型
-                    if 'SIndex' in tVarStruct.keys():
+                    if 'SIndex' in tVarStruct.keys() and tVarStruct['SIndex'] not in [1, '1'] :
                         theStr += '(%s)='%(tVarStruct['SIndex'])
                     if len(TStr[-1])> tNMlstPos: #当当前行是非空行时换行增加序列值
                         TStr.append(' '*tNMlstPos)     
@@ -458,8 +457,12 @@ class dcModel(datcomXMLLoader):
                     if lastCheck < len(tAllInfo.keys()):
                         TStr.append(' '*tNMlstPos) #防止个数变量出现在序列变量之后
                 elif tVarDf['TYPE'] == 'List' :#对于1.0 2.0 或者.TRUE.等字符型 
-                    theStr += '=%s,'%tVarValueS
-                elif tVarDf['TYPE'] is 'INT' :#对于数值类型  INT  
+                    #具有默认值则不输出
+                    if not ('Default' in tVarDf.keys() and  tVarValueS == tVarDf['Default']):  
+                        theStr += '=%s,'%tVarValueS
+                    else:
+                        theStr = ''
+                elif tVarDf['TYPE'] == 'INT' :#对于数值类型  INT  
                     theStr += '=%d.0,'%int(tVarValueS)
                 elif tVarDf['TYPE'] == 'REAL' :#对于数值类型 REAL                
                     if float(tVarValueS) < float(self.Properties['numForE']):

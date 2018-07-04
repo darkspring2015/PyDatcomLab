@@ -118,13 +118,18 @@ class DTdictionary():
         for iT in list(elemt):
             if iT.tag == 'NMACHLinkTable' :
                 #NMACHLinkTable
-                if  not iT.text is None:
-                    tNTable = eval(iT.text)
+                for iA in iT.attrib:
+                    tNTable =iT[iA]
+                    try:
+                        tNTable = eval(iT[iA])
+                    except Exception as e:
+                        self.logger.warning("无法推定NMACHLinkTable属性%s：%s的实际类型"%(iA, iT[iA]))
+                     
                     if tNTable is None or not type(tNTable)  is list or len(tNTable) == 0:
                         continue
                     else:
                         self.dictAddtional[tNmlst]['NMACHLinkTable'] = tNTable
-                    
+                 
             elif iT.tag == 'RuleNumToCount':
                 #RuleNumToCount
                 tRCL = []
@@ -245,6 +250,26 @@ class DTdictionary():
                 if 'Group' in iR.keys() and 'Index' in iR.keys() and comboVar == iR['Index']:
                     return  iR       
         return None        
+        
+    def getRuleNMACHLinkTable(self,  nmlst):
+        """
+        获得nmlst中的受NMACH变量影响的Group组，list形式
+        """
+        if nmlst in self.dictAddtional.keys() and 'NMACHLinkTable' in self.dictAddtional[nmlst]:
+            return self.dictAddtional[nmlst]['NMACHLinkTable']['varList']
+        return []
+        
+        
+    def isLinkToNMACH(self, nmlst, iGroup):
+        """
+        判断nmlst/iGroup是否关联到NMACH
+        """
+        if nmlst in self.dictAddtional.keys() and 'NMACHLinkTable' in self.dictAddtional[nmlst] and\
+        iGroup in self.dictAddtional[nmlst]['NMACHLinkTable']['varList']:
+            return True
+        else:
+            return False
+            
         
     def getGroupVarsByName(self, nmlst, groupNm):
         """

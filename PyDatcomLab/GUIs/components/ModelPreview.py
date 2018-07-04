@@ -52,6 +52,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         self.libraryKeyWord = 'ProjectLibrary'
         self.rootTag  = self.dtConfig.getLibraryRootTag(self.libraryKeyWord)  #获取库文件的根节点的tag
         self.MEKeys  = list(dtConfig.getLibraryElementTemplate(self.libraryKeyWord ))
+        self.configurationList = self.dtConfig.getConfigurationList()
         #配置信息
         self.ext = '.dcxml'        
         self.ModelName = "test"
@@ -79,7 +80,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         self.treeWidget_model.setContextMenuPolicy(Qt.CustomContextMenu)   
 
         #其他状态变量
-        self.isCopy = False             #表示本对话框是否是Copy目的
+        self.isCopy     = False             #表示本对话框是否是Copy目的
         self.isDcModel = True         #表示本对话加载的是否是Datcom模型
         
 
@@ -192,8 +193,8 @@ class ModelPreview(QWidget, Ui_ModelPreview):
             return
         #加载
         self.Model = dcModel()
-        self.isDcModel = self.Model.loadXML(tFile)
-        self.lineEdit_ModelName.setText(self.Model.aerocraftName)
+        self.Model.load(tFile)
+        self.lineEdit_ModelName.setText(self.Model.Properties['CName'])
         self.lineEdit_DirPath.setText(tFile)
         self.currentModelPath = tFile
         #开始界面逻辑刷新过程
@@ -356,26 +357,50 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         
         tKey = '%d.0'%(index+1)
         tList = []
-        if tKey in modelTemplate.keys():
-            tList = modelTemplate[tKey]['CARDList']
+        if tKey in self.configurationList.keys():
+            tList = self.configurationList[index]['Namelist']
         else:
             self.logger.error('尝试的Index：%s并不存在对应的基础定义'%tKey)
             return
         #遍历所有的选项卡执行
-        for iC in allCard:
+        for iC in self.dtDefine.getNamelistCollection():
+            #执行筛选逻辑
             tWidget = self.findChild(QCheckBox, 'checkBox_%s'%iC)
             if not tWidget: 
                 self.logger.error('并不存在对应的CARD复选框：%s'%iC)
                 continue
-            #执行包括
-            if iC in tList:
-                tNodes = self.treeWidget_model.findItems(iC, Qt.MatchFixedString|Qt.MatchRecursive, 0)
-                if len(tNodes) == 0 :
-                    tWidget.setCheckState(Qt.Unchecked)
-                else:
-                    tWidget.setCheckState(Qt.Checked)
             else:
-                tWidget.setCheckState(Qt.Unchecked)
+                #根据DcModel的内容执行选项卡的刷新逻辑
+                if iC in tList:
+                    if self.isDcModel:
+                        #如果是Url版的dcModel
+                        tCARDItemS = self.treeWidget_model.findItems(iC, Qt.MatchFixedString|Qt.MatchRecursive, 1)
+                        for iI in tCARDItemS:
+                            tNode = iI.parent()
+                            if tNode is not None and tNode.checkState(0) != Qt.Checked:
+                                tNode.setCheckState(0, Qt.Checked)                        
+                    else:                        
+                        tNodes = self.treeWidget_model.findItems(iC, Qt.MatchFixedString|Qt.MatchRecursive, 0)
+                        if len(tNodes) == 0 :
+                            tWidget.setCheckState(Qt.Unchecked)
+                        else:
+                            tWidget.setCheckState(Qt.Checked)
+                    tWidget.setCheckState(Qt.Checked)
+                else:
+                    #不在列别
+                    if self.isDcModel:
+                        #如果是Url版的dcModel
+                        tCARDItemS = self.treeWidget_model.findItems(iC, Qt.MatchFixedString|Qt.MatchRecursive, 1)
+                        for iI in tCARDItemS:
+                            tNode = iI.parent()
+                            if tNode is not None and tNode.checkState(0) != Qt.Unchecked:
+                                tNode.setCheckState(0, Qt.Unchecked)                        
+                    else:                        
+                        tNodes = self.treeWidget_model.findItems(iC, Qt.MatchFixedString|Qt.MatchRecursive, 0)
+                        for iI in tNodes:
+                            tNode.setCheckState(0, Qt.Unchecked) 
+                    tWidget.setCheckState(Qt.Unchecked)
+
                 
     def ModelNodeCheckstateChanged(self, cardName, state):
         """
@@ -396,14 +421,20 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         else:
             self.logger.error('不存在%s对应的Checkbox对象'%cardName)
         #修改对应的Node
-        for tNode in self.treeWidget_model.findItems(cardName, Qt.MatchFixedString|Qt.MatchRecursive, 0):
-            if tNode.checkState(0) != state :
-                tNode.setCheckState(0, state)
-        #修改CARDList对应的Node
-        tCARDItem = self.treeWidget_model.findItems('', Qt.MatchFixedString|Qt.MatchRecursive, 0)
-        
-        
-    
+        if self.isDcModel:
+            #如果是Url版的dcModel
+            tCARDItemS = self.treeWidget_model.findItems(cardName, Qt.MatchFixedString|Qt.MatchRecursive, 1)
+            for iI in tCARDItemS:
+                tNode = iI.parent()
+                if tNode is not None and tNode.checkState(0) != state:
+                    tNode.setCheckState(0, state)
+        else:
+            #如果是其他标准dcModel
+            for tNode in self.treeWidget_model.findItems(cardName, Qt.MatchFixedString|Qt.MatchRecursive, 0):
+                if tNode.checkState(0) != state :
+                    tNode.setCheckState(0, state)
+                    
+
     @pyqtSlot(int)
     def on_checkBox_FLTCON_stateChanged(self, p0):
         """
@@ -647,7 +678,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         @type int
         """
         cardName = item.text(0)
-        if cardName in allCard:
+        if cardName in self.dtDefine.getNamelistCollection():
             self.ModelNodeCheckstateChanged(cardName, item.checkState(0))
             
 

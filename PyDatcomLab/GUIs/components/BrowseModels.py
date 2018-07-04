@@ -57,6 +57,7 @@ class BrowseModels(QDialog, Ui_BrowseModel):
             self.ModelSet.setContextMenuPolicy(Qt.CustomContextMenu)    
         self.lastEditingRow = -1
         #刷新模型数据
+        self.dataSet = None
         self._resetModel()
         #界面参数
         self.curPos = QPoint(0, 0)
@@ -165,15 +166,17 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         根据config的配置重置QTableWidget的模型数据
         """
         if self.dtConfig is None : return 
-        tSet = self.dtConfig.getLibrary(self.libraryKeyWord)
+        self.dataSet = self.dtConfig.getLibrary(self.libraryKeyWord)
         self.ModelSet.clearContents()
         self.ModelSet.setRowCount(0)
-        for iT in tSet:
+        for iT in self.dataSet :
             tRowCount = self.ModelSet.rowCount() 
             self.ModelSet.insertRow(tRowCount)
             pix1 = QPixmap(r":/card/rc_card/亚音速常规布局.jpg")                
-            self.ModelSet.setItem(tRowCount, 0, QTableWidgetItem(QIcon(pix1.scaled(QSize(100,100))),iT.get('ModelName', '')))
+            self.ModelSet.setItem(tRowCount, 0, QTableWidgetItem(QIcon(pix1.scaled(QSize(100,100))),iT.get('ModelName', '')))            
             self.ModelSet.setItem(tRowCount, 1, QTableWidgetItem(iT.get('path', '.') ))
+            self.ModelSet.item(tRowCount, 1).setFlags(Qt.NoItemFlags|Qt.ItemIsEnabled)
+            #self.ModelSet.item(tRowCount, 1).setFlags(Qt.NoItemFlags|Qt.ItemIsSelectable|Qt.ItemIsEnabled)
             #self.ModelSet.setItem(tRowCount, 2, QTableWidgetItem(''))        
          
 
@@ -202,18 +205,17 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
-        dlg = NewModelDlg()
-        dlg.exec()
-        mPath = dlg.getModelPath()        
-        self.AddModel(os.path.dirname(mPath), os.path.basename(mPath))
+        dlg         = NewModelDlg()
+        dlg.exec() 
+        if dlg.result() == QDialog.Accepted:
+            mPath = dlg.getModelPath()
+            self.AddModel(os.path.dirname(mPath), os.path.basename(mPath))
     
     @pyqtSlot()
     def on_actionAddModel_triggered(self):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
         baseDir = os.path.expanduser('~')
         if os.path.exists(self.comboBox_Dirs.currentText() ): 
             baseDir = self.comboBox_Dirs.currentText()
@@ -221,7 +223,7 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         tFiles = QFileDialog.getOpenFileNames(self,"选择模型文件", 
                     baseDir, 
                     "Datcom Project Files (*.dcxml *.xml )")
-        for iF in tFiles:
+        for iF in tFiles[0]:
             if os.path.exists(iF):
                 fN, extN = os.path.splitext(os.path.basename(iF))
                 self.AddModel(os.path.dirname(iF), os.path.basename(iF))
@@ -233,13 +235,12 @@ class BrowseModels(QDialog, Ui_BrowseModel):
     def on_actionRemoveModel_triggered(self):
         """
         从列表移除模型，但不会删除模型
-        """
-        
+        """        
         aItem = self.curWidget.indexAt(self.curPos)
         if  aItem.row() >= 0 :  
             tTemplate =  self.dtConfig.getLibraryElementTemplate(self.libraryKeyWord)
-            tTemplate.update({'ModelName':aItem[0],
-            'path':aItem[1],         })
+            tTemplate.update({'ModelName':self.curWidget.item(aItem.row(), 0).text(),
+            'path':self.curWidget.item(aItem.row(), 1).text(),         })
             self.dtConfig.delItemFromLibrary(self.libraryKeyWord, tTemplate)          
             self.curWidget.removeRow(aItem.row())
         else:
@@ -266,6 +267,18 @@ class BrowseModels(QDialog, Ui_BrowseModel):
 #        if previousRow != currentRow:
 #            if not self.ModelSet.itemAt(currentRow, 1) is None :
 #                self.emit_ModelSelected.emit( self.ModelSet.item(currentRow, 1).text())
+
+    #void QTableWidget::cellChanged(int row, int column)
+    @pyqtSlot(int, int)
+    def on_ModelSet_cellChanged(self, iRow, iColumn):
+        """
+        cellChanged的槽函数，用来刷新编辑属性
+        因为在系统中设置了不可编辑路径，所以只编辑名称
+        """
+        if iColumn == 0: 
+            #ModelName列
+            self.dataSet[iRow].update({'ModelName':self.ModelSet.item(iRow, 0).text(),     })
+            self.dtConfig.setLibrary(self.libraryKeyWord, self.dataSet)  
     
     @pyqtSlot(int)
     def on_comboBox_Dirs_currentIndexChanged(self, index):
@@ -292,6 +305,7 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         tPath = self.ModelSet.item(aItem.row(), 1).text()
         self.PreViewdlg = Mp()
         self.PreViewdlg.loadModel(tPath)
+        self.isDcModel = True
         self.PreViewdlg.show()
             
         
@@ -306,4 +320,5 @@ class BrowseModels(QDialog, Ui_BrowseModel):
         """
         if self.lastEditingRow != item.row():
             if not self.ModelSet.itemAt(item.row(), 1) is None :
+                self.lastEditingRow = item.row()
                 self.emit_ModelSelected.emit( self.ModelSet.item(item.row(), 1).text())

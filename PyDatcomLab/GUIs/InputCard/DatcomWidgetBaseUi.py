@@ -94,6 +94,7 @@ class DatcomWidgetBaseUi(object):
                     sizePolicy.setHeightForWidth(tVarWidget.sizePolicy().hasHeightForWidth())
                     tVarWidget.setSizePolicy(sizePolicy)
                     self.LiftLayout.addWidget(tVarWidget)
+                    
                 elif tVarDefine['TYPE'] in ['List'] :
                     # 结束单值工程量创建
                     tVarWidget = LInput.DatcomInputList(tUrl, parent=self.groupBox_lift )
@@ -160,6 +161,8 @@ class DatcomWidgetBaseUi(object):
             #连接变量组合变化信号
             CARD.Singal_RuleIndexToCombo.connect(tTabTable.on_Singal_RuleIndexToCombo)
             tTabTable.Singal_variableComboChanged.connect(self.Singal_varComboChangedFromTable)
+
+                
             #长度控制信号和长度变化信号在RuleNumToCount中绑定
             #tHorizontalLayout.addWidget(tTabTable)
             #tTabName     = tGroup
@@ -187,9 +190,7 @@ class DatcomWidgetBaseUi(object):
         #调用控件信号槽绑定逻辑
         self.connectSlotsByRule(CARD) #绑定自定义的信号槽关系
         QtCore.QMetaObject.connectSlotsByName(CARD)
-      
-
-        
+ 
     def connectSlotsByRule(self, tCARD):
         """
         根据定义的Rule来绑定对应的信号槽
@@ -218,6 +219,22 @@ class DatcomWidgetBaseUi(object):
                 tCWidget.editingFinished.connect(tTbWidget.on_TbLength_editingFinished) 
                 #表格长度到-NUM
                 tTbWidget.Signal_rowCountChanged.connect(tCWidget.on_Signal_rowCountChanged)
+                
+        #添加NMACH对表格长度的控制信号
+        tGroupByNMACH = tCARD.dtDefine.getRuleNMACHLinkTable(tCARD.NameList)
+        for iG in tGroupByNMACH:
+            tTabTable = tCARD.findChild(QtWidgets.QWidget,"tableWidget_%s"%iG)
+            if tTabTable is not None: 
+                #如果该表格需要外部NMACH触发,则转发Signal
+                tCARD.Singal_NMACHChanged.connect(tTabTable.on_Singal_NMACHChanged) 
+                
+        #联结发送NMACH信号的控件
+        if tCARD.NameList == 'FLTCON':
+            tWidget = tCARD.findChild(QtWidgets.QWidget,"NMACH")
+            if tWidget is None:
+                self.logger.error("无法找到FLTCON/NMACH所对应的控件")
+            else:
+                tWidget.Signal_NMACHChanged.connect(tCARD.Singal_NMACHChanged)
 
       
     def retranslateUi(self, CARD):

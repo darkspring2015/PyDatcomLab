@@ -37,11 +37,12 @@ class DatcomCASEEditerUi(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        _translate = QtCore.QCoreApplication.translate
-        if self.dcModel.getProperties()['CName'] is not None:
-            Dialog.setWindowTitle(_translate( self.dcModel.getProperties()['CName'],  self.dcModel.getProperties()['CName']))
-        else:
-            Dialog.setWindowTitle(_translate("DatcomCASEEditer", "DatcomCASEEditer"))
+        pass
+#        _translate = QtCore.QCoreApplication.translate
+#        if self.dcModel.getProperties()['CName'] is not None:
+#            Dialog.setWindowTitle(_translate( "DatcomCASEEditer",  self.dcModel.getProperties()['CName']))
+#        else:
+#            Dialog.setWindowTitle(_translate("DatcomCASEEditer", "DatcomCASEEditer"))
         #self.tabWidget_Configuration.setTabText(self.tabWidget_Configuration.indexOf(self.tab), _translate("Dialog", "Tab 1"))
         #self.tabWidget_Configuration.setTabText(self.tabWidget_Configuration.indexOf(self.tab_2), _translate("Dialog", "Tab 2"))
 

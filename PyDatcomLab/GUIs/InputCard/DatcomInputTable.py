@@ -24,10 +24,11 @@ class DatcomInputTable(QWidget):
     """
     用于输入Datcom中的Array类型的参数.其中将增加一些特殊的转换逻辑
     """
-    currentIndexChanged = pyqtSignal(str , str)  #将编辑结构发送出去 (Url,index在Range中的具体值）
-    Signal_rowCountChanged      = pyqtSignal(str,int)      #向外部通知表格长度发生了变化
-    Singal_RuleNumToCount       = pyqtSignal(int)          #用来接收外部的表格长度变化信号
+    currentIndexChanged            = pyqtSignal(str , str)    #将编辑结构发送出去 (Url,index在Range中的具体值）
+    Signal_rowCountChanged       = pyqtSignal(str,int)      #向外部通知表格长度发生了变化
+    Singal_RuleNumToCount         = pyqtSignal(int)           #用来接收外部的表格长度变化信号
     Singal_variableComboChanged = pyqtSignal(str , str)    #向外部通知表格中激活的列组合关系发生变化  <self.vUrl,"[]">
+    #Singal_NMACHChanged           = pyqtSignal(int)          #用来接收NMACH的变化的信号
     
     def __init__(self, iNameList, iGroup,  parent=None, iDefine = DDefine ):
         """
@@ -67,6 +68,7 @@ class DatcomInputTable(QWidget):
         self.Singal_RuleNumToCount.connect(self.on_Singal_RuleNumToCount)
         self.table.itemChanged.connect(self.onItemChanged) 
         self.table.cellChanged.connect(self.on_cellChanged)
+        #self.Singal_NMACHChanged.connect(self.on_Singal_NMACHChanged)
         
         #再次执行绑定
         QMetaObject.connectSlotsByName(self)
@@ -78,12 +80,14 @@ class DatcomInputTable(QWidget):
         tGroup指向表格容纳的所有列
         """
         #判断定义有效性
-        if tDefine is None or tNameList is None or tGroup is None: return  
-        self.DDefine   = tDefine    
+        if tDefine is None or tNameList is None or tGroup is None:
+            self.logger.error("setDefinition()无法分析定义，定义对象缺失！")
+            return  
+        self.dtDefine   = tDefine    
         self.GroupName = tGroup      #对应的变量组的名称  
         self.Namelist  = tNameList   #对应NameList的名称
         self.vUrl      = '%s/%s'%(tNameList,tGroup )
-        self.varsDf   = {}
+        self.varsDf   = {}      #所有变量的定义 dict形式
         self.groupDf  = {}
         self.varsDfList = []  #顺序保存的所有变量的定义，用以关联表头
         self.maxCount = 20
@@ -94,13 +98,13 @@ class DatcomInputTable(QWidget):
         self.ComboVarUrl = None #表格列组合对应的附加变量的Url
     
         #分析组定义
-        tVariableDf = self.DDefine.getGroupVarsByName(tNameList, tGroup) #对应数组的定义   
+        tVariableDf = self.dtDefine.getGroupVarsByName(tNameList, tGroup) #组内所有变量的定义   
         #分析组定义
         if len(tVariableDf) == 0 :
-            self.logger.error("不包含%s对应的定义信息"%(tNameList))
+            self.logger.error("不包含%s对应的定义信息"%(self.vUrl ))
             return
-        tGroupDfSet = self.DDefine.getCARDAddtionalInformation(tNameList, 'GroupDefine' )
-        if len(tGroupDfSet) == 0 or tGroup not in tGroupDfSet.keys():
+        tGroupDfSet = self.dtDefine.getCARDAddtionalInformation(tNameList, 'GroupDefine' )
+        if len(tGroupDfSet) == 0 or self.GroupName  not in tGroupDfSet.keys():
             self.logger.error("不包含%s的组信息定义%s对应的定义信息"%(tNameList, tGroup))
             return
         #保存定义
@@ -110,23 +114,24 @@ class DatcomInputTable(QWidget):
         for iv in tVariableDf.keys():
             self.varsDfList.append(tVariableDf[iv])
         self.groupDf  = tGroupDfSet[tGroup]
-        #设置表头
-        #self.InitializeHeader()
+
         #分析表格行数限制
-        self.maxCount  = self.DDefine.getGroupLimitByName(tNameList, tGroup)[1]
-        self.minCount  = self.DDefine.getGroupLimitByName(tNameList, tGroup)[0]
+        self.maxCount  = self.dtDefine.getGroupLimitByName(tNameList, tGroup)[1]
+        self.minCount  = self.dtDefine.getGroupLimitByName(tNameList, tGroup)[0]
         #分析表格行数控制变量的结果
-        tCountVar       = self.DDefine.gettRuleNumToCountByGroup(tNameList, tGroup)
+        tCountVar       = self.dtDefine.gettRuleNumToCountByGroup(tNameList, tGroup)
         if tCountVar is not None : 
             self.CountVar = tCountVar
         self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
         #分析表头协同变量结果
-        tComboVar       = self.DDefine.getRuleIndexToComboByGroup(tNameList, tGroup)
+        tComboVar       = self.dtDefine.getRuleIndexToComboByGroup(tNameList, tGroup)
         if tComboVar is not None and  len(tComboVar) > 0: 
             self.ComboVar  = tComboVar['Index']
             self.ComboRule = tComboVar['HowTo']
             self.ComboVarUrl = '%s/%s'%(self.Namelist, self.ComboVar)
-            
+        #分析是否关联到NMACH限制因素
+        self.isLinkNMACH = self.dtDefine.isLinkToNMACH(tNameList, tGroup)
+        
 
         
     def setupUi(self, Form):
@@ -236,7 +241,7 @@ class DatcomInputTable(QWidget):
         """
         for iC in range(0, self.table.columnCount()):            
             tUrl = '%s/%s'%(self.Namelist, self.varsDfList[iC]['VarName'])
-            self.table.setItemDelegateForColumn(iC, CDelegate(tUrl, parent = self, tDDefine = self.DDefine ) )
+            self.table.setItemDelegateForColumn(iC, CDelegate(tUrl, parent = self, tDDefine = self.dtDefine ) )
        
     def clear(self):
         """
@@ -262,8 +267,8 @@ class DatcomInputTable(QWidget):
         self.InitializeHeader()   
         #分析写入数据
         for iC  in range(0, len(self.varsDfList)):
-            iV = self.varsDfList[iC]
-            tUrl = "%s/%s"%(self.Namelist,iV['VarName'])
+            iV       = self.varsDfList[iC]   #这是所有的定义
+            tUrl     = '%s/%s'%(iV['NameList'], iV['VarName'])
             tDataVar = iModel.getVariableByUrl(tUrl)            
             if tDataVar is None:
                 #不存在数据则隐藏对应的列
@@ -287,11 +292,16 @@ class DatcomInputTable(QWidget):
             #执行数据写入
             tData = tDataVar['Value']
             if tData is None :continue
-            if self.table.rowCount() != len(tData): 
-                self.logger.info("%s加载数据过程中表格长度%d与数据长度%d不同，修改表格长度"%(self.vUrl,self.table.rowCount(), len(tData) ))
+            if self.table.rowCount() != len(tData):                 
                 #这里应该是比较大的那个值
-                self.table.setRowCount(len(tData))
-            if len(tData) in range(self.minCount, self.maxCount):                   
+                if 'Limit' in iV.keys() :
+                    if len(tData) < iV['Limit'][0]:
+                        self.logger.info("%s加载数据过程中,数据长度%d小于下限限制%d，修改表格长度为下限"%(self.vUrl,len(tData), iV['Limit'][0] ))        
+                        self.table.setRowCount( iV['Limit'][0])
+                    if len(tData) > iV['Limit'][1]:
+                        self.logger.error("%s加载数据过程中,数据长度%d大于上限限制%d，修改表格长度为上限"%(self.vUrl,len(tData), iV['Limit'][1] ))        
+                        self.table.setRowCount( iV['Limit'][1])
+            if len(tData) in range(self.minCount, self.maxCount):     
                 for iR in range(0, len(tData)):
                     tItem  = QTableWidgetItem(str(tData[iR]))
                     tDataUserRole = tDataTemplate.copy()
@@ -307,10 +317,7 @@ class DatcomInputTable(QWidget):
         #发送行变更消息
         self.Signal_rowCountChanged.emit(self.CountVarUrl , self.table.rowCount())         #向外通知数据加载后的长度
         self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo())) #向外通知数据列的组合关系发生变换
-        
-        
-        
-    
+
     def saveData(self, iModel):
         """
         将控件的编辑结果保存到iModel中 self->iModel
@@ -327,7 +334,7 @@ class DatcomInputTable(QWidget):
             #分析
             if self.table.isColumnHidden(iC):
                 #True is Hidden Delete the Variable from the Model
-                tVar = self.DDefine.getVariableTemplateByUrl(tUrl)
+                tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Value'] = None
                 iModel.setVariable( tVar)
             else:
@@ -337,7 +344,7 @@ class DatcomInputTable(QWidget):
                     #如果没有输入值则利用定义的默认值
                     if self.table.item(iR, iC) is None:  
                         self.logger.error("表格%s在R：%d，C：%d的输入不应为空"%(self.vUrl, iR, iC))
-                        tData = self.DDefine.getVariableTemplateByUrl(tUrl, True)  #查询Array的子项的默认值
+                        tData = self.dtDefine.getVariableTemplateByUrl(tUrl, True)  #查询Array的子项的默认值
                         #self.table.item(iR, iC).setBackground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
                     else:
                         #如果输入了则使用输入值                    
@@ -365,7 +372,7 @@ class DatcomInputTable(QWidget):
                     tUnit = self.table.horizontalHeaderItem(iC).data(Qt.UserRole)['CurrentUnit']
                 else:
                     tUnit = ''
-                tVar = self.DDefine.getVariableTemplateByUrl(tUrl)
+                tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Unit']  = tUnit
                 tVar['Value'] = tVarlist
                 iModel.setVariable( tVar )
@@ -390,8 +397,8 @@ class DatcomInputTable(QWidget):
             return
         #获得变量定义
         tUrl = '%s/%s'%(self.Namelist ,self.varsDfList[column]['VarName'])  
-        tVarDf = self.DDefine.getVariableDefineByUrl(tUrl)
-        #tVarTmp = self.DDefine.getVariableTemplateByUrl(tUrl, True)
+        tVarDf = self.dtDefine.getVariableDefineByUrl(tUrl)
+        #tVarTmp = self.dtDefine.getVariableTemplateByUrl(tUrl, True)
         tItem = self.table.item( row,  column)
         if tItem is None :
             #本身数据是不存在
@@ -470,8 +477,29 @@ class DatcomInputTable(QWidget):
         else:
             self.logger.error("无法将表格的行数设置为%d,当前%d"%(tNum,self.table.rowCount() ))
             self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())
-
-        
+            
+    @pyqtSlot(int)  
+    def on_Singal_NMACHChanged(self, iNMCAH):
+        """
+        根据数据定义初始化表格
+        1.如果关联了MACH、限制等参数，执行表格规模调整至约束条件
+        2.定义了变量的初始值，赋值
+        3.
+        """
+        #分析是否关联到NMACH限制因素
+        self.isLinkNMACH = self.dtDefine.isLinkToNMACH(self.Namelist, self.GroupName)      
+        if self.isLinkNMACH:
+            #表格关联了NMACH
+            self.minCount  = iNMCAH
+            self.maxCount = iNMCAH
+            if self.table.rowCount() < iNMCAH:
+                for iR in range(self.table.rowCount(), iNMCAH):
+                    self.table.insertRow(iR)
+            elif self.table.rowCount() < iNMCAH:
+                for iR in range(iNMCAH, self.table.rowCount()):
+                    self.table.removeRow(iR)      
+                self.logger.warning("on_Singal_NMACHChanged() 根据NMACH值删除了表格最后的几行数据！")
+                    
         
     @pyqtSlot()
     def on_actionAddRow_triggered(self):

@@ -17,7 +17,9 @@ class DatcomInputSingle(QWidget):
     """
     Class documentation goes here.
     """
-    editingFinished = pyqtSignal(str ,str)      #将编辑结构发送出去
+    editingFinished            = pyqtSignal(str ,str)      #将编辑结构发送出去
+    Signal_NMACHChanged = pyqtSignal(int)            #发送NMACH变化的结果
+    
     def __init__(self, iUrl, parent=None, iDefinition = DDefine ):
         """
         Constructor
@@ -522,6 +524,12 @@ class DatcomInputSingle(QWidget):
         """
         self.editingFinished.emit(self.vUrl , self.InputWidget.text())
         
+        if self.vUrl == 'FLTCON/NMACH':
+            try:
+                tNMACH = int(float(self.InputWidget.text()))
+                self.Signal_NMACHChanged.emit(tNMACH)
+            except Exception as e:
+                self.logger.error("编辑控件不发转换输入文本到NMACH(int):%s"%self.InputWidget.text())
 
     
     @pyqtSlot(int)

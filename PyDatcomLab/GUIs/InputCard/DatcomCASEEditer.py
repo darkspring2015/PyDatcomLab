@@ -8,7 +8,7 @@ Module implementing DatcomCASEEditer.
 import os 
 import logging
 #Qt  
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QWidget
 from PyQt5 import QtWidgets, QtGui, QtCore
 
@@ -25,7 +25,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
     Class documentation goes here.
     """
     # TODO: Define the action for the program
-    
+    Singal_NMACHChanged                    = pyqtSignal(int)          #用来接收NMACH的变化的信号
     
     def __init__(self, parent=None, modelpath = None, iDefine = DDefine):
         """
@@ -97,6 +97,13 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         #设置不能关闭
         if iNamelist in self.dtDefine.getBasicNamelistCollection():
             self.tabWidget_Configuration.tabBar().setTabButton(tIndex, QtWidgets.QTabBar.RightSide, None)
+            
+        #设置NMACH信号
+        if iNamelist == 'FLTCON':
+            aW.Singal_NMACHChanged.connect(self.Singal_NMACHChanged)
+        else:
+            self.Singal_NMACHChanged.connect(aW.Singal_NMACHChanged)
+            
     
     def defineActions(self):
         """

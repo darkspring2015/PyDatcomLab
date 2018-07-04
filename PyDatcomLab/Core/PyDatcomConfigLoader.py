@@ -249,7 +249,7 @@ class PyDatcomLabConfig():
                     ET.SubElement(tME, iE).text = iItem[iE]       
                 self.save()
             else:
-                self.logger.warnning('datcom.addItemToLibrary 待添加的项已经存在，忽略添加!')
+                self.logger.warning('datcom.addItemToLibrary 待添加的项已经存在，忽略添加!')
                 tResult = '存在未添加'
         else:
             tResult = '不合规未添加'
