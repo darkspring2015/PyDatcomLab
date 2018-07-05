@@ -72,6 +72,9 @@ class DatcomInputTable(QWidget):
         
         #再次执行绑定
         QMetaObject.connectSlotsByName(self)
+        
+        #执行表格内容的初始化逻辑
+        self.InitializeTableSize()
 
     def setDefinition(self, tNameList, tGroup, tDefine ):
         """
@@ -85,39 +88,47 @@ class DatcomInputTable(QWidget):
             return  
         self.dtDefine   = tDefine    
         self.GroupName = tGroup      #对应的变量组的名称  
-        self.Namelist  = tNameList   #对应NameList的名称
+        self.Namelist  = tNameList    #对应NameList的名称
         self.vUrl      = '%s/%s'%(tNameList,tGroup )
-        self.varsDf   = {}      #所有变量的定义 dict形式
-        self.groupDf  = {}
-        self.varsDfList = []  #顺序保存的所有变量的定义，用以关联表头
-        self.maxCount = 20
-        self.minCount = 0
-        self.CountVar = None    #表格行数对应的变量名
-        self.ComboVar = None    #表格列组合对应的附加变量名
-        self.ComboRule = None   #表格列组合对应的规则
-        self.ComboVarUrl = None #表格列组合对应的附加变量的Url
-    
-        #分析组定义
-        tVariableDf = self.dtDefine.getGroupVarsByName(tNameList, tGroup) #组内所有变量的定义   
-        #分析组定义
-        if len(tVariableDf) == 0 :
-            self.logger.error("不包含%s对应的定义信息"%(self.vUrl ))
+        self.varsDf   = {}               #所有变量的定义 dict形式
+        self.groupDf  = {}              #组定义
+        self.varsDfList = []             #顺序保存的所有变量的定义，用以关联表头
+        self.maxCount = 20            #最大行数限制
+        self.minCount = 0              #最小行数限制
+        self.CountVar = None        #表格行数对应的变量名
+        self.ComboVar = None       #表格列组合对应的附加变量名
+        self.ComboRule = None      #表格列组合对应的规则
+        self.ComboVarUrl = None    #表格列组合对应的附加变量的Url
+        
+         
+        #分析组内变量的定义
+        self.varsDf   = self.dtDefine.getGroupVarsByName(self.Namelist, self.GroupName) #组内所有变量的定义  
+        if len(self.varsDf  ) == 0 :
+            self.logger.error("DatcomInputTable：不包含%s对应的定义信息"%(self.vUrl ))
             return
+        #分析组定义
         tGroupDfSet = self.dtDefine.getCARDAddtionalInformation(tNameList, 'GroupDefine' )
         if len(tGroupDfSet) == 0 or self.GroupName  not in tGroupDfSet.keys():
             self.logger.error("不包含%s的组信息定义%s对应的定义信息"%(tNameList, tGroup))
             return
-        #保存定义
-        self.varsDf   = tVariableDf
-        #分析定义表头
-        self.varsDfList = []
-        for iv in tVariableDf.keys():
-            self.varsDfList.append(tVariableDf[iv])
         self.groupDf  = tGroupDfSet[tGroup]
+        #保存定义
+        #生成组变量定义的列表形式，为所有操作提供定义
+        self.varsDfList = []
+        for iv in self.varsDf.keys():
+            self.varsDfList.append(self.varsDf[iv])
+        #分析表格各列的默认值
+        self.varDefaultList = []
+        for iVar in self.varsDfList:
+            tUrl = '%s/%s'%(iVar['NameList'], iVar['VarName'])
+            tD =  self.dtDefine.getVariableTemplateByUrl(tUrl, isSubType= True)
+            if tD is None : 
+                self.logger.error("Datcom中没有对应变量的定义！")
+            self.varDefaultList.append(tD)
 
         #分析表格行数限制
-        self.maxCount  = self.dtDefine.getGroupLimitByName(tNameList, tGroup)[1]
-        self.minCount  = self.dtDefine.getGroupLimitByName(tNameList, tGroup)[0]
+        self.minCount, self.maxCount  = self.dtDefine.getGroupLimitByName(tNameList, tGroup)
+
         #分析表格行数控制变量的结果
         tCountVar       = self.dtDefine.gettRuleNumToCountByGroup(tNameList, tGroup)
         if tCountVar is not None : 
@@ -132,11 +143,13 @@ class DatcomInputTable(QWidget):
         #分析是否关联到NMACH限制因素
         self.isLinkNMACH = self.dtDefine.isLinkToNMACH(tNameList, tGroup)
         
+        
 
+ 
         
     def setupUi(self, Form):
         """
-        配置界面元素
+        配置界面元素，创建软件界面
         """        
         Form.setObjectName(self.GroupName )
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
@@ -233,7 +246,27 @@ class DatcomInputTable(QWidget):
             
             tHItem.setData(Qt.DisplayRole, tDisplay)
             tHItem.setData(Qt.UserRole, tConfig)
-            self.table.setHorizontalHeaderItem(iC,tHItem )        
+            self.table.setHorizontalHeaderItem(iC,tHItem )     
+         
+    def InitializeTableSize(self):
+        """
+        初始化表格的形状
+        主要功能：
+        1.识别表格的行数限制，将表格的规模调整好最小行数
+        2.给添加的行赋默认值
+        """
+        #分析定义
+        self.table.setRowCount(self.minCount)
+        for iR in range(0, self.minCount):
+            for iC in range(0, self.table.columnCount()):
+                tD = self.varDefaultList[iC]
+                tText = str(tD.get('Value', ''))
+                tItem = QtWidgets.QTableWidgetItem(tText)
+                tItem.setData(Qt.UserRole, tD)
+                self.table.setItem(iR, iC, tItem)
+        #表格各列的默认值self.varDefaultList 
+        
+        
             
     def setDelegate(self):
         """
@@ -265,6 +298,7 @@ class DatcomInputTable(QWidget):
         #清除所有数据
         self.clear()
         self.InitializeHeader()   
+        self.InitializeTableSize()  #重新赋初值
         #分析写入数据
         for iC  in range(0, len(self.varsDfList)):
             iV       = self.varsDfList[iC]   #这是所有的定义
@@ -295,12 +329,15 @@ class DatcomInputTable(QWidget):
             if self.table.rowCount() != len(tData):                 
                 #这里应该是比较大的那个值
                 if 'Limit' in iV.keys() :
-                    if len(tData) < iV['Limit'][0]:
-                        self.logger.info("%s加载数据过程中,数据长度%d小于下限限制%d，修改表格长度为下限"%(self.vUrl,len(tData), iV['Limit'][0] ))        
-                        self.table.setRowCount( iV['Limit'][0])
+                    if len(tData) < iV['Limit'][0]:                        
+                        if self.table.rowCount() <iV['Limit'][0]:
+                            self.logger.info("加载数据%s过程中,数据长度%d小于下限限制%d，调整表格行数为下限"%(self.vUrl,len(tData), iV['Limit'][0] ))  
+                            self.table.setRowCount( iV['Limit'][0])
                     if len(tData) > iV['Limit'][1]:
-                        self.logger.error("%s加载数据过程中,数据长度%d大于上限限制%d，修改表格长度为上限"%(self.vUrl,len(tData), iV['Limit'][1] ))        
-                        self.table.setRowCount( iV['Limit'][1])
+                        if self.table.rowCount() >iV['Limit'][1]:
+                            self.logger.error("加载数据%s过程中,数据长度%d大于上限限制%d，调整表格行数为上限"%(self.vUrl,len(tData), iV['Limit'][1] ))        
+                            self.table.setRowCount( iV['Limit'][1])
+            #开始表格的赋值操作
             if len(tData) in range(self.minCount, self.maxCount):     
                 for iR in range(0, len(tData)):
                     tItem  = QTableWidgetItem(str(tData[iR]))
@@ -312,8 +349,9 @@ class DatcomInputTable(QWidget):
                     self.table.setItem(iR, iC, tItem)
                 self.table.setColumnHidden(iC, False)
             else:
-                self.logger.error("加载表格%s数据越界：%d min：%d max：%d"%(self.GroupName,len(tData), 
+                self.logger.warning("加载表格%s数据长度错误：%d ，需要min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
+                
         #发送行变更消息
         self.Signal_rowCountChanged.emit(self.CountVarUrl , self.table.rowCount())         #向外通知数据加载后的长度
         self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo())) #向外通知数据列的组合关系发生变换
@@ -402,8 +440,7 @@ class DatcomInputTable(QWidget):
         tItem = self.table.item( row,  column)
         if tItem is None :
             #本身数据是不存在
-            return
-            
+            return            
             
         if 'SubType' in tVarDf.keys() and  tVarDf['SubType'] in ['BOOL', 'LIST']:
             #如果是离散值的验证
@@ -473,10 +510,27 @@ class DatcomInputTable(QWidget):
         """
         """
         if tNum >= self.minCount and tNum <= self.maxCount  and  tNum >= self.table.rowCount():
-            self.table.setRowCount(tNum)
+            tNCount = self.table.rowCount()
+            for iR in range(tNCount, tNum):
+                self.insertRowWithDefault(iR)
+                #self.table.setRowCount(tNum)
         else:
             self.logger.error("无法将表格的行数设置为%d,当前%d"%(tNum,self.table.rowCount() ))
             self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())
+            
+    def insertRowWithDefault(self, tNum):
+        """
+        在表格的tNum行插入新行，并赋初值        
+        """
+        if tNum < 0 :return 
+        self.table.insertRow(tNum)
+        for iC in range(0, self.table.columnCount()):
+            tD = self.varDefaultList[iC].copy()
+            tD['Unit']  = self.getHorizontalHeaderUnit(iC)  #此处没有执行坐标变换操作
+            tText = str(tD.get('Value', ''))
+            tItem = QtWidgets.QTableWidgetItem(tText)
+            tItem.setData(Qt.UserRole, tD)
+            self.table.setItem(tNum, iC, tItem)       
             
     @pyqtSlot(int)  
     def on_Singal_NMACHChanged(self, iNMCAH):
@@ -516,7 +570,8 @@ class DatcomInputTable(QWidget):
             rowIndex = aItem.row()
 
         if self.table.rowCount() <self.maxCount:
-            self.table.insertRow(rowIndex)
+            self.insertRowWithDefault(rowIndex)
+            #self.table.insertRow(rowIndex)
         else:
             self.logger.info("%s已经达到最大行数不能添加"%self.objectName())
             
@@ -530,7 +585,9 @@ class DatcomInputTable(QWidget):
         """
         #添加行
         if self.table.rowCount() < self.maxCount:
-            self.table.setRowCount(self.maxCount)
+            for iR in range(self.table.rowCount(), self.maxCount):
+                self.insertRowWithDefault(iR)
+            #self.table.setRowCount(self.maxCount)
 
         self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())        
 
@@ -618,7 +675,19 @@ class DatcomInputTable(QWidget):
         tHItem.setData(Qt.UserRole, tConfig )
         tDisplay = tHItem.data(Qt.DisplayRole).split()[0] + ' ' + newUnit
         tHItem.setData(Qt.DisplayRole, tDisplay )
-
+        
+    def getHorizontalHeaderUnit(self, vIndex):
+        """
+        获得表头的当前单位
+        """
+        tHItem = self.table.horizontalHeaderItem(vIndex)
+        if tHItem is None : return ''
+        tConfig = tHItem.data(Qt.UserRole)
+        if 'Dimension' not in tConfig.keys() :
+            return ''
+        else:
+            return tConfig['CurrentUnit']         
+        
     
     def unitChanged(self, column, tNewUnit):
         """

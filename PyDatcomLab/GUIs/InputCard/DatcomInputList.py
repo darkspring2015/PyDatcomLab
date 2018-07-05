@@ -336,7 +336,8 @@ class DatcomInputList(QWidget):
             if type(self.LabelItem )is QtWidgets.QCheckBox :
                 self.LabelItem.setCheckState(Qt.Unchecked)
             else:
-                self.logger.error("没有为该List传递的有效的参数，而控件又是必须录入信息的控件！")
+                if 'Default' not in self.VarDefine.keys():
+                    self.logger.error("没有为%s该List传递的有效的参数，而控件又是必须录入信息的控件！"%self.vUrl)
     
     def saveData(self, dtModel):
         """

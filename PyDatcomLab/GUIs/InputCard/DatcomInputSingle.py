@@ -470,7 +470,13 @@ class DatcomInputSingle(QWidget):
                     #这里的逻辑是一个顽固的bug，因为控件状态是不可靠的！
                     self.logger.warning("控件loadData(%s)异常：dcModel中没有有效的值，且没有默认值！"%self.vUrl )
 
-                
+    def setFocus_onDelegate(self):
+        """
+        用以在外部给输入控件设置焦点
+        """
+        if self.InputWidget is None:return
+        #设置焦点
+        self.InputWidget.setFocus()
     
     def saveData(self, dtModel):
         """

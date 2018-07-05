@@ -335,17 +335,33 @@ class DTdictionary():
         #返回结果
         return tGroupList
         
-    def getGroupLimitByName(self, tNmlst, tGroup):
+    def getGroupLimitByName(self, tNmlst, tGroup, iPolicy = '交集'):
         """
         返回Namelist中某个组的最大数量 对应变量的Limit属性
+        iPolicy指定函数的推定策略：
+        1.'交集'则推定（最大最小值和最小最大值）
+        2.'并集'则推定（最小最小值和最大最大值）
         """
         tVars = self.getGroupVarsByName(tNmlst, tGroup)
         tL = [0, 0]
+        isFirst = True
         for iV in tVars.keys():
             if 'Limit' in tVars[iV].keys() :
-                tLimit = tVars[iV]['Limit']
-                if tL[0] > tLimit[0]:tL[0] = tLimit[0]
-                if tL[1] < tLimit[1]:tL[1] = tLimit[1]
+                #赋初始值
+                if isFirst:
+                    tL = tVars[iV]['Limit']
+                    isFirst = False
+                else:
+                    tLimit = tVars[iV]['Limit']
+                    if iPolicy == '交集':
+                        if tL[0] < tLimit[0]:tL[0] = tLimit[0]
+                        if tL[1] > tLimit[1]:tL[1] = tLimit[1]
+                    elif iPolicy == '并集':
+                        if tL[0] > tLimit[0]:tL[0] = tLimit[0]
+                        if tL[1] < tLimit[1]:tL[1] = tLimit[1]
+                    else:
+                        self.logger.error("getGroupLimitByName()参数错误%s"%iPolicy)
+
         return tL
 
     def getVariableDimensionByName(self, nmlst, VarName):
