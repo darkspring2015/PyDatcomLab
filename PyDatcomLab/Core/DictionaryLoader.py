@@ -173,8 +173,24 @@ class DTdictionary():
                     
                 self.dictAddtional[tNmlst]['RuleVariableStatus'] = tAllCombo
             elif iT.tag == 'HelpDoc':
-                self.dictAddtional[tNmlst]['HelpDoc'] = iT.attrib              
-                
+                self.dictAddtional[tNmlst]['HelpDoc'] = iT.attrib           
+            elif iT.tag == 'RuleVariableCorrelation':                
+                try:
+                    tAllCombo = []
+                    for iR in list(iT):
+                        #载入每一条规则
+                        tAllComboDict = iR.attrib
+                        tAllComboDict.update({'CorrelatedVariables':eval( iR.attrib['CorrelatedVariables'])})
+                        tAllComboDict['HowTo'] = {}
+                        for iHowto in list(iR):
+                            tSets =iHowto.attrib                 
+                            tSets.update({'RelationalExpr': eval(iHowto.attrib['RelationalExpr'])})
+                            tAllComboDict['HowTo'].update({iHowto.attrib['key']:tSets})
+                        tAllCombo.append(tAllComboDict)
+                    self.dictAddtional[tNmlst]['RuleVariableCorrelation'] = tAllCombo                   
+                except Exception as e:
+                    self.logger.error("Datcom字典执行规则RuleVariableCorrelation解析出错")
+
             else:                
                 self.logger.error("解析规则异常：%s"%(tNmlst + " " + iT.tag))
         

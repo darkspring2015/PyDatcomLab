@@ -29,6 +29,9 @@ class DatcomInputList(QWidget):
         @type DTdictionary
         @param parent reference to the parent widget
         @type QWidget
+        注意事项：
+        1.请合理修改配置文件中的Range,DisplayRange 选项，否则将导致初始化失败。
+        2.函数将会将iUrl中的变量名设置为自身的ObjectName
         """
         super(DatcomInputList, self).__init__( parent = parent)
         
@@ -55,9 +58,8 @@ class DatcomInputList(QWidget):
             self.vRange     = self.VarDefine['Range'] 
         else:
             self.logger.error("没有有效的配置文件，无法初始化,Range不能为空")
+            return
         self.vDisplayRange  = self.VarDefine['DisplayRange'] if 'DisplayRange' in self.VarDefine.keys() else self.vRange
-        
-        
         #基本几何尺寸
         self.labelIndent    = 20
         self.baseSize       = [400, 25]
@@ -71,11 +73,13 @@ class DatcomInputList(QWidget):
     def setupUi(self, Form):
         """
         自动界面构造函数
+        主要功能：
+        1.创建控件框架
         """
         if  self.VarDefine['TYPE'] not in ['List'] : 
             self.logger.error("尝试在DatcomInputList控件中录入非List值")
             return
-            
+        #设置自身的名称为变量名
         Form.setObjectName(self.VarName )
         #Form.resize(self.baseSize[0] , self.baseSize [1])
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
@@ -282,6 +286,12 @@ class DatcomInputList(QWidget):
             tDefault.update({'Unit':tUWidget.currentText()})
         
         return tDefault
+        
+    def getCurrentKey(self):
+        """
+        获得当前控件对应的键
+        """        
+        return self.vRange[self.InputWidget.currentIndex()]  
 
 
     def loadData(self, dtModel):
@@ -310,6 +320,12 @@ class DatcomInputList(QWidget):
   
             if tKey in self.VarDefine['Range']:
                 self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(tKey))
+                #判断是否需要激活控件
+                if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
+                    if 'Default' in self.VarDefine and self.VarDefine['Default'] != tKey :
+                        self.on_EnabledStatusChanged(True)
+                    else:
+                        self.on_EnabledStatusChanged(False)
             else:
                 if 'Default' in self.VarDefine.keys():
                     self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(self.VarDefine['Default']))
@@ -339,13 +355,20 @@ class DatcomInputList(QWidget):
         #写入到结果之中        
         dtModel.setDiscreteVariableValueByName(self.vUrl, tV) 
         
+        
     @pyqtSlot(str, str)  #标示和值
     def on_EnabledStatusChanged(self, iStatus = True):
         """
         响应外部触发的Enable和DisEnable信号或者需求
         """
-        #TODO 实现逻辑待定
-        self.setEnabled(iStatus)
+        #TODO 实现逻辑待定        
+        if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
+            if iStatus:
+                self.LabelItem.setCheckState(Qt.Checked)
+            else:
+                self.LabelItem.setCheckState(Qt.Unchecked)
+        else:
+            self.InputWidget.setEnabled(iStatus)
         
  
     @pyqtSlot(int)
@@ -354,6 +377,8 @@ class DatcomInputList(QWidget):
         Slot documentation goes here.
         这里有一个陷阱，on_checkBox_Var_stateChanged 作为函数
         将导致所有的List之间形成不确定的路由关系，为此不使用和控件名称一致的函数名
+        要求：
+        1.因为控件的激活状态确定了是否使用，因此在checkBoxWidget进入False时应该设置为默认值
         
         @param p0 DESCRIPTION
         @type int
@@ -362,6 +387,9 @@ class DatcomInputList(QWidget):
             self.InputWidget.setEnabled(True)
         else:
             self.InputWidget.setEnabled(False)
+            #改变当前值到默认值
+            if 'Default' in self.VarDefine.keys():
+                self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(self.VarDefine['Default']))
  
     
     @pyqtSlot(int)

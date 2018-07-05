@@ -114,6 +114,7 @@ class DatcomInputSingle(QWidget):
         self.InputWidget = QtWidgets.QLineEdit(self.splitter_Inner)
         self.InputWidget.setObjectName('InputWidget%s'%self.VarName) #设置输入组件的名称为变量名
         self.InputWidget.editingFinished.connect(self.on_InputWidget_editingFinished)
+        self.InputWidget.textChanged.connect(self.on_InputWidget_textChanged)
         #调节录入框的策略
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -396,8 +397,8 @@ class DatcomInputSingle(QWidget):
         
         """
         tVd = self.InputWidget.validator()
-        if tVd is not None  and tVd.validate(self.InputWidget.text()) != Qt.Acceptable:
-            self.logger.error("%s录入控件的的当前值：%s，无法通过验证"%(self.vUrl,self.InputWidget.text() ))
+        if tVd is not None  and tVd.validate(self.InputWidget.text(), 0)[0] == QtGui.QValidator.Invalid:
+            self.logger.warning("%s录入控件的的当前值：%s，无法通过验证"%(self.vUrl,self.InputWidget.text() ))
             return None
         #获得数据
         tDefault = self.dtDefine.getVariableTemplateByUrl(self.vUrl) #每次都是独立的实例
@@ -466,7 +467,8 @@ class DatcomInputSingle(QWidget):
                     self.logger.warning("控件loadData(%s)异常：dcModel中没有有效的值，使用默认值：%s修正！"%(self.vUrl , str(self.VarDefine['Default'])))
             else:
                 if  self.InputWidget.isEnabled():
-                    self.logger.error("控件loadData(%s)异常：dcModel中没有有效的值，且没有默认值！"%self.vUrl )
+                    #这里的逻辑是一个顽固的bug，因为控件状态是不可靠的！
+                    self.logger.warning("控件loadData(%s)异常：dcModel中没有有效的值，且没有默认值！"%self.vUrl )
 
                 
     
@@ -531,6 +533,22 @@ class DatcomInputSingle(QWidget):
         """
         转发输入控件的编辑结果.
         """
+        self.emit_InputWidget_text()
+
+    @pyqtSlot(str)
+    def on_InputWidget_textChanged(self, iText):
+        """
+        转发输入控件的文本的改变.
+        """
+        tVd = self.InputWidget.validator()
+        if tVd is not None  and tVd.validate(self.InputWidget.text(), 0)[0] == QtGui.QValidator.Acceptable:
+            self.emit_InputWidget_text()
+    
+    
+    def emit_InputWidget_text(self):
+        """
+        发射文本改变信号
+        """
         self.editingFinished.emit(self.vUrl , self.InputWidget.text())
         
         if self.vUrl == 'FLTCON/NMACH':
@@ -540,7 +558,7 @@ class DatcomInputSingle(QWidget):
             except Exception as e:
                 self.logger.error("编辑控件不发转换输入文本到NMACH(int):%s"%self.InputWidget.text())
 
-    
+
     @pyqtSlot(int)
     def on_my_currentIndexChanged(self, index):
         """

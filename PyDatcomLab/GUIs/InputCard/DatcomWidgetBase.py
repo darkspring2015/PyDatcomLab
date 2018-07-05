@@ -68,8 +68,17 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         self.RuleIndexToCombo   = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleIndexToCombo')  
         self.GroupDefine            = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'GroupDefine')  
         self.RuleVariableStatus   = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableStatus')
+        #规则self.RuleVariableCorrelation 
+        self.RuleVariableCorrelation = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableCorrelation')
+        self.RuleVariableCorrelationMasterVList = []
+        self.RuleVariableCorrelationConditionVList = []
+        if self.RuleVariableCorrelation is not None:
+            for iR in self.RuleVariableCorrelation :
+                self.RuleVariableCorrelationMasterVList.append(iR['MatserVariable'])
+                self.RuleVariableCorrelationConditionVList.append(iR['ConditionVariable'])      
+        #
         self.HelpUrl                   = self.dtDefine.getCARDHelpDoc(self.NameList)
-        self.HashVaribles         = {}
+        #self.HashVaribles         = {}
         
         
         #配置完成后再调用界面初始化
@@ -95,6 +104,43 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         self.InitializeUI()
         #刷新界面
         self.UILogic()  
+
+    def UILogic(self):
+        """
+        在此刷新UI，需要根据不同的情况执行判断
+        """       
+        #self.DatcomCARD.UILogic()
+        
+    
+    def InitializeUI(self):
+        """
+        此函数执行UI的初始化逻辑，确保各个组件定义的初始状态时可靠地
+        此函数应当在SetupUI和connectSlot之后被调用
+        函数最后将触发 Singal_InitializeUI 用来做非公用的的初始化操作
+        """
+        
+        #创建附加控件 如果定义筛选变量组的控件
+        if hasattr(self,'RuleIndexToCombo'):
+            #逐条创建附加筛选逻辑
+            for tCombo in self.RuleIndexToCombo:
+                if  tCombo is None or tCombo == {} or not 'Index'  in tCombo.keys():
+                    continue
+                #创建一个水平布局器
+                tComboWidget = self.findChild(QWidget, 'Chooser_%s'%tCombo['Index'])
+                if tComboWidget is not None :
+                    tComboWidget.sendCurrentIndex()
+                    
+        #RuleVariableStatus
+        for iR in self.RuleVariableStatus:
+            tCVName = iR['ControlVar']
+            tWidget = self.findChild(QtWidgets.QWidget, tCVName)
+            if tWidget is None:
+                continue
+            else:
+                tIndex = tWidget.getCurrentKey()  #认为不许是DatcomInputList对象
+                self.UILogic_RuleVariableStatus(tCVName, tIndex) 
+                
+        
     @QtCore.pyqtSlot(str, str )  #标示和值
     def on_RuleVariableStatus_dt_triggered(self , iUrl, iKey):
         """
@@ -167,6 +213,103 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                     continue
                 tWidget.on_EnabledStatusChanged(False)
             #结束遍历状态修改
+            
+    @QtCore.pyqtSlot(str, str)  #标示和值
+    def on_MasterVariable_editingFinished(self, iUrl, iText):
+        """
+        响应RuleVariableCorrelation的主变量的editingFinished信号
+        iText为编辑的结果
+        """
+        tMVarName = self.sender().objectName()
+        self.UILogic_RuleVariableCorrelation(tMVarName, iText) #偷懒不进行类型转换
+        
+        
+    @QtCore.pyqtSlot(str, str)  #标示和值    
+    def on_ConditionVariable_currentIndexChanged(self, key):
+        """
+        响应RuleVariableCorrelation的条件变量的currentIndexChanged信号
+        iText为编辑的结果
+        """
+        tCVarName = self.sender().objectName()
+        #判断名称
+        if self.RuleVariableCorrelation is  None:
+            return
+        tMvs = []
+        #获得条件变量到主变量的查询关系，可能1对多
+        for iR in self.RuleVariableCorrelation :
+            if iR['ConditionVariable'] == tCVarName:
+                tMvs.append(iR['MatserVariable'])
+            
+        #发送所有的信号
+        for iM in tMvs:
+            tWidget = self.findChild(QtWidgets.QWidget, '%s'%(iM))  #认为所有的Datcom变量的控件名称均无前缀                
+            if tWidget is None:
+                continue
+            iValue = tWidget.getDataByVariable()    
+            self.UILogic_RuleVariableCorrelation(iM,iValue['Value'] )       
+            
+    def UILogic_RuleVariableCorrelation(self, iMVarName, iVar ):
+        """
+        响应主变量变化导致从变量变化的逻辑
+        iText是主变量的新值 str 类型
+        主要功能:
+        1.实现定义文件中的RuleVariableCorrelation规则
+        资料：
+      <RuleVariableCorrelation dcType="Rule">
+        <Rule MatserVariable="NMACH" ConditionVariable="LOOP" CorrelatedVariables="['NALT']">
+          <HowTo key="1.0" RelationalExpr="['{MVar}']" />
+          <HowTo key="2.0" RelationalExpr="['{SVar}']" />
+          <HowTo key="3.0" RelationalExpr="['{SVar}']" />
+        </Rule>
+        RuleVariableCorrelation规则：
+        1. MatserVariable 主变量  ，ConditionVariable条件变量，CorrelatedVariables随动变量
+        2. Howto为一条具体的规则，key指向条件变量的取值，RelationalExpr是CorrelatedVariables随动变量的取值表达式
+        3. RelationalExpr由 CorrelatedVariable =eval("".format(MVar=MatserVariable,SVar=CorrelatedVariable))执行解析逻辑
+        """
+        #tMVarName = self.sender().objectName()
+        #iMVarName = tMVarName
+        
+        if iMVarName not in self.VariableList.keys():
+            self.logger.error("RuleVariableCorrelation()： 推定的变量名%s 不存于Datcom的定义！"%iMVarName)
+            return
+        #检查规则
+        tRuleSet = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableCorrelation')
+        if tRuleSet is None or len(tRuleSet) ==0:
+            return 
+        for iR in tRuleSet:
+            if 'MatserVariable' not in iR.keys() or iR['MatserVariable'] != iMVarName or \
+            'ConditionVariable' not in  iR.keys() or iR['ConditionVariable'] not in self.VariableList or\
+            'CorrelatedVariables' not in iR.keys():
+                continue
+            #开始分析逻辑
+            tCdWidget = self.findChild(QtWidgets.QWidget, '%s'%(iR['ConditionVariable']))  #认为所有的Datcom变量的控件名称均无前缀
+            if tCdWidget is None :
+                self.logger.error("RuleVariableCorrelation()： 无法获得条件变量：%s 的控件！"%tCdWidget)
+                return 
+            tCdVar = tCdWidget.getCurrentKey()  #获得主键 ，认为值
+            for iSV in iR['CorrelatedVariables']:
+                tSWidget = self.findChild(QtWidgets.QWidget, '%s'%(iSV))  #认为所有的Datcom变量的控件名称均无前缀                
+                if tSWidget is None:
+                    continue
+                iSValue = tSWidget.getDataByVariable()
+                iSVarValue = ''
+                if iSValue is not None  and 'Value' in iSValue.keys() and iSValue['Value'] is not None:
+                    iSVarValue = iSValue ['Value']
+                else:
+                    #如果无法获得有效值
+                    self.logger.warning("UILogic_RuleVariableCorrelation 无法获得有效的当前值")
+                    #continue
+                for iH in iR['HowTo'].keys():
+                    if iH == tCdVar:
+                        #执行该条指令
+                        try:
+                            tSVIndex = iR['CorrelatedVariables'].index(iSV)
+                            nCorrelatedVariable = eval(iR['HowTo'][iH]['RelationalExpr'][tSVIndex].format(MVar=iVar, SVar=iSVarValue))
+                            iSValue.update({'Value':nCorrelatedVariable})
+                            tSWidget.setDataByVariable(iSValue)
+                        except Exception as e:
+                            self.logger.error("RuleVariableCorrelation规则应用出错！%s"%e)
+   
   
     def setModel(self, tModel):
         """
@@ -200,6 +343,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 if tWidget is None:
                     self.logger.error("访问的变量：%s 不在本窗体"%varName)
                 else:
+                    #如果控件没有激活则跳过添加，逻辑应当在控件内部实现
                     tWidget.loadData(self.model)
         #自动化循环赋值
         
@@ -241,30 +385,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         return self.model      
         
         
-    def UILogic(self):
-        """
-        在此刷新UI，需要根据不同的情况执行判断
-        """       
-        #self.DatcomCARD.UILogic()
-        
-    
-    def InitializeUI(self):
-        """
-        此函数执行UI的初始化逻辑，确保各个组件定义的初始状态时可靠地
-        此函数应当在SetupUI和connectSlot之后被调用
-        函数最后将触发 Singal_InitializeUI 用来做非公用的的初始化操作
-        """
-        
-        #创建附加控件 如果定义筛选变量组的控件
-        if hasattr(self,'RuleIndexToCombo'):
-            #逐条创建附加筛选逻辑
-            for tCombo in self.RuleIndexToCombo:
-                if  tCombo is None or tCombo == {} or not 'Index'  in tCombo.keys():
-                    continue
-                #创建一个水平布局器
-                tComboWidget = self.findChild(QWidget, 'Chooser_%s'%tCombo['Index'])
-                if tComboWidget is not None :
-                    tComboWidget.sendCurrentIndex()
+
 
     
 if __name__ == "__main__":

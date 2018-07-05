@@ -244,6 +244,18 @@ class DatcomWidgetBaseUi(object):
                 self.logger.error("无法找到FLTCON/NMACH所对应的控件")
             else:
                 tWidget.Signal_NMACHChanged.connect(tCARD.Singal_NMACHChanged)
+                
+        #添加self.RuleVariableCorrelation规则的相关逻辑
+        for iMv in self.RuleVariableCorrelationMasterVList:
+            tWidget = tCARD.findChild(QtWidgets.QWidget,"%s"%iMv)
+            if tWidget is not None: 
+                #链接主变量的编辑信号
+                tWidget.editingFinished.connect(tCARD.on_MasterVariable_editingFinished)      
+        for iCv in self.RuleVariableCorrelationConditionVList:
+            tWidget = tCARD.findChild(QtWidgets.QWidget,"%s"%iCv) #此处认为必然是Datcom变量
+            if tWidget is not None: 
+                #链接条件变量的选择信号
+                tWidget.currentIndexChanged.connect(tCARD.on_ConditionVariable_currentIndexChanged)                  
 
       
     def retranslateUi(self, CARD):
