@@ -38,8 +38,7 @@ class DatcomWidgetBaseUi(object):
         通用CARD的界面生成器
         CARD： 包括定义表dict 
         """
-        #存储临时的缓存信息
-             
+        #存储临时的缓存信息             
         CARD.setObjectName(CARD.NameList)
         #CARD.resize(self.baseSize[0], self.baseSize[1])
 
@@ -119,16 +118,20 @@ class DatcomWidgetBaseUi(object):
                 #创建一个水平布局器                
                 tVarName   = tCombo['Index']
                 tUrl = '%s/%s'%(CARD.NameList, tVarName)
-                tComboWidget = DatcomInputComboChooser(tUrl,
-                               parent=self.groupBox_lift, iDefinition = DDefine)    
-                tComboWidget.setObjectName('Chooser_%s'%tVarName)
+                tWidget = self.findChild(QtWidgets.QWidget, '%s'%tVarName)
+                if tWidget is None:
+                    tWidget = DatcomInputComboChooser(tUrl,
+                                   parent=self.groupBox_lift, iDefinition = DDefine)    
+                    tWidget.setObjectName('Chooser_%s'%tVarName)
+                    self.LiftLayout.addWidget(tWidget)
+                    #连接变量变化信号到本Widget的转发信号
+                    tWidget.varComboChanged.connect(CARD.Singal_RuleIndexToCombo)
+                    #连接当前转发的表格变化信号
+                    self.Singal_varComboChangedFromTable.connect(tWidget.on_Singal_varComboChangedFromTable)     
+                else:
+                    tWidget.currentIndexChanged.connect(CARD.Singal_RuleIndexToCombo)
                 #绑定值变换信号到自身信号 因为尚未创建对象TableWidget无法直接绑定 
-                #连接变量变化信号到本Widget的转发信号
-                tComboWidget.varComboChanged.connect(CARD.Singal_RuleIndexToCombo)
-                #连接当前转发的表格变化信号
-                self.Singal_varComboChangedFromTable.connect(tComboWidget.on_Singal_varComboChangedFromTable)
-                
-                self.LiftLayout.addWidget(tComboWidget)
+
                 
         #创建下方的空间分割器
         spacerItem_LiftBottom = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -199,12 +202,18 @@ class DatcomWidgetBaseUi(object):
         #添加变量组合控制逻辑
         if hasattr(tCARD,'RuleVariableStatus'):
             for iR in tCARD.RuleVariableStatus:#[]
-                tCWidget  = tCARD.findChild(QtWidgets.QWidget, "comboBox_%s"%iR['ControlVar'])
-                if tCWidget is None :
-                    self.logger.error("变量%s对应的控件不存在"%(iR['ControlVar']))
-                    continue
-                #变量num->Table
-                tCWidget.currentIndexChanged.connect(self.emit_Singal_RuleVariableStatus) 
+                tControlVar = iR['ControlVar'] #获得控制变量的名称
+                if tControlVar not in self.VariableList.keys() :
+                    self.logger.warning("emit_Singal_RuleVariableStatus() 尝试使用不在Datcom定义中的变量%s，忽略!"%tControlVar)
+                    tCWidget  = tCARD.findChild(QtWidgets.QWidget, "comboBox_%s"%(tControlVar))    
+                    tCWidget.currentIndexChanged.connect(tCARD.on_RuleVariableStatus_cuurentIndexChanged)                     
+                else:
+                    tCWidget  = tCARD.findChild(QtWidgets.QWidget, "%s"%(tControlVar))
+                    if tCWidget is None :
+                        self.logger.error("变量%s对应的控件不存在"%(iR['ControlVar']))
+                        continue
+                    #变量num->Table
+                    tCWidget.currentIndexChanged.connect(tCARD.on_RuleVariableStatus_dt_triggered) 
                 
         #添加表格长度控制逻辑
         if hasattr(tCARD,'RuleNumToCount'):
@@ -270,6 +279,4 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
 
- 
-    card.show()
     sys.exit(app.exec_())

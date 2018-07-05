@@ -15,7 +15,7 @@ class DatcomInputList(QWidget):
     """
     用于输入Datcom中的List类型的参数.其中将增加一些特殊的转换逻辑
     """
-    currentIndexChanged = pyqtSignal(str , str)  #将编辑结构发送出去 (Url,index在Range中的具体值）
+    currentIndexChanged = pyqtSignal(str, str)  #将编辑结构发送出去  当前索引 int   # (Url,index在Range中的具体值）
     
     def __init__(self, iUrl,  parent=None, iDefinition = DDefine ):
         """
@@ -339,7 +339,14 @@ class DatcomInputList(QWidget):
         #写入到结果之中        
         dtModel.setDiscreteVariableValueByName(self.vUrl, tV) 
         
-
+    @pyqtSlot(str, str)  #标示和值
+    def on_EnabledStatusChanged(self, iStatus = True):
+        """
+        响应外部触发的Enable和DisEnable信号或者需求
+        """
+        #TODO 实现逻辑待定
+        self.setEnabled(iStatus)
+        
  
     @pyqtSlot(int)
     def on_checkBoxWidget_stateChanged(self, p0):
@@ -369,7 +376,7 @@ class DatcomInputList(QWidget):
         """
         
         self.currentIndexChanged.emit(self.vUrl, self.vRange[index])
-        
+        #self.currentIndexChanged.emit(index)
 
 
 class DatcomInputListNoLabel(DatcomInputList):

@@ -490,6 +490,15 @@ class DatcomInputSingle(QWidget):
         #写入到响应的数据中
         dtModel.setContinuousVariableValueByName(self.vUrl, tV)  
         
+    @pyqtSlot(str, str)  #标示和值
+    def on_EnabledStatusChanged(self, iStatus = True):
+        """
+        响应外部触发的Enable和DisEnable信号或者需求
+        """
+        #TODO 实现逻辑待定
+        self.setEnabled(iStatus)
+        
+        
     @pyqtSlot(str, int)  #标示和值
     def on_Signal_rowCountChanged(self, vUrl, vCount):
         """

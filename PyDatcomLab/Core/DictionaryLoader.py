@@ -118,17 +118,18 @@ class DTdictionary():
         for iT in list(elemt):
             if iT.tag == 'NMACHLinkTable' :
                 #NMACHLinkTable
+                tResDict = {}
                 for iA in iT.attrib:
-                    tNTable =iT[iA]
+                    tNTable =iT.attrib[iA]
                     try:
-                        tNTable = eval(iT[iA])
+                        tNTable = eval(iT.attrib[iA])
                     except Exception as e:
-                        self.logger.warning("无法推定NMACHLinkTable属性%s：%s的实际类型"%(iA, iT[iA]))
+                        self.logger.warning("无法推定NMACHLinkTable属性%s：%s的实际类型"%(iA,iT.attrib[iA]))
+                        
+                    tResDict.update({iA:tNTable})
                      
-                    if tNTable is None or not type(tNTable)  is list or len(tNTable) == 0:
-                        continue
-                    else:
-                        self.dictAddtional[tNmlst]['NMACHLinkTable'] = tNTable
+                #写入结果
+                self.dictAddtional[tNmlst]['NMACHLinkTable'] = tResDict
                  
             elif iT.tag == 'RuleNumToCount':
                 #RuleNumToCount

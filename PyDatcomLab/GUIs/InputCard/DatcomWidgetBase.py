@@ -6,7 +6,7 @@ Module implementing FLTCON.
 
 from PyQt5.QtCore import  QPoint, QMetaObject, pyqtSignal#, pyqtSlot,
 from PyQt5.QtWidgets import QWidget #,QMessageBox
-
+from PyQt5 import  QtWidgets ,QtCore
 
 #from PyDatcomLab.Core import dcModel
 from PyDatcomLab.Core import datcomModel as dcModel
@@ -26,18 +26,17 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
     1.必须指定iNamelist；
     2.如果未给出iModel，将内部创建一个datcomModel对象的实例，并添加默认的变量集合
     3.可以忽略iDefine输入
-    """
-    
+    """    
     #定义各个Widget之间进行参数同步的信号
-    Singal_InitializeUI                         = pyqtSignal(int)            #用来提供额外的界面初始化逻辑，响应信号对界面进行额外的初始化
-    Singal_RuleIndexToCombo              = pyqtSignal(str,str)       #处理变量组合的选择发生变换时，由ComboCHoose触发 <sender.vUrl,Howto-ChosedKey>
-    Singal_CheckboxStateChanged        = pyqtSignal(int,str)      #处理checkbox的同步问题
-    Singal_TableCountEditingFinished     = pyqtSignal(str, int)     #处理表格长度控制变量的触发逻辑 str Url int :count
-    Singal_CommonUIChanged               = pyqtSignal(str)          #通用的输入状态变化规则
-    Singal_RuleVariableStatus               = pyqtSignal(str)           #通用的RuleVariableStatus状态变化规则 
-    Singal_TBRowCountChanged             = pyqtSignal(int, str)     #用于通知表格的行数发生了变化    
-    Singal_varComboChangedFromTable   = pyqtSignal(str , str)    #向外部通知表格中激活的列组合关系发生变化 <sender.vUrl,"[]">
-    Singal_NMACHChanged                    = pyqtSignal(int)          #用来接收NMACH的变化的信号
+    Singal_InitializeUI                            = pyqtSignal(int)            #用来提供额外的界面初始化逻辑，响应信号对界面进行额外的初始化
+    Singal_RuleIndexToCombo                 = pyqtSignal(str,str)       #处理变量组合的选择发生变换时，由ComboCHoose触发 <sender.vUrl,Howto-ChosedKey>
+    Singal_CheckboxStateChanged          = pyqtSignal(int,str)       #处理checkbox的同步问题
+    Singal_TableCountEditingFinished       = pyqtSignal(str, int)      #处理表格长度控制变量的触发逻辑 str Url int :count
+    Singal_CommonUIChanged                = pyqtSignal(str)            #通用的输入状态变化规则
+    #Singal_RuleVariableStatus                = pyqtSignal(str, str)       #通用的RuleVariableStatus状态变化规则  (ControlVarUrl,key)
+    Singal_TBRowCountChanged             = pyqtSignal(int, str)      #用于通知表格的行数发生了变化    
+    Singal_varComboChangedFromTable   = pyqtSignal(str , str)     #向外部通知表格中激活的列组合关系发生变化 <sender.vUrl,"[]">
+    Singal_NMACHChanged                    = pyqtSignal(int)            #用来接收NMACH的变化的信号
     
     def __init__(self, iNamelist, parent=None , iModel = None, iDefine = DDefine ):
         """
@@ -96,16 +95,79 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         self.InitializeUI()
         #刷新界面
         self.UILogic()  
-        
-        
-    def emit_Singal_RuleVariableStatus(self ):
+    @QtCore.pyqtSlot(str, str )  #标示和值
+    def on_RuleVariableStatus_dt_triggered(self , iUrl, iKey):
         """
-        用来触发新的信号函数,转发Singal_RuleVariableStatus
+        用来处理Datcon变量的list控件消息
         """
-        tName = self.sender().objectName()
-        self.Singal_RuleVariableStatus.emit( tName)
+        tControlVar = iUrl.split('/')[-1]
+        #tControlVar = self.sender().objectName().split('_')[-1]      
+        #触发UI逻辑
+        self.UILogic_RuleVariableStatus(tControlVar, iKey)        
         
         
+    @QtCore.pyqtSlot(int)  #标示和值
+    def on_RuleVariableStatus_cuurentIndexChanged(self , index):
+        """
+        对RuleVariableStatus进行逻辑处理
+        假设：
+        1.函数依赖控件名称获得变量名，认为comboBox_VAR  或者VAR两种形式之一
+        """ 
+        tControlWidget =  self.sender()
+        tControlVar = self.sender().objectName().split('_')[-1]             
+        if tControlWidget is None :
+                self.logger.error("无法找到%s对应的控件"%(tControlVar))
+                return
+        #存在控制变量
+        tCVarRange = self.dtDefine.getVariableDefineByName(self.NameList, tControlVar).get('Range', [])
+        if tCVarRange is None or len(tCVarRange) ==0:
+            self.logger.error("不存在%s对应的Range定义，忽略余下逻辑"%(tControlVar))
+            return                         
+        tControlValue = tCVarRange[index] #从Range中获得对应的定义值
+        #触发UI逻辑
+        self.UILogic_RuleVariableStatus(tControlVar, tControlValue)
+ 
+    def UILogic_RuleVariableStatus(self, iControlVar, iKey):
+        """
+        由变量iControlVar的不同值控制的其他变量和控件的可用和不可用逻辑
+        """
+        if self.RuleVariableStatus  is None or len(self.RuleVariableStatus ) ==0:
+            self.logger.error("异常触发RuleVariableStatus规则")
+            return
+        #获得信息
+
+        #定义了控制量则扫描控制量
+        for itRule in self.RuleVariableStatus:  
+            if itRule['ControlVar']  != iControlVar:
+                continue
+            #执行设置逻辑            
+            if  iKey not in itRule['HowTo'].keys():
+                #确保可以获得对应的值
+                self.logger.error("%s索引值%s不在规则定义的列表中"%(iControlVar, iKey ))
+                continue
+            tEnableList     = itRule['HowTo'][iKey]['Enabled']
+            tDisEnableList = itRule['HowTo'][iKey]['Disabled']
+            #遍历进行禁用和启用
+            for itM in tEnableList:
+                #临时处理表格类型
+                if self.VariableList[itM]['TYPE'] == 'Array':
+                    #此处交由其他规则处理，这里只处理单独的控件
+                    continue
+                tWidget = self.findChild(QtWidgets.QWidget, '%s'%(itM))  #认为所有的Datcom变量的控件名称均无前缀
+                if tWidget is None:
+                    continue
+                tWidget.on_EnabledStatusChanged(True)
+            for itM in tDisEnableList:
+                #临时处理表格类型
+                if self.VariableList[itM]['TYPE'] == 'Array':
+                    #此处交由其他规则处理，这里只处理单独的控件
+                    continue
+                tWidget = self.findChild(QtWidgets.QWidget, '%s'%(itM))  #认为所有的Datcom变量的控件名称均无前缀
+                if tWidget is None:
+                    continue
+                tWidget.on_EnabledStatusChanged(False)
+            #结束遍历状态修改
+  
     def setModel(self, tModel):
         """
         初始化本节点的xml描述文档
@@ -129,8 +191,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
     def InitDoc(self):
         """
         分析并初始化后台数据
-        """        
-
+        """   
         #自动化循环赋值
         for varName in self.VariableList.keys():                      
             if self.VariableList[varName]['TYPE'] in ['REAL', 'INT', 'List'] :
@@ -204,8 +265,6 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 tComboWidget = self.findChild(QWidget, 'Chooser_%s'%tCombo['Index'])
                 if tComboWidget is not None :
                     tComboWidget.sendCurrentIndex()
-
-                
 
     
 if __name__ == "__main__":
