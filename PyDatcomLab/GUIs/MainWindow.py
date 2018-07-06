@@ -424,6 +424,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             dcM.buildDatcomInputFile(tFile)
         except Exception as e:
             QMessageBox.information(self, '创建Datcom输入文件失败', '%s'%e)
+            return
         
         #执行计算
         aRunner = datcomRunner.runner(problemDir=tmpPath,
