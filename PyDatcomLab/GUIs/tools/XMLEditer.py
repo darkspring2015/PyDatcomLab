@@ -52,6 +52,19 @@ class XMLEditer(QMainWindow, Ui_XMLEditer):
         'attrib':':/nodes/res/comment.png'
         }
         self.ExpandingDepth = 2
+        
+    def Load(self, iPath):
+        """
+        从外部加载iPath的文件用于显示和编辑
+        主要功能：
+        1.将会iPath保存到路径
+        """
+        if os.path.isfile(iPath):
+            try:
+                self._loadXML(iPath)
+                self.sourceXML = iPath
+            except Exception as e:
+                self.logger.error("加载XML文件过程出错：%s"%e)
 
     def setEditingMode(self, tMode):
         """
@@ -175,7 +188,7 @@ class XMLEditer(QMainWindow, Ui_XMLEditer):
         @param column DESCRIPTION
         @type int
         """
-    def loadXML(self, tFile):
+    def _loadXML(self, tFile):
         """
         将tFile对应的XML文件加载到树结构
         """
@@ -185,7 +198,7 @@ class XMLEditer(QMainWindow, Ui_XMLEditer):
         #加载模型
         root = None 
         try:
-            root = ET.parse(self.sourceXML).getroot()
+            root = ET.parse(tFile).getroot()
         except:
             self.logger.error("加载XMl：%s 失败！"%self.sourceXML)
             
@@ -196,6 +209,14 @@ class XMLEditer(QMainWindow, Ui_XMLEditer):
         self.listDom(root, None)        
         #展开控件
         self.treeWidget_xml.expandToDepth(self.ExpandingDepth)
+        
+    def expandToDepth(self, iDepth):
+        """
+        从外部设置展开深度 iDepth为展开深度 [0,inf]
+        """
+        if iDepth >= 0:
+            self.ExpandingDepth  = iDepth
+            self.treeWidget_xml.expandToDepth(self.ExpandingDepth)
         
     @pyqtSlot()
     def on_actionLoadXML_triggered(self):
@@ -210,14 +231,14 @@ class XMLEditer(QMainWindow, Ui_XMLEditer):
             return
         #配置信息
         self.sourceXML = fN
-        self.loadXML( fN)
+        self._loadXML( fN)
     
     @pyqtSlot()
     def on_actionSave_XML_triggered(self):
         """
         Slot documentation goes here.
         """
-        from PyDatcomLab.Core.tools import xml_Indent as indent
+        from PyDatcomLab.Core.datcomTools import xml_Indent as indent
         if self.objectXML == "" :
             self.objectXML = self.sourceXML
 
@@ -265,7 +286,7 @@ class XMLEditer(QMainWindow, Ui_XMLEditer):
         Slot documentation goes here.
         """
         if os.path.exists(self.sourceXML):
-            self.loadXML(self.sourceXML)
+            self._loadXML(self.sourceXML)
             
     @pyqtSlot()
     def on_actionReadOnlyMode_triggered(self):

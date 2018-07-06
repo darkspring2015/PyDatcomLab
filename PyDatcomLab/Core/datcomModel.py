@@ -338,8 +338,10 @@ class dcModel(datcomXMLLoader):
                     tLog.append('变量的类型REAL,值：%f,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))             
             
         if tDf['TYPE'] == 'Array' :
-            if type(tVar['Value']) != list or len(tVar['Value']) == 0:
-                tLog.append('变量的类型应当为Array实际是%s'%(type(tVar['Value']))) 
+            if type(tVar['Value']) != list :
+                tLog.append('变量的类型应当为Array实际是%s'%(type(tVar['Value'])) )
+            elif len(tVar['Value']) ==0:
+                tLog.append("变量%s的类型为Array，但值长度为0"%tUrl )      
             elif 'Range' in tDf.keys() :
                 for iV in tVar['Value']:
                     if ('SubType' in tDf.keys() and tDf['SubType'] in ['INT', 'REAL']) or\
@@ -384,9 +386,10 @@ class dcModel(datcomXMLLoader):
                 #变量本身值得验证
                 tVarReport = self.validateAVariable(self.doc[tUrl])
                 if tVarReport['status'] != 'Acceptable':
-                    self.logger.error("变量%s不合规，%s"%(tUrl,tVarReport['Report'] ))
+                    tReStr ='\n'.join(tVarReport['Report'])
+                    self.logger.error("变量%s不合规，%s"%(tUrl,tReStr ))
                     #尝试修复或者跳过
-                    tNMExcept[tUrl] = tVarReport['Report']
+                    tNMExcept[tUrl] = tReStr
                     continue
                 #附加规则验证
                 #pass
@@ -408,17 +411,24 @@ class dcModel(datcomXMLLoader):
         过程出错将引发异常
         """
         if self.doc is None or len(self.doc ) == 0:
-            self.logger.error("模型内并没有信息")
-            return False
+            raise  UserWarning('模型内并没有信息') 
         #开始内容分析机制
         tReport = self.validate()    
-        if tReport['status'] != 'Acceptable':
-            self.logger.info(str(tReport))
-            return  tReport
+        if tReport['status'] != 'Acceptable':       
+            #分析报告并输出
+            tAllError = []
+            for iR in tReport['Report']:
+                if iR['status'] != 'Acceptable':
+                    for iSubR in iR['Report']:
+                        tAllError.append( iR['Report'][iSubR])
+            tReport = '\n'.join(tAllError)
+            self.logger.info(str(tReport))   
+            raise  UserWarning(tReport)     
         #获得doc的全部定义
         tAllInfo = self.getNamelistCollection()
         if tAllInfo is None or len(tAllInfo) == 0 :
-            return tReport
+            raise  UserWarning('不包含数据的空模型') 
+
         #将信息格式化为输出文件 要求列宽为80
         TStr = []
         tCASEDes = ''
@@ -444,6 +454,8 @@ class dcModel(datcomXMLLoader):
                 if  tVarDf['TYPE'] == 'Array': #对于序列类型
                     if 'SIndex' in tVarStruct.keys() and tVarStruct['SIndex'] not in [1, '1'] :
                         theStr += '(%s)='%(tVarStruct['SIndex'])
+                    else:
+                        theStr += '='
                     if len(TStr[-1])> tNMlstPos: #当当前行是非空行时换行增加序列值
                         TStr.append(' '*tNMlstPos)     
                     self.Append80ColumsLimit(TStr, theStr)
@@ -460,17 +472,19 @@ class dcModel(datcomXMLLoader):
                     #具有默认值则不输出
                     if not ('Default' in tVarDf.keys() and  tVarValueS == tVarDf['Default']):  
                         theStr += '=%s,'%tVarValueS
+                        self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
                     else:
                         theStr = ''
                 elif tVarDf['TYPE'] == 'INT' :#对于数值类型  INT  
                     theStr += '=%d.0,'%int(tVarValueS)
+                    self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
                 elif tVarDf['TYPE'] == 'REAL' :#对于数值类型 REAL                
                     if float(tVarValueS) < float(self.Properties['numForE']):
                     #if float(tVarValueS) < self.numForE:
                         theStr += '=%.3f,'%float(tVarValueS)
                     else:
                         theStr += '=%.3E,'%float(tVarValueS)
-                self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
+                    self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
             TStr[-1] = TStr[-1][:-1] + '$'            
       
 

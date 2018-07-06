@@ -51,7 +51,8 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
             self.dcModel = dcModel.dcModel(dtDefine = self.dtDefine) 
         
         #内部数据
-        self.lastIndex  = -1     
+        self.lastIndex  = -1    
+        self.namelistSet = {}
         #初始化界面
         self.setupUi(self)        
         #添加页码
@@ -71,7 +72,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         #link slot and signal 对Action执行绑定
         QtCore.QMetaObject.connectSlotsByName(self)
         
-    def reloadTabs(self):
+    def loadTabs(self):
         """
         删除当前所有数据并重新从Model中加载，可能造成数据丢失
         """
@@ -85,15 +86,19 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         添加一个Tab承载iNamelist 
         """
         dF                =  self.dtDefine.getNamelistDefineByName(iNamelist)
-        dFNmlstAtrrib =  self.dtDefine.getNamelistAttributeByName(iNamelist)
+        dFNmlstAtrrib  =  self.dtDefine.getNamelistAttributeByName(iNamelist)
         if dF == {} :
             self.logger.error("不存在%s对应的选项卡定义"%iNamelist)
             return    
         if 'DisplayName' not in dFNmlstAtrrib.keys():
             dFNmlstAtrrib["DisplayName"] = iNamelist
-        aW = DatcomWidgetBase(iNamelist = iNamelist , iModel =  self.dcModel, parent = self)     
-        aW.setObjectName(iNamelist)
-        tIndex = self.tabWidget_Configuration.addTab( aW, dFNmlstAtrrib['DisplayName'])    
+        if iNamelist in self.namelistSet and self.namelistSet[iNamelist]['Widget'] is not None:
+            aW = self.namelistSet[iNamelist]['Widget']
+        else:
+            aW = DatcomWidgetBase(iNamelist = iNamelist , iModel =  self.dcModel, parent = self)     
+        #aW.setObjectName(iNamelist)
+        tIndex = self.tabWidget_Configuration.addTab( aW, dFNmlstAtrrib['DisplayName'])   
+        self.namelistSet.update({iNamelist:{'Widget':aW, 'isRemove':False}})
         #设置不能关闭
         if iNamelist in self.dtDefine.getBasicNamelistCollection():
             self.tabWidget_Configuration.tabBar().setTabButton(tIndex, QtWidgets.QTabBar.RightSide, None)
@@ -103,6 +108,8 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
             aW.Singal_NMACHChanged.connect(self.Singal_NMACHChanged)
         else:
             self.Singal_NMACHChanged.connect(aW.Singal_NMACHChanged)
+            
+        return tIndex
             
     
     def defineActions(self):
@@ -174,8 +181,10 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
                     if tWd is not None and type(tWd) is DatcomWidgetBase:
                         tWd.getDoc()
                 self.writeToXML(self.dcModelPath)
+                self.logger.info("保存模型到%s"%self.dcModelPath)
             except Exception as e:
                 self.logger.error("保存模型时出错：%s!"%repr(e))
+                
             
     @pyqtSlot()
     def on_actionSaveas_triggered(self):
@@ -224,12 +233,16 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         1. 当为-1时，创建新的选项卡
         """
         #判断是否是最小配置中的选项卡
+       
         tW = self.tabWidget_Configuration.widget(index)
-        tNamelist = tW.NameList
         if tW is None:return
+        tNamelist = tW.NameList
         if tNamelist not in self.dtDefine.getBasicNamelistCollection():
             self.tabWidget_Configuration.removeTab(index)
+            self.namelistSet.update({tNamelist:{'Widget':tW, 'isRemove':True}}) 
             self.dcModel.deleteNamelist(tNamelist)
+        else:
+            self.logger.error("用户在尝试关闭一个不允许关闭的Tab，这是一个Bug")
     
     def on_addNamelist(self, iNamelist):
         """
@@ -248,9 +261,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         else:
             self.dcModel.addNamelist(iNamelist)
             self.addTab(iNamelist)
-            
-        
-            
+ 
     def indexOfText(self, iLable):
         """
         查找第一个符合(iLable)要求的Tab

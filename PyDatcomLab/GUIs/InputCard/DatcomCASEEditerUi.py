@@ -26,13 +26,14 @@ class DatcomCASEEditerUi(object):
         self.tabWidget_Configuration.setDocumentMode(True)
         #self.tabWidget_Configuration.tabBar().setExpanding(True)
         #循环添加表单
-        Dialog.reloadTabs()
+        Dialog.loadTabs()
         #添加TabWidget
         self.horizontalLayout.addWidget(self.tabWidget_Configuration)
         #翻译
         self.retranslateUi(Dialog)
         #设置初始值
         self.tabWidget_Configuration.setCurrentIndex(0)
+        self.lastIndex = 0
         #link slot and signal
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 

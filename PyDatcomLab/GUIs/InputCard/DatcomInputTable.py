@@ -328,17 +328,17 @@ class DatcomInputTable(QWidget):
             if tData is None :continue
             if self.table.rowCount() != len(tData):                 
                 #这里应该是比较大的那个值
+                tNeedRows = len(tData)
                 if 'Limit' in iV.keys() :
-                    if len(tData) < iV['Limit'][0]:                        
-                        if self.table.rowCount() <iV['Limit'][0]:
-                            self.logger.info("加载数据%s过程中,数据长度%d小于下限限制%d，调整表格行数为下限"%(self.vUrl,len(tData), iV['Limit'][0] ))  
-                            self.table.setRowCount( iV['Limit'][0])
+                    if len(tData) < iV['Limit'][0]:      
+                        tNeedRows = iV['Limit'][0]
                     if len(tData) > iV['Limit'][1]:
-                        if self.table.rowCount() >iV['Limit'][1]:
-                            self.logger.error("加载数据%s过程中,数据长度%d大于上限限制%d，调整表格行数为上限"%(self.vUrl,len(tData), iV['Limit'][1] ))        
-                            self.table.setRowCount( iV['Limit'][1])
+                        tNeedRows = iV['Limit'][1]
+                #修改表格长度
+                self.table.setRowCount( tNeedRows)
+                #self.logger.info("加载数据%s过程中,数据长度%d与当前表格行数不一致，调整表格行数%s"%(tUrl,len(tData), tNeedRows ))  
             #开始表格的赋值操作
-            if len(tData) in range(self.minCount, self.maxCount):     
+            if len(tData) >= self.minCount and len(tData) <=  self.maxCount:     
                 for iR in range(0, len(tData)):
                     tItem  = QTableWidgetItem(str(tData[iR]))
                     tDataUserRole = tDataTemplate.copy()
@@ -511,19 +511,19 @@ class DatcomInputTable(QWidget):
         """
         if tNum >= self.minCount and tNum <= self.maxCount  and  tNum >= self.table.rowCount():
             tNCount = self.table.rowCount()
+            self.table.setRowCount(tNum)
             for iR in range(tNCount, tNum):
-                self.insertRowWithDefault(iR)
-                #self.table.setRowCount(tNum)
+                self.setRowWithDefault(iR)
         else:
             self.logger.error("无法将表格的行数设置为%d,当前%d"%(tNum,self.table.rowCount() ))
             self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())
             
-    def insertRowWithDefault(self, tNum):
+    def setRowWithDefault(self, tNum):
         """
         在表格的tNum行插入新行，并赋初值        
         """
         if tNum < 0 :return 
-        self.table.insertRow(tNum)
+        #self.table.insertRow(tNum)
         for iC in range(0, self.table.columnCount()):
             tD = self.varDefaultList[iC].copy()
             tD['Unit']  = self.getHorizontalHeaderUnit(iC)  #此处没有执行坐标变换操作
@@ -569,9 +569,9 @@ class DatcomInputTable(QWidget):
         else:
             rowIndex = aItem.row()
 
-        if self.table.rowCount() <self.maxCount:
-            self.insertRowWithDefault(rowIndex)
-            #self.table.insertRow(rowIndex)
+        if self.table.rowCount() <self.maxCount:            
+            self.table.insertRow(rowIndex)
+            self.setRowWithDefault(rowIndex)
         else:
             self.logger.info("%s已经达到最大行数不能添加"%self.objectName())
             
@@ -585,9 +585,10 @@ class DatcomInputTable(QWidget):
         """
         #添加行
         if self.table.rowCount() < self.maxCount:
+            self.table.setRowCount(self.maxCount)
             for iR in range(self.table.rowCount(), self.maxCount):
-                self.insertRowWithDefault(iR)
-            #self.table.setRowCount(self.maxCount)
+                self.setRowWithDefault(iR)
+            
 
         self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())        
 

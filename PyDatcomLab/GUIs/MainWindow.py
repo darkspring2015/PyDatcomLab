@@ -19,6 +19,7 @@ from PyDatcomLab.GUIs.InputCard import *
 from PyDatcomLab.Core import projectManager as PM
 from PyDatcomLab.Core import  datcomRunner  
 from PyDatcomLab.Core.PyDatcomConfigLoader import  PyDatcomLabConfig as dtConfig
+from PyDatcomLab.GUIs.tools.XMLEditer import XMLEditer 
 
 
 
@@ -80,6 +81,9 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
 #        self.docksConfig['DefaulRight'] = self.dockWidget_Right
 #        self.docksConfig['DefaulBottom'] = self.dockWidget_Bottom
         
+        #内部窗口
+        self.XMLEditer = None
+        self.dtXMLEditer = None
 
         #添加日志窗口到下方dack中
         #self.singal
@@ -408,7 +412,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
        
         #获得当前的CASE
         tPC = self.centralWidget()
-        if tPC is None:
+        if tPC is None or type(tPC ) not in [DatcomCASEEditer.DatcomCASEEditer]:
             QMessageBox.information(self, '提示', '没有打开任何模型！')
             return
         dcM = tPC.getDoc()
@@ -416,20 +420,33 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         import tempfile
         tmpPath= tempfile.mkdtemp(suffix='',prefix='Datcom')
         tFile = os.path.join(tmpPath, 'ex.inp')
-        dcM.buildDatcomInputFile(tFile)
+        try:
+            dcM.buildDatcomInputFile(tFile)
+        except Exception as e:
+            QMessageBox.information(self, '创建Datcom输入文件失败', '%s'%e)
         
         #执行计算
         aRunner = datcomRunner.runner(problemDir=tmpPath,
                             execDatcomPath=self.Properties['DatcomExecute'])
         strRes = aRunner.runningPopen(exePath= self.Properties['DatcomExecute'],
                             problemFile=tFile,    tcwd =tmpPath  )
-        if strRes == "成功执行":
+        tTiltie = ''
+        if strRes[0] == 0: 
+            #返回码正确
+            tTiltie = '完成了当前算例的计算'
+            tReport = "完成算例!\n算例目录：\n{0}\n输出：\n{1}\n错误:\n{2}".format(tmpPath,strRes[1], strRes[2] )
             self.logger.info("完成了当前算例的计算。算例目录：%s"%tmpPath)
         else:
-            self.logger.info("当前算例的计算失败。算例目录：%s"%tmpPath)
-
+            tTiltie = '完成了当前算例的计算,但未成功'
+            tReport = "未成功完成算例!\n返回码：{3}\n算例目录：\n{0} \n输出信息：\n{1} \n错误信息:\n {2} ".format(tmpPath,strRes[1], strRes[2] ,strRes[0] )
+            self.logger.info("当前算例的计算失败。算例目录：%s"%tmpPath)     
+        #报告结果
+        QMessageBox.information(self, tTiltie, '%s'%tReport)
+        
+        
         #弹出计算结果
         os.system("explorer.exe %s" % tmpPath) 
+        
     
     @pyqtSlot()
     def on_actionSaveModel_triggered(self):
@@ -447,3 +464,25 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
             #tDoc.writeToXML(self.currentModelPath)
             tDoc.save(self.currentModelPath)
             self.logger.info(r"保存模型到：%s"%self.currentModelPath)        
+    
+    @pyqtSlot()
+    def on_actionXMLEditer_triggered(self):
+        """
+        Slot documentation goes here.
+        """
+        # TODO: 打开XML编辑器
+        self.XMLEditer = XMLEditer()
+        self.XMLEditer.show()        
+    
+    @pyqtSlot()
+    def on_actionDtcomDefineEditer_triggered(self):
+        """
+        Slot documentation goes here.
+        """
+        # TODO: not implemented yet
+        if self.dtXMLEditer is None:
+            self.dtXMLEditer = XMLEditer()
+        self.dtXMLEditer.Load(self.Properties['DatcomDefineFile'])
+        self.dtXMLEditer.expandToDepth(1)
+        self.dtXMLEditer.show()   
+        

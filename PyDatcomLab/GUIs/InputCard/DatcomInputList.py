@@ -60,6 +60,7 @@ class DatcomInputList(QWidget):
             self.logger.error("没有有效的配置文件，无法初始化,Range不能为空")
             return
         self.vDisplayRange  = self.VarDefine['DisplayRange'] if 'DisplayRange' in self.VarDefine.keys() else self.vRange
+        self.isMustInput = self.dtDefine.getVariableMustInput(self.vUrl)
         #基本几何尺寸
         self.labelIndent    = 20
         self.baseSize       = [400, 25]
@@ -339,13 +340,32 @@ class DatcomInputList(QWidget):
                 if 'Default' not in self.VarDefine.keys():
                     self.logger.error("没有为%s该List传递的有效的参数，而控件又是必须录入信息的控件！"%self.vUrl)
     
+    def isEqualDefault(self):
+        """
+        判断是否等于默认值，
+        1. 没有默认值 返回 'Unknown'
+        2. 等于默认值 返回 'TRUE'
+        3. 不等于默认值 返回 'FALSE'
+        """
+        if 'Default' not in self.VarDefine.keys():
+            return  'Unknown'
+        else:
+            if self.VarDefine['Range'].index(self.VarDefine['Default']) == self.InputWidget.currentIndex():
+                return 'TRUE'
+            else:
+                return 'FALSE'
+        
+    
     def saveData(self, dtModel):
         """
         将控件的值写入到模型dtModel中
         """
         tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl)
         tValue = self.vRange[self.InputWidget.currentIndex()]
-        
+#        if self.isMustInput == 'MustInput' and self.isEqualDefault() == 'TRUE':
+#            pass
+#        if self.isMustInput == 'MustInput'
+            
         if not self.InputWidget.isEnabled() or self.InputWidget.currentIndex() < 0:
             tV['Value'] = None
         else  :

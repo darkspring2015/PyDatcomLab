@@ -286,7 +286,18 @@ class DTdictionary():
             return True
         else:
             return False
-            
+          
+    def getVariableMustInput(self, iUrl):
+        """
+        分析获得变量的属性：是否是必须输入的项 ['MustInput','Optional']    ,错误返回'Unkonwn'    
+        """
+        tDf = self.getVariableDefineByUrl(iUrl)
+        if tDf is None: return 'Unkonwn'
+        #分析
+        if 'MustInput' in tDf and tDf['MustInput' ] in ['UnChecked', 'Checked']:
+            return 'Optional'
+        else:
+            return 'MustInput'
         
     def getGroupVarsByName(self, nmlst, groupNm):
         """
@@ -496,7 +507,7 @@ class DTdictionary():
         """
         返回基础Datcom算例的Namelist组合
         """
-        return ['FLTCON', 'BODY']
+        return ['FLTCON', 'SYNTHS','BODY']
         
     def getVariableTemplateByUrl(self, tUrl, isSubType = False):
         """

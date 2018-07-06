@@ -56,6 +56,7 @@ sys.path.append(os.path.abspath(os.path.join(mainPath, '..')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'PlaneConfiguration')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'components')))
+sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'tools')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'Core')))
 
 PyDatcomLabProperties.update( {'DatcomModuleDirectory':mainPath , })

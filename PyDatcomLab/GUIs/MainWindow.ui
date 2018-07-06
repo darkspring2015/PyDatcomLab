@@ -147,11 +147,20 @@
     <addaction name="separator"/>
     <addaction name="menu_7"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>工具</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionXMLEditer"/>
+    <addaction name="actionDtcomDefineEditer"/>
+   </widget>
    <addaction name="menuProject"/>
    <addaction name="menu_Model"/>
    <addaction name="menu_Problem"/>
    <addaction name="menu_Analyze"/>
    <addaction name="menu_Windows"/>
+   <addaction name="menu"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -525,6 +534,20 @@
    </property>
    <property name="text">
     <string>可视化提示窗口</string>
+   </property>
+  </action>
+  <action name="actionXMLEditer">
+   <property name="text">
+    <string>XML编辑器</string>
+   </property>
+  </action>
+  <action name="actionDtcomDefineEditer">
+   <property name="icon">
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/docs.png</normaloff>:/mainwindow/images/mainwindow/docs.png</iconset>
+   </property>
+   <property name="text">
+    <string>Datcom定义编辑</string>
    </property>
   </action>
  </widget>
