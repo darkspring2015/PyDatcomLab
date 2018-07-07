@@ -209,7 +209,8 @@ class dcModel(datcomXMLLoader):
             if tVtp is None:
                 self.logger.error("无法创建对应的变量的基本实例%s"%(tUrl))
                 continue
-            self.doc[tUrl] = tVtp
+            if tUrl not in self.doc:
+                self.doc[tUrl] = tVtp
        
         
     def deleteNamelist(self, namelist):
@@ -254,7 +255,7 @@ class dcModel(datcomXMLLoader):
         if self.dtDefine.getVariableDefineByUrl(tUrl) == {}:
             self.logger.error("Datcom定义中并不包含%s的定义！"%tUrl)
             return False
-        
+        #执行变量写入过程
         if tUrl in self.doc.keys() and iVar['Value'] is None :
             #如果Value为None则删除该变量
             self.doc.pop(tUrl)
@@ -270,7 +271,86 @@ class dcModel(datcomXMLLoader):
             tVarTem.update(iVar)
             self.doc[tUrl] = tVarTem
             return True 
+            
+    def setVariablebyArrayIndex(self, iVar, iIndex):
+        """
+        设置实例的Array变量的某个值值,
+        iVar是Python的dict类型，包括：{Url，Unit，Value}
+        iIndex是Int类型，是对应元素的位置
+        url包括namelist和variableName两部分组成：namelist/variableName
+        函数行为：
+        1.对于不存在的namelist，将导致创建对应选项卡的操作；<br />
+        2.对于存在的变量，将修改值和单位等信息<br />
+        3.如果变量的值为None，将默认值写入到集合
+        4.函数不校验Namelist的完整性，Namelist最低变量组合在其他函数中负责
+        5.对于存在单位的变量进行单位变换，变换到当前model的Unit
+        """
+        #进行必要的单位变换
+        #写入数据到doc中        
+        #数据校验
+        tResult, tReport = self.checkMustKeys(iVar, ['Url', 'Unit', 'Value'])
+        if tResult is False: 
+            self.logger.error("输入的变量不合法，%s！"%tReport)
+            return False
+        #检查值
+        tUrl = iVar['Url']
+        if self.dtDefine.getVariableDefineByUrl(tUrl) == {}:
+            self.logger.error("Datcom定义中并不包含%s的定义！"%tUrl)
+            return False
+        #执行更新逻辑
+        tDefault = self.dtDefine.getVariableTemplateByUrl( tUrl, isSubType = True)
+        
+        if tUrl in self.doc.keys() and iVar['Value'] is None :
+            #如果Value为None则删除该变量
+            self.logger.warning("设置Array变量%s的%d位的数值为None是没有意义的！"%(tUrl, iIndex))
+            self._setArrayItembyIndex(tDefault, iIndex)
+            return False
+        elif tUrl in self.doc.keys() and iVar['Value'] is not  None:
+            #如果Vlaue不为None则更新信息
+            self._setArrayItembyIndex(iVar, iIndex)
+            return True
+        elif tUrl not in self.doc.keys() and iVar['Value'] is None :
+            return True
+        elif  tUrl not in self.doc.keys() and iVar['Value'] is not None :
+            #首先调用添加变量的函数
+            namelist, varName = tUrl.split('/')
+            self.addNamelist(namelist, [varName])
+            self._setArrayItembyIndex(iVar, iIndex)      
+            return True    
+            
+        return True         
 
+    def _setArrayItembyIndex(self, iVar, iIndex):
+        """
+        用来设置Array变量的某个值
+        函数特性:
+        1.如果iIndex在iVar['Url']指定的变量现有长度之内则直接更新
+        2.如果iIndex在iVar['Url']指定的允许长度之内，则扩大长度到iIndex，并添加
+        3.如果iIndex超过了iVar['Url']指定允许的最大返回，则触发错误
+        注意事项：
+        函数不进行大量的检查，因此可能造成异常
+        """
+        tUrl = iVar['Url']       
+        try:
+            tRange = self.dtDefine.getVariableDefineByUrl(tUrl)['Limit']
+            tDefault = self.dtDefine.getVariableTemplateByUrl( tUrl, isSubType = True)
+            tNowVar = self.getVariableByUrl(tUrl)
+            tNowLength = len(tNowVar['Value']) 
+            #转换坐标
+            tNewInputVar = iVar
+            if tNowVar['Unit'] != iVar['Unit']:
+                tNewInputVar = dtDimension.unitTransformation(iVar,tNowVar['Unit'] )
+            #判断长度变换
+            if tNowLength>= iIndex:
+                tNowVar['Value'][iIndex] = tNewInputVar['Value']
+            if tNowLength < iIndex and iIndex > tRange[0] and iIndex < tRange[1]:
+                tNowVar['Value'] = tNowVar['Value'] + [tDefault['Value']]*3
+                tNowVar['Value'][iIndex] = tNewInputVar['Value']
+            if  iIndex > tRange[1] or  iIndex < 0:
+                raise UserWarning("无效的索引")            
+        except Exception as e:
+            self.logger.error("设置过程出错！%s"%(e))
+ 
 
     def checkMustKeys(self, iDict, iMust=[]):
         """

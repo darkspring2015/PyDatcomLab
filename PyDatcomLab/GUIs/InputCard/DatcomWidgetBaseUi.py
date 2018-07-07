@@ -225,7 +225,7 @@ class DatcomWidgetBaseUi(object):
                     continue
                 #变量num->Table
                 #直接进行绑定不经过Mainwindo的转发了
-                tCWidget.editingFinished.connect(tTbWidget.on_TbLength_editingFinished) 
+                tCWidget.editingFinished.connect(tTbWidget.on_Singal_RuleNumToCount) 
                 #表格长度到-NUM
                 tTbWidget.Signal_rowCountChanged.connect(tCWidget.on_Signal_rowCountChanged)
                 

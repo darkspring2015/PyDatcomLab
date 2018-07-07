@@ -13,7 +13,7 @@ import logging
 #项目导入项
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
 #from PyDatcomLab.Core import dcModel
-from PyDatcomLab.Core import  datcomModel as dcModel
+from PyDatcomLab.Core.datcomModel import    dcModel
 from PyDatcomLab.Core import datcomDimension as dtDimension
 from PyDatcomLab.Core.datcomDimension import Dimension
 from PyDatcomLab.Core import datcomTools as tools
@@ -26,11 +26,11 @@ class DatcomInputTable(QWidget):
     """
     currentIndexChanged            = pyqtSignal(str , str)    #将编辑结构发送出去 (Url,index在Range中的具体值）
     Signal_rowCountChanged       = pyqtSignal(str,int)      #向外部通知表格长度发生了变化
-    Singal_RuleNumToCount         = pyqtSignal(int)           #用来接收外部的表格长度变化信号
+    #Singal_RuleNumToCount         = pyqtSignal(int)           #用来接收外部的表格长度变化信号
     Singal_variableComboChanged = pyqtSignal(str , str)    #向外部通知表格中激活的列组合关系发生变化  <self.vUrl,"[]">
     #Singal_NMACHChanged           = pyqtSignal(int)          #用来接收NMACH的变化的信号
     
-    def __init__(self, iNameList, iGroup,  parent=None, iDefine = DDefine ):
+    def __init__(self, iNameList, iGroup,  parent=None, iDefine = DDefine , iModel =None):
         """
         Constructor
         
@@ -44,6 +44,9 @@ class DatcomInputTable(QWidget):
         if iDefine is  None or iNameList is None or iGroup is None:
             self.logger.error("没有有效的配置文件，无法初始化")
             return        
+        if iModel is None:
+            iModel = dcModel()
+        self.dtModel        = iModel
         #读取配置文件
         self.setDefinition( iNameList, iGroup, iDefine )
         #初始化界面
@@ -51,13 +54,14 @@ class DatcomInputTable(QWidget):
         #self.InitializeUILogic()        
         #界面参数
         self.curPos = QPoint(0, 0)
+        self.isTransaction  = False   #用来标记是否处于事务处理状态，如果是True则临时禁用itemChanged中的dtModel的刷新
 
         #设置表头
         self.InitializeHeader()
         self.setDelegate()  #按列设置代理
         #指定Header的内容菜单
         #self.horizontalHeader().customContextMenuRequested.connect(self.OnHeaderCustomContextMenuRequested)
-        self.table.horizontalHeader().sectionClicked.connect(self.ForSectionClicked)
+        self.table.horizontalHeader().sectionClicked.connect(self.on_SectionClicked)
         
         #附加初始化过程
         self.InitializeContextMenu() #配置内容菜单
@@ -65,7 +69,7 @@ class DatcomInputTable(QWidget):
         self.table.customContextMenuRequested.connect(self.on_customContextMenuRequested)
         
         #绑定执行逻辑 
-        self.Singal_RuleNumToCount.connect(self.on_Singal_RuleNumToCount)
+        #self.Singal_RuleNumToCount.connect(self.on_Singal_RuleNumToCount)
         self.table.itemChanged.connect(self.onItemChanged) 
         self.table.cellChanged.connect(self.on_cellChanged)
         #self.Singal_NMACHChanged.connect(self.on_Singal_NMACHChanged)
@@ -75,6 +79,17 @@ class DatcomInputTable(QWidget):
         
         #执行表格内容的初始化逻辑
         self.InitializeTableSize()
+        
+                #为数据模型调用初始化函数
+        if self.dtModel is not None :
+            if type(self.dtModel) == dcModel:
+                self.setModel(self.dtModel)
+            else:
+                self.logger.warning("初始化DatcomInputSingle时传入的dtModel的类型为%s，应该为%s"%(str(type(self.dtModel)), str(type(dcModel))))
+                self.dtModel = dcModel()
+              
+        #联结部分的slot
+        self.installEventFilter(self)
 
     def setDefinition(self, tNameList, tGroup, tDefine ):
         """
@@ -142,10 +157,7 @@ class DatcomInputTable(QWidget):
             self.ComboVarUrl = '%s/%s'%(self.Namelist, self.ComboVar)
         #分析是否关联到NMACH限制因素
         self.isLinkNMACH = self.dtDefine.isLinkToNMACH(tNameList, tGroup)
-        
-        
 
- 
         
     def setupUi(self, Form):
         """
@@ -220,8 +232,21 @@ class DatcomInputTable(QWidget):
         self.popMenu.addAction(self.actionDeleteRow)
         self.popMenu.addAction(self.actionAddRowToMax)
         self.popMenu.addAction(self.actionClearRows)
+        
+    def eventFilter(self, watched, event):
+        """
+        重载eventFilter(QObject *o, QEvent *e)函数，实现过滤功能，在实现进入时给与 激活focus的功能
+        """
+#        if watched == self.InputWidget:
+#            if QtCore.QEvent.HoverEnter == event.type():
+#                 self.setFocus_onWindowActivate()
+#                 return True
+#            if QtCore.QEvent.HoverLeave == event.type():
+#                self.cancelSelection_onWindowDeactivate()
+#                return True
+             
+        return False
 
-     
 
     def InitializeHeader(self):
         """
@@ -265,8 +290,6 @@ class DatcomInputTable(QWidget):
                 tItem.setData(Qt.UserRole, tD)
                 self.table.setItem(iR, iC, tItem)
         #表格各列的默认值self.varDefaultList 
-        
-        
             
     def setDelegate(self):
         """
@@ -282,18 +305,42 @@ class DatcomInputTable(QWidget):
         """
         self.table.clear()
         
-    def loadData(self, iModel):
+    #下面开始的是控件的读写逻辑部分
+    # 
+
+    def setModel(self, iModel):
         """
-        将iModel定义的数据加载到控件以方便的编辑 iModel-> self
+        设置控件的dtModel
+        注意：
+        1.控件的更改将直接写入到iModel中
+        2.函数触发一次加载
+        """        
+        #为数据模型调用初始化函数
+        if iModel is not None and  type(self.dtModel) == dcModel:
+            self.dtModel = iModel
+            self._loadData()
+        else:
+            self.logger.warning("DatcomInputSingle.setModel()传入的dtModel的类型为%s，应该为%s"%(str(type(self.dtModel)), str(type(dcModel))))        
+    
+    def getModel(self):
+        """
+        返回模型的Model
+        不推荐使用该方法        
+        """
+        return self.dtModel 
+
+    def _loadData(self):
+        """
+        将self.dtModel定义的数据加载到控件以方便的编辑 iModel-> self
         函数行为:
         1. 根据Namelist 和 Group的值从iModel中读取对应的信息
         2. 加载所有Group中指定的Variable，从AddtionalInformation设定显示规则
         3. 调整对应变量的单位
         4. 如果输入值不合法进行背景标红提示
         """
-        
-        if iModel is None or type(iModel) != dcModel.dcModel:
-            self.logger.info("尝试传递非dcModel对象给DatcomInputTable的loadData函数，Type：%s"%str(type(iModel)))
+        #参数验证
+        if self.dtModel is None or type(self.dtModel) != dcModel:
+            self.logger.info("尝试传递非dcModel对象给DatcomInputTable的loadData函数，Type：%s"%str(type(self.dtModel)))
             return 
         #清除所有数据
         self.clear()
@@ -303,7 +350,7 @@ class DatcomInputTable(QWidget):
         for iC  in range(0, len(self.varsDfList)):
             iV       = self.varsDfList[iC]   #这是所有的定义
             tUrl     = '%s/%s'%(iV['NameList'], iV['VarName'])
-            tDataVar = iModel.getVariableByUrl(tUrl)            
+            tDataVar = self.dtModel.getVariableByUrl(tUrl)            
             if tDataVar is None:
                 #不存在数据则隐藏对应的列
                 self.table.setColumnHidden(iC, True)
@@ -326,6 +373,7 @@ class DatcomInputTable(QWidget):
             #执行数据写入
             tData = tDataVar['Value']
             if tData is None :continue
+            #判断表格长度
             if self.table.rowCount() != len(tData):                 
                 #这里应该是比较大的那个值
                 tNeedRows = len(tData)
@@ -355,8 +403,46 @@ class DatcomInputTable(QWidget):
         #发送行变更消息
         self.Signal_rowCountChanged.emit(self.CountVarUrl , self.table.rowCount())         #向外通知数据加载后的长度
         self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo())) #向外通知数据列的组合关系发生变换
+            
+    def setItemData(self, iUrl, iRow, iVar):
+        """
+        从外部设置具体某列的具体值
+        """
+        if 'Url'not in iVar or iVar['Url'] not in self.varsDf or iRow > self.varsDf[iUrl]['Limit'][1] or\
+        iRow < 0 or  iVar is None:
+            self.logger.warning("setItemData()的参数无效！%s,C:%d,var:%s"%(iUrl, iRow, iVar))
+            return 
+        #开始设置逻辑
+        #扩张表格规模
+        if iRow > self.table.rowCount():            
+            self._resizeTableToCount(iRow)
+        #开始分析数据并添加
+        tCIndex = self._getIndexByUrl(iUrl)
+        tUData = self.table.item(iRow, tCIndex).data(Qt.UserRole)
+        #检查iVar
+        if tUData['Url'] != iUrl:
+            self.logger.error("错误的数据关系，现有Url：%s,写入Url")
+            return
+        #转换坐标
+        tCurrentUnit = self.getHorizontalHeaderUnit(tCIndex)
+        tNewData = dtDimension.unitTransformation(tUData,tCurrentUnit )
+        self.table.item(iRow, tCIndex).setData(Qt.UserRole,tNewData)
+        self.table.item(iRow, tCIndex).setData(Qt.DisplayRole,tNewData['Value'])
+        #写入到数据模型
+        self.dtModel.setVariablebyArrayIndex(tNewData, tCIndex)
+        
+    def _getIndexByUrl(self, iUrl):
+        """
+        获得iUrl对应的列号
+        """
+        tIndex = -1
+        for iC in range(0, len(self.varsDfList)):
+            if self.varsDfList[iC]['Url'] == iUrl:
+                tIndex = iC
+        return tIndex
 
-    def saveData(self, iModel):
+
+    def _flushData(self ):
         """
         将控件的编辑结果保存到iModel中 self->iModel
         函数行为:
@@ -374,7 +460,7 @@ class DatcomInputTable(QWidget):
                 #True is Hidden Delete the Variable from the Model
                 tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Value'] = None
-                iModel.setVariable( tVar)
+                self.dtModel.setVariable( tVar)
             else:
                 #False : warite the data
                 tVarlist = []
@@ -413,7 +499,7 @@ class DatcomInputTable(QWidget):
                 tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Unit']  = tUnit
                 tVar['Value'] = tVarlist
-                iModel.setVariable( tVar )
+                self.dtModel.setVariable( tVar )
         #回写iModel完成
 
     def getColumnCombo(self):
@@ -491,7 +577,7 @@ class DatcomInputTable(QWidget):
         #print("row:%d,col:%d"%(self.table.rowCount(), self.table.columnCount()))
     
     @pyqtSlot(str, str)     
-    def on_TbLength_editingFinished(self, vUrl, vCount):
+    def on_Singal_RuleNumToCount(self, vUrl, vCount): 
         """
         响应表格长度变化事件
         也可以用来设置表格长度
@@ -500,27 +586,33 @@ class DatcomInputTable(QWidget):
         if tUrl == vUrl:
             try:
                 tNum = int(vCount)
-                self.on_Singal_RuleNumToCount(tNum)
+                self._resizeTableToCount(tNum) 
             except Exception as e1:
                 self.logger.error("变量：%s 的值：%s ，无法转换为Int"%(vUrl, vCount +e1))
 
-        
-    @pyqtSlot(int)    
-    def on_Singal_RuleNumToCount(self, tNum):
+    def _resizeTableToCount(self, iNum):
         """
+        扩张表格规模到iNum
+        将会刷新到Model
         """
-        if tNum >= self.minCount and tNum <= self.maxCount  and  tNum >= self.table.rowCount():
+        if iNum >= self.minCount and iNum <= self.maxCount  and  iNum > self.table.rowCount():
             tNCount = self.table.rowCount()
-            self.table.setRowCount(tNum)
-            for iR in range(tNCount, tNum):
-                self.setRowWithDefault(iR)
+            #开始事务
+            self.isTransaction = True
+            self.table.setRowCount(iNum)
+            for iR in range(tNCount, iNum):
+                self._setRowWithDefault(iR)
+            #结束事务
+            self.isTransaction = False
+            #刷新数据到Model
+            self._flushData()
         else:
-            self.logger.error("无法将表格的行数设置为%d,当前%d"%(tNum,self.table.rowCount() ))
-            self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())
+            self.logger.error("无法将表格的行数设置为%d,当前%d"%(iNum,self.table.rowCount() ))
+            self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())        
             
-    def setRowWithDefault(self, tNum):
+    def _setRowWithDefault(self, tNum):
         """
-        在表格的tNum行插入新行，并赋初值        
+        在表格的tNum行插入新行，并赋初值  ,但是不触发到Model的同步      
         """
         if tNum < 0 :return 
         #self.table.insertRow(tNum)
@@ -547,13 +639,16 @@ class DatcomInputTable(QWidget):
             self.minCount  = iNMCAH
             self.maxCount = iNMCAH
             if self.table.rowCount() < iNMCAH:
-                for iR in range(self.table.rowCount(), iNMCAH):
-                    self.table.insertRow(iR)
-            elif self.table.rowCount() < iNMCAH:
+                self.on_Singal_RuleNumToCount(self.vUrl, str(iNMCAH))
+            if self.table.rowCount() > iNMCAH:
+                self.isTransaction = True
                 for iR in range(iNMCAH, self.table.rowCount()):
-                    self.table.removeRow(iR)      
+                    self.table.removeRow(iR)     
+                    #这里将触发大量的读写 
+                self.isTransaction = False
                 self.logger.warning("on_Singal_NMACHChanged() 根据NMACH值删除了表格最后的几行数据！")
-                    
+            #就刷新到Model
+            self._flushData()
         
     @pyqtSlot()
     def on_actionAddRow_triggered(self):
@@ -568,14 +663,18 @@ class DatcomInputTable(QWidget):
             rowIndex = self.table.rowCount()
         else:
             rowIndex = aItem.row()
-
+        #开始事务处理
+        self.isTransaction = True  
         if self.table.rowCount() <self.maxCount:            
             self.table.insertRow(rowIndex)
-            self.setRowWithDefault(rowIndex)
+            self._setRowWithDefault(rowIndex)
         else:
             self.logger.info("%s已经达到最大行数不能添加"%self.objectName())
-            
-        #self.curN.setText(str(self.rowCount()))
+        #结束事务处理
+        self.isTransaction = False     
+        #刷新到Model
+        self._flushData()       
+        #向外发送结果
         self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())
 
     @pyqtSlot()
@@ -583,13 +682,18 @@ class DatcomInputTable(QWidget):
         """
         增加到最大行的代码.
         """
+        #开始事务处理
+        self.isTransaction = True  
         #添加行
         if self.table.rowCount() < self.maxCount:
             self.table.setRowCount(self.maxCount)
             for iR in range(self.table.rowCount(), self.maxCount):
-                self.setRowWithDefault(iR)
-            
-
+                self._setRowWithDefault(iR)           
+        #结束事务处理
+        self.isTransaction = False     
+        #刷新到Model
+        self._flushData()       
+        #向外发送结果
         self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())        
 
     
@@ -598,13 +702,19 @@ class DatcomInputTable(QWidget):
         """
         删除行的代码.
         """
-        # TODO: not implemented yet
+        #开始事务处理
+        self.isTransaction = True  
+        #删除操作
         aItem = self.table.indexAt(self.curPos)
         if  aItem.row() >=0 :            
             self.table.removeRow(aItem.row())
         else:
             self.logger.info("没有命中任何行")
-        
+         #结束事务处理
+        self.isTransaction = False     
+        #刷新到Model
+        self._flushData()       
+        #向外发送结果       
         self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())
 
     @pyqtSlot()
@@ -612,9 +722,15 @@ class DatcomInputTable(QWidget):
         """
         删除行的代码.
         """
-        # TODO: not implemented yet
-        #self.clear()
-        self.table.setRowCount(self.minCount)        
+        #开始事务处理
+        self.isTransaction = True  
+        #删除所有的行
+        self.table.setRowCount(self.minCount)    
+         #结束事务处理
+        self.isTransaction = False     
+        #刷新到Model
+        self._flushData()       
+        #向外发送结果   
         self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())         
         
             
@@ -629,21 +745,21 @@ class DatcomInputTable(QWidget):
         self.curPos = pos        
         posG = self.mapToGlobal(pos)
         self.popMenu.exec(posG)
-   
-    def ForSectionClicked(self, vIndex):
+        
+    @pyqtSlot(int)
+    def on_SectionClicked(self, vIndex):
         """
-        设置表头的内容菜单.
-        
-        @param pos DESCRIPTION
-        @type QPoint
+        表头被点击的响应函数        
+        @param vIndex 表头的logicIndex
+        @type int
         """   
-        
+        #获取背景信息
         tHItem = self.table.horizontalHeaderItem(vIndex)
         tConfig = tHItem.data(Qt.UserRole)
         tDisplay = tHItem.data(Qt.DisplayRole)
         #执行表头的单位制变换操作
         if 'Dimension' in tConfig.keys() and tConfig['Dimension'] in Dimension.keys() \
-        and 'CurrentUnit' in tConfig.keys():
+                and 'CurrentUnit' in tConfig.keys():
             #获取当前单位
             tCUnit = tConfig['CurrentUnit']
             tUList = dtDimension.getUnitListByDimension(tConfig['Dimension'])
@@ -655,7 +771,13 @@ class DatcomInputTable(QWidget):
             tHItem.setData(Qt.DisplayRole, tDisplay )
             tHItem.setData(Qt.UserRole, tConfig )
             #更新表格的数据
-            self.unitChanged(vIndex, tNextUnit)
+            #开始事务处理
+            self.isTransaction = True              
+            self._unitChanged(vIndex, tNextUnit)
+            #结束事务处理
+            self.isTransaction = False     
+            #刷新到Model
+            self._flushData()  
     
     def setHorizontalHeaderUnit(self, vIndex, newUnit):
         """
@@ -676,13 +798,23 @@ class DatcomInputTable(QWidget):
         tHItem.setData(Qt.UserRole, tConfig )
         tDisplay = tHItem.data(Qt.DisplayRole).split()[0] + ' ' + newUnit
         tHItem.setData(Qt.DisplayRole, tDisplay )
+        #更新表格的数据
+        #开始事务处理
+        self.isTransaction = True              
+        self._unitChanged(vIndex, newUnit)
+        #结束事务处理
+        self.isTransaction = False     
+        #刷新到Model
+        self._flushData()  
         
     def getHorizontalHeaderUnit(self, vIndex):
         """
         获得表头的当前单位
         """
         tHItem = self.table.horizontalHeaderItem(vIndex)
-        if tHItem is None : return ''
+        if tHItem is None : 
+            self.logger.warning("尝试获得没有意义的索引%d的单位"%vIndex)
+            return None
         tConfig = tHItem.data(Qt.UserRole)
         if 'Dimension' not in tConfig.keys() :
             return ''
@@ -690,7 +822,7 @@ class DatcomInputTable(QWidget):
             return tConfig['CurrentUnit']         
         
     
-    def unitChanged(self, column, tNewUnit):
+    def _unitChanged(self, column, tNewUnit):
         """
         将某一列数据的单位进行变换
         """
@@ -713,7 +845,7 @@ class DatcomInputTable(QWidget):
     def onItemChanged(self, item):
         """
         void QTableWidget::itemChanged(QTableWidgetItem *item)
-This signal is emitted whenever the data of item has changed.
+        This signal is emitted whenever the data of item has changed.
         在此处协调代理自行变换单位的情况
         """
         #做值判断
@@ -736,8 +868,12 @@ This signal is emitted whenever the data of item has changed.
             tNewItemData = dtDimension.unitTransformation(tItemData, tConfig['CurrentUnit'])
             item.setData(Qt.UserRole, tNewItemData)
             item.setData(Qt.DisplayRole, str(tNewItemData['Value']))
-        
-        
+            
+        #逐项值更新表格数据
+        #写入到数据模型
+        if self.isTransaction  == False :
+            self.dtModel.setVariablebyArrayIndex(item.getData(Qt.UserRole), item.column())
+  
         
 if __name__ == "__main__":
     import sys, os
@@ -749,10 +885,9 @@ if __name__ == "__main__":
     tTable = DatcomInputTable( 'FLTCON', 'Speed_Atmospheric',  parent=tMain, iDefine = DDefine )
     LiftLayout.addWidget(tTable) 
     tMPath = os.path.join(os.path.expanduser('~'), r'.PyDatcomLab\extras\PyDatcomProjects\1\case2.xml')
-    tModel = dcModel.dcModel(tMPath)
-    tTable.loadData(tModel)    
+    tModel = dcModel(tMPath)
+    tTable.setModel(tModel)    
     tMain.show()
-    tTable.saveData(tModel)
     tModel.save(tMPath)
     sys.exit(app.exec_())
         
