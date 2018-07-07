@@ -504,13 +504,24 @@ class dcModel(datcomXMLLoader):
    
     def getVariableByUrl(self, tUrl):
         """
-        函数从当前模型中获得变量
+        获得tUrl对应的Datcom变量副本
+        注意：外部修改该变量副本将影响dcmodel中值，因为返回的是一个dict
+        
         """
         if tUrl is None or tUrl == "" or self.doc is None:
             return None
         if tUrl in self.doc.keys():
             return self.doc[tUrl]
-        
+            
+    def getVariableCopyByUrl(self, tUrl) :
+        """
+        获得tUrl对应的Datcom变量的副本
+        注意：外部修改该变量的值不会影响dcmodel中值，因为返回的是一个dict的拷贝        
+        """
+        tV =  self.getVariableByUrl(tUrl)
+        if  tV is not None:
+            return tV.copy()
+
 
     
     def getDiscreteVariableValueByName(self, tUrl):

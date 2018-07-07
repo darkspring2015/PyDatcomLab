@@ -306,7 +306,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                             tSVIndex = iR['CorrelatedVariables'].index(iSV)
                             nCorrelatedVariable = eval(iR['HowTo'][iH]['RelationalExpr'][tSVIndex].format(MVar=iVar, SVar=iSVarValue))
                             iSValue.update({'Value':nCorrelatedVariable})
-                            tSWidget.setDataByVariable(iSValue)
+                            tSWidget.setDataByVariable(iSValue)  #
                         except Exception as e:
                             self.logger.error("RuleVariableCorrelation规则应用出错！%s"%e)
    

@@ -54,7 +54,7 @@ UnitMap ={
 
 'W':{'SI':'kg', 'HowTo':{
 'kg':[lambda kg:  kg , lambda kg:  kg] ,
-'lb':[lambda lb:  0.4535924*lb    , lambda kg:  kg*2.2046226 ] ,#pounds
+'lb':[lambda lb:  0.45359237*lb    , lambda kg:  kg*2.20462262 ] ,#pounds
 'g':[ lambda g:  1e-3*g , lambda kg:  kg*1e3 ] ,
 }}, #'W'
 
