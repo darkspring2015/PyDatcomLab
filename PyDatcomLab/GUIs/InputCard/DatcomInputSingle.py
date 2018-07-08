@@ -639,7 +639,7 @@ class DatcomInputSingle(QWidget):
         if self.vUrl == vUrl and type(self.InputWidget) is QtWidgets.QLineEdit:
             tDefault = self.dtModel.getVariableByUrl(self.vUrl) 
             tDefault.update({'Value':vCount})  #利用高级Python特性，代替了回写操作
-            self.dtModel.setVariable(self.vUrl, tDefault)
+            self.dtModel.setVariable( tDefault)
             self.InputWidget.setText(str(vCount))   
         else:
             self.logger.error("on_Signal_rowCountChanged处理异常:%s-%d"%(vUrl, vCount))
@@ -683,7 +683,7 @@ class DatcomInputSingle(QWidget):
         self.vCurrentUnit  = tUint
         tDefault = self._getCurrentValueInModel()
         tDefault.update(tRVar)
-        self.dtModel.setVariable(self.vUrl, tDefault)  #利用Python高级技巧更新字典数据
+        self.dtModel.setVariable(tDefault)  #利用Python高级技巧更新字典数据
             
             
     @pyqtSlot(str)

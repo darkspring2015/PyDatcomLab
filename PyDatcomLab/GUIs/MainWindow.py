@@ -18,6 +18,7 @@ from PyDatcomLab.GUIs.components import *
 from PyDatcomLab.GUIs.InputCard import *
 from PyDatcomLab.Core import projectManager as PM
 from PyDatcomLab.Core import  datcomRunner  
+from PyDatcomLab.Core.DictionaryLoader import  DTdictionary, defaultDatcomDefinition as DDefine
 from PyDatcomLab.Core.PyDatcomConfigLoader import  PyDatcomLabConfig as dtConfig
 from PyDatcomLab.GUIs.tools.XMLEditer import XMLEditer 
 
@@ -60,8 +61,13 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
                                 'DatcomExecute': tExe
                                 }
         self.Properties.update(iProperties)
+        #定义基本的项目信息存储
         self.PyDatcomLabConfig = dtConfig(self.Properties['ConfigFile'])  #加载配置到Main
-
+        #定义DatcomDefine的实体
+        if 'DatcomDefineFile' in self.Properties and os.path.isfile(self.Properties['DatcomDefineFile']):
+            self.dtDefine = DTdictionary(self.Properties['DatcomDefineFile'])
+        else:
+            self.dtDefine = DDefine
         #配置MainWindow的Dock系统信息
         self.setDockNestingEnabled(True)
         
@@ -386,7 +392,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
                 self.logger.info(r"保存模型到：%s"%self.currentModelPath)
         #加载新模型
         #self.currentCASE = PlaneConfiguration.PlaneConfiguration(modelpath = modelPath)
-        self.currentCASE = DatcomCASEEditer.DatcomCASEEditer(modelpath = modelPath)        
+        self.currentCASE = DatcomCASEEditer.DatcomCASEEditer(iModelpath = modelPath,  iDefine =self.dtDefine)        
         self.setCentralWidget(self.currentCASE)
         self.currentModelPath = modelPath
         self.centralWidgetUsed = True

@@ -872,7 +872,7 @@ class DatcomInputTable(QWidget):
         #逐项值更新表格数据
         #写入到数据模型
         if self.isTransaction  == False :
-            self.dtModel.setVariablebyArrayIndex(item.getData(Qt.UserRole), item.column())
+            self.dtModel.setVariablebyArrayIndex(item.data(Qt.UserRole), item.column())
   
         
 if __name__ == "__main__":

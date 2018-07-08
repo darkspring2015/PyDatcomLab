@@ -21,8 +21,7 @@ class DatcomWidgetBaseUi(object):
     """
     class DatcomCARD 是提供CARD录入的基础类
     """
-
-    
+   
     def __init__(self):
         """
         初始化所有必需的操作
@@ -84,7 +83,7 @@ class DatcomWidgetBaseUi(object):
                     continue
                 elif tVarDefine['TYPE'] in ['INT', 'REAL'] :
                     # 开始单值工程量创建
-                    tVarWidget = SInput.DatcomInputSingle(tUrl, parent=self.groupBox_lift )                    
+                    tVarWidget = SInput.DatcomInputSingle(tUrl, parent=self.groupBox_lift,  iModel =CARD.dtModel  )                    
                     tVarWidget.setObjectName(tVarName)
                     #限制var的格式
                     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -96,7 +95,7 @@ class DatcomWidgetBaseUi(object):
                     
                 elif tVarDefine['TYPE'] in ['List'] :
                     # 结束单值工程量创建
-                    tVarWidget = LInput.DatcomInputList(tUrl, parent=self.groupBox_lift )
+                    tVarWidget = LInput.DatcomInputList(tUrl, parent=self.groupBox_lift ,  iModel =CARD.dtModel  )                    
                     tVarWidget.setObjectName(tVarName)
                     #限制var的格式
                     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -150,8 +149,8 @@ class DatcomWidgetBaseUi(object):
         tabWidget_right.setSizePolicy(sizePolicy)        
         #创建多值工程量的输入结构      
         for tGroup in tableCache.keys():
-            #创建表单
-            tTabTable = TB(iNameList = CARD.NameList, iGroup = tGroup , iDefine = CARD.dtDefine, parent = CARD)
+            #创建表单  iNameList, iGroup,  parent=None, iDefine = DDefine , iModel =None
+            tTabTable = TB(iNameList = CARD.NameList, iGroup = tGroup , iDefine = CARD.dtDefine, parent = CARD, iModel =CARD.dtModel)
             tTabTable.setObjectName("tableWidget_%s"%tGroup)
             #设置表格的大小策略
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -164,11 +163,8 @@ class DatcomWidgetBaseUi(object):
             #连接变量组合变化信号
             CARD.Singal_RuleIndexToCombo.connect(tTabTable.on_Singal_RuleIndexToCombo)
             tTabTable.Singal_variableComboChanged.connect(self.Singal_varComboChangedFromTable)
-
                 
             #长度控制信号和长度变化信号在RuleNumToCount中绑定
-            #tHorizontalLayout.addWidget(tTabTable)
-            #tTabName     = tGroup
             tTabTooltips = tGroup
             tDisplayName = tGroup
             if hasattr(CARD,'GroupDefine'):

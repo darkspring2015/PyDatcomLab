@@ -59,7 +59,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         if iNamelist is None or iNamelist == '':
             self.logger.error("未指定Namelist信息：%s!"%str(iNamelist))
             iNamelist = 'FLTCON'
-        self.NameList            = iNamelist
+        self.NameList                = iNamelist
         self.dtDefine                 = iDefine
         self.NamelistAttriabute    = self.dtDefine.getNamelistAttributeByName(self.NameList)
         self.VariableList             = self.dtDefine.getNamelistDefineByName(self.NameList) 
@@ -78,32 +78,108 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 self.RuleVariableCorrelationConditionVList.append(iR['ConditionVariable'])      
         #
         self.HelpUrl                   = self.dtDefine.getCARDHelpDoc(self.NameList)
-        #self.HashVaribles         = {}
-        
-        
-        #配置完成后再调用界面初始化
-        self.setupUi(self)
-        
-        #修改后台的数据，如果tModel is None 将创建空的datcomModel对象       
-        #将附加指定 InitDoc，InitLogic
-        self.setModel( iModel)        
-        #绑定处理逻辑
-
         #界面参数
         self.curPos = QPoint(0, 0)
         self.curWidget = None
         self.curN = None
-        self.popMenu = None
+        self.popMenu = None       
         
-        #再次执行绑定
+        #定义控件dtModel
+        if iModel is None or type(iModel) is not dcModel.dcModel:
+            self.logger.error('传递的参数不是合格的类型：%s'%type(iModel) )  
+            self.dtModel = dcModel.dcModel()      
+        else:
+            self.dtModel = iModel
         
+        #配置完成后再调用界面初始化
+        self.setupUi(self)
+ 
+        #重新执行数据绑定！  
+        #将附加指定 _InitDoc，InitLogic
+        self.setModel( iModel)       
+
+        #绑定处理逻辑
         QMetaObject.connectSlotsByName(self)
-        
         
         #执行附加的界面初始化操作
         self.InitializeUI()
         #刷新界面
         self.UILogic()  
+
+    def setModel(self, tModel):
+        """
+        初始化本节点的xml描述文档
+        """
+        #修改后台的数据
+        if tModel is None or type(tModel) is not dcModel.dcModel:
+            self.logger.error('传递的参数不是合格的类型：%s'%type(tModel) )
+            #tModel = dcModel.dcModel('J6', '常规布局')     
+            tModel = dcModel.dcModel()   
+        #检查是否包含    
+        if self.NameList not in tModel.getNamelistCollection():
+            tModel.addNamelist(self.NameList)
+        self.dtModel = tModel  
+        
+        #执行参数配置过程        
+        self._InitDoc()  
+        
+        #触发界面协调
+        self.UILogic()
+        
+    def _InitDoc(self):
+        """
+        分析并初始化后台数据
+        """   
+        #自动化循环赋值
+        for varName in self.VariableList.keys():                      
+            if self.VariableList[varName]['TYPE'] in ['REAL', 'INT', 'List'] :
+                #查询默认值
+                tWidget = self.findChild(QWidget,varName)
+                if tWidget is None:
+                    self.logger.error("访问的变量：%s 不在本窗体"%varName)
+                else:
+                    #如果控件没有激活则跳过添加，逻辑应当在控件内部实现
+                    tWidget.setModel(self.dtModel)
+        #自动化循环赋值
+        
+        #对于表格类型的数据进行赋值
+        for iTb in self.dtDefine.getGroupDefine(self.NameList):
+            tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
+            if tWidget is None:
+                self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
+                continue
+            tWidget.setModel(self.dtModel)
+            #遍历所有的遍历写入到表格中
+        #遍历所有表格控件
+      
+    def getModel(self):
+        """
+        返回模型的Model
+        不推荐使用该方法   
+        """
+#        #自动化循环赋值
+#        for varName in self.VariableList.keys():                      
+#            if self.VariableList[varName]['TYPE'] in ['REAL', 'INT', 'List'] :
+#                #查询默认值
+#                tWidget = self.findChild(QWidget,varName)
+#                if tWidget is None:
+#                    self.logger.error("访问的变量：%s 不在本窗体"%varName)
+#                else:
+#                    tWidget.saveData(self.dtModel)
+#        #自动化循环赋值
+#        
+#        #对于表格类型的数据进行赋值
+#        for iTb in self.dtDefine.getGroupDefine(self.NameList):
+#            tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
+#            if tWidget is None:
+#                self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
+#                continue
+#            tWidget.saveData(self.dtModel)
+#            #遍历所有的遍历写入到表格中
+#        #遍历所有表格控件
+#        #执行界面刷新
+        return self.dtModel    
+
 
     def UILogic(self):
         """
@@ -141,7 +217,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 self.UILogic_RuleVariableStatus(tCVName, tIndex) 
                 
         
-    @QtCore.pyqtSlot(str, str )  #标示和值
+    @QtCore.pyqtSlot(str, str ) 
     def on_RuleVariableStatus_dt_triggered(self , iUrl, iKey):
         """
         用来处理Datcon变量的list控件消息
@@ -152,7 +228,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         self.UILogic_RuleVariableStatus(tControlVar, iKey)        
         
         
-    @QtCore.pyqtSlot(int)  #标示和值
+    @QtCore.pyqtSlot(int)  
     def on_RuleVariableStatus_cuurentIndexChanged(self , index):
         """
         对RuleVariableStatus进行逻辑处理
@@ -309,84 +385,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                             tSWidget.setDataByVariable(iSValue)  #
                         except Exception as e:
                             self.logger.error("RuleVariableCorrelation规则应用出错！%s"%e)
-   
-  
-    def setModel(self, tModel):
-        """
-        初始化本节点的xml描述文档
-        """
-        #修改后台的数据
-        if tModel is None or type(tModel) is not dcModel.dcModel:
-            self.logger.error('传递的参数不是合格的类型：%s'%type(tModel) )
-            #tModel = dcModel.dcModel('J6', '常规布局')     
-            tModel = dcModel.dcModel()   
-        #检查是否包含    
-        if self.NameList not in tModel.getNamelistCollection():
-            tModel.addNamelist(self.NameList)
-        self.model = tModel  
-        
-        #执行参数配置过程        
-        self.InitDoc()  
-        
-        #触发界面协调
-        self.UILogic()
-        
-    def InitDoc(self):
-        """
-        分析并初始化后台数据
-        """   
-        #自动化循环赋值
-        for varName in self.VariableList.keys():                      
-            if self.VariableList[varName]['TYPE'] in ['REAL', 'INT', 'List'] :
-                #查询默认值
-                tWidget = self.findChild(QWidget,varName)
-                if tWidget is None:
-                    self.logger.error("访问的变量：%s 不在本窗体"%varName)
-                else:
-                    #如果控件没有激活则跳过添加，逻辑应当在控件内部实现
-                    tWidget.loadData(self.model)
-        #自动化循环赋值
-        
-        #对于表格类型的数据进行赋值
-        for iTb in self.dtDefine.getGroupDefine(self.NameList):
-            tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
-            if tWidget is None:
-                self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
-                continue
-            tWidget.loadData(self.model)
-            #遍历所有的遍历写入到表格中
-        #遍历所有表格控件
-      
-    def getDoc(self):
-        """
-        将界面的内容刷新到变量model
-        """
-        #自动化循环赋值
-        for varName in self.VariableList.keys():                      
-            if self.VariableList[varName]['TYPE'] in ['REAL', 'INT', 'List'] :
-                #查询默认值
-                tWidget = self.findChild(QWidget,varName)
-                if tWidget is None:
-                    self.logger.error("访问的变量：%s 不在本窗体"%varName)
-                else:
-                    tWidget.saveData(self.model)
-        #自动化循环赋值
-        
-        #对于表格类型的数据进行赋值
-        for iTb in self.dtDefine.getGroupDefine(self.NameList):
-            tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
-            if tWidget is None:
-                self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
-                continue
-            tWidget.saveData(self.model)
-            #遍历所有的遍历写入到表格中
-        #遍历所有表格控件
-        #执行界面刷新
-        return self.model      
-        
-        
-
-
+ 
     
 if __name__ == "__main__":
     import sys

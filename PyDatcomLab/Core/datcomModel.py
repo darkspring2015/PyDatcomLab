@@ -29,7 +29,7 @@ class dcModel(datcomXMLLoader):
     使用说明：
     1.该类型派生自datcomXMLLoader类，需要自定义解析关系，请使用xml文档约定来实现函数ParseXmltoDoc
     """
-    def __init__(self, path = None, dtDefine = DtDefine):
+    def __init__(self, path = None, iDefine = DtDefine):
         """
         初始化模型类
         如果指定了path，将加载对应的模型文件，否则创建基础的Datcom模型，基础模型在defaultDatcomDefinition中定义
@@ -39,7 +39,7 @@ class dcModel(datcomXMLLoader):
         #初始化日志系统
         self.logger = logging.getLogger(r'Datcomlogger')
         #定义各种属性
-        self.dtDefine = dtDefine
+        self.dtDefine = iDefine
         self.Properties.update({
                                 'CName':'AerocraftName CASE', 
                                 'CASEID':'1',  

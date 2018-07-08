@@ -6,8 +6,8 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyDatcomLab.GUIs.InputCard.DatcomWidgetBase import DatcomWidgetBase as dtCARD
+from PyQt5 import QtCore, QtWidgets #, QtGui
+#from PyDatcomLab.GUIs.InputCard.DatcomWidgetBase import DatcomWidgetBase as dtCARD
 
 
 class DatcomCASEEditerUi(object):
@@ -26,7 +26,7 @@ class DatcomCASEEditerUi(object):
         self.tabWidget_Configuration.setDocumentMode(True)
         #self.tabWidget_Configuration.tabBar().setExpanding(True)
         #循环添加表单
-        Dialog.loadTabs()
+        Dialog._loadTabs()
         #添加TabWidget
         self.horizontalLayout.addWidget(self.tabWidget_Configuration)
         #翻译
