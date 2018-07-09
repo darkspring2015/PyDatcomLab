@@ -1,0 +1,21 @@
+﻿<DatcomModelTemplate>
+  <ModelTemplate>
+	<ModelName>J6</ModelName>
+	<Author>Linger</Author>
+	<UUID></UUID>
+	<ModelPath>.\ModelLibrary\J6.xml</ModelPath>
+	<Description/>
+	<AirConfiguration>常规布局</AirConfiguration>      
+  </ModelTemplate>
+
+  <AirConfigurationSet>
+	<AirConfiguration>
+		<AirConfName>常规布局</AirConfName>
+		<Description/>
+		<RuleSet>
+			<Rule ruleName=''/>
+		</RuleSet>	
+	</AirConfiguration>
+  </AirConfigurationSet>
+
+</DatcomModelTemplate>
