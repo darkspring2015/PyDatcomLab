@@ -15,24 +15,25 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 #PyDatcomLab
 from PyDatcomLab.Core import datcomModel as dcModel
 from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  , DTdictionary as dtDefinition
-#from PyDatcomLab.Core.datcomCaseConstraint import  datcomCaseConstraint as dcConstrait
 from PyDatcomLab.GUIs.InputCard.DatcomCASEEditerUi import DatcomCASEEditerUi
 from PyDatcomLab.GUIs.InputCard.DatcomWidgetBase import DatcomWidgetBase
 
 
 class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
     """
-    Class documentation goes here.
+    DatcomCASEEditer 是Datcom Input文件的输入控件.提供Datcom模型文件的创建、编辑功能。
     """
-    # TODO: Define the action for the program
     Singal_NMACHChanged                    = pyqtSignal(int)          #用来接收NMACH的变化的信号
     
     def __init__(self, parent=None, iModelpath = None, iDefine = DDefine):
         """
-        Constructor
-        
+        构造函数        
         @param parent reference to the parent widget
         @type QWidget
+        @param iModelpath 模型的输入文件路径
+        @type str
+        @param iDefine reference to DTdictionary类实例，是Datcom配置
+        @type DTdictionary
         """
         super(DatcomCASEEditer, self).__init__(parent)
 
@@ -276,7 +277,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
        
         tW = self.tabWidget_Configuration.widget(index)
         if tW is None:return
-        tNamelist = tW.NameList
+        tNamelist = tW.Namelist
         if tNamelist not in self.dtDefine.getBasicNamelistCollection():
             self.tabWidget_Configuration.removeTab(index)
             self.namelistSet.update({tNamelist:{'Widget':tW, 'isRemove':True}}) 
@@ -317,14 +318,14 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         """
         响应tabBar栏的双击行为
         1. 当为-1时，创建新的选项卡
-        """
-        self.logger.info("on_tabWidget_Configuration_tabBarDoubleClicked %d"%index)
+        """        
         if index <0: #index == -1
             tChoose = self._ChoiseNamelist(iMode = '未添加')    
             if tChoose  is not None:
-                self.on_addNamelist(tChoose)
+                self.on_addNamelist(tChoose)            
+                self.logger.info("双击添加选项卡 %s"%tChoose)    
         else: #双击Tab本身 。忽略
-            pass
+            self.logger.info("on_tabWidget_Configuration_tabBarDoubleClicked %d"%index)
                 
     def _ChoiseNamelist(self, iMode = '未添加'):
         """

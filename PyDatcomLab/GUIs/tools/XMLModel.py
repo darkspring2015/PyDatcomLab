@@ -3,7 +3,7 @@
 """
 Module implementing XMLModel. 
 """
-#from PyQt5.QtCore import 
+from PyQt5 import QtCore  
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
 from xml.etree import ElementTree  as ET
 #from xml.dom import minidom  as dom
@@ -17,7 +17,7 @@ class XMLModel(QStandardItemModel):
     """
     自定义实现的XML模型，用作模型视图
     """
-    def __init__(self, tXMLFile):
+    def __init__(self, iXML):
         """
         初始化函数
         """
@@ -27,27 +27,27 @@ class XMLModel(QStandardItemModel):
         #内部常量
         self.doc = ET.ElementTree().getroot()
         #设置数据
-        self.setXMLData(tXMLFile)
+        self.setXMLData(iXML)
     
     
-    def setXMLData(self,   tXML):
+    def setXMLData(self,   iXML):
         """
         将XML文件添加到表中模型
         """
         #self.beginResetModel()
         
-        if type(tXML)== str :
-            if os.path.isfile(tXML):
-                self.doc = ET.parse(tXML).getroot()
+        if type(iXML)== str :
+            if os.path.isfile(iXML):
+                self.doc = ET.parse(iXML).getroot()
                 if self.doc is None:
                     self.logger.error("解析文件%s 失败!")    
             else:
-                self.logger.error("setXMLData()输入参数错误，文件不存在！%s"%tXML)                
-        elif type(tXML)  == ET.Element :
-            self.doc = tXML
-        elif type(tXML)  is ET.ElementTree :            
-            self.doc = tXML.getroot()          
-
+                self.logger.error("setXMLData()输入参数错误，文件不存在！%s"%iXML)                
+        elif type(iXML)  == ET.Element :
+            self.doc = iXML
+        elif type(iXML)  is ET.ElementTree :            
+            self.doc = iXML.getroot()          
+        #开始解析
         self.setModelByXML()    
         self.setXMLHeader()
 
@@ -60,7 +60,9 @@ class XMLModel(QStandardItemModel):
         if self.doc is None or type(self.doc) != ET.Element:
             return 
         self.clear()
+        #获得QStandardTree的根元素
         rItem = self.invisibleRootItem()
+        #遍历添加所有元素
         self.walk(self.doc, rItem)
         
     def setXMLHeader(self, tHeader = ['节点', '值', '属性']):
@@ -70,63 +72,80 @@ class XMLModel(QStandardItemModel):
         self.setHorizontalHeaderLabels(tHeader)
         
         
-    def walk(self, node, pItem):
+    def walk(self, iNode, iTreeItem):
         """
-        @param node ET.Element节点
+        添加iNode到 
+        @param iNode ET.Element节点
         @type ET.Element
         @param pItem QModelItem 父节点的索引
-        @type ET.Element
+        @type QStandardItem
         
         parentItem = self.model.invisibleRootItem()
         """
-        if node is None or pItem is None:
+        if iNode is None or iTreeItem is None:
+            self.logger.warning("walk()无效的遍历迭代参数，直接返回！")
             return 
         #插入本级
-        tRow = [QStandardItem(node.tag), QStandardItem(node.text)]
-        for iA, iV in node.items():
-            tRow.append(QStandardItem('%s :%s'%(iA, iV)))
-        
-        pItem.appendRow(tRow)        
-        for iN in list(node):
+        tRow = [QStandardItem(iNode.tag), QStandardItem(iNode.text)]
+        #遍历迭代属性
+        #items() Returns the element attributes as a sequence of (name, value) pairs. The attributes are returned in an arbitrary order.
+        for iA, iV in iNode.items():
+            tSubiTem = QStandardItem(iA)
+            tSubiTem.setData({iA:iV}, QtCore.Qt.UserRole )
+            tRow.append(tSubiTem)
+        #追加到树
+        iTreeItem.appendRow(tRow)        
+        #遍历所有的子节点
+        for iN in list(iNode):
             self.walk(iN, tRow[0])
         
     def getXMLFromModel(self):
         """
         将模型数据串行化到XML实现
         """
+        #创建子节点
         tXML = ET.ElementTree().getroot()
+        #调用遍历
         self.walkTree(self.invisibleRootItem(), tXML)
+        #写入到doc
         self.doc = tXML
         return tXML
 
-    def walkTree(self, item, pElem):
+    def walkTree(self, iTreeItem, iNode):
         """
-        遍历模型创建xml
+        遍历TreeModel模型创建xml
+        @param iNode ET.Element节点
+        @type ET.Element
+        @param iTreeItem QModelItem 父节点的索引
+        @type QStandardItem
         """
-        if item is None or pElem is None:
+        if iTreeItem is None or iNode is None:
+            self.logger.warning("walk()无效的遍历迭代参数，直接返回！")
             return 
-        if item.columnCount < 3:
+        #列计数
+        if iTreeItem.columnCount < 3:
             self.logger.error("结构异常")
         #获得数据结构
-        for iR in range(0, item.rowCount()):
-            
+        for iR in range(0, iTreeItem.rowCount()):
+            #遍历所有的内容
             tAttrib ={}
-            for iC in range(0, item.columnCount()):
+            #获得属性
+            for iC in range(0, iTreeItem.columnCount()):
                 if iC == 0:
-                    tTag = item.child(iR, iC).text()
+                    tTag  = iTreeItem.child(iR, iC).text()
                 elif iC == 1:
-                    tText = item.child(iR, iC).text()
+                    tText = iTreeItem.child(iR, iC).text()
                 else:
-                    tITtext = item.child(iR, iC).text()
-                    if tITtext is not None  or tITtext != "":
-                        tAN, tAV = tITtext.split(':')
-                        tAttrib[tAN] = tAV
-            #分析完毕开始写入内容
-            tElem = ET.SubElement(pElem, tTag, tAttrib)
+                    #tAttriKey = iTreeItem.child(iR, iC).text()
+                    tAttribElem =  iTreeItem.child(iR, iC).data(QtCore.Qt.UserRole )
+                    tAttrib.update(tAttribElem)
+            #属性分析完毕开始写入内容
+            tElem = ET.SubElement(iNode, tTag, tAttrib)            
             if tText is not None and tText != "":
                 tElem.text = tText
-            if item.hasChildren():
-                self.walkTree(item.child(iR, 0), tElem)
+            #遍历子节点
+            if iTreeItem.hasChildren():
+                self.walkTree(iTreeItem.child(iR, 0), tElem)
 
         
 

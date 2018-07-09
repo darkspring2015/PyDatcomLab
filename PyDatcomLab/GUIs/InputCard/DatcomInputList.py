@@ -58,6 +58,7 @@ class DatcomInputList(QWidget):
         #分析其他的附加信息
         self.VarDisplayName = self.VarDefine['DisplayName'] if 'DisplayName' in self.VarDefine.keys() else self.VarName
         self.VarTooltips    = self.VarDefine['Tooltips'] if 'Tooltips' in  self.VarDefine.keys() else self.VarDisplayName
+        self.setToolTip(self.VarTooltips  )
         self.vRange         = []
         if 'Range' in self.VarDefine.keys():
             self.vRange     = self.VarDefine['Range'] 

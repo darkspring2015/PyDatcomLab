@@ -58,18 +58,19 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         #获得Datcom的界面定义
         if iNamelist is None or iNamelist == '':
             self.logger.error("未指定Namelist信息：%s!"%str(iNamelist))
-            iNamelist = 'FLTCON'
-        self.NameList                = iNamelist
+            return 
+            #iNamelist = 'FLTCON'
+        self.Namelist                = iNamelist
         self.dtDefine                 = iDefine
-        self.NamelistAttriabute    = self.dtDefine.getNamelistAttributeByName(self.NameList)
-        self.VariableList             = self.dtDefine.getNamelistDefineByName(self.NameList) 
-        self.NMACHLinkTable       = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'NMACHLinkTable') 
-        self.RuleNumToCount      = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleNumToCount')        
-        self.RuleIndexToCombo   = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleIndexToCombo')  
-        self.GroupDefine            = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'GroupDefine')  
-        self.RuleVariableStatus   = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableStatus')
+        self.NamelistAttriabute    = self.dtDefine.getNamelistAttributeByName(self.Namelist)
+        self.VariableList             = self.dtDefine.getNamelistDefineByName(self.Namelist) 
+        self.NMACHLinkTable       = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'NMACHLinkTable') 
+        self.RuleNumToCount      = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleNumToCount')        
+        self.RuleIndexToCombo   = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleIndexToCombo')  
+        self.GroupDefine            = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'GroupDefine')  
+        self.RuleVariableStatus   = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableStatus')
         #规则self.RuleVariableCorrelation 
-        self.RuleVariableCorrelation = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableCorrelation')
+        self.RuleVariableCorrelation = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableCorrelation')
         self.RuleVariableCorrelationMasterVList = []
         self.RuleVariableCorrelationConditionVList = []
         if self.RuleVariableCorrelation is not None:
@@ -77,7 +78,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 self.RuleVariableCorrelationMasterVList.append(iR['MatserVariable'])
                 self.RuleVariableCorrelationConditionVList.append(iR['ConditionVariable'])      
         #
-        self.HelpUrl                   = self.dtDefine.getCARDHelpDoc(self.NameList)
+        self.HelpUrl                   = self.dtDefine.getCARDHelpDoc(self.Namelist)
         #界面参数
         self.curPos = QPoint(0, 0)
         self.curWidget = None
@@ -92,8 +93,8 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
             self.dtModel = iModel
         
         #配置完成后再调用界面初始化
-        self.setupUi(self)
- 
+        self.setupUi(self) 
+        
         #重新执行数据绑定！  
         #将附加指定 _InitDoc，InitLogic
         self.setModel( iModel)       
@@ -116,8 +117,8 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
             #tModel = dcModel.dcModel('J6', '常规布局')     
             tModel = dcModel.dcModel()   
         #检查是否包含    
-        if self.NameList not in tModel.getNamelistCollection():
-            tModel.addNamelist(self.NameList)
+        if self.Namelist not in tModel.getNamelistCollection():
+            tModel.addNamelist(self.Namelist)
         self.dtModel = tModel  
         
         #执行参数配置过程        
@@ -143,7 +144,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         #自动化循环赋值
         
         #对于表格类型的数据进行赋值
-        for iTb in self.dtDefine.getGroupDefine(self.NameList):
+        for iTb in self.dtDefine.getGroupDefine(self.Namelist):
             tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
             if tWidget is None:
                 self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
@@ -169,7 +170,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
 #        #自动化循环赋值
 #        
 #        #对于表格类型的数据进行赋值
-#        for iTb in self.dtDefine.getGroupDefine(self.NameList):
+#        for iTb in self.dtDefine.getGroupDefine(self.Namelist):
 #            tWidget = self.findChild(QWidget,'tableWidget_'+iTb)
 #            if tWidget is None:
 #                self.logger.error("访问的控件：tableWidget_%s 不在本窗体"%iTb)
@@ -241,7 +242,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 self.logger.error("无法找到%s对应的控件"%(tControlVar))
                 return
         #存在控制变量
-        tCVarRange = self.dtDefine.getVariableDefineByName(self.NameList, tControlVar).get('Range', [])
+        tCVarRange = self.dtDefine.getVariableDefineByName(self.Namelist, tControlVar).get('Range', [])
         if tCVarRange is None or len(tCVarRange) ==0:
             self.logger.error("不存在%s对应的Range定义，忽略余下逻辑"%(tControlVar))
             return                         
@@ -278,7 +279,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 tWidget = self.findChild(QtWidgets.QWidget, '%s'%(itM))  #认为所有的Datcom变量的控件名称均无前缀
                 if tWidget is None:
                     continue
-                tWidget.on_EnabledStatusChanged(True)
+                tWidget.on_EnabledStatusChanged(QtCore.Qt.Checked)
             for itM in tDisEnableList:
                 #临时处理表格类型
                 if self.VariableList[itM]['TYPE'] == 'Array':
@@ -287,7 +288,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
                 tWidget = self.findChild(QtWidgets.QWidget, '%s'%(itM))  #认为所有的Datcom变量的控件名称均无前缀
                 if tWidget is None:
                     continue
-                tWidget.on_EnabledStatusChanged(False)
+                tWidget.on_EnabledStatusChanged(QtCore.Qt.Unchecked)
             #结束遍历状态修改
             
     @QtCore.pyqtSlot(str, str)  #标示和值
@@ -349,7 +350,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
             self.logger.error("RuleVariableCorrelation()： 推定的变量名%s 不存于Datcom的定义！"%iMVarName)
             return
         #检查规则
-        tRuleSet = self.dtDefine.getCARDAddtionalInformation(self.NameList, 'RuleVariableCorrelation')
+        tRuleSet = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableCorrelation')
         if tRuleSet is None or len(tRuleSet) ==0:
             return 
         for iR in tRuleSet:

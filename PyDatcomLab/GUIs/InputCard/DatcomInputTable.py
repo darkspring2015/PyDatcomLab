@@ -30,7 +30,7 @@ class DatcomInputTable(QWidget):
     Singal_variableComboChanged = pyqtSignal(str , str)    #向外部通知表格中激活的列组合关系发生变化  <self.vUrl,"[]">
     #Singal_NMACHChanged           = pyqtSignal(int)          #用来接收NMACH的变化的信号
     
-    def __init__(self, iNameList, iGroup,  parent=None, iDefine = DDefine , iModel =None):
+    def __init__(self, iNamelist, iGroup,  parent=None, iDefine = DDefine , iModel =None):
         """
         Constructor
         
@@ -41,21 +41,20 @@ class DatcomInputTable(QWidget):
         #创建日志
         self.logger = logging.getLogger(r'Datcomlogger')        
         #配置分析
-        if iDefine is  None or iNameList is None or iGroup is None:
+        if iDefine is  None or iNamelist is None or iGroup is None:
             self.logger.error("没有有效的配置文件，无法初始化")
             return        
         if iModel is None:
             iModel = dcModel()
         self.dtModel        = iModel
         #读取配置文件
-        self.setDefinition( iNameList, iGroup, iDefine )
+        self.setDefinition( iNamelist, iGroup, iDefine )
         #初始化界面
         self.setupUi(self)
         #self.InitializeUILogic()        
         #界面参数
         self.curPos = QPoint(0, 0)
         self.isTransaction  = False   #用来标记是否处于事务处理状态，如果是True则临时禁用itemChanged中的dtModel的刷新
-
         #设置表头
         self.InitializeHeader()
         self.setDelegate()  #按列设置代理
@@ -91,20 +90,20 @@ class DatcomInputTable(QWidget):
         #联结部分的slot
         self.installEventFilter(self)
 
-    def setDefinition(self, tNameList, tGroup, tDefine ):
+    def setDefinition(self, iNamelist, tGroup, tDefine ):
         """
         利用tDefine定义的信息，初始化表格信息
-        tNameList 指向当前表格承担的Namelist的名称
+        iNamelist 指向当前表格承担的Namelist的名称
         tGroup指向表格容纳的所有列
         """
         #判断定义有效性
-        if tDefine is None or tNameList is None or tGroup is None:
+        if tDefine is None or iNamelist is None or tGroup is None:
             self.logger.error("setDefinition()无法分析定义，定义对象缺失！")
             return  
         self.dtDefine   = tDefine    
         self.GroupName = tGroup      #对应的变量组的名称  
-        self.Namelist  = tNameList    #对应NameList的名称
-        self.vUrl      = '%s/%s'%(tNameList,tGroup )
+        self.Namelist  = iNamelist    #对应NameList的名称
+        self.vUrl      = '%s/%s'%(iNamelist,tGroup )
         self.varsDf   = {}               #所有变量的定义 dict形式
         self.groupDf  = {}              #组定义
         self.varsDfList = []             #顺序保存的所有变量的定义，用以关联表头
@@ -122,9 +121,9 @@ class DatcomInputTable(QWidget):
             self.logger.error("DatcomInputTable：不包含%s对应的定义信息"%(self.vUrl ))
             return
         #分析组定义
-        tGroupDfSet = self.dtDefine.getCARDAddtionalInformation(tNameList, 'GroupDefine' )
+        tGroupDfSet = self.dtDefine.getCARDAddtionalInformation(iNamelist, 'GroupDefine' )
         if len(tGroupDfSet) == 0 or self.GroupName  not in tGroupDfSet.keys():
-            self.logger.error("不包含%s的组信息定义%s对应的定义信息"%(tNameList, tGroup))
+            self.logger.error("不包含%s的组信息定义%s对应的定义信息"%(iNamelist, tGroup))
             return
         self.groupDf  = tGroupDfSet[tGroup]
         #保存定义
@@ -142,21 +141,21 @@ class DatcomInputTable(QWidget):
             self.varDefaultList.append(tD)
 
         #分析表格行数限制
-        self.minCount, self.maxCount  = self.dtDefine.getGroupLimitByName(tNameList, tGroup)
+        self.minCount, self.maxCount  = self.dtDefine.getGroupLimitByName(iNamelist, tGroup)
 
         #分析表格行数控制变量的结果
-        tCountVar       = self.dtDefine.gettRuleNumToCountByGroup(tNameList, tGroup)
+        tCountVar       = self.dtDefine.gettRuleNumToCountByGroup(iNamelist, tGroup)
         if tCountVar is not None : 
             self.CountVar = tCountVar
         self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
         #分析表头协同变量结果
-        tComboVar       = self.dtDefine.getRuleIndexToComboByGroup(tNameList, tGroup)
+        tComboVar       = self.dtDefine.getRuleIndexToComboByGroup(iNamelist, tGroup)
         if tComboVar is not None and  len(tComboVar) > 0: 
             self.ComboVar  = tComboVar['Index']
             self.ComboRule = tComboVar['HowTo']
             self.ComboVarUrl = '%s/%s'%(self.Namelist, self.ComboVar)
         #分析是否关联到NMACH限制因素
-        self.isLinkNMACH = self.dtDefine.isLinkToNMACH(tNameList, tGroup)
+        self.isLinkNMACH = self.dtDefine.isLinkToNMACH(iNamelist, tGroup)
 
         
     def setupUi(self, Form):
@@ -606,9 +605,11 @@ class DatcomInputTable(QWidget):
             self.isTransaction = False
             #刷新数据到Model
             self._flushData()
+            self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())     
         else:
-            self.logger.error("无法将表格的行数设置为%d,当前%d"%(iNum,self.table.rowCount() ))
-            self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())        
+            if iNum != self.table.rowCount() :
+                self.logger.error("无法将表格的行数设置为%d,当前%d"%(iNum,self.table.rowCount() ))
+               
             
     def _setRowWithDefault(self, tNum):
         """

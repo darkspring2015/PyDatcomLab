@@ -60,6 +60,7 @@ class DatcomInputSingle(QWidget):
         self.namelist , self.VarName    =    iUrl.split('/')[-2:]                 
         self.VarDisplayName = self.VarDefine['DisplayName'] if 'DisplayName' in self.VarDefine.keys() else self.VarName
         self.VarTooltips    = self.VarDefine['Tooltips'] if 'Tooltips' in  self.VarDefine.keys() else self.VarDisplayName
+        self.setToolTip(self.VarTooltips  )
         self.vDimension     = self.VarDefine['Dimension'] if 'Dimension' in  self.VarDefine.keys() else ''
         self.vCurrentUnit   = ''  #保存当前的单位
         self.labelIndent    = 20
@@ -85,10 +86,8 @@ class DatcomInputSingle(QWidget):
                 self.dtModel = dcModel()
               
         #联结部分的slot
-        self.InputWidget.installEventFilter(self)
+        self.InputWidget.installEventFilter(self)       
         
-                
-
     def setupUi(self, Form):
         """
         配置界面元素

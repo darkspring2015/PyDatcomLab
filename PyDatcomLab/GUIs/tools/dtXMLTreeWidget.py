@@ -40,7 +40,7 @@ class dtXMLTreeWidget(QTreeWidget):
     """
     自定义实现的XML模型，用作模型视图
     """
-    def __init__(self, parent,  tXMLFile):
+    def __init__(self, parent,  iXMLFile):
         """
         初始化函数
         """
@@ -59,26 +59,25 @@ class dtXMLTreeWidget(QTreeWidget):
         'Node':':/img/images/content.png',     #默认图标
         }
         #设置数据
-        self.setXMLData(tXMLFile)
+        self.setXMLData(iXMLFile)
     
     
-    def setXMLData(self,   tXML):
+    def setXMLData(self,   iXML):
         """
         将XML文件添加到表中模型
         """
-        #self.beginResetModel()
-        
-        if type(tXML)== str :
-            if os.path.isfile(tXML):
-                self.doc = ET.parse(tXML).getroot()
+        #self.beginResetModel()        
+        if type(iXML)== str :
+            if os.path.isfile(iXML):
+                self.doc = ET.parse(iXML).getroot()
                 if self.doc is None:
                     self.logger.error("解析文件%s 失败!")    
             else:
-                self.logger.error("setXMLData()输入参数错误，文件不存在！%s"%tXML)                
-        elif type(tXML)  == ET.Element :
-            self.doc = tXML
-        elif type(tXML)  is ET.ElementTree :            
-            self.doc = tXML.getroot()          
+                self.logger.error("setXMLData()输入参数错误，文件不存在！%s"%iXML)                
+        elif type(iXML)  == ET.Element :
+            self.doc = iXML
+        elif type(iXML)  is ET.ElementTree :            
+            self.doc = iXML.getroot()          
         #装载数据
         self.setModelByXML()    
         #设置表头风格

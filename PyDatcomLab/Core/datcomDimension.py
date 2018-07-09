@@ -18,18 +18,18 @@ UnitMap ={
 'A':{'SI':'m2', 'HowTo':{
 'm2':[ lambda m2:  m2              , lambda m2:  m2] , 
 'cm2':[lambda cm2:  1e-4*cm2       , lambda m2:  1e4*m2 ], 
-'ft2':[lambda ft2:  0.92903e-1*ft2 , lambda m2:  m2*10.7639104 ],
-'in2':[lambda in2:  0.6452e-3*in2  , lambda m2:  m2*1550.0031 ],
+'ft2':[lambda ft2:  0.92903e-1*ft2 , lambda m2:  m2/ 0.92903e-1 ],
+'in2':[lambda in2:  0.6452e-3*in2  , lambda m2:  m2/0.6452e-3],
 }}, #'A'
 'L':{'SI':'m', 'HowTo':{
-'m':[ lambda m:  m              , lambda m:  m] ,
-'ft':[lambda ft:  0.3048*ft     , lambda m:  m*3.2808399 ] ,
-'in':[lambda inch:  0.0254*inch , lambda m:  m*39.3700787 ] ,
-'cm':[lambda cm:  1e-2*cm       , lambda m:  m*1e2 ] ,
+'m':[ lambda m:      m                 ,  lambda m:  m] ,
+'ft':[lambda ft:     ft/3.28089     ,  lambda m:  m*3.28089 ] ,
+'in':[lambda inch:  inch/39.3707 ,  lambda m:  m*39.3707 ] ,
+'cm':[lambda cm:   1e-2*cm        ,  lambda m:  m*1e2 ] ,
 }}, #'L'
 'DEG':{'SI':'deg', 'HowTo':{
 'deg':[lambda deg:  deg           , lambda deg:  deg] ,
-'rad':[lambda rad:  0.0174533*rad , lambda deg:  deg*57.29578 ] ,
+'rad':[lambda rad:  0.0174533*rad , lambda deg:  deg/0.0174533 ] ,
 }}, #'DEG'
 #https://baike.baidu.com/item/%E6%B8%A9%E5%BA%A6%E5%8D%95%E4%BD%8D/9460959?fr=aladdin
 #华氏度(fahrenheit)和摄氏度(Centigrade)都是用来计量温度的单位
@@ -48,19 +48,19 @@ UnitMap ={
 
 'F':{'SI':'N', 'HowTo':{
 'N':[lambda N:  N , lambda N:  N] ,
-'lbf':[lambda lbf:  4.448222*lbf    , lambda N:  N*0.2248089 ] ,#pounds
-'kip':[lambda kip:  4448.221615*kip , lambda N:  N*0.2248089e-3 ] ,
+'lbf':[lambda lbf:  4.448222*lbf    , lambda N:  N/ 4.448222 ] ,#pounds
+'kip':[lambda kip:  4448.221615*kip , lambda N:  N/4448.221615 ] ,
 }}, #'F'
 
 'W':{'SI':'kg', 'HowTo':{
 'kg':[lambda kg:  kg , lambda kg:  kg] ,
-'lb':[lambda lb:  0.45359237*lb    , lambda kg:  kg*2.20462262 ] ,#pounds
+'lb':[lambda lb:  0.45359237*lb    , lambda kg:  kg/0.45359237 ] ,#pounds
 'g':[ lambda g:  1e-3*g , lambda kg:  kg*1e3 ] ,
 }}, #'W'
 
 'T':{'SI':'s', 'HowTo':{
 's':[lambda s:  s             , lambda s:  s] ,
-'min':[lambda min:  60*min    , lambda s:  s*0.0166667 ] ,#pounds
+'min':[lambda min:  60*min    , lambda s:  s/60 ] ,#pounds
 'ms':[ lambda ms:  1e-3*ms    , lambda s:  s*1e3 ] ,
 }}, #'W'
 

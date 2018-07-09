@@ -57,6 +57,10 @@ class DTdictionary():
         if root is None:return False
         #保存XML信息
         self.docXML = root
+        #清空当前的doc
+        self.Dictionary           = {}
+        self.NamelistAttribute = {}
+        self.dictAddtional       = {}
         #分析XML文件
         if not root.tag == 'DatcomVariableDefine': 
             self.logger.error("加载XML文件：%s失败，其中不包含DatcomVariableDefine节"%tFile)

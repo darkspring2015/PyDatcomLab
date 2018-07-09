@@ -29,7 +29,7 @@ class dcModel(datcomXMLLoader):
     使用说明：
     1.该类型派生自datcomXMLLoader类，需要自定义解析关系，请使用xml文档约定来实现函数ParseXmltoDoc
     """
-    def __init__(self, path = None, iDefine = DtDefine):
+    def __init__(self, iPath = None, iDefine = DtDefine):
         """
         初始化模型类
         如果指定了path，将加载对应的模型文件，否则创建基础的Datcom模型，基础模型在defaultDatcomDefinition中定义
@@ -54,14 +54,14 @@ class dcModel(datcomXMLLoader):
         self.additionalDoc = {}              #存储datcom配置之外的信息          
         self.isValid =True
         #执行path的分析
-        if path is None :
+        if iPath is None :
             self.__createBasicdoc()
-        elif os.path.isfile(path):
+        elif os.path.isfile(iPath):
             #尝试加载文件并提示错误异常信息
             try:
-                self.load(path)
+                self.load(iPath)
             except Exception as e:
-                self.logger.error("加载算例文件:%s 出现异常:%s"%(path, e.message))
+                self.logger.error("加载算例文件:%s 出现异常:%s"%(iPath, e.message))
                 self.isValid = False
 
         

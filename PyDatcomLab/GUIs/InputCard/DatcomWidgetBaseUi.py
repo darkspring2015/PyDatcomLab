@@ -38,7 +38,7 @@ class DatcomWidgetBaseUi(object):
         CARD： 包括定义表dict 
         """
         #存储临时的缓存信息             
-        CARD.setObjectName(CARD.NameList)
+        CARD.setObjectName(CARD.Namelist)
         #CARD.resize(self.baseSize[0], self.baseSize[1])
 
         #创建框架
@@ -67,10 +67,8 @@ class DatcomWidgetBaseUi(object):
         tableCache ={}
         if hasattr(CARD,'VariableList'):
             #开始参数配置过程
-            for tVarName in CARD.VariableList.keys():              
-                #tVarDefine = CARD.VariableList[tVarName]
-                
-                tUrl = '%s/%s'%(CARD.NameList, tVarName)
+            for tVarName in CARD.VariableList.keys():                              
+                tUrl = '%s/%s'%(CARD.Namelist, tVarName)
                 tVarDefine = CARD.dtDefine.getVariableDefineByUrl(tUrl)
                 #判断类型
                 if tVarDefine['TYPE'] == 'Array':
@@ -83,7 +81,7 @@ class DatcomWidgetBaseUi(object):
                     continue
                 elif tVarDefine['TYPE'] in ['INT', 'REAL'] :
                     # 开始单值工程量创建
-                    tVarWidget = SInput.DatcomInputSingle(tUrl, parent=self.groupBox_lift,  iModel =CARD.dtModel  )                    
+                    tVarWidget = SInput.DatcomInputSingle(tUrl, parent=self.groupBox_lift,  iModel =CARD.dtModel , iDefinition = CARD.dtDefine )                    
                     tVarWidget.setObjectName(tVarName)
                     #限制var的格式
                     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -95,7 +93,7 @@ class DatcomWidgetBaseUi(object):
                     
                 elif tVarDefine['TYPE'] in ['List'] :
                     # 结束单值工程量创建
-                    tVarWidget = LInput.DatcomInputList(tUrl, parent=self.groupBox_lift ,  iModel =CARD.dtModel  )                    
+                    tVarWidget = LInput.DatcomInputList(tUrl, parent=self.groupBox_lift ,  iModel =CARD.dtModel  , iDefinition = CARD.dtDefine)                    
                     tVarWidget.setObjectName(tVarName)
                     #限制var的格式
                     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -116,11 +114,11 @@ class DatcomWidgetBaseUi(object):
                     continue
                 #创建一个水平布局器                
                 tVarName   = tCombo['Index']
-                tUrl = '%s/%s'%(CARD.NameList, tVarName)
+                tUrl = '%s/%s'%(CARD.Namelist, tVarName)
                 tWidget = self.findChild(QtWidgets.QWidget, '%s'%tVarName)
                 if tWidget is None:
                     tWidget = DatcomInputComboChooser(tUrl,
-                                   parent=self.groupBox_lift, iDefinition = DDefine)    
+                                   parent=self.groupBox_lift, iDefinition = CARD.dtDefine)    
                     tWidget.setObjectName('Chooser_%s'%tVarName)
                     self.LiftLayout.addWidget(tWidget)
                     #连接变量变化信号到本Widget的转发信号
@@ -149,8 +147,8 @@ class DatcomWidgetBaseUi(object):
         tabWidget_right.setSizePolicy(sizePolicy)        
         #创建多值工程量的输入结构      
         for tGroup in tableCache.keys():
-            #创建表单  iNameList, iGroup,  parent=None, iDefine = DDefine , iModel =None
-            tTabTable = TB(iNameList = CARD.NameList, iGroup = tGroup , iDefine = CARD.dtDefine, parent = CARD, iModel =CARD.dtModel)
+            #创建表单  iNamelist, iGroup,  parent=None, iDefine = DDefine , iModel =None
+            tTabTable = TB(iNamelist = CARD.Namelist, iGroup = tGroup , iDefine = CARD.dtDefine, parent = CARD, iModel =CARD.dtModel)
             tTabTable.setObjectName("tableWidget_%s"%tGroup)
             #设置表格的大小策略
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -226,7 +224,7 @@ class DatcomWidgetBaseUi(object):
                 tTbWidget.Signal_rowCountChanged.connect(tCWidget.on_Signal_rowCountChanged)
                 
         #添加NMACH对表格长度的控制信号
-        tGroupByNMACH = tCARD.dtDefine.getRuleNMACHLinkTable(tCARD.NameList)
+        tGroupByNMACH = tCARD.dtDefine.getRuleNMACHLinkTable(tCARD.Namelist)
         for iG in tGroupByNMACH:
             tTabTable = tCARD.findChild(QtWidgets.QWidget,"tableWidget_%s"%iG)
             if tTabTable is not None: 
@@ -234,7 +232,7 @@ class DatcomWidgetBaseUi(object):
                 tCARD.Singal_NMACHChanged.connect(tTabTable.on_Singal_NMACHChanged) 
                 
         #联结发送NMACH信号的控件
-        if tCARD.NameList == 'FLTCON':
+        if tCARD.Namelist == 'FLTCON':
             tWidget = tCARD.findChild(QtWidgets.QWidget,"NMACH")
             if tWidget is None:
                 self.logger.error("无法找到FLTCON/NMACH所对应的控件")

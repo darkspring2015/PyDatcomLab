@@ -63,8 +63,15 @@
     <addaction name="actionValueOnlyMode"/>
     <addaction name="actionAllMode"/>
    </widget>
+   <widget class="QMenu" name="menuExtraTools">
+    <property name="title">
+     <string>外部命令</string>
+    </property>
+    <addaction name="actionReLoadCaseUI"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
+   <addaction name="menuExtraTools"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolBar">
@@ -86,6 +93,8 @@
    <addaction name="actionReadOnlyMode"/>
    <addaction name="actionValueOnlyMode"/>
    <addaction name="actionAllMode"/>
+   <addaction name="separator"/>
+   <addaction name="actionReLoadCaseUI"/>
   </widget>
   <action name="actionLoadXML">
    <property name="icon">
@@ -166,6 +175,15 @@
    </property>
    <property name="text">
     <string>完全可编辑模式</string>
+   </property>
+  </action>
+  <action name="actionReLoadCaseUI">
+   <property name="icon">
+    <iconset resource="tools.qrc">
+     <normaloff>:/nodes/res/qscintilla.png</normaloff>:/nodes/res/qscintilla.png</iconset>
+   </property>
+   <property name="text">
+    <string>重载CASE的UI</string>
    </property>
   </action>
  </widget>

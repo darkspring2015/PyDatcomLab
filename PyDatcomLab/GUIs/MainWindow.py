@@ -317,7 +317,6 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
 
-        # TODO: not implemented yet
         if '可视化提示'  not in self.docksConfig.keys():
             #create ProjectsManager
             imgTips = ImageTips.ImageTips()
@@ -421,12 +420,12 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         if tPC is None or type(tPC ) not in [DatcomCASEEditer.DatcomCASEEditer]:
             QMessageBox.information(self, '提示', '没有打开任何模型！')
             return
-        dcM = tPC.getDoc()
         #创建运行目录
         import tempfile
         tmpPath= tempfile.mkdtemp(suffix='',prefix='Datcom')
         tFile = os.path.join(tmpPath, 'ex.inp')
         try:
+            dcM = tPC.getModel()
             dcM.buildDatcomInputFile(tFile)
         except Exception as e:
             QMessageBox.information(self, '创建Datcom输入文件失败', '%s'%e)
@@ -483,12 +482,70 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_actionDtcomDefineEditer_triggered(self):
         """
-        Slot documentation goes here.
+        Slot 打开CASE界面编辑器.
         """
         # TODO: not implemented yet
         if self.dtXMLEditer is None:
             self.dtXMLEditer = XMLEditer()
-        self.dtXMLEditer.Load(self.Properties['DatcomDefineFile'])
+            self.dtXMLEditer.Load(self.Properties['DatcomDefineFile'])
+            self.dtXMLEditer.Command_ReloadDtDefine_triggered.connect(self.on_ReloadCaseUI)
         self.dtXMLEditer.expandToDepth(1)
         self.dtXMLEditer.show()   
         
+    def on_ReloadCaseUI(self, iDefinePath):
+        """
+        Slot 重载中央的CASE界面
+        """
+        #重新加载datcomDefine配置文件到软件
+        if os.path.isfile(iDefinePath):
+            try:
+                if self.dtDefine is None:
+                    self.dtDefine = DTdictionary(iDefinePath)
+                    self.Properties['DatcomDefineFile'] = iDefinePath
+                else :
+                    self.dtDefine.loadDictionory(iDefinePath)
+                    #self.dtDefine = DTdictionary(iDefinePath)
+                    self.Properties['DatcomDefineFile'] = iDefinePath
+            except Exception as e:
+                self.logger.warning("重新加载DatcomDefineFile出错：%s ！"%(iDefinePath))
+                return
+        else:
+            self.logger.warning("输入不是有效的配置文件路径：%s ！"%(iDefinePath))
+            return
+            
+        #刷新中心控件
+        #保存当前的模型
+        if  self.currentCASE is not None and self.centralWidgetUsed :
+            #当前模型存在,则提示是否写入到XML
+            button = QMessageBox.question(self, r"重新加载当前模型",
+                                   r"重新加载当前模型，使Datcom定义生效？\n\t注意：操作将导致当前模型被写入到文件！",
+                                   QMessageBox.Yes | QMessageBox.No)
+            if button == QMessageBox.Yes:                    
+                try:
+                    #保存当前模型
+                    self.currentCASE.writeToXML()
+                    #加载新模型
+                    self.currentCASE = DatcomCASEEditer.DatcomCASEEditer(iModelpath = self.currentModelPath,  iDefine =self.dtDefine)  
+                    self.setCentralWidget(self.currentCASE)
+                    self.currentModelPath =  self.currentModelPath
+                    self.centralWidgetUsed = True                       
+                except Exception as e:
+                    self.logger.warning("重新加载模型出错 ！")
+        else: 
+            if os.path.isfile( self.currentModelPath):
+                try:
+                    #加载新模型
+                    self.currentCASE = DatcomCASEEditer.DatcomCASEEditer(iModelpath = self.currentModelPath,  iDefine =self.dtDefine)  
+                    self.setCentralWidget(self.currentCASE)
+                    self.currentModelPath =  self.currentModelPath
+                    self.centralWidgetUsed = True                       
+                except Exception as e:
+                    self.logger.warning("重新加载模型出错 ！")                
+
+    @pyqtSlot()
+    def on_actionUpdateCASEUIConfig_triggered(self):
+        """
+        Slot 更新Datcom Define，并重载中央的CASE界面.
+        """
+        if self.dtXMLEditer is None: return 
+        self.on_ReloadCaseUI(self.Properties['DatcomDefineFile'])
