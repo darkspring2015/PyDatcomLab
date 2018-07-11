@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-05-31, 23:24:09 -->
+<!-- Saved: 2018-07-11, 01:28:41 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language>en_US</Language>
@@ -15,10 +15,12 @@
   <Email>lingo_renlo@qq.com</Email>
   <Sources>
     <Source>PyDatcomLab/Core/DictionaryLoader.py</Source>
+    <Source>PyDatcomLab/Core/PyDatcomConfigLoader.py</Source>
     <Source>PyDatcomLab/Core/__init__.py</Source>
     <Source>PyDatcomLab/Core/datcomCaseConstraint.py</Source>
-    <Source>PyDatcomLab/Core/datcomDefine.py</Source>
+    <Source>PyDatcomLab/Core/datcomDictionary.py</Source>
     <Source>PyDatcomLab/Core/datcomDimension.py</Source>
+    <Source>PyDatcomLab/Core/datcomEventManager.py</Source>
     <Source>PyDatcomLab/Core/datcomModel.py</Source>
     <Source>PyDatcomLab/Core/datcomRunner.py</Source>
     <Source>PyDatcomLab/Core/datcomTools.py</Source>
@@ -53,6 +55,7 @@
     <Source>PyDatcomLab/GUIs/components/Reference.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_AddProject.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_BrowseModels.py</Source>
+    <Source>PyDatcomLab/GUIs/components/Ui_ChooseNamelist.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_ImageTips.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_ModelPreview.py</Source>
     <Source>PyDatcomLab/GUIs/components/Ui_NewModel.py</Source>
@@ -75,6 +78,7 @@
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
     <Form>PyDatcomLab/GUIs/components/AddProject.ui</Form>
     <Form>PyDatcomLab/GUIs/components/BrowseModels.ui</Form>
+    <Form>PyDatcomLab/GUIs/components/ChooseNamelist.ui</Form>
     <Form>PyDatcomLab/GUIs/components/ImageTips.ui</Form>
     <Form>PyDatcomLab/GUIs/components/ModelPreview.ui</Form>
     <Form>PyDatcomLab/GUIs/components/NewModel.ui</Form>
@@ -90,8 +94,12 @@
   </Resources>
   <Others>
     <Other>.gitignore</Other>
+    <Other>PyDatcomLab/config/datcomDefine.xml</Other>
+    <Other>PyDatcomLab/config/datcomDefinitionDefault.xml</Other>
+    <Other>PyDatcomLab/config/datcomModelTemplateDefault.xml</Other>
     <Other>docs</Other>
     <Other>extras</Other>
+    <Other>wiki/PyQtGuide/QTabwidget.md</Other>
   </Others>
   <MainScript>PyDatcomLab/PyDatcomLab.py</MainScript>
   <Vcs>

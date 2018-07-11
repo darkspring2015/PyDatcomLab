@@ -1,10 +1,10 @@
 <DatcomVariableDefine>
-  <FLTCON dcType="Namelist" DisplayName='飞行条件'>
+  <FLTCON DisplayName="飞行条件" dcType="Namelist">
     <LOOP dcType="Variable">
       <VarName>LOOP</VarName>
       <NameList>FLTCON</NameList>
       <DisplayName>LOOP 循环模式</DisplayName>
-      <Tooltips />
+      <Tooltips>['=1 同步计算高度、马赫数（默认值）', '=2 高度固定遍历马赫数', '=3 马赫数固定遍历高度']</Tooltips>
       <TYPE>List</TYPE>
       <SubType />
       <Group />
@@ -13,7 +13,7 @@
       <Default>1.0</Default>
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </LOOP>
     <NMACH dcType="Variable">
@@ -26,7 +26,7 @@
       <Group />
       <Range>[0, 20]</Range>
       <DisplayRange />
-      <Default />
+      <Default>1</Default>
       <Limit />
       <Dimension />
       <MustInput />
@@ -52,13 +52,13 @@
       <VarName>NALPHA</VarName>
       <NameList>FLTCON</NameList>
       <DisplayName>NALPHA 攻角数</DisplayName>
-      <Tooltips />
+      <Tooltips>攻角数量</Tooltips>
       <TYPE>INT</TYPE>
       <SubType />
       <Group />
       <Range>[0, 20]</Range>
       <DisplayRange />
-      <Default />
+      <Default>1</Default>
       <Limit />
       <Dimension />
       <MustInput />
@@ -68,7 +68,7 @@
       <VarName>WT</VarName>
       <NameList>FLTCON</NameList>
       <DisplayName>WT    飞行器重量</DisplayName>
-      <Tooltips />
+      <Tooltips>飞行器重量</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -90,7 +90,7 @@
       <Group />
       <Range>[-180, 180]</Range>
       <DisplayRange />
-      <Default />
+      <Default>0.0</Default>
       <Limit />
       <Dimension />
       <MustInput>UnChecked</MustInput>
@@ -105,9 +105,9 @@
       <SubType />
       <Group />
       <Range>[0.6, 0.99]</Range>
-	  <Decimals>2</Decimals>
+      <Decimals>2</Decimals>
       <DisplayRange />
-      <Default />
+      <Default>0.6</Default>
       <Limit />
       <Dimension />
       <MustInput>UnChecked</MustInput>
@@ -119,12 +119,12 @@
       <DisplayName>TSMACH 超音速下限</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
-	  <Decimals>2</Decimals>
+      <Decimals>2</Decimals>
       <SubType />
       <Group />
       <Range>[1.01, 1.4]</Range>
       <DisplayRange />
-      <Default />
+      <Default>1.4</Default>
       <Limit />
       <Dimension />
       <MustInput>UnChecked</MustInput>
@@ -165,7 +165,7 @@
     <ALSCHD dcType="Variable">
       <VarName>ALSCHD</VarName>
       <NameList>FLTCON</NameList>
-      <DisplayName >攻角</DisplayName >
+      <DisplayName>攻角</DisplayName>
       <Tooltips>录入攻角</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
@@ -174,7 +174,7 @@
       <DisplayRange />
       <Default />
       <Limit>[0, 20]</Limit>
-	  <Decimals>2</Decimals>
+      <Decimals>2</Decimals>
       <Dimension />
       <MustInput />
       <Relation />
@@ -182,17 +182,17 @@
     <MACH dcType="Variable">
       <VarName>MACH</VarName>
       <NameList>FLTCON</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>马赫数</DisplayName>
+      <Tooltips>马赫数</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>Speed_Atmospheric</Group>
       <Range />
       <DisplayRange />
-      <Default />
+      <Default>0.0</Default>
       <Limit>[0, 20]</Limit>
       <Dimension />
-	  <Decimals>2</Decimals>
+      <Decimals>2</Decimals>
       <MustInput />
       <Relation />
     </MACH>
@@ -209,7 +209,7 @@
       <Default />
       <Limit>[0, 20]</Limit>
       <Dimension />
-	  <Decimals>2</Decimals>
+      <Decimals>2</Decimals>
       <MustInput />
       <Relation />
     </VINF>
@@ -226,14 +226,14 @@
       <Default />
       <Limit>[0, 20]</Limit>
       <Dimension />
-	  <Decimals>2</Decimals>
+      <Decimals>2</Decimals>
       <MustInput />
       <Relation />
     </RNNUB>
     <ALT dcType="Variable">
       <VarName>ALT</VarName>
       <NameList>FLTCON</NameList>
-      <DisplayName >高度</DisplayName >
+      <DisplayName>高度</DisplayName>
       <Tooltips />
       <TYPE>Array</TYPE>
       <SubType />
@@ -242,8 +242,8 @@
       <DisplayRange />
       <Default />
       <Limit>[0, 20]</Limit>
-	  <Range>[-10000, 1000000]</Range>
-	  <Decimals>2</Decimals>
+      <Range>[-10000, 1000000]</Range>
+      <Decimals>2</Decimals>
       <Dimension>L</Dimension>
       <MustInput />
       <Relation />
@@ -286,7 +286,7 @@
         <Rule Group="ALSCHD" Num="NALPHA" />
       </RuleNumToCount>
       <RuleIndexToCombo dcType="Rule">
-        <Rule Group="Speed_Atmospheric" Index="Variables" DisplayName="变量组合">
+        <Rule DisplayName="变量组合" Group="Speed_Atmospheric" Index="Variables">
           <HowTo key="1.0" value="['MACH', 'RNNUB']" />
           <HowTo key="2.0" value="['MACH', 'ALT', 'PINF', 'TINF', 'RNNUB']" />
           <HowTo key="3.0" value="['VINF', 'ALT', 'PINF', 'TINF', 'MACH', 'RNNUB']" />
@@ -294,14 +294,28 @@
           <HowTo key="5.0" value="['PINF', 'TINF', 'MACH', 'RNNUB', 'VINF']" />
         </Rule>
       </RuleIndexToCombo>
+      <RuleVariableCorrelation dcType="Rule">
+        <Rule ConditionVariable="LOOP" CorrelatedVariables="['NALT']" MatserVariable="NMACH">
+          <HowTo RelationalExpr="['{MVar}']" key="1.0" />
+          <HowTo RelationalExpr="['{SVar}']" key="2.0" />
+          <HowTo RelationalExpr="['{SVar}']" key="3.0" />
+        </Rule>
+      </RuleVariableCorrelation>
+      <RuleVariableStatus dcType="Rule">
+        <Rule ControlVar="LOOP">
+          <HowTo Disabled="['NALT']" Enabled="['NMACH', 'NALPHA']" key="1.0" />
+          <HowTo Disabled="[]" Enabled="['NALT','NMACH', 'NALPHA']" key="2.0" />
+          <HowTo Disabled="[]" Enabled="['NALT','NMACH', 'NALPHA']" key="3.0" />
+        </Rule>
+      </RuleVariableStatus>
       <GroupDefine dcType="Rule">
         <Group DisplayName="攻角输入" Name="ALSCHD" ToolTips="ALSCHD" />
         <Group DisplayName="飞行大气条件" Name="Speed_Atmospheric" ToolTips="Speed_Atmospheric" />
       </GroupDefine>
-	  <HelpDoc Url="https://github.com/darkspring2015/PyDatcomLab/blob/master/wiki/%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E%E6%96%87%E4%BB%B6.md" />
+      <HelpDoc Url="https://github.com/darkspring2015/PyDatcomLab/blob/master/wiki/%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E%E6%96%87%E4%BB%B6.md" />
     </AdditionalInfo>
   </FLTCON>
-  <OPTINS dcType="Namelist" DisplayName='其他选项'>
+  <OPTINS DisplayName="其他选项" dcType="Namelist">
     <ROUGFC dcType="Variable">
       <VarName>ROUGFC</VarName>
       <NameList>OPTINS</NameList>
@@ -368,7 +382,7 @@
     </BLREF>
     <AdditionalInfo dcType="Infomation" />
   </OPTINS>
-  <SYNTHS dcType="Namelist" DisplayName='综合参数'>
+  <SYNTHS DisplayName="综合参数" dcType="Namelist">
     <VERTUP dcType="Variable">
       <VarName>VERTUP</VarName>
       <NameList>SYNTHS</NameList>
@@ -398,7 +412,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </XCG>
     <ZCG dcType="Variable">
@@ -414,7 +428,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ZCG>
     <XW dcType="Variable">
@@ -430,7 +444,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </XW>
     <ZW dcType="Variable">
@@ -446,7 +460,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ZW>
     <ALIW dcType="Variable">
@@ -462,7 +476,7 @@
       <Default />
       <Limit />
       <Dimension>DEG</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ALIW>
     <XH dcType="Variable">
@@ -478,7 +492,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </XH>
     <ZH dcType="Variable">
@@ -494,7 +508,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ZH>
     <ALIH dcType="Variable">
@@ -510,7 +524,7 @@
       <Default />
       <Limit />
       <Dimension>DEG</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ALIH>
     <HINAX dcType="Variable">
@@ -542,7 +556,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </XV>
     <ZV dcType="Variable">
@@ -558,7 +572,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ZV>
     <XVF dcType="Variable">
@@ -574,7 +588,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </XVF>
     <ZVF dcType="Variable">
@@ -590,7 +604,7 @@
       <Default />
       <Limit />
       <Dimension>L</Dimension>
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ZVF>
     <SCALE dcType="Variable">
@@ -603,7 +617,7 @@
       <Group />
       <Range />
       <DisplayRange />
-      <Default />
+      <Default>1.0</Default>
       <Limit />
       <Dimension />
       <MustInput>UnChecked</MustInput>
@@ -611,7 +625,7 @@
     </SCALE>
     <AdditionalInfo dcType="Infomation" />
   </SYNTHS>
-  <BODY dcType="Namelist"  DisplayName='机体参数'>
+  <BODY DisplayName="机体参数" dcType="Namelist">
     <NX dcType="Variable">
       <VarName>NX</VarName>
       <NameList>BODY</NameList>
@@ -782,7 +796,7 @@
       <Group>BODY</Group>
       <Range />
       <DisplayRange />
-      <Default />
+      <Default>0.0</Default>
       <Limit>[0, 20]</Limit>
       <Dimension />
       <MustInput />
@@ -857,7 +871,7 @@
         <Rule Group="BODY" Num="NX" />
       </RuleNumToCount>
       <RuleIndexToCombo dcType="Rule">
-        <Rule Group="BODY" Index="VarCombo" DisplayName="机身几何尺寸定义变量组合">
+        <Rule DisplayName="机身几何尺寸定义变量组合" Group="BODY" Index="VarCombo">
           <HowTo key="1.0" value="['X', 'R', 'ZU', 'ZL']" />
           <HowTo key="2.0" value="['X', 'S', 'ZU', 'ZL']" />
           <HowTo key="3.0" value="['X', 'S', 'R', 'P', 'ZU', 'ZL']" />
@@ -868,12 +882,12 @@
       </GroupDefine>
     </AdditionalInfo>
   </BODY>
-  <WGPLNF dcType="Namelist"  DisplayName='机翼几何参数'>
+  <WGPLNF DisplayName="机翼几何参数" dcType="Namelist">
     <CHRDTP dcType="Variable">
       <VarName>CHRDTP</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CHRDTP：翼稍弦长</DisplayName>
+      <Tooltips>CHRDTP：翼稍弦长</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -888,8 +902,8 @@
     <CHRDBP dcType="Variable">
       <VarName>CHRDBP</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CHRDBP：机翼折点弦长</DisplayName>
+      <Tooltips>机翼折点弦长（Chord at breakpoint）</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -904,8 +918,8 @@
     <CHRDR dcType="Variable">
       <VarName>CHRDR</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CHRDR：翼根弦长</DisplayName>
+      <Tooltips>CHRDR：翼根弦长（ Root Chord）</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -921,7 +935,7 @@
       <VarName>SSPNOP</VarName>
       <NameList>WGPLNF</NameList>
       <DisplayName />
-      <Tooltips />
+      <Tooltips>semi-span</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1095,12 +1109,12 @@
     </TYPE>
     <AdditionalInfo dcType="Infomation" />
   </WGPLNF>
-  <HTPLNF dcType="Namelist"  DisplayName ="平尾几何参数">
+  <HTPLNF DisplayName="平尾几何参数" dcType="Namelist">
     <CHRDTP dcType="Variable">
       <VarName>CHRDTP</VarName>
       <NameList>HTPLNF</NameList>
       <DisplayName>CHRDTP：稍弦长</DisplayName>
-      <Tooltips />
+      <Tooltips>CHRDTP：稍弦长</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1109,7 +1123,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CHRDTP>
     <CHRDBP dcType="Variable">
@@ -1375,7 +1389,7 @@
       </GroupDefine>
     </AdditionalInfo>
   </HTPLNF>
-  <VTPLNF dcType="Namelist"  DisplayName ="垂尾几何参数">
+  <VTPLNF DisplayName="垂尾几何参数" dcType="Namelist">
     <CHRDTP dcType="Variable">
       <VarName>CHRDTP</VarName>
       <NameList>VTPLNF</NameList>
@@ -1591,7 +1605,7 @@
       </GroupDefine>
     </AdditionalInfo>
   </VTPLNF>
-  <VFPLNF dcType="Namelist" DisplayName ="腹鳍几何参数">
+  <VFPLNF DisplayName="腹鳍几何参数" dcType="Namelist">
     <CHRDTP dcType="Variable">
       <VarName>CHRDTP</VarName>
       <NameList>VFPLNF</NameList>
@@ -1807,12 +1821,13 @@
       </GroupDefine>
     </AdditionalInfo>
   </VFPLNF>
-  <WGSCHR dcType="Namelist" DisplayName ="机翼气动参数">
+  <WGSCHR DisplayName="机翼气动参数" dcType="Namelist">
     <TOVC dcType="Variable">
       <VarName>TOVC</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>TOVC:最大翼型截面厚度</DisplayName>
+      <Tooltips>maximum airfoil section thickness ,fraction of chord
+\n最大机翼截面厚度 最大机翼厚度是弦长的分数</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1827,8 +1842,9 @@
     <DELTAY dcType="Variable">
       <VarName>DELTAY</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>DELTAY:6.0到.15%弦长处翼型差</DisplayName>
+      <Tooltips>difference between airfoil ordinates at 6.0 AND .15% chord ,percent chord
+6.0到.15%弦长处翼型差</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1840,11 +1856,28 @@
       <MustInput />
       <Relation />
     </DELTAY>
+    <NPTS dcType="Variable">
+      <VarName>NPTS</VarName>
+      <NameList>WGSCHR</NameList>
+      <DisplayName>NTPS:截面输入点个数</DisplayName>
+      <Tooltips>截面输入点个数，对应XCORD、YUPPER、YLOWER、MEAN、THICK</Tooltips>
+      <TYPE>INT</TYPE>
+      <SubType />
+      <Group />
+      <Range>[0, 50]</Range>
+      <DisplayRange />
+      <Default />
+      <Limit />
+      <Dimension />
+      <MustInput />
+      <Relation />
+    </NPTS>
     <XOVC dcType="Variable">
       <VarName>XOVC</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>XOVC：最大机翼厚度的纵坐标</DisplayName>
+      <Tooltips>chord location of maximum airfoil thickness, fraction of chord
+最大机翼厚度的纵坐标</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1859,8 +1892,9 @@
     <CLI dcType="Variable">
       <VarName>CLI</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CLI ：翼型设计升力系数</DisplayName>
+      <Tooltips>airfoil section design lift coefficient
+翼型设计升力系数</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1875,8 +1909,9 @@
     <ALPHAI dcType="Variable">
       <VarName>ALPHAI</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>ALPHAI ：设计攻角</DisplayName>
+      <Tooltips>angle of attack at section design lift coefficient,edg
+翼型设计升力系数对应的攻角</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1891,8 +1926,9 @@
     <CMO dcType="Variable">
       <VarName>CMO</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CMO：截面零升俯仰力矩系数</DisplayName>
+      <Tooltips>section zero lift pitching moment coefficient
+截面零升俯仰力矩系数</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1907,8 +1943,9 @@
     <LERI dcType="Variable">
       <VarName>LERI</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>LERI ：翼型前缘半径</DisplayName>
+      <Tooltips>airfoil leading edge radius fraction of chard
+翼型前缘半径 ，参考弦长</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1923,8 +1960,9 @@
     <LERO dcType="Variable">
       <VarName>LERO</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>LERO：舷外板RLE</DisplayName>
+      <Tooltips>RLE for outboard panel fraction of chard
+舷外板RLE 参考弦长</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1939,8 +1977,8 @@
     <TOVCO dcType="Variable">
       <VarName>TOVCO</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>TOVCO ：t/c for outboard panel</DisplayName>
+      <Tooltips>TOVCO ：t/c for outboard panel</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1955,8 +1993,8 @@
     <XOVCO dcType="Variable">
       <VarName>XOVCO</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>XOVCO：(x/c)max for outboard panel</DisplayName>
+      <Tooltips>(x/c)max for outboard panel</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1971,8 +2009,8 @@
     <CMOT dcType="Variable">
       <VarName>CMOT</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CMOT ：Cmo for outboard panel</DisplayName>
+      <Tooltips>CMOT CM0T 	Cmo for outboard panel</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1987,8 +2025,8 @@
     <CLMAXL dcType="Variable">
       <VarName>CLMAXL</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CLMAXL：翼型最大升级系数（0Ma）</DisplayName>
+      <Tooltips>airfoil maximum lift coefficient at MACH equal Zero</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -2003,8 +2041,8 @@
     <CLAMO dcType="Variable">
       <VarName>CLAMO</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CLAMO：翼型截面升力曲线斜率（0Ma）</DisplayName>
+      <Tooltips>CLAMO：airfoil section lift curve slope at MACH equal Zero</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -2019,8 +2057,8 @@
     <TCEFF dcType="Variable">
       <VarName>TCEFF</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>TCEFF：平面等效厚度比</DisplayName>
+      <Tooltips>planform effective thickness ratio，fraction of chord</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -2035,8 +2073,8 @@
     <KSHARP dcType="Variable">
       <VarName>KSHARP</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>KSHARP：波阻系数</DisplayName>
+      <Tooltips>wave drag factor for sharp-nosed airfoil section，not input for round nosed airfoil</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -2051,8 +2089,8 @@
     <ARCL dcType="Variable">
       <VarName>ARCL</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>ARCL：纵横比分类 </DisplayName>
+      <Tooltips>aspect ratio classification</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -2061,14 +2099,14 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ARCL>
     <YCM dcType="Variable">
       <VarName>YCM</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>YCM：翼型最大曲面</DisplayName>
+      <Tooltips>翼型最大曲面 airfoil maximum camber， fraction of chord</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -2083,8 +2121,9 @@
     <CLD dcType="Variable">
       <VarName>CLD</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CLD：锥形凸轮设计升力系数 </DisplayName>
+      <Tooltips>0.0 conical camber design lift coefficient for M=1.0 Design.
+See-NACA RM A55G19.(Default To 0.0)</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -2096,36 +2135,20 @@
       <MustInput />
       <Relation />
     </CLD>
-    <NPTS dcType="Variable">
-      <VarName>NPTS</VarName>
-      <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
-      <TYPE>INT</TYPE>
-      <SubType />
-      <Group />
-      <Range>[0, 50]</Range>
-      <DisplayRange />
-      <Default />
-      <Limit />
-      <Dimension />
-      <MustInput />
-      <Relation />
-    </NPTS>
     <CAMBER dcType="Variable">
       <VarName>CAMBER</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>CAMBER：弧形翼型剖面标志</DisplayName>
+      <Tooltips>CAMBER=TRUE cambered airfoil section flag</Tooltips>
       <TYPE>List</TYPE>
       <SubType />
       <Group />
       <Range>['.TRUE.', '.FALSE.']</Range>
-      <DisplayRange>['TRUE', 'FALSE']</DisplayRange>
+      <DisplayRange>['.TRUE.', '.FALSE.']</DisplayRange>
       <Default>.TRUE.</Default>
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CAMBER>
     <DWASH dcType="Variable">
@@ -2141,13 +2164,13 @@
       <Default>1.0</Default>
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </DWASH>
     <TYPEIN dcType="Variable">
       <VarName>TYPEIN</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
+      <DisplayName>翼型截面坐标模式</DisplayName>
       <Tooltips>
 TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input for airfoil section module
                               = 1.0 upper and lower surface coordinates(Y Upper and Y Lower)
@@ -2166,9 +2189,10 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <SLOPE dcType="Variable">
       <VarName>SLOPE</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName>SLOPE</DisplayName>
-      <Tooltips>airfoil surface slope at 0 ，20,40,60,80,100% chord ，DEG.Positive when the
- tangent intersects the chord plane forward of the reference chord point</Tooltips>
+      <DisplayName>翼型表面斜率</DisplayName>
+      <Tooltips>airfoil surface slope at 0 ，20,40,60,80,100% chord ，DEG.
+Positive when the tangent intersects the chord plane forward of the reference chord point
+只有Supersonic下使用NACA CARD的翼型计算</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>SLOPE</Group>
@@ -2183,7 +2207,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <CLALPA dcType="Variable">
       <VarName>CLALPA</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
+      <DisplayName>翼型截面升力曲线斜率</DisplayName>
       <Tooltips>输入值必须和飞行条件中的VIF匹配</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
@@ -2199,7 +2223,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <CLMAX dcType="Variable">
       <VarName>CLMAX</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
+      <DisplayName>最大升力系数</DisplayName>
       <Tooltips>输入值必须和飞行条件中的VIF匹配</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
@@ -2215,8 +2239,8 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <XAC dcType="Variable">
       <VarName>XAC</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips>输入值必须和飞行条件中的VIF匹配</Tooltips>
+      <DisplayName>截面气动中心在弦线的比例位置</DisplayName>
+      <Tooltips>截面气动中心在弦线的比例位置，输入值必须和飞行条件中的VIF匹配</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>Lift</Group>
@@ -2231,8 +2255,8 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <XCORD dcType="Variable">
       <VarName>XCORD</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>输入点横坐标</DisplayName>
+      <Tooltips>输入点横坐标（ abscissas of input point）从0-1输入</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>AirfoilSection</Group>
@@ -2247,8 +2271,8 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <YUPPER dcType="Variable">
       <VarName>YUPPER</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>上表面纵坐标</DisplayName>
+      <Tooltips>上表面纵坐标（ordinates of upper surface）弦长的分数，0.0 -0.0</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>AirfoilSection</Group>
@@ -2263,8 +2287,8 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <YLOWER dcType="Variable">
       <VarName>YLOWER</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>下表面纵坐标</DisplayName>
+      <Tooltips>下表面纵坐标（ordinates of lower surface）弦长的分数，0.0 -0.0</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>AirfoilSection</Group>
@@ -2279,8 +2303,8 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <MEAN dcType="Variable">
       <VarName>MEAN</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>中线纵坐标</DisplayName>
+      <Tooltips>中线纵坐标（ordinates of mean line）弦长的分数，0.0 -0.0</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>AirfoilSection</Group>
@@ -2295,8 +2319,8 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <THICK dcType="Variable">
       <VarName>THICK</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName />
-      <Tooltips />
+      <DisplayName>厚度分布</DisplayName>
+      <Tooltips>厚度分布（thickness distribution）弦长的分数，0.0 -0.0</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>AirfoilSection</Group>
@@ -2310,14 +2334,23 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     </THICK>
     <AdditionalInfo dcType="Infomation">
       <NMACHLinkTable varList="['Lift']" />
+      <RuleNumToCount dcType="Rule">
+        <Rule Group="AirfoilSection" Num="NPTS" />
+      </RuleNumToCount>
+      <RuleIndexToCombo dcType="Rule">
+        <Rule DisplayName="翼型截面输入组合" Group="AirfoilSection" Index="TYPEIN">
+          <HowTo key="1.0" value="['XCORD', 'YUPPER','YLOWER']" />
+          <HowTo key="2.0" value="['XCORD', 'MEAN','THICK']" />
+        </Rule>
+      </RuleIndexToCombo>
       <GroupDefine dcType="Rule">
-        <Group DisplayName="SLOPE" Name="SLOPE" ToolTips="SLOPE" />
-        <Group DisplayName="Lift" Name="Lift" ToolTips="Lift" />
-        <Group DisplayName="AirfoilSection" Name="AirfoilSection" ToolTips="AirfoilSection" />
+        <Group DisplayName="翼型截面定义" Name="AirfoilSection" ToolTips="翼型截面定义" />
+        <Group DisplayName="翼型升力特性" Name="Lift" ToolTips="翼型升力特性" />
+        <Group DisplayName="翼型截面斜率" Name="SLOPE" ToolTips="翼型截面斜率" />
       </GroupDefine>
     </AdditionalInfo>
   </WGSCHR>
-  <HTSCHR dcType="Namelist" DisplayName ="平尾气动参数">
+  <HTSCHR DisplayName="平尾气动参数" dcType="Namelist">
     <TOVC dcType="Variable">
       <VarName>TOVC</VarName>
       <NameList>HTSCHR</NameList>
@@ -2626,7 +2659,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     <TYPEIN dcType="Variable">
       <VarName>TYPEIN</VarName>
       <NameList>HTSCHR</NameList>
-      <DisplayName />
+      <DisplayName>翼型截面坐标模式</DisplayName>
       <Tooltips>
 TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input for airfoil section module
                               = 1.0 upper and lower surface coordinates(Y Upper and Y Lower)
@@ -2778,11 +2811,11 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </HTSCHR>
-  <VTSCHR dcType="Namelist" DisplayName ="垂尾气动参数">
+  <VTSCHR DisplayName="垂尾气动参数" dcType="Namelist">
     <TOVC dcType="Variable">
       <VarName>TOVC</VarName>
       <NameList>VTSCHR</NameList>
-      <DisplayName />
+      <DisplayName>TOVC 最大机翼截面厚度</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -3078,7 +3111,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </VTSCHR>
-  <VFSCHR dcType="Namelist" DisplayName ="腹鳍气动参数">
+  <VFSCHR DisplayName="腹鳍气动参数" dcType="Namelist">
     <TOVC dcType="Variable">
       <VarName>TOVC</VarName>
       <NameList>VFSCHR</NameList>
@@ -3378,7 +3411,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </VFSCHR>
-  <EXPR dcType="Namelist" DisplayName ="试验数据">
+  <EXPR DisplayName="试验数据" dcType="Namelist">
     <CDV dcType="Variable">
       <VarName>CDV</VarName>
       <NameList>EXPR</NameList>
@@ -3902,7 +3935,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </EXPR>
-  <PROPWR dcType="Namelist" DisplayName ="动力">
+  <PROPWR DisplayName="动力" dcType="Namelist">
     <AIETLP dcType="Variable">
       <VarName>AIETLP</VarName>
       <NameList>PROPWR</NameList>
@@ -4129,7 +4162,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     </CROT>
     <AdditionalInfo dcType="Infomation" />
   </PROPWR>
-  <JETPWR dcType="Namelist" DisplayName ="喷气动力">
+  <JETPWR DisplayName="喷气动力" dcType="Namelist">
     <AIETLJ dcType="Variable">
       <VarName>AIETLJ</VarName>
       <NameList>JETPWR</NameList>
@@ -4356,7 +4389,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     </JERAD>
     <AdditionalInfo dcType="Infomation" />
   </JETPWR>
-  <CONTAB dcType="Namelist" DisplayName ="控制板">
+  <CONTAB DisplayName="控制板" dcType="Namelist">
     <CFITC dcType="Variable">
       <VarName>CFITC</VarName>
       <NameList>CONTAB</NameList>
@@ -4703,7 +4736,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </RuleVariableStatus>
     </AdditionalInfo>
   </CONTAB>
-  <SYMFLP dcType="Namelist" DisplayName ="对称控制板">
+  <SYMFLP DisplayName="对称控制板" dcType="Namelist">
     <FTYPE dcType="Variable">
       <VarName>FTYPE</VarName>
       <NameList>SYMFLP</NameList>
@@ -5153,7 +5186,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </SYMFLP>
-  <ASYFLP dcType="Namelist" DisplayName ="差动控制板">
+  <ASYFLP DisplayName="差动控制板" dcType="Namelist">
     <STYPE dcType="Variable">
       <VarName>STYPE</VarName>
       <NameList>ASYFLP</NameList>
@@ -5405,7 +5438,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </ASYFLP>
-  <GRNDEF dcType="Namelist" DisplayName ="地效">
+  <GRNDEF DisplayName="地效" dcType="Namelist">
     <GRDHT dcType="Variable">
       <VarName>GRDHT</VarName>
       <NameList>GRNDEF</NameList>
@@ -5447,7 +5480,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </GRNDEF>
-  <HYPEFF dcType="Namelist" DisplayName ="高超声速襟翼">
+  <HYPEFF DisplayName="高超声速襟翼" dcType="Namelist">
     <ALITD dcType="Variable">
       <VarName>ALITD</VarName>
       <NameList>HYPEFF</NameList>
@@ -5569,7 +5602,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </HYPEFF>
-  <LARWB dcType="Namelist" DisplayName ="翼身融合体">
+  <LARWB DisplayName="翼身融合体" dcType="Namelist">
     <ZB dcType="Variable">
       <VarName>ZB</VarName>
       <NameList>LARWB</NameList>
@@ -5908,7 +5941,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     </XCENW>
     <AdditionalInfo dcType="Infomation" />
   </LARWB>
-  <TRNJET dcType="Namelist" DisplayName ="横向射流">
+  <TRNJET DisplayName="横向射流" dcType="Namelist">
     <NT dcType="Variable">
       <VarName>NT</VarName>
       <NameList>TRNJET</NameList>
@@ -6110,7 +6143,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       </GroupDefine>
     </AdditionalInfo>
   </TRNJET>
-  <TVTPAN dcType="Namelist" DisplayName ="双垂面">
+  <TVTPAN DisplayName="双垂面" dcType="Namelist">
     <BVP dcType="Variable">
       <VarName>BVP</VarName>
       <NameList>TVTPAN</NameList>
@@ -6241,4 +6274,12 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     </ZP>
     <AdditionalInfo dcType="Infomation" />
   </TVTPAN>
+  <AddtionalDefine  dcType="Other">
+	 <NamelistGroups dcType="Infomation">
+		<NamelistGroup ComboName='机翼参数' DisplayName = '机翼参数' Combo = "['WGPLNF','WGSCHR']"></NamelistGroup>
+		<NamelistGroup ComboName='平尾参数' DisplayName = '平尾参数' Combo = "['HTPLNF','HTSCHR']"></NamelistGroup>
+		<NamelistGroup ComboName='垂尾参数' DisplayName = '垂尾参数' Combo = "['VTPLNF','VTSCHR']"></NamelistGroup>
+		<NamelistGroup ComboName='腹鳍参数' DisplayName = '腹鳍参数' Combo = "['VFPLNF','VFSCHR']"></NamelistGroup>
+	 </NamelistGroups>
+  </AddtionalDefine>
 </DatcomVariableDefine>
