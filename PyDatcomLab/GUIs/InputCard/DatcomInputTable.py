@@ -373,18 +373,30 @@ class DatcomInputTable(QWidget):
             tData = tDataVar['Value']
             if tData is None :continue
             #判断表格长度
-            if self.table.rowCount() != len(tData):                 
-                #这里应该是比较大的那个值
-                tNeedRows = len(tData)
-                if 'Limit' in iV.keys() :
-                    if len(tData) < iV['Limit'][0]:      
-                        tNeedRows = iV['Limit'][0]
-                    if len(tData) > iV['Limit'][1]:
-                        tNeedRows = iV['Limit'][1]
-                #修改表格长度
-                self.table.setRowCount( tNeedRows)
-                #self.logger.info("加载数据%s过程中,数据长度%d与当前表格行数不一致，调整表格行数%s"%(tUrl,len(tData), tNeedRows ))  
-            #开始表格的赋值操作
+            if self.isLinkNMACH :
+                #如果是链接到NMACH的内容
+                tNMACH = self.dtModel.getVariableByUrl('FLTCON/NMACH')
+                if tNMACH is None:
+                    self.logger.error("无法数据")
+                else:
+                    if self.table.rowCount() !=tNMACH['Value']:   
+                        tNeedRows = tNMACH['Value']
+                        self.minCount  = tNeedRows
+                        self.maxCount = tNeedRows
+                        self.table.setRowCount( tNeedRows)
+            else:
+                    if self.table.rowCount() != len(tData):                 
+                        #这里应该是比较大的那个值
+                        tNeedRows = len(tData)
+                        if 'Limit' in iV.keys() :
+                            if len(tData) < iV['Limit'][0]:      
+                                tNeedRows = iV['Limit'][0]
+                            if len(tData) > iV['Limit'][1]:
+                                tNeedRows = iV['Limit'][1]
+                        #修改表格长度
+                        self.table.setRowCount( tNeedRows)
+                       
+            #开始表格的赋值操作                    
             if len(tData) >= self.minCount and len(tData) <=  self.maxCount:     
                 for iR in range(0, len(tData)):
                     tItem  = QTableWidgetItem(str(tData[iR]))

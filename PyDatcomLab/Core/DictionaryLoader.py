@@ -34,9 +34,11 @@ class DTdictionary():
             path = self.basePath
         self.dicPath = path
         #定义一个字典存储所有的定义信息
-        self.Dictionary = {}             #按照键值对方式存储所有的信息
-        self.dictAddtional = {}         #以CARD/Namelist为键，保存附加定义信息 NMACHLinkTable  RuleNumToCount RuleIndexToCombo groupDefine
-        self.NamelistAttribute = {}   #存储Namelist自身的属性值信息
+        self.Dictionary                     = {}     #按照键值对方式存储所有的信息
+        self.dictAddtional                 = {}     #以CARD/Namelist为键，保存附加定义信息 NMACHLinkTable  RuleNumToCount RuleIndexToCombo groupDefine
+        self.NamelistAttribute           = {}   #存储Namelist自身的属性值信息
+        self.DictionaryOther             = {}    #其他定义内容的存储位置
+        self.DictionaryOtherAttribute  = {}   #其他定义的属性内容的存储位置
         self.docXML = ET.ElementTree().getroot()
         #调用加载
         self.loadDictionory(self.dicPath)
@@ -67,48 +69,63 @@ class DTdictionary():
             return False
         #循环获取所有配置信息  
         for nmlstNode in list(root):
-            #遍历所有的根节点，认为是Namelist节点
-            nmlistName = nmlstNode.tag
-            self.Dictionary[nmlistName] = {}  #添加Namelist的定义
-            self.NamelistAttribute[nmlistName] = nmlstNode.attrib
-            for varNode  in list(nmlstNode):
-                if varNode.get('dcType') == 'Infomation':
-                    #如果是变量节则跳过
-                    self.loadAddtionalInforation(varNode, nmlistName)
-                    continue 
-                tDicElememt = {}
-                #将所有字节全部解析到字典中
-                for paraNode in list(varNode):     
-                    if not paraNode.text  is None:
-                        tDicElememt[paraNode.tag] = paraNode.text
-                #重新识别部分项
-                try:
-                    if 'Range' in tDicElememt.keys():
-                        if 'TYPE' in tDicElememt.keys() and tDicElememt['TYPE'] in ['REAL', 'Array']:
-                            tDicElememt['Range'] = self.parserArray(tDicElememt['Range'])
-                        else:
-                            tDicElememt['Range'] = eval(tDicElememt['Range'])
-                    if 'DisplayRange' in tDicElememt.keys():
-                        tDicElememt['DisplayRange'] = eval(tDicElememt['DisplayRange'])
-                    if 'Limit' in tDicElememt.keys():
-                        tDicElememt['Limit'] = self.parserArray(tDicElememt['Limit'])
-                    if 'Default' in tDicElememt.keys():
-                        if ('TYPE' in tDicElememt.keys() and tDicElememt['TYPE']  == 'REAL') or\
-                        ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and 'SubType' not in tDicElememt.keys() )or\
-                        ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and\
-                        'SubType' in tDicElememt.keys() and tDicElememt['SubType']  == 'REAL'):
-                            tDicElememt['Default'] = float(tDicElememt['Default'])
-                        if ('TYPE' in tDicElememt.keys() and tDicElememt['TYPE']  == 'INT ') or\
-                        ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and\
-                        'SubType' in tDicElememt.keys() and tDicElememt['SubType']  == 'INT'):
-                            tDicElememt['Default'] = int(float(tDicElememt['Default']))
-                except Exception as e:
-                    self.logger.error("转换类型出错，%s ：%s"%(repr(e), str(e)))
-                #将定义添加到变量的表达之中
-                self.Dictionary[nmlistName][varNode.tag] = tDicElememt
-            #
-        #结束加载
-    def loadAddtionalInforation(self, elemt, tNmlst):
+            #遍历所有的根节点
+            #分析Namelist节点
+            if nmlstNode.attrib.get('dcType', None) == 'Namelist':
+                self._loadNamelistNode(nmlstNode)
+            #分析附加定义节
+            elif nmlstNode.attrib.get('dcType', None) == 'Other':                
+                self._loadOtherNode(nmlstNode)
+            else:
+                self.logger.warning("没有定义的")
+        
+    def _loadNamelistNode(self, iElemt):
+        """
+        从iElemt中解析附加的信息
+        """
+        if iElemt is None or iElemt.attrib.get('dcType', None) != 'Namelist':
+            return 
+        nmlistName = iElemt.tag
+        self.Dictionary[nmlistName]           = {}  #添加Namelist的定义
+        self.NamelistAttribute[nmlistName] = iElemt.attrib
+        tDicElememt = {}
+        for varNode  in list(iElemt):
+            if varNode.get('dcType') == 'Infomation':
+                #如果是变量节则跳过
+                self._loadAddtionalInforation(varNode, nmlistName)
+                continue 
+            tDicElememt = {}
+            #将所有字节全部解析到字典中
+            for paraNode in list(varNode):     
+                if not paraNode.text  is None:
+                    tDicElememt[paraNode.tag] = paraNode.text
+            #重新识别部分项
+            try:
+                if 'Range' in tDicElememt.keys():
+                    if 'TYPE' in tDicElememt.keys() and tDicElememt['TYPE'] in ['REAL', 'Array']:
+                        tDicElememt['Range'] = self.parserArray(tDicElememt['Range'])
+                    else:
+                        tDicElememt['Range'] = eval(tDicElememt['Range'])
+                if 'DisplayRange' in tDicElememt.keys():
+                    tDicElememt['DisplayRange'] = eval(tDicElememt['DisplayRange'])
+                if 'Limit' in tDicElememt.keys():
+                    tDicElememt['Limit'] = self.parserArray(tDicElememt['Limit'])
+                if 'Default' in tDicElememt.keys():
+                    if ('TYPE' in tDicElememt.keys() and tDicElememt['TYPE']  == 'REAL') or\
+                    ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and 'SubType' not in tDicElememt.keys() )or\
+                    ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and\
+                    'SubType' in tDicElememt.keys() and tDicElememt['SubType']  == 'REAL'):
+                        tDicElememt['Default'] = float(tDicElememt['Default'])
+                    if ('TYPE' in tDicElememt.keys() and tDicElememt['TYPE']  == 'INT ') or\
+                    ('TYPE' in tDicElememt.keys()  and tDicElememt['TYPE']  == 'Array' and\
+                    'SubType' in tDicElememt.keys() and tDicElememt['SubType']  == 'INT'):
+                        tDicElememt['Default'] = int(float(tDicElememt['Default']))
+            except Exception as e:
+                self.logger.error("转换类型出错，%s ：%s"%(repr(e), str(e)))
+            #将定义添加到变量的表达之中
+            self.Dictionary[nmlistName][varNode.tag] = tDicElememt
+                
+    def _loadAddtionalInforation(self, elemt, tNmlst):
         """
         从elemt中解析附加信息，写入到字典中
         elemt是包含附加信息的ET.Element元素
@@ -197,7 +214,36 @@ class DTdictionary():
 
             else:                
                 self.logger.error("解析规则异常：%s"%(tNmlst + " " + iT.tag))
+                
+    def _loadOtherNode(self, iElemt):
+        """
+        解析附加的非Namelist的顶级节
+        """
+        if iElemt is None or iElemt.attrib.get('dcType', None) != 'Other':
+            return 
+        tDefineTag = iElemt.tag
         
+        #遍历添加所有的描述节点
+        for varNode  in list(iElemt):
+            if varNode.get('dcType') != 'Infomation':
+                #认为必须声明为Infomation
+                continue 
+            tDefineTag = varNode.tag   #认为NamelistGroup是唯一的
+            tAllElementSet = []  
+            #将所有字节全部解析到字典中
+            for paraNode in list(varNode):     
+                tDicElememt = paraNode.attrib
+                if  paraNode.text  is not None:
+                    tDicElememt['Value'] = paraNode.text
+                #重新识别部分项
+                try:
+                    tDicElememt['Combo'] = eval(tDicElememt['Combo'])
+                except Exception as e:
+                    self.logger.error("尝试转换Combo出错，%s "%(e))
+                tAllElementSet.append(tDicElememt)
+            #将定义添加到变量的表达之中
+            self.DictionaryOther[tDefineTag] = tAllElementSet   
+            self.DictionaryOtherAttribute[tDefineTag] = varNode.attrib 
                 
     def getNamelistDefineByName(self, nmlst):
         """
@@ -506,6 +552,47 @@ class DTdictionary():
         返回Namelist的全集
         """
         return list(self.Dictionary.keys())
+        
+    def getNamelistCombo(self):
+        """
+        返回所有Namelist的分组信息。用于保证数据完整性。如果没有在datcomDefine中定义NamelistGroups，则相当于调用getNamelistCollection
+        返回值：dict
+        dict key    ：是Namelist 或者 NamelistCombo 
+        dict value ： 是保存的Namelist的组合值
+        """
+        #判断是否用数据定义
+        tComboSet = self.DictionaryOther.get('NamelistGroups', [])
+        tNamelistCollection = self.getNamelistCollection()
+        tRSet ={}
+        #分析相互关系    
+        #添加在组合中的Namelist
+        for iC in tComboSet:
+            #认为ComboName、Combo是必须存在的
+            tCName  = iC.get('DisplayName', iC['ComboName'])
+            tCombo  = iC.get('Combo', [])
+            if len(tCombo)  ==0:
+                self.logger.warning("Datcomdefine的数据结构错误！")
+                continue
+            #添加到结果            
+            tRSet.update({tCName:tCombo} )  
+        #添加没有在组合中中Namelist
+        for iN in tNamelistCollection:            
+            tNDf = self.getNamelistAttributeByName(iN)
+            if tNDf is  None or len(tNDf) == 0:
+                tKey = iN
+            else:                
+                tKey = tNDf.get("DisplayName", iN)
+            #分析是否在组合中
+            isInCombo = False
+            for iC in tComboSet:
+                if iN in iC['Combo']:
+                    isInCombo =True
+            if not isInCombo:
+                tRSet.update({tKey:[iN]})     
+            
+        return tRSet            
+                
+                
         
     def getBasicNamelistCollection(self):
         """

@@ -385,9 +385,11 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
                                    r"保存当前的Model吗?",
                                    QMessageBox.Yes | QMessageBox.No)
             if button == QMessageBox.Yes:
-                tDoc = self.currentCASE.getDoc()
-                #tDoc.writeToXML(self.currentModelPath)
-                tDoc.save(self.currentModelPath)
+                try:
+                    self.currentCASE.writeToXML(self.currentModelPath)
+                except Exception as e:    
+                    self.logger.error(r"保存模型异常：%s"%e)
+                #输入日志
                 self.logger.info(r"保存模型到：%s"%self.currentModelPath)
         #加载新模型
         #self.currentCASE = PlaneConfiguration.PlaneConfiguration(modelpath = modelPath)

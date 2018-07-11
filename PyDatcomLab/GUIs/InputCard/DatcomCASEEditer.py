@@ -61,6 +61,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         #初始化界面
         self.setupUi(self)    
         #执行附加界面初始化
+        self.namelistComboDefine = self.dtDefine.getNamelistCombo()
         #定义Action
         self.defineActions()
         #给TabWidget的标签栏定义菜单
@@ -238,14 +239,15 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         """
         响应actionSaveas的槽函数
         """
-        tChoose = self._ChoiseNamelist(iMode = '已添加')    
-        if tChoose  is not None:
-            #获得对应的索引
-            tIndex = self._indexOfText(tChoose)
-            #执行删除逻辑
-            if tIndex >=0 :
-                self.on_tabWidget_Configuration_tabCloseRequested(tIndex)
-        
+        tChoises = self._ChoiseNamelistDialog(iMode = '已添加')    
+        for iC in tChoises:
+            if iC  is not None:
+                #获得对应的索引
+                tIndex = self._indexOfText(iC)
+                #执行删除逻辑
+                if tIndex >=0 :
+                    self.on_tabWidget_Configuration_tabCloseRequested(tIndex)
+       
     @pyqtSlot()
     def on_actionAddNamelist_triggered(self):
         """
@@ -320,10 +322,11 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         1. 当为-1时，创建新的选项卡
         """        
         if index <0: #index == -1
-            tChoose = self._ChoiseNamelist(iMode = '未添加')    
-            if tChoose  is not None:
-                self.on_addNamelist(tChoose)            
-                self.logger.info("双击添加选项卡 %s"%tChoose)    
+            tChoises = self._ChoiseNamelistDialog(iMode = '未添加')    
+            for iC in tChoises:
+                if iC  is not None:
+                    self.on_addNamelist(iC)            
+                    self.logger.info("双击添加选项卡 %s"%iC)    
         else: #双击Tab本身 。忽略
             self.logger.info("on_tabWidget_Configuration_tabBarDoubleClicked %d"%index)
                 
@@ -383,6 +386,44 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
             return tChoose
         else:
             return None
+            
+    def _ChoiseNamelistDialog(self, iMode = '未添加'):
+        """
+        创建一个临时的Widget来选择Namelist
+        iMode in ['未添加','已添加']
+        """
+        #获得当前数据
+        tHaveAdd   = self.dtModel.getNamelistCollection().keys()
+        tTitle = '选择选项卡'
+        tlabel = "Datcom输入卡(组合)："
+        tItems = [] #['无']
+        if iMode == '未添加':
+            for iCombo in self.namelistComboDefine :
+                for iN in self.namelistComboDefine[iCombo]:
+                    if iN not in tHaveAdd:
+                        #分析是否在组合中
+                        tItems.append(iCombo)
+                        break
+            #打开标准对话框
+            tTitle ="选择需要添加的Namelist"
+
+        elif iMode == '已添加':
+            for iCombo in self.namelistComboDefine :
+                for iN in self.namelistComboDefine[iCombo]:
+                    if iN in tHaveAdd and  iN not in self.dtDefine.getBasicNamelistCollection():
+                        #分析是否在组合中
+                        tItems.append(iCombo)
+                        break
+            tTitle ="选择需要删除的的Namelist"
+        else:
+            self.logger.warning("_ChoiseNamelistDialog()调用参数错误！")            
+        #打开标准对话框
+        item, ok = QtWidgets.QInputDialog.getItem(self, tTitle,tlabel, tItems, 0, False)
+        if ok and item:
+           return self.namelistComboDefine[item]
+        else:
+           return []
+
     
     @pyqtSlot(int)
     def on_tabWidget_Configuration_currentChanged(self, index):
