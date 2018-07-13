@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="images">
+    <file>images/exit.png</file>
+    <file>images/back.png</file>
+    <file>images/bokeh.png</file>
+    <file>images/collapse_selection.png</file>
+    <file>images/dialog-seealso.png</file>
+    <file>images/dialog-todo.png</file>
+    <file>images/find.png</file>
+    <file>images/findnext.png</file>
+    <file>images/forward.png</file>
+    <file>images/ie_32x32.png</file>
+    <file>images/information.png</file>
+    <file>images/matplotlib.png</file>
+    <file>images/move_large.png</file>
+    <file>images/subplots_large.png</file>
+    <file>images/warning.png</file>
+  </qresource>
+</RCC>
