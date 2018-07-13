@@ -44,6 +44,8 @@ a img {
 }
 p {
     margin-bottom: 9px;
+    text-indent: 2em;
+    font-size: 15px;
 }
 h1,
 h2,

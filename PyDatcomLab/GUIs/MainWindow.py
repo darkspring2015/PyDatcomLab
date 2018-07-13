@@ -21,6 +21,7 @@ from PyDatcomLab.Core import  datcomRunner
 from PyDatcomLab.Core.DictionaryLoader import  DTdictionary, defaultDatcomDefinition as DDefine
 from PyDatcomLab.Core.PyDatcomConfigLoader import  PyDatcomLabConfig as dtConfig
 from PyDatcomLab.GUIs.tools.XMLEditer import XMLEditer 
+from PyDatcomLab.GUIs.tools.HelperSystem.HelperBrowses import PyMarkDownHelper
 
 
 
@@ -90,6 +91,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         #内部窗口
         self.XMLEditer = None
         self.dtXMLEditer = None
+        self.docHelper = None
 
         #添加日志窗口到下方dack中
         #self.singal
@@ -191,10 +193,13 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_actionDocs_triggered(self):
         """
-        Slot documentation goes here.
+        打开帮助文件系统
         """
-        # TODO: not implemented yet
-        #raise NotImplementedError
+        if self.docHelper is None:
+            self.docHelper = PyMarkDownHelper(self, self.Properties)
+        self.docHelper.show()
+        
+
     
     @pyqtSlot(str)
     def on_statusBar_windowTitleChanged(self, title):
@@ -478,7 +483,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: 打开XML编辑器
-        self.XMLEditer = XMLEditer()
+        self.XMLEditer = XMLEditer.XMLEditer()
         self.XMLEditer.show()        
     
     @pyqtSlot()
@@ -488,7 +493,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         # TODO: not implemented yet
         if self.dtXMLEditer is None:
-            self.dtXMLEditer = XMLEditer()
+            self.dtXMLEditer = XMLEditer.XMLEditer()
             self.dtXMLEditer.Load(self.Properties['DatcomDefineFile'])
             self.dtXMLEditer.Command_ReloadDtDefine_triggered.connect(self.on_ReloadCaseUI)
         self.dtXMLEditer.expandToDepth(1)

@@ -18,20 +18,29 @@ from Ui_HelperBrowses import Ui_PyMarkDownHelper
 class PyMarkDownHelper(QMainWindow, Ui_PyMarkDownHelper):
     """
     Class documentation goes here.
+    帮助系统
     """
-    def __init__(self, parent=None):
+    def __init__(self, parent=None,  iProperties ={}):
         """
-        Constructor
+        Constructor 帮助系统
         
         @param parent reference to the parent widget
         @type QWidget
+        @param iProperties reference to 配置信息
+        @type dict        
         """
         super(PyMarkDownHelper, self).__init__(parent)
         #日志
         self.logger = logging.getLogger(r'Datcomlogger')        
+        #定义配置参数
+        self.Properties = {'extFilter': ["*.md"], 
+                                'docDirectory':os.path.join(os.path.expanduser('~'), '.PyDatcomLab', 'wiki')
+        }
+        if iProperties is not None and type(iProperties) is dict:
+            self.Properties.update(iProperties)            
         #数据模型
         self.helperDirectory =QtWidgets.QFileSystemModel()
-        self.namefilter =  ["*.md"]
+        self.namefilter =  self.Properties['extFilter']
         self.helperDirectory.setNameFilters(self.namefilter)
         self.helperDirectory.setNameFilterDisables(False)        
         #设置界面
@@ -40,16 +49,18 @@ class PyMarkDownHelper(QMainWindow, Ui_PyMarkDownHelper):
         self.tabWidget_right.clear()
         self.pageSet = {0:self.addWebBrowseToTab()}
         #UI参数
-        self.baseSplitterSize = [300, 400]
+        self.baseSplitterSize = [400, 600]
         self.baseStretchFactor = [1, 4]
         #执行分裂期附加配置
         self.splitter.setStretchFactor(0, self.baseStretchFactor[0])
         self.splitter.setStretchFactor(1, self.baseStretchFactor[1])
         self.splitter.setSizes(self.baseSplitterSize)
         
+        #设置引擎
+        self.docEngine = markdownEngine(self.Properties)
 
         #Test 初始化
-        testPath = os.path.realpath(r'E:\tmp\11')
+        testPath = os.path.realpath(self.Properties['docDirectory'])
         self.helperDirectory.setRootPath(testPath)
         self.treeView_Helper.setModel(self.helperDirectory)
         self.treeView_Helper.setRootIndex(self.helperDirectory.index(testPath))
@@ -59,7 +70,7 @@ class PyMarkDownHelper(QMainWindow, Ui_PyMarkDownHelper):
         self.treeView_Helper.setColumnHidden(3, True)
         
     
-    def addWebBrowseToTab(self,iLable = '',  index =-1, iUrl= 'https://www.baidu.com'):
+    def addWebBrowseToTab(self,iLable = '',  index =-1, iUrl= r'https://github.com/darkspring2015/PyDatcomLab/blob/2.0-cleanall/wiki/PyDatcomLab%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E6%96%87%E4%BB%B6.md'):
         """
         在Index位置添加一个QtWebEngineWidgets
         """
@@ -134,9 +145,10 @@ class PyMarkDownHelper(QMainWindow, Ui_PyMarkDownHelper):
         @type QModelIndex
         """
         tPath = self.helperDirectory.filePath(index)
-        tEngine = markdownEngine()
+        if self.docEngine  is None:
+            self.docEngine  = markdownEngine(self.Properties)
         try:
-            tOutPath , tHtml = tEngine.md2Html(tPath)
+            tOutPath , tHtml = self.docEngine .md2Html(tPath)
             #更新右侧显示
             tWidget = self.tabWidget_right.widget(0)
             if tWidget is not None:

@@ -20,7 +20,7 @@
       <VarName>NMACH</VarName>
       <NameList>FLTCON</NameList>
       <DisplayName>NMACH  马赫数</DisplayName>
-      <Tooltips />
+      <Tooltips>NMACH  马赫数</Tooltips>
       <TYPE>INT</TYPE>
       <SubType />
       <Group />
@@ -6274,12 +6274,12 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
     </ZP>
     <AdditionalInfo dcType="Infomation" />
   </TVTPAN>
-  <AddtionalDefine  dcType="Other">
-	 <NamelistGroups dcType="Infomation">
-		<NamelistGroup ComboName='机翼参数' DisplayName = '机翼参数' Combo = "['WGPLNF','WGSCHR']"></NamelistGroup>
-		<NamelistGroup ComboName='平尾参数' DisplayName = '平尾参数' Combo = "['HTPLNF','HTSCHR']"></NamelistGroup>
-		<NamelistGroup ComboName='垂尾参数' DisplayName = '垂尾参数' Combo = "['VTPLNF','VTSCHR']"></NamelistGroup>
-		<NamelistGroup ComboName='腹鳍参数' DisplayName = '腹鳍参数' Combo = "['VFPLNF','VFSCHR']"></NamelistGroup>
-	 </NamelistGroups>
+  <AddtionalDefine dcType="Other">
+    <NamelistGroups dcType="Infomation">
+      <NamelistGroup Combo="['WGPLNF','WGSCHR']" ComboName="机翼参数" DisplayName="机翼参数" />
+      <NamelistGroup Combo="['HTPLNF','HTSCHR']" ComboName="平尾参数" DisplayName="平尾参数" />
+      <NamelistGroup Combo="['VTPLNF','VTSCHR']" ComboName="垂尾参数" DisplayName="垂尾参数" />
+      <NamelistGroup Combo="['VFPLNF','VFSCHR']" ComboName="腹鳍参数" DisplayName="腹鳍参数" />
+    </NamelistGroups>
   </AddtionalDefine>
 </DatcomVariableDefine>

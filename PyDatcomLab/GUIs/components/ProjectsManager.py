@@ -10,8 +10,8 @@ from PyQt5.QtCore import pyqtSlot, QPoint, QModelIndex
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox , QHeaderView, QApplication
 
 from PyDatcomLab.Core.projectManager import dcProject 
-from PyDatcomLab.GUIs.tools.XMLModel import XMLModel 
-from PyDatcomLab.GUIs.tools.XMLTreeEditer import XMLTreeModel as XM
+from PyDatcomLab.GUIs.tools.XMLEditer.XMLModel import XMLModel 
+from PyDatcomLab.GUIs.tools.XMLEditer.XMLTreeEditer import XMLTreeModel as XM
 #from xml.etree import ElementTree  as ET
 from lxml import etree as ET
 

@@ -50,6 +50,8 @@ parser.add_argument('--logLevel', help='日志等级 info,error,warning')
 argments = parser.parse_args()
 #配置整个项目的基础配置
 PyDatcomLabProperties ={}
+#设置开发标志
+PyDatcomLabProperties.update( {'isDevelop':True ,})
 #确保相对的导入能够起到作用，需要导入相对路径
 mainPath = os.path.split(os.path.realpath(__file__))[0]
 sys.path.append(os.path.abspath(os.path.join(mainPath, '..')))
@@ -57,6 +59,8 @@ sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'PlaneConfiguration')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'components')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'tools')))
+sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'tools', 'XMLEditer')))
+sys.path.append(os.path.abspath(os.path.join(mainPath, 'GUIs', 'tools', 'HelperSystem')))
 sys.path.append(os.path.abspath(os.path.join(mainPath, 'Core')))
 
 PyDatcomLabProperties.update( {'DatcomModuleDirectory':mainPath , })
@@ -68,6 +72,7 @@ tDirlist =  {
            'LogDirectory':os.path.join(tDefaultDir, 'log') , 
            'SQliteDB':os.path.join(tDefaultDir, 'DB') , 
            'ConfigDirectory':os.path.join(tDefaultDir, 'config') , 
+           'WikiDirectory':os.path.join(tDefaultDir, 'wiki'),            
            #'extras':os.path.join(configPath, 'extras')
 }
 for tDir in tDirlist.keys():
@@ -90,16 +95,41 @@ except  Exception as e:
 
 #创建配置文件目录
 try:
-    bPath = os.path.join(PyDatcomLabProperties['ConfigDirectory'], 'datcomDefine.xml')
-    if not os.path.exists(bPath):
-        srcfile = os.path.join(mainPath, 'config', 'datcomDefinitionDefualt.xml')
-        shutil.copyfile(srcfile,bPath) 
+    tDefaultDefinePath = os.path.join(mainPath, 'config','datcomDefinitionDefault.xml')
+    if 'isDevelop' in PyDatcomLabProperties and PyDatcomLabProperties['isDevelop']:
+        #用于开发目的时，临时启用
+        bPath = tDefaultDefinePath
+    else:
+        #应用模式,使用用户的配置
+        bPath = os.path.join(PyDatcomLabProperties['ConfigDirectory'], 'datcomDefine.xml')
+        #开始复制基本配置文件
+        if not os.path.exists(bPath):
+            srcfile =tDefaultDefinePath
+            shutil.copyfile(srcfile,bPath) 
+    #更新配置
     PyDatcomLabProperties.update({'DatcomDefineFile':bPath})
 except :
     logger.error("复制配置文件%s异常:无法复制配置文件"%srcfile)
 
+#创建Wiki目录，用来存储产生的doc Html资源
+try:
+    bPath = PyDatcomLabProperties['WikiDirectory']
+    sPath = os.path.abspath(os.path.join(mainPath, '..', 'wiki'))
+    if not os.path.exists(bPath):
+        os.makedirs(bPath)  
+    #更新WikiDirectory目录配置
+    PyDatcomLabProperties.update({'WikiDirectory':bPath})
+    #更新doc路径配置
+    PyDatcomLabProperties.update({'docDirectory':sPath})
+    #复制doc文件
+#    if not os.path.exists(bPath) or len(os.listdir(bPath)) != len(os.listdir(sPath)):
+#        shutil.rmtree(bPath)
+#        shutil.copytree(sPath,bPath) 
+
+except :
+    logger.error("复制配置文件%s异常:无法复制配置文件"%srcfile)
     
-#copy extras to ~/.PyDatcomLab for tests 
+#复制附加资源 copy extras to ~/.PyDatcomLab for tests 
 try:
     bPath = os.path.join(PyDatcomLabProperties['PyDatcomWorkspace'], 'extras')    
     sPath = os.path.abspath(os.path.join(mainPath, '..', 'extras'))
@@ -113,18 +143,25 @@ except :
 #import sqlite3
 #dbFile = os.path.join(dirList['SQliteDB'], 'datcom.db')
 #if not os.path.exists(dbFile):
+
+#定义附加库的路径
+#MathJax
+tMathJax = os.path.realpath(os.path.join(PyDatcomLabProperties['DatcomModuleDirectory'], '..', 'Thirdparty', 'MathJax', 'MathJax.js'))
+PyDatcomLabProperties.update({'MathJaxPath':tMathJax})
  
 #导入主要的窗体
 from PyDatcomLab.GUIs.MainWindow import DatcomMainWindow
 #进入系统的主循环
 app = QtWidgets.QApplication(sys.argv)
-#MainWindow
+#获得当前系统风格
+#QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create("Fusion"))
+
+#启动 Datcm的MainWindow   ，更新全局配置给MainWindows
 mainWin = DatcomMainWindow( iProperties = PyDatcomLabProperties)
 mainWin.logger = logger
 logger.info("启动了DatcomMainWindow")
-#更新全局配置给MainWindows
 mainWin.show()
-
+#退出应用
 sys.exit(app.exec_())
 
 
