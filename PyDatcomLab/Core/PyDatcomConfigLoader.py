@@ -327,7 +327,7 @@ class PyDatcomLabConfig():
             try:
                 tRoot = ET.parse(iModeldict[tPathKey]).getroot()               
             except Exception as e:
-                self.logger.error('datcom.getLibrary 尝试读取配置文件时出错:%s!'%(repr(e)))
+                self.logger.error('PyDatcomLabConfig.checkInfo 尝试读取配置文件时出错:%s!'%(e))
             if tRoot is None:
                 return False   
             #检查UUID属性

@@ -52,7 +52,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         except Exception as e:
             self.logger.error("DatcomCASEEditer构造dtModel过程异常：%s"%(e))            
         if self.dtModel is None:
-             self.dtModel = dcModel.dcModel(iDefine = self.dtDefine) 
+            self.dtModel = dcModel.dcModel(iDefine = self.dtDefine) 
             
         #内部数据
         self.lastIndex  = -1    
@@ -279,6 +279,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
        
         tW = self.tabWidget_Configuration.widget(index)
         if tW is None:return
+        #执行逻辑
         tNamelist = tW.Namelist
         if tNamelist not in self.dtDefine.getBasicNamelistCollection():
             self.tabWidget_Configuration.removeTab(index)

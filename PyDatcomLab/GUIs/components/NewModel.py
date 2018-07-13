@@ -57,12 +57,13 @@ class NewModelDlg(QDialog, Ui_Dialog):
         if self.lineEdit_DirPath.text() == '':
             QMessageBox.information(self, '警告', '请模型名称不能为空')
             return
-        self.ModelDir = self.lineEdit_DirPath.text()
+        tObjPath = self.lineEdit_DirPath.text()
+        self.ModelDir =os.path.dirname(tObjPath)
         if not os.path.exists(self.ModelDir):
             os.mkdirs(self.ModelDir)
         self.Modelpath = os.path.join(self.ModelDir, self.ModelName+self.ext )      
         #开始创建对应的DatcomModel
-        tModel = dcModel()
+        tModel = dcModel( iDefine = self.dtDefine)
         tModel.Properties.update({'CName': self.ModelName, 
                                             'Configuration':self.comboBox_template.currentText(), 
                                             'Describe':self.textEdit_Describe.toPlainText(), 

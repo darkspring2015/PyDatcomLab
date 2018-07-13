@@ -616,11 +616,12 @@ class DTdictionary():
         if tDf is None :return None
         #解析并构造变量的结构
         tRes = {
-            'VarName':tDf['VarName'], 
-            'Namelist':tDf['NameList'], 
             'Url':tUrl, 
+            'VarName':tDf['VarName'], 
+            'Namelist':tDf['NameList'],             
             'Unit':'',    
-            'Value':None 
+            'Value':None, 
+            'InUsed':'False'
         }
         #检查单位
         if 'Dimension' in  tDf.keys():
@@ -674,6 +675,15 @@ class DTdictionary():
         if tDf['TYPE'] == 'Array':
             tRes['SIndex'] = '1'
             #tRes['Value'] = []
+            
+        #检查是否是必须输入的标识位
+        if 'MustInput' in tDf and tDf['MustInput'] in ['Checked', 'UnChecked']:
+            tRes['InUsed'] = 'False'
+        elif 'MustInput' not in tDf or ('MustInput' in tDf and tDf['MustInput'] in ['MustInput']):
+            tRes['InUsed'] = 'True' 
+        else:
+            self.logger.warning("无法推定的状态！")
+            
         #设置标志位
         tRes['Edited'] = False
         
@@ -696,10 +706,6 @@ class DTdictionary():
         tDf = self.getVariableDefineByName( tNamelist, tVarName)
         if tDf == {}:return None        
         return tDf
-        
-        
-        
-        
         
         
 #导出一个常量

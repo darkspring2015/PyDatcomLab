@@ -296,7 +296,7 @@ class DatcomInputTable(QWidget):
         """
         for iC in range(0, self.table.columnCount()):            
             tUrl = '%s/%s'%(self.Namelist, self.varsDfList[iC]['VarName'])
-            self.table.setItemDelegateForColumn(iC, CDelegate(tUrl, parent = self, tDDefine = self.dtDefine ) )
+            self.table.setItemDelegateForColumn(iC, CDelegate(tUrl, parent = self, iDefine = self.dtDefine ) )
        
     def clear(self):
         """
@@ -366,7 +366,7 @@ class DatcomInputTable(QWidget):
             else:
                 tUnit = dtDimension.getMainUnitByDimension(tDimension)
                 #self.logger.info("数据格式异常，缺少单位信息")
-            #定义本列的魔板
+            #定义本列的模板
             tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}                
 
             #执行数据写入
@@ -407,12 +407,12 @@ class DatcomInputTable(QWidget):
                     #tItem.setData(Qt.DisplayRole,str(tData[iR]) )
                     self.table.setItem(iR, iC, tItem)
                 self.table.setColumnHidden(iC, False)                
-                #self._UpdateUsedFlags(tUrl, True)
+                #self._UpdateUsedFlags(tUrl, 'True')
             else:
                 self.logger.warning("加载表格%s数据长度错误：%d ，需要min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
             #判断是否在使用
-            if  'InUsed' in tDataVar and not tDataVar['InUsed']:
+            if  'InUsed' in tDataVar and  tDataVar['InUsed'] == 'False':
                 self.table.setColumnHidden(iC, True)
             
         #发送行变更消息
@@ -475,7 +475,7 @@ class DatcomInputTable(QWidget):
                 #True is Hidden Delete the Variable from the Model
                 tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Value'] = None
-                tVar['InUsed'] = False  #设置标志位
+                tVar['InUsed'] = 'False'  #设置标志位
                 self.dtModel.setVariable( tVar)
             else:
                 #False : warite the data
@@ -515,7 +515,7 @@ class DatcomInputTable(QWidget):
                 tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Unit']    = tUnit
                 tVar['Value']  = tVarlist
-                tVar['InUsed'] = True
+                tVar['InUsed'] = 'True'
                 self.dtModel.setVariable( tVar )
         #回写iModel完成
 
@@ -539,10 +539,10 @@ class DatcomInputTable(QWidget):
         tV = self.dtModel.getVariableByUrl(iUrl)  #获取模型中的具体数值
         if tV is None:
             tV = self.dtDefine.getVariableTemplateByUrl(iUrl)
-            tV.update({"InUsed":False})        
+            tV.update({"InUsed":'False'})        
         return tV
 
-    def _UpdateUsedFlags(self, iColumn,  isUsed = True):
+    def _UpdateUsedFlags(self, iColumn,  isUsed = 'True'):
         """
         更新变量的值
         """
@@ -618,10 +618,10 @@ class DatcomInputTable(QWidget):
             tVarName = self.varsDfList[iC]['VarName']
             if tVarName in tVarCombo:
                 self.table.setColumnHidden(iC, False)
-                self._UpdateUsedFlags(iC, True)
+                self._UpdateUsedFlags(iC, 'True')
             else:
                 self.table.setColumnHidden(iC, True)
-                self._UpdateUsedFlags(iC, False)
+                self._UpdateUsedFlags(iC, 'False')
         #print("row:%d,col:%d"%(self.table.rowCount(), self.table.columnCount()))
     
     @pyqtSlot(str, str)     

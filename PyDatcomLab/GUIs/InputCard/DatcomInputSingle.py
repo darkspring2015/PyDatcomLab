@@ -46,9 +46,6 @@ class DatcomInputSingle(QWidget):
             return
         self.dtDefine       = iDefinition   #设置Datcom配置文件
         self.vUrl             = iUrl
-        if iModel is None:
-            iModel = dcModel()
-        self.dtModel        = iModel
         #获得变量定义
         self.VarDefine     = self.dtDefine.checkUrl(self.vUrl )  
         if self.VarDefine is None :
@@ -73,18 +70,18 @@ class DatcomInputSingle(QWidget):
             self.logger.error('尝试创建的%s变量不是INT或者REAL类型'%self.vUrl )
         #是否为通用代理模式
         self.isDelegate = False
+        self.isLoading = True
         #规划界面
         self.setupUi(self)
         self.InitializeUILogic()
-        
+        #执行模型加载
+        if iModel is None or type(iModel) != dcModel:
+            self.logger.warning("初始化DatcomInputSingle时传入的dtModel的类型为%s，应该为%s"%(str(type(iModel)), str(type(dcModel))))
+            iModel = dcModel()
+            iModel.setVariable(self.VarTemplate)        
+        self.dtModel        = iModel       
         #为数据模型调用初始化函数
-        if self.dtModel is not None :
-            if type(self.dtModel) == dcModel:
-                self.setModel(self.dtModel)
-            else:
-                self.logger.warning("初始化DatcomInputSingle时传入的dtModel的类型为%s，应该为%s"%(str(type(self.dtModel)), str(type(dcModel))))
-                self.dtModel = dcModel()
-              
+        self.setModel(self.dtModel)              
         #联结部分的slot
         self.InputWidget.installEventFilter(self)       
         
@@ -220,7 +217,7 @@ class DatcomInputSingle(QWidget):
             sizePolicy.setHeightForWidth(self.comboBox_VarUnit.sizePolicy().hasHeightForWidth())
             self.comboBox_VarUnit.setSizePolicy(sizePolicy)    
             #在此手动连接slot
-            self.comboBox_VarUnit.currentIndexChanged.connect(self.on_my_currentIndexChanged)
+            self.comboBox_VarUnit.currentIndexChanged.connect(self.on_Unit_currentIndexChanged)
         
         #添加分裂器
         self.verticalLayout.addWidget(self.splitter_Top)   
@@ -232,8 +229,7 @@ class DatcomInputSingle(QWidget):
 
         #执行其他逻辑
         self.retranslateUi(Form)        
-        QtCore.QMetaObject.connectSlotsByName(Form)       
-    
+        QtCore.QMetaObject.connectSlotsByName(Form)           
         
         
     def InitializeUILogic(self):
@@ -319,8 +315,7 @@ class DatcomInputSingle(QWidget):
                 self.cancelSelection_onWindowDeactivate()
                 return True
              
-        return False
-                 
+        return False                 
 
 
     def setFocus_onWindowActivate(self):
@@ -330,8 +325,10 @@ class DatcomInputSingle(QWidget):
         if self.InputWidget is None:return
         #设置焦点
         if self.InputWidget.isEnabled() :
+            #捕获焦点，全选，设置光标为最后
             self.InputWidget.setFocus()
             self.InputWidget.setSelection(0,len(self.InputWidget.text()) )
+            self.InputWidget.setCursorPosition(len(self.InputWidget.text()) )
                      
     def cancelSelection_onWindowDeactivate(self):
         """
@@ -344,7 +341,10 @@ class DatcomInputSingle(QWidget):
         直接设置数据值，将在作为Delegate是被使用
         tData 是包含量纲和单位的单值、多值中的一个 etc：{'Dimension': 'L', 'Unit': 'feet', 'Value': 11111.0}
         """
-        
+        #激活设置窗口
+        self.InputWidget.setEnabled(True)
+        self.isDelegate =True
+        #执行逻辑
         if type(tData) is  dict and 'Value' in  tData.keys():
             tDValue = tData
         else :
@@ -363,7 +363,7 @@ class DatcomInputSingle(QWidget):
                 #linger 修正算法
                 tVatTmp = self.dtDefine.getVariableTemplateByUrl(self.vUrl, True)
                 tDValue['Value'] = tVatTmp['Value']
-                
+            #设置单位系统
             tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
             if tUWidget is not None :
                 tIndex = tUWidget.findText(tData['Unit'])
@@ -383,7 +383,7 @@ class DatcomInputSingle(QWidget):
             self.delegateData['Value'] = float(self.InputWidget.text())
         elif self.VarDefine['TYPE'] == 'Array' and ('SubType' not in self.VarDefine.keys() or\
              self.VarDefine['SubType' ] in ['', 'INT', 'REAL']) :
-                self.delegateData['Value'] = float(self.InputWidget.text())
+            self.delegateData['Value'] = float(self.InputWidget.text())
         else:
             self.delegateData['Value'] =  self.InputWidget.text()
         tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)  
@@ -402,9 +402,11 @@ class DatcomInputSingle(QWidget):
         2.函数触发一次加载
         """        
         #为数据模型调用初始化函数
-        if iModel is not None and  type(self.dtModel) == dcModel:
+        if iModel is not None and  type(iModel) == dcModel:
             self.dtModel = iModel
+            self.isLoading  = True
             self._loadData()
+            self.isLoading  = False
         else:
             self.logger.warning("DatcomInputSingle.setModel()传入的dtModel的类型为%s，应该为%s"%(str(type(self.dtModel)), str(type(dcModel))))        
     
@@ -422,8 +424,16 @@ class DatcomInputSingle(QWidget):
         if self.dtModel is None : 
             self.logger.error("dtModel为None！")
             return     
-        tVar = self._getCurrentValueInModel()
-        self._loadDataToWidget(tVar)
+        #tVar = self._getCurrentValueInModel()        
+        tVar = self.dtModel.getVariableByUrl(self.vUrl)  #获取模型中的具体数值
+        if tVar is None:
+            tVar = self.dtDefine.getVariableTemplateByUrl(self.vUrl, isSubType=True)
+            tVar.update({"InUsed":'False'})    
+            self.on_checkBox_Var_stateChanged(Qt.Unchecked)
+        else:
+            self.on_checkBox_Var_stateChanged(Qt.Checked)
+            #将结果加载到控件
+            self._loadDataToWidget(tVar)
 
                     
     def _loadDataToWidget(self, iVariable):
@@ -434,21 +444,21 @@ class DatcomInputSingle(QWidget):
         """
         #检查输入类型
         if iVariable is None or type(iVariable) != dict  :
-            self.logger.error("setDataByVariable()设置%s的输入的参数类型不合法：%s !"%(self.vUrl, type(iVariable)))
+            self.logger.error("_loadDataToWidget()设置%s的输入的参数类型不合法：%s !"%(self.vUrl, type(iVariable)))
             return False
         #分析输入合规性
         #tMust = ['VarName','Namelist', 'Url', 'Unit', 'Value' ]
         tMust = [ 'Url', 'Unit', 'Value' ]
         for iK in tMust:
             if iK not in iVariable.keys():
-                self.logger.error("setDataByVariable()设置%s的输入参数项不足,缺少%s"%(self.vUrl, iK))
+                self.logger.error("_loadDataToWidget()设置%s的输入参数项不足,缺少%s"%(self.vUrl, iK))
                 return False
         #检查变量名称
         if iVariable['Url'] != self.vUrl:
-            self.logger.error("setDataByVariable()输入的变量名为 %s，应该为%s"%(self.vUrl, iVariable['Url']))
+            self.logger.error("_loadDataToWidget()输入的变量名为 %s，应该为%s"%(self.vUrl, iVariable['Url']))
             return False
         if not self.isValidateType():
-            self.logger.error("setDataByVariable()输入的变量%s的datcom类型不被支持"%(self.vUrl))
+            self.logger.error("_loadDataToWidget()输入的变量%s的datcom类型不被支持"%(self.vUrl))
             
         #开始加载逻辑
         #设置单位           
@@ -459,10 +469,10 @@ class DatcomInputSingle(QWidget):
                 if tIndex >=0 : 
                     tUWidget.setCurrentIndex(tIndex)
                 else:
-                    self.logger.error("无法找到对应的单位！")
+                    self.logger.error("_loadDataToWidget()无法找到对应的单位！")
             else:
                 #self.logger.error("输入存在单位项但控件初始化部分没有单位选项！")
-                self.logger.error("传递的参数具有错误的量纲信息：%s，U:%s"%(iVariable['Dimension'], iVariable['Unit']))
+                self.logger.error("_loadDataToWidget()传递的参数具有错误的量纲信息：%s，U:%s"%(iVariable['Dimension'], iVariable['Unit']))
    
         #设置值
         if 'Value' in iVariable.keys() and iVariable['Value'] is not None:    
@@ -473,21 +483,36 @@ class DatcomInputSingle(QWidget):
             else:
                 if tVd.validate(str(iVariable['Value']), 0)[0] == QtGui.QValidator.Acceptable:
                     self.InputWidget.setText(str(iVariable['Value']))
+                    #这里区分三种情况：必须输入的参数 、可选输入的参数、代理输入模式
+                    #if not self.isDelegate or self.dtDefine.getVariableMustInput(self.vUrl) == 'Optional':
+                    if 'InUsed' in iVariable and iVariable['InUsed'] == 'True':
+                        self.on_EnabledStatusChanged(Qt.Checked)
+                    else:
+                        self.on_EnabledStatusChanged(Qt.Unchecked)
                 else:
-                    self.logger.error("传入数据无法通过验证：%s：%s,修正为默认值"%(self.vUrl, str(iVariable['Value'])))
+                    #没有通过验证的情况，则输入默认值
+                    self.logger.error("_loadDataToWidget()传入数据无法通过验证：%s：%s,修正为默认值"%(self.vUrl, str(iVariable['Value'])))
                     #linger 修正算法
                     tVatTmp = self.dtDefine.getVariableTemplateByUrl(self.vUrl, True)
                     iVariable['Value'] = tVatTmp['Value']
+                    self.InputWidget.setText(str(iVariable['Value']))
+                    #if not self.isDelegate or self.dtDefine.getVariableMustInput(self.vUrl) == 'Optional':
+                    self.on_EnabledStatusChanged(Qt.Unchecked)
         else:
+            #没有有效的值
             if 'Default' in  self.VarDefine.keys() and self.VarDefine['Default'] is not None:
                 self.InputWidget.setText(str(self.VarDefine['Default']))
                 if  self.InputWidget.isEnabled():
                     self.logger.warning("控件loadData(%s)异常：dcModel中没有有效的值，使用默认值：%s修正！"%(self.vUrl , str(self.VarDefine['Default'])))
+                    #if not self.isDelegate or self.dtDefine.getVariableMustInput(self.vUrl) == 'Optional':
+                    self.on_EnabledStatusChanged(Qt.Unchecked)
             else:
                 if  self.InputWidget.isEnabled():
                     #这里的逻辑是一个顽固的bug，因为控件状态是不可靠的！
+                    #if not self.isDelegate or self.dtDefine.getVariableMustInput(self.vUrl) == 'Optional':
+                    self.on_EnabledStatusChanged(Qt.Unchecked)
                     self.logger.warning("控件loadData(%s)异常：dcModel中没有有效的值，且没有默认值！"%self.vUrl )       
-                   
+
         return True
  
     def setDataByVariable(self, iVar):
@@ -533,12 +558,14 @@ class DatcomInputSingle(QWidget):
                         tDefault.update({'Value':int(float(self.InputWidget.text()))})
                     if  self.VarDefine['TYPE'] == 'REAL':
                         tDefault.update({'Value':float(self.InputWidget.text())})
-                    elif self.VarDefine['TYPE'] == 'Array' and ('SubType' not in self.VarDefine.keys() or\
-                        self.VarDefine['SubType' ] in ['', 'INT', 'REAL']) :
-                        #self.delegateData['Value'] = float(self.InputWidget.text()) 
-                        self.logger.error("作为Array的Delegate的内容，text：%s!"%self.InputWidget.text())                   
+                    if self.VarDefine['TYPE'] == 'Array' and ('SubType' not in self.VarDefine.keys() or\
+                        self.VarDefine['SubType' ]  in ['', 'INT', 'REAL']) :
+                        #tDefault.update({'Value':float(self.InputWidget.text())})
+                        self.delegateData['Value'] = float(self.InputWidget.text()) 
+                        if not self.isDelegate:
+                            self.logger.error("作为Array的Delegate的内容，text：%s!"%self.InputWidget.text())                   
                 except Exception as e:
-                    self.logger.error("进行类型转换时失败，text：%s!"%self.InputWidget.text())
+                    self.logger.error("进行类型转换时异常，text：%s! Exception：%s"%(self.InputWidget.text(), e))
         #更新单位
         tUWidget = self.findChild(QWidget, "comboBox_Unit_%s"%self.VarName)
         if tUWidget is not None:
@@ -556,10 +583,10 @@ class DatcomInputSingle(QWidget):
         tV = self.dtModel.getVariableByUrl(self.vUrl)  #获取模型中的具体数值
         if tV is None:
             tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl, isSubType=True)
-            tV.update({"InUsed":False})        
+            tV.update({"InUsed":'False'})        
         return tV
         
-    def _UpdateUsedFlags(self, isUsed = True):
+    def _UpdateUsedFlags(self, isUsed = 'True' ):
         """
         更新变量的值
         """
@@ -612,11 +639,14 @@ class DatcomInputSingle(QWidget):
         """
         发射文本改变信号
         """
+        #如果处于代理模式，则取消更新逻辑
+        #如果处于Loading模式，则取消更新逻辑
+        if self.isDelegate or self.isLoading  : 
+            return 
         #获得当前控件的输入值
         tVar = self._getDatcomData()       
         #写入到响应的数据中
-        self.dtModel.setVariable(tVar)  
-        
+        self.dtModel.setVariable(tVar)          
         #发送信号
         self.editingFinished.emit(self.vUrl , self.InputWidget.text())
         self.Signal_VariableChanged.emit(self.vUrl)  #发送变量改变的信号        
@@ -641,10 +671,12 @@ class DatcomInputSingle(QWidget):
         else:
             if iStatus == Qt.Checked:
                 self.InputWidget.setEnabled(True)
-                self._UpdateUsedFlags(True)                
+                if self.isLoading :
+                    self._UpdateUsedFlags('True')                
             else:
-                self.InputWidget.setEnabled(False)      
-                self._UpdateUsedFlags(False) 
+                self.InputWidget.setEnabled(False)     
+                if self.isLoading : 
+                    self._UpdateUsedFlags('False') 
    
         
     @pyqtSlot(str, int)  #控件是Group长度的输入项
@@ -669,17 +701,30 @@ class DatcomInputSingle(QWidget):
         @param p0 选项 Qt.Checked ,Qt.Unchecked
         @type int
         """
+        if  self.isLoading :
+            return 
         tUnitWidget = self.findChild(QtWidgets.QComboBox,"comboBox_Unit_%s"%self.VarName)
         if p0 == Qt.Checked:
+            #调整界面状态
             self.InputWidget.setEnabled(True)
-            #self.dtModel.getVariableByUrl(self.vUrl).update({''})
-            if tUnitWidget: tUnitWidget.setEnabled(True)
+            if tUnitWidget: 
+                tUnitWidget.setEnabled(True)
+            #获得并写入到Model
+            tVar = self._getDatcomData()
+            tVar.update({'InUsed':'True'})
+            self.dtModel.setVariable(tVar)
         else:
+            #调整界面状态
             self.InputWidget.setEnabled(False)
-            if tUnitWidget: tUnitWidget.setEnabled(False)            
+            if tUnitWidget: 
+                tUnitWidget.setEnabled(False)     
+            #获得并写入到Model
+            tVar = self._getDatcomData()
+            tVar.update({'InUsed':'False'})
+            self.dtModel.setVariable(tVar)
 
     @pyqtSlot(int)
-    def on_my_currentIndexChanged(self, index):
+    def on_Unit_currentIndexChanged(self, index):
         """
         响应量纲变化.
         
@@ -697,9 +742,11 @@ class DatcomInputSingle(QWidget):
             self.InputWidget.setText(self.vFloatFormat%(tRVar['Value']))
         #更新内部状态
         self.vCurrentUnit  = tUint
-        tDefault = self._getCurrentValueInModel()
-        tDefault.update(tRVar)
-        self.dtModel.setVariable(tDefault)  #利用Python高级技巧更新字典数据
+        #如果是代理模式，回写变量
+        if not self.isDelegate:
+            tDefault = self._getCurrentValueInModel()
+            tDefault.update(tRVar)
+            self.dtModel.setVariable(tDefault)  
             
             
     @pyqtSlot(str)

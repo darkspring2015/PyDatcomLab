@@ -16,22 +16,22 @@ class DatcomInputContinuousDelegate(QtWidgets.QStyledItemDelegate ):
     """
     定义一个用来编辑的代理控件
     """
-    def __init__(self, vUrl, parent = None, tDDefine = DDefine):
+    def __init__(self, vUrl, parent = None, iDefine = DDefine):
         """
         vUrl 指向需要代理的列的定义
         """
         super(DatcomInputContinuousDelegate, self).__init__(parent)
         #日志系统        
         self.logger = logging.getLogger(r'Datcomlogger')  
-        if tDDefine is None : tDDefine = DDefine
-        self.DDefine = DDefine
+        if iDefine is None : iDefine = DDefine
+        self.dtDefine = iDefine
         if vUrl is None or vUrl == "":
             self.logger.error("输入的标示是无效的：%s ！"%vUrl) 
             vUrl ='/'
         self.vUrl = vUrl
         self.Namelist  = self.vUrl.split('/')[-2]   #指向的Namelist的名称
         self.VarName   = self.vUrl.split('/')[-1]   #指向的变量名称
-        self.VarDefine = self.DDefine.getVariableDefineByName( self.Namelist, self.VarName) 
+        self.VarDefine = self.dtDefine.getVariableDefineByName( self.Namelist, self.VarName) 
         
         
     def createEditor(self, parent, option, index):
@@ -43,12 +43,14 @@ class DatcomInputContinuousDelegate(QtWidgets.QStyledItemDelegate ):
         #printTrace('createEditor') 
         tType = 'REAL'
         if 'SubType' in self.VarDefine.keys():
-            self.logger.info("%s在定义中声明的SubType为%s"%(self.vUrl, self.DDefine['SubType']))
+            self.logger.info("%s在定义中声明的SubType为%s"%(self.vUrl, self.dtDefine['SubType']))
             tType = self.VarDefine['SubType']
         if tType in ['REAL', 'INT']:
-            tTb = SInput(self.vUrl, parent=parent,  iDefinition = self.DDefine )
+            tTb = SInput(self.vUrl, parent=parent,  iDefinition = self.dtDefine )
+            tTb.isDelegate = True 
         else:
-            tTb = LInput(self.vUrl, parent=parent,  iDefinition = self.DDefine)        
+            tTb = LInput(self.vUrl, parent=parent,  iDefinition = self.dtDefine)   
+            tTb.isDelegate = True     
         return tTb
         
     def setEditorData(self,editor, index ):

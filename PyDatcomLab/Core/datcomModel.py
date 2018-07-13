@@ -148,9 +148,15 @@ class dcModel(datcomXMLLoader):
         tRoot  = self.createXMLDocBasic() 
         for iV in self.doc.keys(): 
             tVar = self.doc[iV].copy()
+            #跳过不使用的模型的值
+            if 'InUsed' in tVar and  tVar['InUsed'] == 'False':
+                continue
+            #分析变量的值
             tValue = None if 'Value' not  in tVar.keys() else tVar['Value']
             tVar.pop('Value')
-            if 'Edited' in tVar.keys() : tVar.pop('Edited') #不保存对应的字段
+            if 'Edited' in tVar.keys() : 
+                tVar.pop('Edited') #不保存对应的字段
+            #将属性值全部都刷新到
             tElem = ET.SubElement(tRoot, 'VARIABLE', tVar)
             if tValue is not None:
                 tElem.text = str(tValue)
@@ -418,7 +424,7 @@ class dcModel(datcomXMLLoader):
                     tLog.append('变量的类型REAL,值：%f,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))             
             
         if tDf['TYPE'] == 'Array' :
-            if 'InUsed' in tVar and tVar['InUsed']:
+            if 'InUsed' in tVar and tVar['InUsed'] == 'True':
                 #默认不使用的变量是错误的
                 if type(tVar['Value']) != list :
                     tLog.append('变量的类型应当为Array实际是%s'%(type(tVar['Value'])) )
@@ -469,7 +475,7 @@ class dcModel(datcomXMLLoader):
                 tVarReport = self.validateAVariable(self.doc[tUrl])
                 if tVarReport['status'] != 'Acceptable':
                     tReStr ='\n'.join(tVarReport['Report'])
-                    self.logger.error("变量%s不合规，%s"%(tUrl,tReStr ))
+                    self.logger.error("datcomModel.validate()变量%s不合规，%s"%(tUrl,tReStr ))
                     #尝试修复或者跳过
                     tNMExcept[tUrl] = tReStr
                     continue
@@ -523,15 +529,16 @@ class dcModel(datcomXMLLoader):
             tNMlstPos = len(TStr[-1]) #记录Namelist变量的位置
             lastCheck = 0
             for itVar in tAllInfo[itr]:#循环Var []
+                #获得当前变量的结论
+                theStr = '%s'%itVar 
+                tURl    = '%s/%s'%(itr, itVar)
+                tVarStruct = self.getVariableByUrl(tURl)
+                tVarValueS = tVarStruct['Value']
                 #跳过不在使用的变量
-                if 'InUsed' in itVar and not itVar['InUsed'] :
+                if 'InUsed' in tVarStruct and tVarStruct['InUsed'] =='False' :
                     continue
                 #创建写入
                 lastCheck +=1
-                theStr = '%s'%itVar 
-                tURl = '%s/%s'%(itr, itVar)
-                tVarStruct = self.getVariableByUrl(tURl)
-                tVarValueS = tVarStruct['Value']
                 if tVarValueS is None :
                     self.logger.error("创建Datcom计算配置文件失败，不能为空值创建结果！%s/%s"%(itr,itVar ))
                     continue
@@ -571,6 +578,7 @@ class dcModel(datcomXMLLoader):
                     else:
                         theStr += '=%.3E,'%float(tVarValueS)
                     self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
+            #写入Datcom的Namelist的结尾部分$
             TStr[-1] = TStr[-1][:-1] + '$'            
       
 
