@@ -396,7 +396,19 @@ class DatcomInputList(QWidget):
         tV = self.dtModel.getVariableByUrl(self.vUrl)  #获取模型中的具体数值
         if tV is None:
             tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl, isSubType=True)
+            tV.update({"InUsed":False})   
         return tV
+        
+    def _UpdateUsedFlags(self, isUsed = True):
+        """
+        更新变量的值
+        """
+        #获取模型值
+        tV = self._getCurrentValueInModel()  #获取模型中的具体数值
+        #更新标志
+        tV.update({'InUsed':isUsed})
+        #回写到数据模型
+        self.dtModel.setVariable( tV)       
         
     def getCurrentKey(self):
         """
@@ -432,9 +444,11 @@ class DatcomInputList(QWidget):
         else:
             if iStatus == Qt.Checked:
                 self.InputWidget.setEnabled(True)
+                self._UpdateUsedFlags(True)   
             else:
-                self.InputWidget.setEnabled(False)        
- 
+                self.InputWidget.setEnabled(False)    
+                self._UpdateUsedFlags(False)   
+
     @pyqtSlot(int)
     def on_checkBoxWidget_stateChanged(self, p0):
         """

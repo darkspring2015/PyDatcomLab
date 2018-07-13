@@ -6,7 +6,7 @@ Module implementing PyMarkDownHelper.
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5 import QtWidgets, QtWebEngineWidgets ,  QtCore
+from PyQt5 import QtWidgets, QtWebEngineWidgets ,  QtCore, Qt
 #
 import os ,logging#,  codecs
 #
@@ -42,10 +42,15 @@ class PyMarkDownHelper(QMainWindow, Ui_PyMarkDownHelper):
         self.helperDirectory =QtWidgets.QFileSystemModel()
         self.namefilter =  self.Properties['extFilter']
         self.helperDirectory.setNameFilters(self.namefilter)
-        self.helperDirectory.setNameFilterDisables(False)        
+        self.helperDirectory.setNameFilterDisables(False)       
+        
         #设置界面
         self.setupUi(self)        
-        #添加基本的Page
+        #self.setWindowFlags(Qt.Qt.CustomizeWindowHint) 
+        #吟唱
+        self.hideToolBar(False)
+        
+        #添加基本的Page        
         self.tabWidget_right.clear()
         self.pageSet = {0:self.addWebBrowseToTab()}
         #UI参数
@@ -69,6 +74,13 @@ class PyMarkDownHelper(QMainWindow, Ui_PyMarkDownHelper):
         self.treeView_Helper.setColumnHidden(2, True)
         self.treeView_Helper.setColumnHidden(3, True)
         
+
+      
+    def hideToolBar(self, iStutas =True):
+        """
+        隐藏工具栏
+        """
+        self.toolBar.setVisible(iStutas)
     
     def addWebBrowseToTab(self,iLable = '',  index =-1, iUrl= r'https://github.com/darkspring2015/PyDatcomLab/blob/2.0-cleanall/wiki/PyDatcomLab%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E6%96%87%E4%BB%B6.md'):
         """

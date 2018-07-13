@@ -350,7 +350,7 @@ class DatcomInputTable(QWidget):
             iV       = self.varsDfList[iC]   #这是所有的定义
             tUrl     = '%s/%s'%(iV['NameList'], iV['VarName'])
             tDataVar = self.dtModel.getVariableByUrl(tUrl)            
-            if tDataVar is None:
+            if tDataVar is None :
                 #不存在数据则隐藏对应的列
                 self.table.setColumnHidden(iC, True)
                 #self.logger.info("%s的列%s没有数据，不显示"%(self.vUrl, self.table.horizontalHeaderItem(iC).text()))
@@ -406,11 +406,15 @@ class DatcomInputTable(QWidget):
                     tItem.setData( Qt.UserRole,tDataUserRole )
                     #tItem.setData(Qt.DisplayRole,str(tData[iR]) )
                     self.table.setItem(iR, iC, tItem)
-                self.table.setColumnHidden(iC, False)
+                self.table.setColumnHidden(iC, False)                
+                #self._UpdateUsedFlags(tUrl, True)
             else:
                 self.logger.warning("加载表格%s数据长度错误：%d ，需要min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
-                
+            #判断是否在使用
+            if  'InUsed' in tDataVar and not tDataVar['InUsed']:
+                self.table.setColumnHidden(iC, True)
+            
         #发送行变更消息
         self.Signal_rowCountChanged.emit(self.CountVarUrl , self.table.rowCount())         #向外通知数据加载后的长度
         self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo())) #向外通知数据列的组合关系发生变换
@@ -471,6 +475,7 @@ class DatcomInputTable(QWidget):
                 #True is Hidden Delete the Variable from the Model
                 tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
                 tVar['Value'] = None
+                tVar['InUsed'] = False  #设置标志位
                 self.dtModel.setVariable( tVar)
             else:
                 #False : warite the data
@@ -508,8 +513,9 @@ class DatcomInputTable(QWidget):
                 else:
                     tUnit = ''
                 tVar = self.dtDefine.getVariableTemplateByUrl(tUrl)
-                tVar['Unit']  = tUnit
-                tVar['Value'] = tVarlist
+                tVar['Unit']    = tUnit
+                tVar['Value']  = tVarlist
+                tVar['InUsed'] = True
                 self.dtModel.setVariable( tVar )
         #回写iModel完成
 
@@ -522,7 +528,36 @@ class DatcomInputTable(QWidget):
             if not self.table.isColumnHidden(iC):
                 tShowColumnList.append(self.varsDfList[iC]['VarName'])
         return tShowColumnList      
+
+    def _getCurrentValueInModel(self, iUrl):
+        """
+        内部函数，从self.dtModel中获得当前值
+        如果model中没有当前变量，则使用datcomDefine中的默认值
+        返回值是获得变量值
+        如果使用模板值，则设置标记位"InUsed"为False
+        """
+        tV = self.dtModel.getVariableByUrl(iUrl)  #获取模型中的具体数值
+        if tV is None:
+            tV = self.dtDefine.getVariableTemplateByUrl(iUrl)
+            tV.update({"InUsed":False})        
+        return tV
+
+    def _UpdateUsedFlags(self, iColumn,  isUsed = True):
+        """
+        更新变量的值
+        """
+        if iColumn < 0 or iColumn >= len(self.varsDfList):
+            self.logger.warning("索引越界！")
+            return
+        tUrl = '%s/%s'%(self.varsDfList[iColumn]['NameList'], self.varsDfList[iColumn]['VarName'] )       
+        #获取模型值
+        tV = self._getCurrentValueInModel(tUrl)  #获取模型中的具体数值
+        #更新标志
+        tV.update({'InUsed':isUsed})
+        #回写到数据模型
+        self.dtModel.setVariable( tV)       
         
+
     @pyqtSlot(int, int)    
     def on_cellChanged(self, row,  column ):  
         """
@@ -583,8 +618,10 @@ class DatcomInputTable(QWidget):
             tVarName = self.varsDfList[iC]['VarName']
             if tVarName in tVarCombo:
                 self.table.setColumnHidden(iC, False)
+                self._UpdateUsedFlags(iC, True)
             else:
                 self.table.setColumnHidden(iC, True)
+                self._UpdateUsedFlags(iC, False)
         #print("row:%d,col:%d"%(self.table.rowCount(), self.table.columnCount()))
     
     @pyqtSlot(str, str)     

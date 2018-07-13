@@ -36,11 +36,15 @@ class markdownEngine(object):
                             'Github': os.path.join('css', 'typora_defualt.css'),         
         }
         #MathJax支持
+        if 'MathJaxOnLinePath' in self.Properties:
+            tUrl = self.Properties['MathJaxOnLinePath']
+        else:
+            tUrl = r'http://cdn.mathjax.org/mathjax/latest/MathJax.js'
         self.mathJaxScriptOnline = """
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        <script type="text/javascript" src="%s?config=TeX-AMS-MML_HTMLorMML">
 </script>
-        """
+        """%(tUrl)
         #配置HTML的头和CSS信息
         self.defaultCSS = self._loadCSS()
         if os.path.isfile( self.Properties['MathJaxPath']):
@@ -48,7 +52,7 @@ class markdownEngine(object):
             
             self.mathJaxHeader ="""
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <script type="text/javascript" src="%s?config=default">
+            <script type="text/javascript" src="%s?config=TeX-AMS-MML_HTMLorMML"">
               MathJax.Hub.Config({
         extensions: ["tex2jax.js"],
         jax: ["input/TeX","output/HTML-CSS"],
@@ -65,9 +69,9 @@ class markdownEngine(object):
         self.regImage = re.compile(r"""<img\s.*?\s?src\s*=\s*['|"]?([^\s'"]+).*?>""",re.I)  
         
         #创建临时目录，执行初始化
-        self.tempDirectory = os.path.join(os.path.expanduser('~'), '.PyDatcomLab', 'wiki', 'HTML')
+        self.tempDirectory = os.path.join(os.path.expanduser('~'), '.PyDatcomLab', 'wiki')
         if 'PyDatcomWorkspace' in self.Properties:
-            self.tempDirectory =  os.path.join(os.path.realpath(self.Properties['PyDatcomWorkspace']), '.PyDatcomLab', 'wiki', 'HTML')
+            self.tempDirectory =  os.path.join(os.path.realpath(self.Properties['PyDatcomWorkspace']), '.PyDatcomLab', 'wiki')
         try:
             self.tempDirectory= tempfile.mkdtemp(suffix='',prefix='Datcom')
         except Exception as e:

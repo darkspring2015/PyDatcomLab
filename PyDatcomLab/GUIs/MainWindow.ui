@@ -546,6 +546,10 @@
    </property>
   </action>
   <action name="actionXMLEditer">
+   <property name="icon">
+    <iconset resource="PyDatcomLab.qrc">
+     <normaloff>:/mainwindow/images/mainwindow/PyDatcomLab.png</normaloff>:/mainwindow/images/mainwindow/PyDatcomLab.png</iconset>
+   </property>
    <property name="text">
     <string>XML编辑器</string>
    </property>
@@ -553,7 +557,7 @@
   <action name="actionDtcomDefineEditer">
    <property name="icon">
     <iconset resource="PyDatcomLab.qrc">
-     <normaloff>:/mainwindow/images/mainwindow/docs.png</normaloff>:/mainwindow/images/mainwindow/docs.png</iconset>
+     <normaloff>:/mainwindow/images/mainwindow/DatcomDefine.png</normaloff>:/mainwindow/images/mainwindow/DatcomDefine.png</iconset>
    </property>
    <property name="text">
     <string>Datcom定义编辑</string>

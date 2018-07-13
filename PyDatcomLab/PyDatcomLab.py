@@ -117,15 +117,8 @@ try:
     sPath = os.path.abspath(os.path.join(mainPath, '..', 'wiki'))
     if not os.path.exists(bPath):
         os.makedirs(bPath)  
-    #更新WikiDirectory目录配置
-    PyDatcomLabProperties.update({'WikiDirectory':bPath})
     #更新doc路径配置
     PyDatcomLabProperties.update({'docDirectory':sPath})
-    #复制doc文件
-#    if not os.path.exists(bPath) or len(os.listdir(bPath)) != len(os.listdir(sPath)):
-#        shutil.rmtree(bPath)
-#        shutil.copytree(sPath,bPath) 
-
 except :
     logger.error("复制配置文件%s异常:无法复制配置文件"%srcfile)
     
@@ -148,6 +141,7 @@ except :
 #MathJax
 tMathJax = os.path.realpath(os.path.join(PyDatcomLabProperties['DatcomModuleDirectory'], '..', 'Thirdparty', 'MathJax', 'MathJax.js'))
 PyDatcomLabProperties.update({'MathJaxPath':tMathJax})
+PyDatcomLabProperties.update({'MathJaxOnLinePath':r'http://cdn.mathjax.org/mathjax/latest/MathJax.js'})
  
 #导入主要的窗体
 from PyDatcomLab.GUIs.MainWindow import DatcomMainWindow

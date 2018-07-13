@@ -550,11 +550,25 @@ class DatcomInputSingle(QWidget):
         """
         内部函数，从self.dtModel中获得当前值
         如果model中没有当前变量，则使用datcomDefine中的默认值
+        返回值是获得变量值
+        如果使用模板值，则设置标记位"InUsed"为False
         """
         tV = self.dtModel.getVariableByUrl(self.vUrl)  #获取模型中的具体数值
         if tV is None:
             tV = self.dtDefine.getVariableTemplateByUrl(self.vUrl, isSubType=True)
+            tV.update({"InUsed":False})        
         return tV
+        
+    def _UpdateUsedFlags(self, isUsed = True):
+        """
+        更新变量的值
+        """
+        #获取模型值
+        tV = self._getCurrentValueInModel()  #获取模型中的具体数值
+        #更新标志
+        tV.update({'InUsed':isUsed})
+        #回写到数据模型
+        self.dtModel.setVariable( tV)        
 
     def isValidateType(self):
         """
@@ -627,8 +641,11 @@ class DatcomInputSingle(QWidget):
         else:
             if iStatus == Qt.Checked:
                 self.InputWidget.setEnabled(True)
+                self._UpdateUsedFlags(True)                
             else:
-                self.InputWidget.setEnabled(False)        
+                self.InputWidget.setEnabled(False)      
+                self._UpdateUsedFlags(False) 
+   
         
     @pyqtSlot(str, int)  #控件是Group长度的输入项
     def on_Signal_rowCountChanged(self, vUrl, vCount):

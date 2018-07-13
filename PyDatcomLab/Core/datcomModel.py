@@ -418,20 +418,22 @@ class dcModel(datcomXMLLoader):
                     tLog.append('变量的类型REAL,值：%f,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))             
             
         if tDf['TYPE'] == 'Array' :
-            if type(tVar['Value']) != list :
-                tLog.append('变量的类型应当为Array实际是%s'%(type(tVar['Value'])) )
-            elif len(tVar['Value']) ==0:
-                tLog.append("变量%s的类型为Array，但值长度为0"%tUrl )      
-            elif 'Range' in tDf.keys() :
-                for iV in tVar['Value']:
-                    if ('SubType' in tDf.keys() and tDf['SubType'] in ['INT', 'REAL']) or\
-                        'SubType' not  in tDf.keys() :
-                        if iV < tDf['Range'][0] or iV > tDf['Range'][1]:
-                            tLog.append('变量的类型Array,值：%s,超出Range：%s '%(str(iV), str(tDf['Range'])))  
-                    if 'SubType' in tDf.keys() and tDf['SubType'] in ['List']:
-                         if iV not in  tDf['Range']:
-                            tLog.append('变量的类型Array,元素类型%s,值：%s,超出Range：%s '%(tDf['SubType'] , 
-                            str(iV), str(tDf['Range'])))  
+            if 'InUsed' in tVar and tVar['InUsed']:
+                #默认不使用的变量是错误的
+                if type(tVar['Value']) != list :
+                    tLog.append('变量的类型应当为Array实际是%s'%(type(tVar['Value'])) )
+                elif len(tVar['Value']) ==0:
+                    tLog.append("变量%s的类型为Array，但值长度为0"%tUrl )      
+                elif 'Range' in tDf.keys() :
+                    for iV in tVar['Value']:
+                        if ('SubType' in tDf.keys() and tDf['SubType'] in ['INT', 'REAL']) or\
+                            'SubType' not  in tDf.keys() :
+                            if iV < tDf['Range'][0] or iV > tDf['Range'][1]:
+                                tLog.append('变量的类型Array,值：%s,超出Range：%s '%(str(iV), str(tDf['Range'])))  
+                        if 'SubType' in tDf.keys() and tDf['SubType'] in ['List']:
+                             if iV not in  tDf['Range']:
+                                tLog.append('变量的类型Array,元素类型%s,值：%s,超出Range：%s '%(tDf['SubType'] , 
+                                str(iV), str(tDf['Range'])))  
                     
         if tDf['TYPE'] == 'List' :
             if type(tVar['Value'])  != str:
@@ -521,6 +523,10 @@ class dcModel(datcomXMLLoader):
             tNMlstPos = len(TStr[-1]) #记录Namelist变量的位置
             lastCheck = 0
             for itVar in tAllInfo[itr]:#循环Var []
+                #跳过不在使用的变量
+                if 'InUsed' in itVar and not itVar['InUsed'] :
+                    continue
+                #创建写入
                 lastCheck +=1
                 theStr = '%s'%itVar 
                 tURl = '%s/%s'%(itr, itVar)
