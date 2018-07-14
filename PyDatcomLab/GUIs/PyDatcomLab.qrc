@@ -53,5 +53,6 @@
     <file>images/InputCard/NormalIcon.ico</file>
     <file>images/InputCard/deleteLine.ico</file>
     <file>images/InputCard/addLine.ico</file>
+    <file>images/InputCard/editPaste.png</file>
   </qresource>
 </RCC>

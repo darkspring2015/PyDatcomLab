@@ -338,19 +338,19 @@ class dcModel(datcomXMLLoader):
         """
         tUrl = iVar['Url']       
         try:
-            tRange = self.dtDefine.getVariableDefineByUrl(tUrl)['Limit']
-            tDefault = self.dtDefine.getVariableTemplateByUrl( tUrl, isSubType = True)
-            tNowVar = self.getVariableByUrl(tUrl)
+            tRange        = self.dtDefine.getVariableDefineByUrl(tUrl)['Limit']
+            tDefault       = self.dtDefine.getVariableTemplateByUrl( tUrl, isSubType = True)
+            tNowVar      = self.getVariableByUrl(tUrl)
             tNowLength = len(tNowVar['Value']) 
             #转换坐标
             tNewInputVar = iVar
             if tNowVar['Unit'] != iVar['Unit']:
                 tNewInputVar = dtDimension.unitTransformation(iVar,tNowVar['Unit'] )
             #判断长度变换
-            if tNowLength>= iIndex:
+            if tNowLength>= iIndex +1 and  tNowLength != 0:
                 tNowVar['Value'][iIndex] = tNewInputVar['Value']
-            if tNowLength < iIndex and iIndex > tRange[0] and iIndex < tRange[1]:
-                tNowVar['Value'] = tNowVar['Value'] + [tDefault['Value']]*3
+            if tNowLength < iIndex + 1 and iIndex > tRange[0] and iIndex < tRange[1]:
+                tNowVar['Value'] = tNowVar['Value'] + [tDefault['Value']]*(iIndex + 1 - tNowLength)
                 tNowVar['Value'][iIndex] = tNewInputVar['Value']
             if  iIndex > tRange[1] or  iIndex < 0:
                 raise UserWarning("无效的索引")            
@@ -475,7 +475,7 @@ class dcModel(datcomXMLLoader):
                 tVarReport = self.validateAVariable(self.doc[tUrl])
                 if tVarReport['status'] != 'Acceptable':
                     tReStr ='\n'.join(tVarReport['Report'])
-                    self.logger.error("datcomModel.validate()变量%s不合规，%s"%(tUrl,tReStr ))
+                    self.logger.info("datcomModel.validate()变量%s不合规，%s"%(tUrl,tReStr ))
                     #尝试修复或者跳过
                     tNMExcept[tUrl] = tReStr
                     continue

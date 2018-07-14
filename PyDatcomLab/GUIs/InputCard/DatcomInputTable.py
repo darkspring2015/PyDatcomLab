@@ -142,20 +142,24 @@ class DatcomInputTable(QWidget):
 
         #分析表格行数限制
         self.minCount, self.maxCount  = self.dtDefine.getGroupLimitByName(iNamelist, tGroup)
-
-        #分析表格行数控制变量的结果
-        tCountVar       = self.dtDefine.gettRuleNumToCountByGroup(iNamelist, tGroup)
-        if tCountVar is not None : 
-            self.CountVar = tCountVar
-        self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
+        #分析是否关联到NMACH限制因素
+        self.isLinkNMACH = self.dtDefine.isLinkToNMACH(iNamelist, tGroup)
+        if self.isLinkNMACH:
+            self.CountVar = 'NMACH'
+            self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
+        else:
+            #分析表格行数控制变量的结果
+            tCountVar       = self.dtDefine.gettRuleNumToCountByGroup(iNamelist, tGroup)
+            if tCountVar is not None : 
+                self.CountVar = tCountVar
+            self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
         #分析表头协同变量结果
         tComboVar       = self.dtDefine.getRuleIndexToComboByGroup(iNamelist, tGroup)
         if tComboVar is not None and  len(tComboVar) > 0: 
             self.ComboVar  = tComboVar['Index']
             self.ComboRule = tComboVar['HowTo']
             self.ComboVarUrl = '%s/%s'%(self.Namelist, self.ComboVar)
-        #分析是否关联到NMACH限制因素
-        self.isLinkNMACH = self.dtDefine.isLinkToNMACH(iNamelist, tGroup)
+
 
         
     def setupUi(self, Form):
@@ -223,6 +227,17 @@ class DatcomInputTable(QWidget):
         icon1.addPixmap(QPixmap(":/InputCard/images/InputCard/deleteLine.ico"), QIcon.Normal, QIcon.Off)
         self.actionClearRows.setIcon(icon1)
         self.actionClearRows.setObjectName("actionClearRows")  
+        #Delete all Row
+        self.actionPasteColumn = QAction(self)
+        self.actionPasteColumn.setText("粘贴一列")
+        self.actionPasteColumn.setToolTip( "粘贴一列")
+        icon1 = QIcon()
+        icon1.addPixmap(QPixmap(":/InputCard/images/InputCard/editPaste.png"), QIcon.Normal, QIcon.Off)
+        self.actionPasteColumn.setIcon(icon1)
+        self.actionPasteColumn.setObjectName("actionPasteColumn") 
+        self.actionPasteColumn.setShortcuts(QtGui.QKeySequence.Paste)
+        
+        #clipboard = QtGui.QGuiApplication.clipboard()
         
         #创建菜单
         self.popMenu = QMenu(self.table)
@@ -231,6 +246,8 @@ class DatcomInputTable(QWidget):
         self.popMenu.addAction(self.actionDeleteRow)
         self.popMenu.addAction(self.actionAddRowToMax)
         self.popMenu.addAction(self.actionClearRows)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.actionPasteColumn)
         
     def eventFilter(self, watched, event):
         """
@@ -345,16 +362,28 @@ class DatcomInputTable(QWidget):
         self.clear()
         self.InitializeHeader()   
         self.InitializeTableSize()  #重新赋初值
+        #h获得行数限制
+        if self.isLinkNMACH :
+            tTableRows = self.dtModel.getVariableByUrl('FLTCON/NMACH')['Value']
+        else:
+            tTableRows = self.dtModel.getVariableByUrl(self.CountVarUrl)['Value']
         #分析写入数据
         for iC  in range(0, len(self.varsDfList)):
+            #分析并获取定义
             iV       = self.varsDfList[iC]   #这是所有的定义
             tUrl     = '%s/%s'%(iV['NameList'], iV['VarName'])
-            tDataVar = self.dtModel.getVariableByUrl(tUrl)            
+            tDataVar = self.dtModel.getVariableByUrl(tUrl)      
+            #定义本列的模板
+            tElementTemplate  = self.dtDefine.getVariableTemplateByUrl(tUrl, True).copy() #{'Dimension':tDimension, 'Unit':tUnit, 'Value':None}     
+            tDataTemplate      = self.dtDefine.getVariableTemplateByUrl(tUrl)            
             if tDataVar is None :
                 #不存在数据则隐藏对应的列
                 self.table.setColumnHidden(iC, True)
-                #self.logger.info("%s的列%s没有数据，不显示"%(self.vUrl, self.table.horizontalHeaderItem(iC).text()))
-                continue
+                #被隐藏列默认的值
+                tDataVar = tDataTemplate.copy()
+                tDataVar.update({'Value': [tElementTemplate['Value']] * tTableRows})
+                #但是需要添加必要
+                #continue  
             #执行表头坐标同步
             tDimension = ''
             if 'Dimension' in self.varsDfList[iC]:
@@ -365,9 +394,7 @@ class DatcomInputTable(QWidget):
                 self.setHorizontalHeaderUnit(iC,tUnit )
             else:
                 tUnit = dtDimension.getMainUnitByDimension(tDimension)
-                #self.logger.info("数据格式异常，缺少单位信息")
-            #定义本列的模板
-            tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}                
+                #self.logger.info("数据格式异常，缺少单位信息")           
 
             #执行数据写入
             tData = tDataVar['Value']
@@ -417,7 +444,7 @@ class DatcomInputTable(QWidget):
             
         #发送行变更消息
         self.Signal_rowCountChanged.emit(self.CountVarUrl , self.table.rowCount())         #向外通知数据加载后的长度
-        self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo())) #向外通知数据列的组合关系发生变换
+        self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo()))     #向外通知数据列的组合关系发生变换
             
     def setItemData(self, iUrl, iRow, iVar):
         """
@@ -782,8 +809,84 @@ class DatcomInputTable(QWidget):
         self._flushData()       
         #向外发送结果   
         self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())         
+
+
+    @pyqtSlot()
+    def on_actionPasteColumn_triggered(self):
+        """
+        删除行的代码.
+        """
+        #开始事务处理
+        self.isTransaction = True  
+        #获得粘贴板中的数据
+        clipboard = QtGui.QGuiApplication.clipboard()
+        tStr = clipboard.text()
+        if tStr is not None and tStr !='':
+            tDigits = tStr.split(',')
+            tDList = []
+            tDigitsOld = []
+            for iD in range(0, len(tDigits)):
+                try:
+                    if tDigits[iD].strip() == '':                        
+                        continue
+                    tStrT = tDigits[iD].replace("\r", "").replace("\n", "").strip()  
+                    if tStrT is not None or tStrT !='':    
+                        tDigitsOld.append(tStrT)                    
+                        tDList.append( float(tStrT))
+                except Exception as e:
+                    self.logger.info("无法转换的数据：%s！"%iD)
+            #尝试写入到结果
+            nRow = self.table.currentRow()
+            nCol  = self.table.currentColumn()
+            if nRow >-1 and nCol >-1:
+                button = QtWidgets.QMessageBox.question(self, r"粘贴数据",
+                                       "将粘贴%d个数据：\n%s\n到:R:%d,C:%d列"%(len(tDigitsOld),'\n'.join(tDigitsOld), nRow,nCol ),
+                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                if button == QtWidgets.QMessageBox.Yes:    
+                    #遍历添加数据
+                    for iR in range(0, len(tDList)):
+                        tItem = self.table.item(nRow + iR , nCol)
+                        #如果是空Item，则使用默认值进行推定
+                        if tItem is None :
+                            tItem =self._getInitializeItem(nCol)
+                            self.table.setItem(nRow + iR , nCol, tItem )
+                        #写入数据
+                        tItemData = tItem.data(Qt.UserRole)
+                        tItemData.update({'Value':tDList[iR]})
+                        tItem.setData(Qt.UserRole,tItemData )
+                        tItem.setData(Qt.DisplayRole,str(tDList[iR]) )
+        #结束事务处理
+        self.isTransaction = False     
+        #刷新到Model
+        self._flushData()       
+        #向外发送结果   
+        #self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())            
         
-            
+    def _getInitializeItem(self, iCol):
+        """
+        获得列iCol的默认Item
+        需要根据当前的单位值进行转换
+        """
+        #分析并获取定义
+        iV       = self.varsDfList[iCol]   #这是所有的定义
+        tUrl     = '%s/%s'%(iV['NameList'], iV['VarName'])   
+        tElementTemplate  = self.dtDefine.getVariableTemplateByUrl(tUrl, True).copy()   
+        #获取背景信息
+        tConfig = self.table.horizontalHeaderItem(iCol).data(Qt.UserRole)
+        #执行表头的单位制变换操作
+        if 'Dimension' in tConfig.keys() and tConfig['Dimension'] in Dimension.keys() \
+                and 'CurrentUnit' in tConfig.keys():
+            if tElementTemplate['Unit'] != tConfig['CurrentUnit']:
+                tElementTemplate  = dtDimension.unitTransformation(tElementTemplate,tConfig['CurrentUnit'] )
+        #赋值
+        tItem = QtWidgets.QTableWidgetItem(tElementTemplate['Value'])
+        tItem.setData(Qt.UserRole, tElementTemplate)
+        return tItem
+        
+        
+        
+         
+         
     @pyqtSlot(QPoint)
     def on_customContextMenuRequested(self, pos):
         """
@@ -898,31 +1001,33 @@ class DatcomInputTable(QWidget):
         This signal is emitted whenever the data of item has changed.
         在此处协调代理自行变换单位的情况
         """
-        #做值判断
-        if item.data(Qt.DisplayRole) is not None and item.data(Qt.UserRole) is None:
-            #tDataTemplate  = {'Dimension':tDimension, 'Unit':tUnit, 'Value':None}
-            pass
-        
-        #判断列结论
+        if self.isTransaction : return
+        #获取定义
         tConfig = self.table.horizontalHeaderItem(item.column()).data(Qt.UserRole)
-        if 'Dimension' not in tConfig.keys() or 'CurrentUnit'  not in tConfig.keys():
-            return 
-        #判断值结论
-        tItemData = item.data(Qt.UserRole)
-        if tItemData is None or 'Dimension' not in tItemData.keys()  \
-                    or tItemData['Dimension'] == ''  or\
-                    'Unit' not in tItemData.keys() or \
-                    tItemData['Unit'] == '':
-            return 
-        if tItemData['Unit']  != tConfig['CurrentUnit']:
-            tNewItemData = dtDimension.unitTransformation(tItemData, tConfig['CurrentUnit'])
-            item.setData(Qt.UserRole, tNewItemData)
-            item.setData(Qt.DisplayRole, str(tNewItemData['Value']))
+        #做值判断,修复错误
+        if item.data(Qt.DisplayRole) is not None and item.data(Qt.UserRole) is None:
+            tDf = self.dtDefine.getVariableTemplateByUrl(tConfig["Url"], True)
+            tDf.update({'Value':item.data(Qt.DisplayRole), 'Unit':tConfig['CurrentUnit']})
+            item.setData(Qt.UserRole, tDf)
+            self.logger.warning("onItemChanged（）修复了之错误")
+        
+        #判断列结论        
+        if 'Dimension' in tConfig.keys() and 'CurrentUnit'   in tConfig.keys():
+            #判断值结论
+            tItemData = item.data(Qt.UserRole)
+            #判断值得有效性
+            if tItemData is not None and   'Unit'  in tItemData.keys() and  tItemData['Unit'] == '':                
+                if tItemData['Unit']  != tConfig['CurrentUnit']:
+                    tNewItemData = dtDimension.unitTransformation(tItemData, tConfig['CurrentUnit'])
+                    item.setData(Qt.UserRole, tNewItemData)
+                    item.setData(Qt.DisplayRole, str(tNewItemData['Value']))
+            else:
+                self.logger.warning("onItemChanged()检查出错！") 
             
         #逐项值更新表格数据
         #写入到数据模型
         if self.isTransaction  == False :
-            self.dtModel.setVariablebyArrayIndex(item.data(Qt.UserRole), item.column())
+            self.dtModel.setVariablebyArrayIndex(item.data(Qt.UserRole), item.row())
   
         
 if __name__ == "__main__":

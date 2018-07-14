@@ -19,7 +19,7 @@ class DatcomInputList(QWidget):
     currentIndexChanged = pyqtSignal(str, str)  #将编辑结构发送出去  当前索引 int   # (Url,index在Range中的具体值）
     Signal_VariableChanged =  pyqtSignal(str)            #控件对应的datcom变量发生变化时触发 str为变量的iUrl，用于通知其他的相关控件
     
-    def __init__(self, iUrl,  parent=None, iDefinition = DDefine , iModel =None):
+    def __init__(self, iUrl,  parent=None, iDefinition = DDefine , iModel =None, isDelegate = False):
         """
         Constructor
         DatcomInputList是一个QWidget控件，用来输出和显示一个List类型的值,list的内容默认为str
@@ -51,10 +51,8 @@ class DatcomInputList(QWidget):
         if self.VarDefine is None :
             self.logger.error("无法处理不存在的定义，URL：%s"%iUrl)
             return
-        self.Namelist  , self.VarName    =    iUrl.split('/')[-2:]        
-        if iModel is None:
-            iModel = dcModel()
-        self.dtModel        = iModel
+        #获取各种常量定义
+        self.Namelist  , self.VarName    =    iUrl.split('/')[-2:]   
         #分析其他的附加信息
         self.VarDisplayName = self.VarDefine['DisplayName'] if 'DisplayName' in self.VarDefine.keys() else self.VarName
         self.VarTooltips    = self.VarDefine['Tooltips'] if 'Tooltips' in  self.VarDefine.keys() else self.VarDisplayName
@@ -77,14 +75,16 @@ class DatcomInputList(QWidget):
         #初始化界面
         self.setupUi(self)
         self.InitializeUILogic()
-        
-        #为数据模型调用初始化函数
-        if self.dtModel is not None :
-            if type(self.dtModel) == dcModel:
-                self.setModel(self.dtModel)
-            else:
-                self.logger.warning("初始化DatcomInputSingle时传入的dtModel的类型为%s，应该为%s"%(str(type(self.dtModel)), str(type(dcModel))))
-                self.dtModel = dcModel()
+        #设置代理标志位
+        self.isDelegate = isDelegate        
+        #加载模型信息
+        if self.isDelegate == False:
+            if iModel is None or type(iModel) != dcModel:
+                iModel = dcModel()
+                self.logger.warning("初始化DatcomInputList时传入的dtModel的类型为%s，应该为%s"%(str(type(iModel)), str(type(dcModel))))
+            self.dtModel        = iModel
+            #为数据模型调用初始化函数
+            self.setModel(self.dtModel)
                 
         #联结部分的slot
         self.installEventFilter(self)
@@ -252,7 +252,12 @@ class DatcomInputList(QWidget):
         直接设置数据值，将在作为Delegate是被使用
         tData发送来的是显示值 DisplayRange的值
         """
-        tIndex = self.vDisplayRange.index(str(tData))
+        self.isDelegate = True
+        if type(tData) == dict :
+            tKey = tData['Value']
+        else:
+            tKey = str(tData)
+        tIndex = self.vDisplayRange.index(tKey)
         if tIndex < 0 :
             self.logger.error("传入数据无法通过验证：%s：%s"%(self.vUrl, str(tData)))
             return 
@@ -263,8 +268,11 @@ class DatcomInputList(QWidget):
         """
         返回编辑控件当前的显示值，将在作为Delegate是被使用
         """
-        if self.vRange is None :return None
-        return self.vDisplayRange[self.InputWidget.currentIndex()] 
+        if self.vRange is None :
+            return None
+        tDefault = self.dtDefine.getVariableTemplateByUrl(self.vUrl, isSubType=True)
+        tDefault.update({'Value':self.vDisplayRange[self.InputWidget.currentIndex()] })
+        return tDefault
 
 
     def setModel(self, iModel):
@@ -275,7 +283,7 @@ class DatcomInputList(QWidget):
         2.函数触发一次加载
         """        
         #为数据模型调用初始化函数
-        if iModel is not None and  type(self.dtModel) == dcModel:
+        if iModel is not None and  type(iModel) == dcModel:
             self.dtModel = iModel
             self._loadData()
         else:
@@ -295,87 +303,27 @@ class DatcomInputList(QWidget):
         if self.dtModel is None : 
             self.logger.error("dtModel为None！")
             return     
-        tVar = self._getCurrentValueInModel()
-        self._loadDataToWidget(tVar)
-
-                    
-    def _loadDataToWidget(self, iVariable):
-        """
-        根据输入变量iVariable修改界面信息
-        @param iVariable 输入的变量值
-        @type dict
-        """
-        #检查输入类型
-        if iVariable is None or type(iVariable) != dict  :
-            self.logger.error("setDataByVariable()设置%s的输入的参数类型不合法：%s !"%(self.vUrl, type(iVariable)))
-            return False
-            
-        tMust = [ 'Url', 'Value' ]
-        for iK in tMust:
-            if iK not in iVariable.keys():
-                self.logger.error("setDataByVariable()设置%s的输入参数项不足,缺少%s"%(self.vUrl, iK))
-                return False
-        #检查变量名称
-        if iVariable['Url'] != self.vUrl:
-            self.logger.error("setDataByVariable()输入的变量名为 %s，应该为%s"%(self.vUrl, iVariable['Url']))
-            return False            
-
-        #分析输入合规性,获得输入的键值
-        if iVariable is not None and type(iVariable) is dict:
-            if type(iVariable['Value']) is str:
-                tKey = iVariable['Value']
-            elif type(iVariable['Value']) in [float, int] and self.isDatcom:
-                tKey = '%.1f'%(float(iVariable['Value']))
+        #分析值
+        tVar = self.dtModel.getVariableByUrl(self.vUrl)  #获取模型中的具体数值
+        if tVar is None:
+            if self.isDelegate:
+                tVar =  self.dtDefine.getVariableTemplateByUrl(self.vUrl, isSubType=True)
             else:
-                tKey = iVariable['Value']  #None 
-                self.logger.error("值类型错误: %s "%(str(iVariable)))                   
+                tVar =  self.dtDefine.getVariableTemplateByUrl(self.vUrl)
+            tVar.update({'InUsed':'False'})
+            self._loadDataToWidget(tVar)
+            self.on_EnabledStatusChanged(Qt.Unchecked)
         else:
-            self.logger.error("值类型错误")
-        #根据键值选择控件的选项，并激活或关闭控件
-        if tKey in self.VarDefine['Range']:
-            self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(tKey))
-            #判断是否需要激活控件
-            if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
-                if 'Default' in self.VarDefine and self.VarDefine['Default'] != tKey :
-                    self.on_EnabledStatusChanged(True)
-                else:
-                    self.on_EnabledStatusChanged(False)
-        else:
-            if 'Default' in self.VarDefine.keys():
-                self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(self.VarDefine['Default']))
-                self.on_EnabledStatusChanged(False)
-                self.logger.error("传递的参数具有的值不在预设范围之内：%s,使用默认值修正：%s"%(tKey, self.VarDefine['Default'])) 
-            else:
-                self.logger.error("传递的参数具有的值不在预设范围之内：%s"%(iVariable['Value'])) 
-
-        return True
- 
-    def setDataByVariable(self, iVar):
-        """
-        设置控件的值  
-        iVar 是dict型的变量，是dcModel的子项
-        注意事项:
-        1. 如果控件设置了dcModel，将触发合理的输入值被保存到dcModel
-        """             
-        if self._loadDataToWidget(iVar):
-            self.dtModel.setVariable(iVar)
-        else:
-            self.logger.warning("设置控件值得过程出错！")
-
+            tVar = self._getCurrentValueInModel()
+            self._loadDataToWidget(tVar)
         
-    def getDataByVariable(self):
-        """
-        获得当前控制的值，负责从外部调用，
-        如果当前值无法通过验证返回None
-        如果正常，返回Model中的一个具体实例
-        返回值为独立的副本
-        """
-        return self._getDatcomData().copy()
-
-
+        
     def _getDatcomData(self):
         """
         分析获取控件的当前输入值，生成一个dcModel的子项（DatcomData）
+        函数行为:
+        1.分析InputWidget的选项，将键值更新到Model子项
+        2.如果控件的状态为不可用，则将'InUsed'属性定义为False
         """ 
         if self.InputWidget is None :return 
         tDefault = self._getCurrentValueInModel()
@@ -401,14 +349,98 @@ class DatcomInputList(QWidget):
         
     def _UpdateUsedFlags(self, isUsed = 'True'):
         """
-        更新变量的值
+        更新变量的值,不负责再更新界面
         """
         #获取模型值
         tV = self._getCurrentValueInModel()  #获取模型中的具体数值
         #更新标志
         tV.update({'InUsed':isUsed})
         #回写到数据模型
-        self.dtModel.setVariable( tV)       
+        self.dtModel.setVariable( tV)   
+#        #更新标志
+#        if tV['InUsed'] =='False' and  self.InputWidget.isEnabled() :
+#            self.on_EnabledStatusChanged(Qt.Unchecked)
+#        if tV['InUsed'] =='True' and not  self.InputWidget.isEnabled() :
+#            self.on_EnabledStatusChanged(Qt.Checked)
+                    
+    def _loadDataToWidget(self, iVariable):
+        """
+        根据输入变量iVariable修改界面信息
+        @param iVariable 输入的变量值
+        @type dict
+        """
+        #检查输入类型
+        if iVariable is None or type(iVariable) != dict  :
+            self.logger.error("_loadDataToWidget()设置%s的输入的参数类型不合法：%s !"%(self.vUrl, type(iVariable)))
+            return False
+        #检查字段
+        tMust = [ 'Url', 'Value' ]
+        for iK in tMust:
+            if iK not in iVariable.keys():
+                self.logger.error("_loadDataToWidget()设置%s的输入参数项不足,缺少%s"%(self.vUrl, iK))
+                return False
+        #检查变量名称
+        if iVariable['Url'] != self.vUrl:
+            self.logger.error("_loadDataToWidget()输入的变量名为 %s，应该为%s"%(self.vUrl, iVariable['Url']))
+            return False            
+
+        #分析输入合规性,获得输入的键值
+        if iVariable is not None and type(iVariable) is dict:
+            if type(iVariable['Value']) is str:
+                tKey = iVariable['Value']
+            elif type(iVariable['Value']) in [float, int] and self.isDatcom:
+                tKey = '%.1f'%(float(iVariable['Value']))
+            else:
+                tKey = iVariable['Value']  #None 
+                self.logger.error("值类型错误: %s "%(str(iVariable)))                   
+        else:
+            self.logger.error("值类型错误")
+        #根据键值选择控件的选项，并激活或关闭控件
+        if tKey in self.VarDefine['Range']:
+            self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(tKey))
+            #判断是否需要激活控件
+            if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
+                if 'Default' in self.VarDefine and self.VarDefine['Default'] != tKey :
+                    self.on_EnabledStatusChanged(True)
+                else:
+                    self.on_EnabledStatusChanged(False)
+            else:
+                self.on_EnabledStatusChanged(True)
+        else:
+            if 'Default' in self.VarDefine.keys():
+                self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(self.VarDefine['Default']))
+                self.on_EnabledStatusChanged(False)
+                self.logger.error("传递的参数具有的值不在预设范围之内：%s,使用默认值修正：%s"%(tKey, self.VarDefine['Default'])) 
+            else:
+                self.logger.error("传递的参数具有的值不在预设范围之内：%s"%(iVariable['Value'])) 
+
+        return True
+        
+
+ 
+    def setDataByVariable(self, iVar):
+        """
+        设置控件的值  
+        iVar 是dict型的变量，是dcModel的子项
+        注意事项:
+        1. 如果控件设置了dcModel，将触发合理的输入值被保存到dcModel
+        """             
+        if self._loadDataToWidget(iVar):
+            self.dtModel.setVariable(iVar)
+        else:
+            self.logger.warning("设置控件值得过程出错！")
+
+        
+    def getDataByVariable(self):
+        """
+        获得当前控制的值，负责从外部调用，
+        如果当前值无法通过验证返回None
+        如果正常，返回Model中的一个具体实例
+        返回值为独立的副本
+        """
+        return self._getDatcomData().copy()
+
+    
         
     def getCurrentKey(self):
         """
@@ -479,6 +511,10 @@ class DatcomInputList(QWidget):
         @param index 选项的索引
         @type int
         """
+        #获得当前值
+        tVd = self._getDatcomData()
+        self.dtModel.setVariable(tVd)
+        #发送相关信号
         self.currentIndexChanged.emit(self.vUrl, self.vRange[index])
         self.Signal_VariableChanged.emit(self.vUrl)
 
