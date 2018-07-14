@@ -444,14 +444,15 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         strRes = aRunner.runningPopen(exePath= self.Properties['DatcomExecute'],
                             problemFile=tFile,    tcwd =tmpPath  )
         tTiltie = ''
-        if strRes[0] == 0: 
+        if strRes[0] in [0, '0'] : 
             #返回码正确
             tTiltie = '完成了当前算例的计算'
             tReport = "完成算例!\n算例目录：\n{0}\n输出：\n{1}\n错误:\n{2}".format(tmpPath,strRes[1], strRes[2] )
             self.logger.info("完成了当前算例的计算。算例目录：%s"%tmpPath)
         else:
             tTiltie = '完成了当前算例的计算,但未成功'
-            tReport = "未成功完成算例!\n返回码：{3}\n算例目录：\n{0} \n输出信息：\n{1} \n错误信息:\n {2} ".format(tmpPath,strRes[1], strRes[2] ,strRes[0] )
+            tReport = "未成功完成算例!\n返回码：{3}\n算例目录：\n{0} \n输出信息：\n{1} \n错误信息:\n {2} ".format(tmpPath,strRes[1], strRes[2] ,
+                                                            strRes[0] + " : " +aRunner.getReturnCodeDescribe(strRes[0]))
             self.logger.info("当前算例的计算失败。算例目录：%s"%tmpPath)     
         #报告结果
         QMessageBox.information(self, tTiltie, '%s'%tReport)        

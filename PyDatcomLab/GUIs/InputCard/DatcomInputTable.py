@@ -382,6 +382,7 @@ class DatcomInputTable(QWidget):
                 #被隐藏列默认的值
                 tDataVar = tDataTemplate.copy()
                 tDataVar.update({'Value': [tElementTemplate['Value']] * tTableRows})
+                tDataVar.update({'InUsed':'False'})
                 #但是需要添加必要
                 #continue  
             #执行表头坐标同步
@@ -433,15 +434,15 @@ class DatcomInputTable(QWidget):
                     tItem.setData( Qt.UserRole,tDataUserRole )
                     #tItem.setData(Qt.DisplayRole,str(tData[iR]) )
                     self.table.setItem(iR, iC, tItem)
-                self.table.setColumnHidden(iC, False)                
-                #self._UpdateUsedFlags(tUrl, 'True')
+                #判断是否在使用
+                if tDataVar['InUsed'] == 'True':
+                    self.table.setColumnHidden(iC, False)     
+                else:     
+                    self.table.setColumnHidden(iC, True)    
             else:
                 self.logger.warning("加载表格%s数据长度错误：%d ，需要min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
-            #判断是否在使用
-            if  'InUsed' in tDataVar and  tDataVar['InUsed'] == 'False':
-                self.table.setColumnHidden(iC, True)
-            
+
         #发送行变更消息
         self.Signal_rowCountChanged.emit(self.CountVarUrl , self.table.rowCount())         #向外通知数据加载后的长度
         self.Singal_variableComboChanged.emit(self.vUrl, str(self.getColumnCombo()))     #向外通知数据列的组合关系发生变换

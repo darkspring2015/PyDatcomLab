@@ -72,8 +72,6 @@ class runner(object):
         (outStr, errStr)= p.communicate(bytes(os.path.abspath(problemFile) , encoding='utf8' ))
         returnCode = p.wait()
         #结果转换：从字节流到字符串
-        if str(returnCode) in poenReturnCode.keys():
-            returnCode = str(returnCode) +": "+  poenReturnCode[str(returnCode) ]
         return returnCode, str(outStr, encoding = "utf8")  , str(errStr, encoding = "utf8")   
         
         
@@ -108,6 +106,14 @@ class runner(object):
             (outStr, errStr)= p.communicate(bytes(os.path.abspath(tfile) , encoding='utf8' ))
             returnCode = p.wait()
             print('%s 执行结果 . %s'%(tfile, returnCode))
+            
+    def getReturnCodeDescribe(self, iCode):
+        """
+        返回错误代码的含义
+        """
+        if str(iCode) in poenReturnCode:
+            return poenReturnCode[str(iCode)]
+        return  ""
 
 def getFiles(dir, ext ='.py'):
     files=[]

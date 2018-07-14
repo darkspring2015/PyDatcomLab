@@ -559,8 +559,9 @@ class dcModel(datcomXMLLoader):
                         else:
                             theStr = '%.3E,'%itValue
                         self.Append80ColumsLimit(TStr, theStr, tNewPos)   
-                    if lastCheck < len(tAllInfo.keys()):
-                        TStr.append(' '*tNMlstPos) #防止个数变量出现在序列变量之后
+                    #防止个数变量出现在序列变量之后
+                    if lastCheck < len(tAllInfo[itr]): 
+                        TStr.append(' '*tNMlstPos) 
                 elif tVarDf['TYPE'] == 'List' :#对于1.0 2.0 或者.TRUE.等字符型 
                     #具有默认值则不输出
                     if not ('Default' in tVarDf.keys() and  tVarValueS == tVarDf['Default']):  
