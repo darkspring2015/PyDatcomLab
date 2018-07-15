@@ -211,7 +211,18 @@ class DTdictionary():
                     self.dictAddtional[tNmlst]['RuleVariableCorrelation'] = tAllCombo                   
                 except Exception as e:
                     self.logger.error("Datcom字典执行规则RuleVariableCorrelation解析出错")
-
+            elif iT.tag =='FixedRowsTable':
+                #解析固定长度表格的内容项
+                try:
+                    tAllCombo = []
+                    for iR in list(iT):
+                        #载入每一条规则
+                        tAllComboDict = iR.attrib
+                        tAllComboDict.update({'FixedRows':eval( iR.attrib['FixedRows'])})      
+                        tAllCombo.append(tAllComboDict)
+                    self.dictAddtional[tNmlst]['FixedRowsTable'] = tAllCombo                   
+                except Exception as e:
+                    self.logger.error("Datcom字典执行规则FixedRowsTable解析出错")
             else:                
                 self.logger.error("解析规则异常：%s"%(tNmlst + " " + iT.tag))
                 
@@ -285,18 +296,27 @@ class DTdictionary():
             
         
 
-    def gettRuleNumToCountByGroup(self, nmlst, groupNm):
+    def getRuleNumToCountByGroup(self, nmlst, groupNm):
         """
         通过group查询对应的控制变量
-        认为控制变量
+        返回控制变量的Url ,Rows
+        函数行为：
+        1. 返回值Url为控制变量的Url，对控制常量为None
+        2. Rows为控制常量的取值，对控制变量无意义
         """
         tCName = None 
+        tRows = -1
         if nmlst in self.dictAddtional.keys() and 'RuleNumToCount' in self.dictAddtional[nmlst]:
             for iR in self.dictAddtional[nmlst]['RuleNumToCount']:
                 if 'Num' in iR.keys() and 'Group' in iR.keys():
                     if groupNm == iR['Group']:
-                        tCName = iR['Num']        
-        return tCName
+                        tCName = '%s/%s'%(nmlst, iR['Num']  )     
+        if self.isLinkToNMACH(nmlst, groupNm):
+            tCName ='FLTCON/NMACH'
+        tRows = self.checkFixedRowTable(nmlst, groupNm)
+        if tRows >= 0:
+            tCName = None            
+        return tCName, tRows
 
     def getRuleIndexToComboByGroup(self, nmlst, groupNm):
         """
@@ -336,6 +356,22 @@ class DTdictionary():
             return True
         else:
             return False
+            
+    def checkFixedRowTable(self, nmlst, iGroup):
+        """
+        判断nmlst/iGroup是否是固定行数的表格
+        返回值：-1不是FixedRows表格
+                   >= 0 是固定的表格的行数限制
+        """
+        if nmlst in self.dictAddtional.keys() and 'FixedRowsTable' in self.dictAddtional[nmlst] :
+            tReslut = -1
+            for iR in self.dictAddtional[nmlst]['FixedRowsTable']:
+                if iR['Group'] == iGroup:
+                    tReslut = iR['FixedRows']
+                    break
+            return tReslut
+        else:
+            return -1
           
     def getVariableMustInput(self, iUrl):
         """

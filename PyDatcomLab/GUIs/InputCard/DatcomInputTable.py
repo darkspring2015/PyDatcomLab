@@ -54,7 +54,8 @@ class DatcomInputTable(QWidget):
         #self.InitializeUILogic()        
         #界面参数
         self.curPos = QPoint(0, 0)
-        self.isTransaction  = False   #用来标记是否处于事务处理状态，如果是True则临时禁用itemChanged中的dtModel的刷新
+        #self.isTransaction           = False   #用来标记是否处于事务处理状态，如果是True则临时禁用itemChanged中的dtModel的刷新
+        self.isTransactionCount   = 0   #用来分析和计数事务的队列关系，当进入一次isTransactionCount时+1，结束时减少-1，使用时判断是否为0
         #设置表头
         self.InitializeHeader()
         self.setDelegate()  #按列设置代理
@@ -107,14 +108,7 @@ class DatcomInputTable(QWidget):
         self.varsDf   = {}               #所有变量的定义 dict形式
         self.groupDf  = {}              #组定义
         self.varsDfList = []             #顺序保存的所有变量的定义，用以关联表头
-        self.maxCount = 20            #最大行数限制
-        self.minCount = 0              #最小行数限制
-        self.CountVar = None        #表格行数对应的变量名
-        self.ComboVar = None       #表格列组合对应的附加变量名
-        self.ComboRule = None      #表格列组合对应的规则
-        self.ComboVarUrl = None    #表格列组合对应的附加变量的Url
-        
-         
+
         #分析组内变量的定义
         self.varsDf   = self.dtDefine.getGroupVarsByName(self.Namelist, self.GroupName) #组内所有变量的定义  
         if len(self.varsDf  ) == 0 :
@@ -141,25 +135,39 @@ class DatcomInputTable(QWidget):
             self.varDefaultList.append(tD)
 
         #分析表格行数限制
+        self.maxCount = 20            #最大行数限制
+        self.minCount = 0              #最小行数限制
         self.minCount, self.maxCount  = self.dtDefine.getGroupLimitByName(iNamelist, tGroup)
+        
+        #分析控制变量逻辑
+        self.CountVar      = None    #表格行数对应的变量名
+        self.CountVarUrl  = None     #表格行数对应的变量的Url
         #分析是否关联到NMACH限制因素
-        self.isLinkNMACH = self.dtDefine.isLinkToNMACH(iNamelist, tGroup)
-        if self.isLinkNMACH:
-            self.CountVar = 'NMACH'
-            self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
+        self.isLinkNMACH             = self.dtDefine.isLinkToNMACH(iNamelist, tGroup)
+        self.FixedRows                =  -1   #是否是固定长度表格标识位 -1标识否，>=0是表格的固定长度
+        tCountVarUrl , tRows       = self.dtDefine.getRuleNumToCountByGroup(iNamelist, tGroup)
+        #getRuleNumToCountByGroup 函数返回了跨Namelist的变量集合
+        if tCountVarUrl is not None : 
+            self.CountVar = tCountVarUrl.split('/')[-2]   #获得倒数第二个字符串 Namelist
+            self.CountVarUrl = tCountVarUrl
         else:
-            #分析表格行数控制变量的结果
-            tCountVar       = self.dtDefine.gettRuleNumToCountByGroup(iNamelist, tGroup)
-            if tCountVar is not None : 
-                self.CountVar = tCountVar
-            self.CountVarUrl = '%s/%s'%(self.Namelist, self.CountVar)
+            if self.FixedRows < 0:
+                self.logger.info("setDefinition(%s,%s)错误的数据结构!"%(iNamelist, tGroup))
+            else:
+                #设置相关变量
+                self.FixedRows = tRows    
+                self.maxCount = self.FixedRows            #最大行数限制
+                self.minCount  = self.FixedRows             #最小行数限制            
+            
         #分析表头协同变量结果
+        self.ComboVar     = None     #表格列组合对应的附加变量名
+        self.ComboRule    = None    #表格列组合对应的规则
+        self.ComboVarUrl  = None    #表格列组合对应的附加变量的Url
         tComboVar       = self.dtDefine.getRuleIndexToComboByGroup(iNamelist, tGroup)
         if tComboVar is not None and  len(tComboVar) > 0: 
             self.ComboVar  = tComboVar['Index']
             self.ComboRule = tComboVar['HowTo']
             self.ComboVarUrl = '%s/%s'%(self.Namelist, self.ComboVar)
-
 
         
     def setupUi(self, Form):
@@ -273,7 +281,7 @@ class DatcomInputTable(QWidget):
         self.table.setColumnCount(len(self.varsDfList))
         #执行表头初始化
         for iC in range(0, len(self.varsDfList)) :
-
+            #获取定义
             tConfig = self.varsDfList[iC]
             if "DisplayName" in tConfig.keys():
                 tDisplay = tConfig["DisplayName" ]
@@ -300,7 +308,7 @@ class DatcomInputTable(QWidget):
         self.table.setRowCount(self.minCount)
         for iR in range(0, self.minCount):
             for iC in range(0, self.table.columnCount()):
-                tD = self.varDefaultList[iC]
+                tD = self.varDefaultList[iC].copy()
                 tText = str(tD.get('Value', ''))
                 tItem = QtWidgets.QTableWidgetItem(tText)
                 tItem.setData(Qt.UserRole, tD)
@@ -333,8 +341,11 @@ class DatcomInputTable(QWidget):
         """        
         #为数据模型调用初始化函数
         if iModel is not None and  type(self.dtModel) == dcModel:
+            #开始事务操作，防止消息扩散
             self.dtModel = iModel
+            self.isTransactionCount = self.isTransactionCount +1
             self._loadData()
+            self.isTransactionCount = self.isTransactionCount -1
         else:
             self.logger.warning("DatcomInputSingle.setModel()传入的dtModel的类型为%s，应该为%s"%(str(type(self.dtModel)), str(type(dcModel))))        
     
@@ -362,20 +373,28 @@ class DatcomInputTable(QWidget):
         self.clear()
         self.InitializeHeader()   
         self.InitializeTableSize()  #重新赋初值
+        
         #h获得行数限制
         if self.isLinkNMACH :
             tTableRows = self.dtModel.getVariableByUrl('FLTCON/NMACH')['Value']
+        elif self.FixedRows >= 0:
+            tTableRows = self.FixedRows  #常量表格
         else:
-            tTableRows = self.dtModel.getVariableByUrl(self.CountVarUrl)['Value']
+            if self.CountVarUrl is not None:
+                tTableRows = self.dtModel.getVariableByUrl(self.CountVarUrl)['Value']
+            else:
+                self.logger.info("_loadData()数据定义异常：%s"%(self.vUrl))
+                
         #分析写入数据
         for iC  in range(0, len(self.varsDfList)):
             #分析并获取定义
-            iV       = self.varsDfList[iC]   #这是所有的定义
-            tUrl     = '%s/%s'%(iV['NameList'], iV['VarName'])
+            iV          = self.varsDfList[iC]   #这是所有的定义
+            tUrl        = '%s/%s'%(iV['NameList'], iV['VarName'])
             tDataVar = self.dtModel.getVariableByUrl(tUrl)      
             #定义本列的模板
             tElementTemplate  = self.dtDefine.getVariableTemplateByUrl(tUrl, True).copy() #{'Dimension':tDimension, 'Unit':tUnit, 'Value':None}     
-            tDataTemplate      = self.dtDefine.getVariableTemplateByUrl(tUrl)            
+            tDataTemplate      = self.dtDefine.getVariableTemplateByUrl(tUrl)   
+            #设置默认值         
             if tDataVar is None :
                 #不存在数据则隐藏对应的列
                 self.table.setColumnHidden(iC, True)
@@ -383,8 +402,7 @@ class DatcomInputTable(QWidget):
                 tDataVar = tDataTemplate.copy()
                 tDataVar.update({'Value': [tElementTemplate['Value']] * tTableRows})
                 tDataVar.update({'InUsed':'False'})
-                #但是需要添加必要
-                #continue  
+
             #执行表头坐标同步
             tDimension = ''
             if 'Dimension' in self.varsDfList[iC]:
@@ -392,7 +410,7 @@ class DatcomInputTable(QWidget):
             tUnit = ''
             if 'Unit' in tDataVar.keys():
                 tUnit = tDataVar['Unit']
-                self.setHorizontalHeaderUnit(iC,tUnit )
+                self.setHorizontalHeaderUnit(iC,tUnit )  #这里导致不正确的更新
             else:
                 tUnit = dtDimension.getMainUnitByDimension(tDimension)
                 #self.logger.info("数据格式异常，缺少单位信息")           
@@ -405,13 +423,19 @@ class DatcomInputTable(QWidget):
                 #如果是链接到NMACH的内容
                 tNMACH = self.dtModel.getVariableByUrl('FLTCON/NMACH')
                 if tNMACH is None:
-                    self.logger.error("无法数据")
+                    self.logger.error("_loadData()无法获取FLTCON/NMACH的数据！")
                 else:
                     if self.table.rowCount() !=tNMACH['Value']:   
                         tNeedRows = tNMACH['Value']
                         self.minCount  = tNeedRows
                         self.maxCount = tNeedRows
                         self.table.setRowCount( tNeedRows)
+            elif self.FixedRows > -1:
+                if self.table.rowCount()  != self.FixedRows:   
+                    tNeedRows = self.FixedRows
+                    self.minCount  = tNeedRows
+                    self.maxCount = tNeedRows
+                    self.table.setRowCount( tNeedRows)
             else:
                     if self.table.rowCount() != len(tData):                 
                         #这里应该是比较大的那个值
@@ -511,7 +535,7 @@ class DatcomInputTable(QWidget):
                 for iR in range(0, self.table.rowCount()): 
                     #如果没有输入值则利用定义的默认值
                     if self.table.item(iR, iC) is None:  
-                        self.logger.error("表格%s在R：%d，C：%d的输入不应为空"%(self.vUrl, iR, iC))
+                        self.logger.warning("_flushData()表格%s在R：%d，C：%d的项为空，使用默认值"%(self.vUrl, iR, iC))
                         tData = self.dtDefine.getVariableTemplateByUrl(tUrl, True)  #查询Array的子项的默认值
                         #self.table.item(iR, iC).setBackground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
                     else:
@@ -523,7 +547,7 @@ class DatcomInputTable(QWidget):
                             elif tText == '.TRUE.':
                                 tVarlist.append(True)
                             else:
-                                self.logger.error("DatcomInputTable.saveData()输入数据%s不合法"%tText)
+                                self.logger.error("_flushData() DatcomInputTable.saveData()输入数据%s不合法"%tText)
                         else:
                             #值校验认为由控件已经完成了
                             #单位换算认为已经由控件换算完成了
@@ -531,7 +555,7 @@ class DatcomInputTable(QWidget):
                         
                     #将结果写入到序列
                     if tData is None or tData['Value'] is None:
-                        self.logger.error("DatcomInputTable.saveData()输入数据%s不合法 R：%d，C：%d"%(self.table.item(iR, iC).text(), iR, iC))
+                        self.logger.error("_flushData()输入数据%s不合法 R：%d，C：%d"%(self.table.item(iR, iC).text(), iR, iC))
                     else:                            
                         tVarlist.append(tData['Value']) 
                 #此处传递了CurrentUnit给Model
@@ -674,12 +698,12 @@ class DatcomInputTable(QWidget):
         if iNum >= self.minCount and iNum <= self.maxCount  and  iNum > self.table.rowCount():
             tNCount = self.table.rowCount()
             #开始事务
-            self.isTransaction = True
+            self.isTransactionCount   =  self.isTransactionCount  + 1
             self.table.setRowCount(iNum)
             for iR in range(tNCount, iNum):
                 self._setRowWithDefault(iR)
             #结束事务
-            self.isTransaction = False
+            self.isTransactionCount   =  self.isTransactionCount  - 1
             #刷新数据到Model
             self._flushData()
             self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())     
@@ -719,11 +743,11 @@ class DatcomInputTable(QWidget):
             if self.table.rowCount() < iNMCAH:
                 self.on_Singal_RuleNumToCount(self.vUrl, str(iNMCAH))
             if self.table.rowCount() > iNMCAH:
-                self.isTransaction = True
+                self.isTransactionCount   =  self.isTransactionCount  + 1
                 for iR in range(iNMCAH, self.table.rowCount()):
                     self.table.removeRow(iR)     
                     #这里将触发大量的读写 
-                self.isTransaction = False
+                self.isTransactionCount   =  self.isTransactionCount  - 1
                 self.logger.warning("on_Singal_NMACHChanged() 根据NMACH值删除了表格最后的几行数据！")
             #就刷新到Model
             self._flushData()
@@ -742,14 +766,14 @@ class DatcomInputTable(QWidget):
         else:
             rowIndex = aItem.row()
         #开始事务处理
-        self.isTransaction = True  
+        self.isTransactionCount   =  self.isTransactionCount  + 1
         if self.table.rowCount() <self.maxCount:            
             self.table.insertRow(rowIndex)
             self._setRowWithDefault(rowIndex)
         else:
             self.logger.info("%s已经达到最大行数不能添加"%self.objectName())
         #结束事务处理
-        self.isTransaction = False     
+        self.isTransactionCount   =  self.isTransactionCount  - 1     
         #刷新到Model
         self._flushData()       
         #向外发送结果
@@ -761,14 +785,14 @@ class DatcomInputTable(QWidget):
         增加到最大行的代码.
         """
         #开始事务处理
-        self.isTransaction = True  
+        self.isTransactionCount   =  self.isTransactionCount  + 1
         #添加行
         if self.table.rowCount() < self.maxCount:
             self.table.setRowCount(self.maxCount)
             for iR in range(self.table.rowCount(), self.maxCount):
                 self._setRowWithDefault(iR)           
         #结束事务处理
-        self.isTransaction = False     
+        self.isTransactionCount   =  self.isTransactionCount  - 1  
         #刷新到Model
         self._flushData()       
         #向外发送结果
@@ -781,7 +805,7 @@ class DatcomInputTable(QWidget):
         删除行的代码.
         """
         #开始事务处理
-        self.isTransaction = True  
+        self.isTransactionCount   =  self.isTransactionCount  + 1
         #删除操作
         aItem = self.table.indexAt(self.curPos)
         if  aItem.row() >=0 :            
@@ -789,7 +813,7 @@ class DatcomInputTable(QWidget):
         else:
             self.logger.info("没有命中任何行")
          #结束事务处理
-        self.isTransaction = False     
+        self.isTransactionCount   =  self.isTransactionCount  - 1    
         #刷新到Model
         self._flushData()       
         #向外发送结果       
@@ -801,11 +825,11 @@ class DatcomInputTable(QWidget):
         删除行的代码.
         """
         #开始事务处理
-        self.isTransaction = True  
+        self.isTransactionCount   =  self.isTransactionCount  + 1
         #删除所有的行
         self.table.setRowCount(self.minCount)    
          #结束事务处理
-        self.isTransaction = False     
+        self.isTransactionCount   =  self.isTransactionCount  - 1
         #刷新到Model
         self._flushData()       
         #向外发送结果   
@@ -818,7 +842,7 @@ class DatcomInputTable(QWidget):
         删除行的代码.
         """
         #开始事务处理
-        self.isTransaction = True  
+        self.isTransactionCount   =  self.isTransactionCount  + 1
         #获得粘贴板中的数据
         clipboard = QtGui.QGuiApplication.clipboard()
         tStr = clipboard.text()
@@ -857,7 +881,7 @@ class DatcomInputTable(QWidget):
                         tItem.setData(Qt.UserRole,tItemData )
                         tItem.setData(Qt.DisplayRole,str(tDList[iR]) )
         #结束事务处理
-        self.isTransaction = False     
+        self.isTransactionCount   =  self.isTransactionCount  - 1
         #刷新到Model
         self._flushData()       
         #向外发送结果   
@@ -926,10 +950,10 @@ class DatcomInputTable(QWidget):
             tHItem.setData(Qt.UserRole, tConfig )
             #更新表格的数据
             #开始事务处理
-            self.isTransaction = True              
+            self.isTransactionCount   =  self.isTransactionCount  + 1          
             self._unitChanged(vIndex, tNextUnit)
             #结束事务处理
-            self.isTransaction = False     
+            self.isTransactionCount   =  self.isTransactionCount  - 1   
             #刷新到Model
             self._flushData()  
     
@@ -937,16 +961,24 @@ class DatcomInputTable(QWidget):
         """
         设置表头的单位属性，以同步数据设置操作
         """
-        if newUnit is None or newUnit == '': return 
+        #检查输入
+        if newUnit is None or newUnit == '':
+            return 
         #获取数据
         tHItem = self.table.horizontalHeaderItem(vIndex)
         tConfig = tHItem.data(Qt.UserRole)
-        if 'Dimension' not in tConfig.keys() :return 
-        tUList = dtDimension.getUnitListByDimension(tConfig['Dimension'])
-        
+        #如果没有量纲直接返回
+        if 'Dimension' not in tConfig.keys() :
+            return 
+        #获得单位列表
+        tUList = dtDimension.getUnitListByDimension(tConfig['Dimension'])        
         if tUList is None or newUnit not in  tUList:
             self.logger.error("想要设置的单位：%s 并不在当前的Dimension:%s定义内"%(newUnit, tConfig['Dimension']))
             return 
+        #如果新单位等于原单位退出
+        if tConfig['CurrentUnit']  == newUnit:
+            return
+        #开始新单位的设置逻辑
         tConfig['CurrentUnit'] = newUnit
         #更新表头的显示效果
         tHItem.setData(Qt.UserRole, tConfig )
@@ -954,10 +986,10 @@ class DatcomInputTable(QWidget):
         tHItem.setData(Qt.DisplayRole, tDisplay )
         #更新表格的数据
         #开始事务处理
-        self.isTransaction = True              
+        self.isTransactionCount   =  self.isTransactionCount  + 1           
         self._unitChanged(vIndex, newUnit)
         #结束事务处理
-        self.isTransaction = False     
+        self.isTransactionCount   =  self.isTransactionCount  - 1   
         #刷新到Model
         self._flushData()  
         
@@ -1002,7 +1034,9 @@ class DatcomInputTable(QWidget):
         This signal is emitted whenever the data of item has changed.
         在此处协调代理自行变换单位的情况
         """
-        if self.isTransaction : return
+        #当处于某一个isTransactionCount队列时，不触发逻辑
+        if self.isTransactionCount   >0: 
+            return
         #获取定义
         tConfig = self.table.horizontalHeaderItem(item.column()).data(Qt.UserRole)
         #做值判断,修复错误
@@ -1017,7 +1051,7 @@ class DatcomInputTable(QWidget):
             #判断值结论
             tItemData = item.data(Qt.UserRole)
             #判断值得有效性
-            if tItemData is not None and   'Unit'  in tItemData.keys() and  tItemData['Unit'] == '':                
+            if tItemData is not None and   'Unit'  in tItemData.keys() and  tItemData['Unit'] not in[None,  '']:                
                 if tItemData['Unit']  != tConfig['CurrentUnit']:
                     tNewItemData = dtDimension.unitTransformation(tItemData, tConfig['CurrentUnit'])
                     item.setData(Qt.UserRole, tNewItemData)
@@ -1027,7 +1061,7 @@ class DatcomInputTable(QWidget):
             
         #逐项值更新表格数据
         #写入到数据模型
-        if self.isTransaction  == False :
+        if self.isTransactionCount  == 0 :
             self.dtModel.setVariablebyArrayIndex(item.data(Qt.UserRole), item.row())
   
         

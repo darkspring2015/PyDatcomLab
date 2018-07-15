@@ -495,6 +495,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         # TODO: not implemented yet
         if self.dtXMLEditer is None:
             self.dtXMLEditer = XMLEditer.XMLEditer()
+            self.dtXMLEditer.setWindowTitle("Datcom元数据编辑")
             self.dtXMLEditer.Load(self.Properties['DatcomDefineFile'])
             self.dtXMLEditer.Command_ReloadDtDefine_triggered.connect(self.on_ReloadCaseUI)
         self.dtXMLEditer.expandToDepth(1)
@@ -526,7 +527,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         if  self.currentCASE is not None and self.centralWidgetUsed :
             #当前模型存在,则提示是否写入到XML
             button = QMessageBox.question(self, r"重新加载当前模型",
-                                   r"重新加载当前模型，使Datcom定义生效？\n\t注意：操作将导致当前模型被写入到文件！",
+                                   "重新加载当前模型，使Datcom定义生效？\n\t注意：操作将导致当前模型被写入到文件！",
                                    QMessageBox.Yes | QMessageBox.No)
             if button == QMessageBox.Yes:                    
                 try:

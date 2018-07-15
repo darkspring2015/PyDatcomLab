@@ -934,7 +934,7 @@
     <SSPNOP dcType="Variable">
       <VarName>SSPNOP</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>SSPNOP：外侧板半展长</DisplayName>
       <Tooltips>semi-span</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
@@ -950,7 +950,7 @@
     <SSPNE dcType="Variable">
       <VarName>SSPNE</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>SSPNE：外露板半展长</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -966,7 +966,7 @@
     <SSPN dcType="Variable">
       <VarName>SSPN</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>SSPN：理论根弦的理论半展长</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -982,7 +982,7 @@
     <SAVSI dcType="Variable">
       <VarName>SAVSI</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>SAVSI：内侧板掠角</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -1014,7 +1014,7 @@
     <CHSTAT dcType="Variable">
       <VarName>CHSTAT</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>CHSTAT：内外侧板掠角的参考弦点</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -1030,7 +1030,7 @@
     <TWISTA dcType="Variable">
       <VarName>TWISTA</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>TWISTA：扭转角</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -1046,7 +1046,7 @@
     <SSPNDD dcType="Variable">
       <VarName>SSPNDD</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>SSPNDD：内上反角的外侧板半展长</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -1062,7 +1062,7 @@
     <DHDADI dcType="Variable">
       <VarName>DHDADI</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>DHDADI：内侧板上反角</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -1078,7 +1078,7 @@
     <DHDADO dcType="Variable">
       <VarName>DHDADO</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>DHDADO：外侧板上反角</DisplayName>
       <Tooltips />
       <TYPE>REAL</TYPE>
       <SubType />
@@ -1094,7 +1094,7 @@
     <TYPE dcType="Variable">
       <VarName>TYPE</VarName>
       <NameList>WGPLNF</NameList>
-      <DisplayName />
+      <DisplayName>TYPE：机翼类型</DisplayName>
       <Tooltips />
       <TYPE>List</TYPE>
       <SubType />
@@ -1836,7 +1836,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </TOVC>
     <DELTAY dcType="Variable">
@@ -1853,7 +1853,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </DELTAY>
     <NPTS dcType="Variable">
@@ -1886,7 +1886,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </XOVC>
     <CLI dcType="Variable">
@@ -1903,7 +1903,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CLI>
     <ALPHAI dcType="Variable">
@@ -1920,7 +1920,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </ALPHAI>
     <CMO dcType="Variable">
@@ -1937,7 +1937,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CMO>
     <LERI dcType="Variable">
@@ -1954,7 +1954,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </LERI>
     <LERO dcType="Variable">
@@ -1971,7 +1971,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </LERO>
     <TOVCO dcType="Variable">
@@ -1987,7 +1987,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </TOVCO>
     <XOVCO dcType="Variable">
@@ -2003,7 +2003,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </XOVCO>
     <CMOT dcType="Variable">
@@ -2019,7 +2019,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CMOT>
     <CLMAXL dcType="Variable">
@@ -2035,7 +2035,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CLMAXL>
     <CLAMO dcType="Variable">
@@ -2051,7 +2051,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CLAMO>
     <TCEFF dcType="Variable">
@@ -2067,7 +2067,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </TCEFF>
     <KSHARP dcType="Variable">
@@ -2083,7 +2083,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </KSHARP>
     <ARCL dcType="Variable">
@@ -2115,7 +2115,7 @@
       <Default />
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </YCM>
     <CLD dcType="Variable">
@@ -2132,7 +2132,7 @@ See-NACA RM A55G19.(Default To 0.0)</Tooltips>
       <Default>0.0</Default>
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>UnChecked</MustInput>
       <Relation />
     </CLD>
     <CAMBER dcType="Variable">
@@ -2183,7 +2183,7 @@ TYPEIN    翼型截面坐标模式    type of airfoil section coordinate input f
       <Default>1.0</Default>
       <Limit />
       <Dimension />
-      <MustInput />
+      <MustInput>MustInput</MustInput>
       <Relation />
     </TYPEIN>
     <SLOPE dcType="Variable">
@@ -2333,7 +2333,10 @@ Positive when the tangent intersects the chord plane forward of the reference ch
       <Relation />
     </THICK>
     <AdditionalInfo dcType="Infomation">
-      <NMACHLinkTable varList="['Lift']" />
+      <NMACHLinkTable dcType="Rule" varList="['Lift']" />
+      <FixedRowsTable dcType="Rule">
+        <Rule FixedRows="6" Group="SLOPE" />
+      </FixedRowsTable>
       <RuleNumToCount dcType="Rule">
         <Rule Group="AirfoilSection" Num="NPTS" />
       </RuleNumToCount>

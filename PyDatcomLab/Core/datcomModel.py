@@ -186,14 +186,31 @@ class dcModel(datcomXMLLoader):
         for iV in self.doc.keys():
             tNamelist = iV.split('/')[-2]
             tVarName  = iV.split('/')[-1]
-#            if tNamelist not in self.dtDefine.getNamelistCollection():
-#                self.logger.error("解析的Namelsit结果异常")
             if tNamelist in tResult.keys():
                 tResult[tNamelist].append(tVarName)
             else:
                 tResult[tNamelist] = [tVarName]           
         
         return tResult
+        
+    def _getNamelistCollectionInUsed(self):
+        """
+        返回doc中实际在用的所有变量和Namelist的组合
+        """
+         #从 self.xmlDoc中进行分析结果
+        tResult = {}        
+        for iV in self.doc.keys():
+            tNamelist = iV.split('/')[-2]
+            tVarName  = iV.split('/')[-1]
+            #如果变量在文档中并且在使用
+            if ('InUsed' in self.doc[iV] and self.doc[iV]['InUsed'] =='True') or \
+                'InUsed' not in self.doc[iV] :           
+                if tNamelist in tResult.keys():
+                    tResult[tNamelist].append(tVarName)
+                else:
+                    tResult[tNamelist] = [tVarName]           
+        
+        return tResult       
         
     def addNamelist(self, namelist, variables = []):
         """
@@ -492,6 +509,7 @@ class dcModel(datcomXMLLoader):
                 tReport['status'] = 'Invalid'
                 break   
         return tReport
+    
         
     def buildDatcomInputFile(self, path):
         """
@@ -513,7 +531,7 @@ class dcModel(datcomXMLLoader):
             self.logger.info(str(tReport))   
             raise  UserWarning(tReport)     
         #获得doc的全部定义
-        tAllInfo = self.getNamelistCollection()
+        tAllInfo = self._getNamelistCollectionInUsed()
         if tAllInfo is None or len(tAllInfo) == 0 :
             raise  UserWarning('不包含数据的空模型') 
 
@@ -527,22 +545,23 @@ class dcModel(datcomXMLLoader):
             theStr = " $%s "%itr
             self.Append80ColumsLimit(TStr, theStr)
             tNMlstPos = len(TStr[-1]) #记录Namelist变量的位置
-            lastCheck = 0
+            lastCheck = 1
             for itVar in tAllInfo[itr]:#循环Var []
                 #获得当前变量的结论
                 theStr = '%s'%itVar 
                 tURl    = '%s/%s'%(itr, itVar)
                 tVarStruct = self.getVariableByUrl(tURl)
                 tVarValueS = tVarStruct['Value']
-                #跳过不在使用的变量
-                if 'InUsed' in tVarStruct and tVarStruct['InUsed'] =='False' :
-                    continue
                 #创建写入
                 lastCheck +=1
                 if tVarValueS is None :
                     self.logger.error("创建Datcom计算配置文件失败，不能为空值创建结果！%s/%s"%(itr,itVar ))
                     continue
                     #raise(Exception("创建Datcom计算配置文件失败，不能为空值创建结果！%s/%s"%(itr,itVar ))) 
+                #跳过不在使用的变量
+                if 'InUsed' in tVarStruct and tVarStruct['InUsed'] =='False' :
+                    continue
+                #执行分析逻辑
                 tVarDf = self.dtDefine.getVariableDefineByUrl(tURl)
                 if  tVarDf['TYPE'] == 'Array': #对于序列类型
                     if 'SIndex' in tVarStruct.keys() and tVarStruct['SIndex'] not in [1, '1'] :
@@ -558,7 +577,7 @@ class dcModel(datcomXMLLoader):
                             theStr = '%.3f,'%itValue
                         else:
                             theStr = '%.3E,'%itValue
-                        self.Append80ColumsLimit(TStr, theStr, tNewPos)   
+                        self.Append80ColumsLimit(TStr, theStr, tNewPos)        
                     #防止个数变量出现在序列变量之后
                     if lastCheck < len(tAllInfo[itr]): 
                         TStr.append(' '*tNMlstPos) 
