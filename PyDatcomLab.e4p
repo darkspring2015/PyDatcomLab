@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-07-11, 01:28:41 -->
+<!-- Saved: 2018-07-13, 23:10:33 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language>en_US</Language>
@@ -65,12 +65,17 @@
     <Source>PyDatcomLab/GUIs/components/Ui_logForm.py</Source>
     <Source>PyDatcomLab/GUIs/components/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/components/logForm.py</Source>
-    <Source>PyDatcomLab/GUIs/tools/Ui_XMLEditer.py</Source>
-    <Source>PyDatcomLab/GUIs/tools/XMLEditer.py</Source>
-    <Source>PyDatcomLab/GUIs/tools/XMLModel.py</Source>
-    <Source>PyDatcomLab/GUIs/tools/XMLTreeEditer.py</Source>
-    <Source>PyDatcomLab/GUIs/tools/dtXMLTreeWidget.py</Source>
-    <Source>PyDatcomLab/GUIs/tools/tools_rc.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/HelperSystem/HelperBrowses.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/HelperSystem/MarkdownEngine.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/HelperSystem/Ui_HelperBrowses.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/HelperSystem/__init__.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/HelperSystem/resource_rc.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLEditer/Ui_XMLEditer.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLEditer/XMLEditer.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLEditer/XMLModel.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLEditer/XMLTreeEditer.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLEditer/dtXMLTreeWidget.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLEditer/tools_rc.py</Source>
     <Source>PyDatcomLab/PyDatcomLab.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
   </Sources>
@@ -86,19 +91,23 @@
     <Form>PyDatcomLab/GUIs/components/ProjectsManager.ui</Form>
     <Form>PyDatcomLab/GUIs/components/Reference.ui</Form>
     <Form>PyDatcomLab/GUIs/components/logForm.ui</Form>
-    <Form>PyDatcomLab/GUIs/tools/XMLEditer.ui</Form>
+    <Form>PyDatcomLab/GUIs/tools/HelperSystem/HelperBrowses.ui</Form>
+    <Form>PyDatcomLab/GUIs/tools/XMLEditer/XMLEditer.ui</Form>
   </Forms>
   <Resources>
     <Resource>PyDatcomLab/GUIs/PyDatcomLab.qrc</Resource>
-    <Resource>PyDatcomLab/GUIs/tools/tools.qrc</Resource>
+    <Resource>PyDatcomLab/GUIs/tools/HelperSystem/resource.qrc</Resource>
+    <Resource>PyDatcomLab/GUIs/tools/XMLEditer/tools.qrc</Resource>
   </Resources>
   <Others>
     <Other>.gitignore</Other>
-    <Other>PyDatcomLab/config/datcomDefine.xml</Other>
+    <Other>PyDatcomLab/GUIs/tools/HelperSystem/css/diy1.css</Other>
+    <Other>PyDatcomLab/GUIs/tools/HelperSystem/css/typora_defualt.css</Other>
     <Other>PyDatcomLab/config/datcomDefinitionDefault.xml</Other>
     <Other>PyDatcomLab/config/datcomModelTemplateDefault.xml</Other>
     <Other>docs</Other>
     <Other>extras</Other>
+    <Other>wiki</Other>
     <Other>wiki/PyQtGuide/QTabwidget.md</Other>
   </Others>
   <MainScript>PyDatcomLab/PyDatcomLab.py</MainScript>

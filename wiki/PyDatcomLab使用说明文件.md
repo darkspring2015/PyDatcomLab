@@ -4,7 +4,7 @@
 
 变量定义表包括如下信息：
 
-```sql lite
+```mssql
 CREATE TABLE `VariableDefine` (
                               `VarName` varchar(10) NOT NULL,
                               `NameList` varchar(10) NOT NULL,
@@ -106,20 +106,20 @@ dcModel类主要接口包括：
 
 ​	
 
-| 接口名称                                         | 功能描述                                               | 参数说明                                                     | 约束条件                                                     | 其、他 |
-| ------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------ |
-| \__init__(self，dtDefine = DtDefine)             | 初始化函数                                             | dtDefine是datcom的整体定义对象，常驻实例 DtDefine            | 创建空的没有任何信息的实例<br />约束信息根据dtDefine生成     |        |
-| \__init__(self,path = None，dtDefine = DtDefine) | 初始化函数，从文件path加载数据                         | path str<br />*.dcXML,*.xml类型                              | path无效将创建在 "~/.PyDatcomLab/temp/"下的随机文件<br />path有效将加载对应文件<br />path不存在将尝试创建对应的文件，并创建空白实例 |        |
-| loadCASE(path)                                   | 从文件path加载数据                                     | path str<br />*.dcXML,*.xml类型<br />加载出现错误将引发异常  |                                                              |        |
-| saveCASE(path)                                   | 将结果保存到文件                                       |                                                              |                                                              |        |
-| setProperties(pDict)                             | 修改属性字典定义的属性                                 | pDict是Python的dict类型修改基本信息                          | 对于超过datcom算例文件的属性信息将作为属性写入，但不承若行为 |        |
-| getProperties()                                  | 以dict形式返回属性                                     | 返回值为Python的dict类型                                     | 将返回所有的属性                                             |        |
-| getNamelistCollection()                          | 返回实例包含的所有的Namelist和对应的Variaable          | 返回值为dict<br />etc：{‘FLTCON’:['NMACH']}                  | 返回的结果不包括值                                           |        |
-| addNamelist(self, namelist, variables = [])      | 向实例添加一个选项卡和对应的变量                       | namelist str ：控制卡的名称<br />variables [str] 变量组合 ，可选 | 当添加的变量省略时，或者变量未达到基本要求时，将根据datcom定义文件进行推定补充 |        |
-| setVariable(variable)                            | 设置实例的某一个变量的值                               | variable是Python的dict类型，包括：{url，unit，value}         | 对于不存在的namelist，将导致创建对应选项卡的操作；<br />对于存在的变量，将修改值和单位等信息<br />如果变量的值为None，将从集合中删除该变量 |        |
-| deleteNamelist(namelist)                         | 从实例移除一个选项卡                                   | namelist str：选项卡的名称                                   | 不承诺数据的完整性                                           |        |
-| validate()                                       | 验证当前的配置是否是一个可以执行的配置，并返回报告信息 | 返回值为当前配置的错误报告                                   |                                                              |        |
-| buildDatcomInputFile(path)                       | 根据当前的CASE配置创建datcom的计算文件                 | 过程出错将引发异常                                           |                                                              |        |
+| 接口名称                                     | 功能描述                            | 参数说明                                     | 约束条件                                     | 其、他  |
+| ---------------------------------------- | ------------------------------- | ---------------------------------------- | ---------------------------------------- | ---- |
+| \__init__(self，dtDefine = DtDefine)      | 初始化函数                           | dtDefine是datcom的整体定义对象，常驻实例 DtDefine     | 创建空的没有任何信息的实例<br />约束信息根据dtDefine生成      |      |
+| \__init__(self,path = None，dtDefine = DtDefine) | 初始化函数，从文件path加载数据               | path str<br />*.dcXML,*.xml类型            | path无效将创建在 "~/.PyDatcomLab/temp/"下的随机文件<br />path有效将加载对应文件<br />path不存在将尝试创建对应的文件，并创建空白实例 |      |
+| loadCASE(path)                           | 从文件path加载数据                     | path str<br />*.dcXML,*.xml类型<br />加载出现错误将引发异常 |                                          |      |
+| saveCASE(path)                           | 将结果保存到文件                        |                                          |                                          |      |
+| setProperties(pDict)                     | 修改属性字典定义的属性                     | pDict是Python的dict类型修改基本信息                | 对于超过datcom算例文件的属性信息将作为属性写入，但不承若行为        |      |
+| getProperties()                          | 以dict形式返回属性                     | 返回值为Python的dict类型                        | 将返回所有的属性                                 |      |
+| getNamelistCollection()                  | 返回实例包含的所有的Namelist和对应的Variaable | 返回值为dict<br />etc：{‘FLTCON’:['NMACH']}   | 返回的结果不包括值                                |      |
+| addNamelist(self, namelist, variables = []) | 向实例添加一个选项卡和对应的变量                | namelist str ：控制卡的名称<br />variables [str] 变量组合 ，可选 | 当添加的变量省略时，或者变量未达到基本要求时，将根据datcom定义文件进行推定补充 |      |
+| setVariable(variable)                    | 设置实例的某一个变量的值                    | variable是Python的dict类型，包括：{url，unit，value} | 对于不存在的namelist，将导致创建对应选项卡的操作；<br />对于存在的变量，将修改值和单位等信息<br />如果变量的值为None，将从集合中删除该变量 |      |
+| deleteNamelist(namelist)                 | 从实例移除一个选项卡                      | namelist str：选项卡的名称                      | 不承诺数据的完整性                                |      |
+| validate()                               | 验证当前的配置是否是一个可以执行的配置，并返回报告信息     | 返回值为当前配置的错误报告                            |                                          |      |
+| buildDatcomInputFile(path)               | 根据当前的CASE配置创建datcom的计算文件        | 过程出错将引发异常                                |                                          |      |
 
 ## datcomConstraint 类
 
@@ -145,9 +145,9 @@ datcomConstraint 用来加载和记录与基本计算构型相关的datcom配置
 
 ​	 1.根节点Tag ：ConfigurationCollection
 
- 	2. 其下包含多个Configuration，每个Configuration由若干VARIABLE作为子节点
- 	3. VARIABLE的指定了特殊的初始化规则,其值将被用来修改模型
- 	4. Configuration的Namelists属性指定了该配置必需包含的选项卡的名称
+       	2. 其下包含多个Configuration，每个Configuration由若干VARIABLE作为子节点
+        	3. VARIABLE的指定了特殊的初始化规则,其值将被用来修改模型
+         	4. Configuration的Namelists属性指定了该配置必需包含的选项卡的名称
 
 
 
@@ -155,5 +155,64 @@ datcomConstraint 用来加载和记录与基本计算构型相关的datcom配置
 
 
 
+## 开发过程
+
+项目主要由Linger独立完成。
+
+项目采用了Bug驱动开发的模式，在丰富的预判断日志机制下，系统的错误信息非常有效
+
+### 1. 主要功能的开发
+
+2018-7-13  Bug ：WT 、GAMMA、STMACH 、TSMACH 没有在界面激活，但是写入了最终文件，需要检查逻辑
+
+​                    Bug： NX 不可见 &radic;
+
+​		    Bug：编辑控件不可用&radic;
+
+​		    Bug：添加选项卡无效&radic;
+
+​		    Bug ：选项卡添加逻辑异常&radic;
 
 
+
+2018-7-14 Bug： X的值加载不完整  &radic;
+
+​			     _setArrayItembyIndex 修改了内部逻辑问题      &radic;
+
+​		  Bug：界面未输入的表单项出现在最终的输入文件中    &radic;
+
+​		  Bug ：没有按照分组顺序写入。不美观
+
+​		  Bug ：Datcom的最终输入文件中数组列最后应该换行，不美观 &hearts;
+
+​		  Bug ：Runing的报告信息总是提示未完成！    &radic;
+
+​		  Bug ： 没有正确的推定 combo的组合关系  &radic;
+
+​		  Bug :  在Input文件中array最后的，和$之间应该不同时出现&radic;
+
+2018-07-15 
+
+​                  Bug : onItemChanged()检查出错   这是逻辑判断错误导致  &radic; 
+
+​                  Bug：表格FLTCON/Speed_Atmospheric在R：0，C：5的输入不应为空 
+
+​			     主要问题，隐藏表格问题   &radic;
+
+​                   Bug: 加载机翼的多个CARD错误	'WGSCHR/None'  给了一个不稳定的补丁&radic;
+
+​                   Bug: 翼型截面的坐标模式没有选项卡，但是却被错误禁用&radic;
+
+​                   	Task：添加定长表格规则描述&radic;
+
+1. ​                                修改datcomDefine file的模板 增加 FixedRowsTable &radic;
+
+2. ​                                增加了读写函数的FixedRowsTable 节&radic;
+
+3. ​                                增加checkFixedRowTable()&radic;
+
+4. 修改getRuleNumToCountByGroup的返回逻辑，从VarName到Url &radic;
+
+   ​             Bug ： 修复了重新加载CASEUI时的打印不美观问题       &radic;
+
+   ​             Bug  ： 修改DatcomDefine编辑器没有合适标题的问题  &radic;
