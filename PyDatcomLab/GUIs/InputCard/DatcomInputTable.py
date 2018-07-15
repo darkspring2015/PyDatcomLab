@@ -78,9 +78,9 @@ class DatcomInputTable(QWidget):
         QMetaObject.connectSlotsByName(self)
         
         #执行表格内容的初始化逻辑
-        self.InitializeTableSize()
+        #self.InitializeTableSize()
         
-                #为数据模型调用初始化函数
+        #为数据模型调用初始化函数
         if self.dtModel is not None :
             if type(self.dtModel) == dcModel:
                 self.setModel(self.dtModel)
@@ -141,17 +141,17 @@ class DatcomInputTable(QWidget):
         
         #分析控制变量逻辑
         self.CountVar      = None    #表格行数对应的变量名
-        self.CountVarUrl  = None     #表格行数对应的变量的Url
+        self.CountVarUrl   = None     #表格行数对应的变量的Url
         #分析是否关联到NMACH限制因素
         self.isLinkNMACH             = self.dtDefine.isLinkToNMACH(iNamelist, tGroup)
         self.FixedRows                =  -1   #是否是固定长度表格标识位 -1标识否，>=0是表格的固定长度
         tCountVarUrl , tRows       = self.dtDefine.getRuleNumToCountByGroup(iNamelist, tGroup)
         #getRuleNumToCountByGroup 函数返回了跨Namelist的变量集合
         if tCountVarUrl is not None : 
-            self.CountVar = tCountVarUrl.split('/')[-2]   #获得倒数第二个字符串 Namelist
+            self.CountVar = tCountVarUrl.split('/')[-1]   #获得倒数第1个字符串 Namelist
             self.CountVarUrl = tCountVarUrl
         else:
-            if self.FixedRows < 0:
+            if tRows < 0:
                 self.logger.info("setDefinition(%s,%s)错误的数据结构!"%(iNamelist, tGroup))
             else:
                 #设置相关变量
@@ -296,6 +296,13 @@ class DatcomInputTable(QWidget):
             tHItem.setData(Qt.DisplayRole, tDisplay)
             tHItem.setData(Qt.UserRole, tConfig)
             self.table.setHorizontalHeaderItem(iC,tHItem )     
+            
+        #设置表头风格
+        self.table.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
+        self.table.horizontalHeader().setMinimumSectionSize(100)
+        #self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        
          
     def InitializeTableSize(self):
         """
@@ -383,7 +390,7 @@ class DatcomInputTable(QWidget):
             if self.CountVarUrl is not None:
                 tTableRows = self.dtModel.getVariableByUrl(self.CountVarUrl)['Value']
             else:
-                self.logger.info("_loadData()数据定义异常：%s"%(self.vUrl))
+                self.logger.info("_loadData()获取%s的行数数据异常："%(self.vUrl))
                 
         #分析写入数据
         for iC  in range(0, len(self.varsDfList)):
@@ -410,7 +417,7 @@ class DatcomInputTable(QWidget):
             tUnit = ''
             if 'Unit' in tDataVar.keys():
                 tUnit = tDataVar['Unit']
-                self.setHorizontalHeaderUnit(iC,tUnit )  #这里导致不正确的更新
+                self.setHorizontalHeaderUnit(iC,tUnit , isChangeAll = False)  #这里导致不正确的更新
             else:
                 tUnit = dtDimension.getMainUnitByDimension(tDimension)
                 #self.logger.info("数据格式异常，缺少单位信息")           
@@ -455,6 +462,7 @@ class DatcomInputTable(QWidget):
                     tDataUserRole = tDataTemplate.copy()
                     tDataUserRole['Unit']  = tUnit
                     tDataUserRole['Value'] =  tData[iR]
+                    tDataUserRole['Edited'] =  True
                     tItem.setData( Qt.UserRole,tDataUserRole )
                     #tItem.setData(Qt.DisplayRole,str(tData[iR]) )
                     self.table.setItem(iR, iC, tItem)
@@ -466,6 +474,9 @@ class DatcomInputTable(QWidget):
             else:
                 self.logger.warning("加载表格%s数据长度错误：%d ，需要min：%d max：%d"%(self.GroupName,len(tData), 
                                self.minCount, self.maxCount ))
+                #逻辑问题，没有数据，但是加载了默认值需要同步一次，否则dtModel中没有数据
+                self._flushData()
+                
 
         #发送行变更消息
         self.Signal_rowCountChanged.emit(self.CountVarUrl , self.table.rowCount())         #向外通知数据加载后的长度
@@ -709,6 +720,7 @@ class DatcomInputTable(QWidget):
             self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())     
         else:
             if iNum != self.table.rowCount() :
+                self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())
                 self.logger.error("无法将表格的行数设置为%d,当前%d"%(iNum,self.table.rowCount() ))
                
             
@@ -757,7 +769,12 @@ class DatcomInputTable(QWidget):
         """
         增加新行的代码.
         """
-        # TODO: not implemented yet
+        #判断是否可以添加
+        if  self.table.rowCount() >= self.maxCount :
+            self.logger.warning("当前行数%d ,最大行数：%d，无法执行添加逻辑！"%(self.table.rowCount(), self.maxCount))
+            return 
+        
+        #判断添加逻辑
         aItem = self.table.indexAt(self.curPos) #认为是表格 ，否则会异常
         rowIndex = 0
         if aItem.row() == -1 :
@@ -765,15 +782,17 @@ class DatcomInputTable(QWidget):
             rowIndex = self.table.rowCount()
         else:
             rowIndex = aItem.row()
-        #开始事务处理
-        self.isTransactionCount   =  self.isTransactionCount  + 1
-        if self.table.rowCount() <self.maxCount:            
+        #添加逻辑
+        if self.table.rowCount() <self.maxCount:      
+            #开始事务处理
+            self.isTransactionCount   =  self.isTransactionCount  + 1
             self.table.insertRow(rowIndex)
             self._setRowWithDefault(rowIndex)
+            #结束事务处理
+            self.isTransactionCount   =  self.isTransactionCount  - 1     
         else:
             self.logger.info("%s已经达到最大行数不能添加"%self.objectName())
-        #结束事务处理
-        self.isTransactionCount   =  self.isTransactionCount  - 1     
+
         #刷新到Model
         self._flushData()       
         #向外发送结果
@@ -784,17 +803,23 @@ class DatcomInputTable(QWidget):
         """
         增加到最大行的代码.
         """
-        #开始事务处理
-        self.isTransactionCount   =  self.isTransactionCount  + 1
+        #判断是否可以添加
+        if  self.table.rowCount() >= self.maxCount :
+            self.logger.warning("当前行数%d ,最大行数：%d，无法执行添加到最大逻辑！"%(self.table.rowCount(), self.maxCount))
+            return        
+
         #添加行
         if self.table.rowCount() < self.maxCount:
+#            #开始事务处理
+#            self.isTransactionCount   =  self.isTransactionCount  + 1
+            tNowRows = self.table.rowCount()
             self.table.setRowCount(self.maxCount)
-            for iR in range(self.table.rowCount(), self.maxCount):
+            for iR in range(tNowRows, self.maxCount):
                 self._setRowWithDefault(iR)           
-        #结束事务处理
-        self.isTransactionCount   =  self.isTransactionCount  - 1  
-        #刷新到Model
-        self._flushData()       
+#            #结束事务处理
+#            self.isTransactionCount   =  self.isTransactionCount  - 1  
+#        #刷新到Model
+#        self._flushData()       
         #向外发送结果
         self.Signal_rowCountChanged.emit(self.CountVarUrl, self.table.rowCount())        
 
@@ -804,10 +829,15 @@ class DatcomInputTable(QWidget):
         """
         删除行的代码.
         """
-        #开始事务处理
-        self.isTransactionCount   =  self.isTransactionCount  + 1
+        #判断是否可以删除
+        if  self.table.rowCount() <= self.minCount or self.table.rowCount() == 0:
+            self.logger.warning("当前行数%d ,最小行数：%d，无法执行删除逻辑！"%(self.table.rowCount(), self.minCount))
+            return 
+        
         #删除操作
         aItem = self.table.indexAt(self.curPos)
+        #开始事务处理
+        self.isTransactionCount   =  self.isTransactionCount  + 1
         if  aItem.row() >=0 :            
             self.table.removeRow(aItem.row())
         else:
@@ -824,6 +854,10 @@ class DatcomInputTable(QWidget):
         """
         删除行的代码.
         """
+        #判断是否可以删除
+        if  self.table.rowCount() <= self.minCount or self.table.rowCount() == 0:
+            self.logger.warning("当前行数%d ,最小行数：%d，无法执行删除所有行逻辑！"%(self.table.rowCount(), self.minCount))
+            return 
         #开始事务处理
         self.isTransactionCount   =  self.isTransactionCount  + 1
         #删除所有的行
@@ -922,6 +956,32 @@ class DatcomInputTable(QWidget):
         """   
         self.curPos = pos        
         posG = self.mapToGlobal(pos)
+        #执行禁用逻辑
+        #判断是否是定长表格
+        if self.minCount == self.maxCount :
+            self.actionDeleteRow.setEnabled(False)
+            self.actionClearRows.setEnabled(False)
+            self.actionAddRow.setEnabled(False)    
+            self.actionAddRowToMax.setEnabled(False)
+        else:            
+            if  self.table.rowCount() <= self.minCount or self.table.rowCount() == 0:
+                #无法删除的逻辑
+                self.actionDeleteRow.setEnabled(False)
+                self.actionClearRows.setEnabled(False)
+                self.actionAddRow.setEnabled(True)    
+                self.actionAddRowToMax.setEnabled(True)
+            if self.table.rowCount() < self.maxCount and self.table.rowCount() > self.minCount:
+                self.actionAddRow.setEnabled(True)    
+                self.actionAddRowToMax.setEnabled(True)
+                self.actionDeleteRow.setEnabled(True)
+                self.actionClearRows.setEnabled(True)
+            #判断是否可以添加
+            if  self.table.rowCount() >= self.maxCount :        
+                self.actionAddRow.setEnabled(False)    
+                self.actionAddRowToMax.setEnabled(False)
+                self.actionDeleteRow.setEnabled(True)
+                self.actionClearRows.setEnabled(True)
+           
         self.popMenu.exec(posG)
         
     @pyqtSlot(int)
@@ -957,7 +1017,7 @@ class DatcomInputTable(QWidget):
             #刷新到Model
             self._flushData()  
     
-    def setHorizontalHeaderUnit(self, vIndex, newUnit):
+    def setHorizontalHeaderUnit(self, vIndex, newUnit, isChangeAll = True):
         """
         设置表头的单位属性，以同步数据设置操作
         """
@@ -985,13 +1045,14 @@ class DatcomInputTable(QWidget):
         tDisplay = tHItem.data(Qt.DisplayRole).split()[0] + ' ' + newUnit
         tHItem.setData(Qt.DisplayRole, tDisplay )
         #更新表格的数据
-        #开始事务处理
-        self.isTransactionCount   =  self.isTransactionCount  + 1           
-        self._unitChanged(vIndex, newUnit)
-        #结束事务处理
-        self.isTransactionCount   =  self.isTransactionCount  - 1   
-        #刷新到Model
-        self._flushData()  
+        if isChangeAll :
+            #开始事务处理
+            self.isTransactionCount   =  self.isTransactionCount  + 1           
+            self._unitChanged(vIndex, newUnit)
+            #结束事务处理
+            self.isTransactionCount   =  self.isTransactionCount  - 1   
+            #刷新到Model
+            self._flushData()  
         
     def getHorizontalHeaderUnit(self, vIndex):
         """
@@ -1035,7 +1096,8 @@ class DatcomInputTable(QWidget):
         在此处协调代理自行变换单位的情况
         """
         #当处于某一个isTransactionCount队列时，不触发逻辑
-        if self.isTransactionCount   >0: 
+        if self.isTransactionCount   > 0: 
+            #self.logger.info("onItemChanged（）调用%s： %d"%(self.vUrl, self.isTransactionCount) )
             return
         #获取定义
         tConfig = self.table.horizontalHeaderItem(item.column()).data(Qt.UserRole)

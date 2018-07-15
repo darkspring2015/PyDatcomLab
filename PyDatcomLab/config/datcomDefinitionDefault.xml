@@ -327,7 +327,7 @@
       <Range />
       <DisplayRange />
       <Default />
-      <Limit />
+      <Limit>[0,inf]</Limit>
       <Dimension />
       <MustInput>UnChecked</MustInput>
       <Relation />
@@ -646,7 +646,7 @@
       <VarName>ELLIP</VarName>
       <NameList>BODY</NameList>
       <DisplayName>ELLIP：机身高宽比</DisplayName>
-      <Tooltips />
+      <Tooltips>ELLIP：机身高宽比</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -726,7 +726,7 @@
       <VarName>DS</VarName>
       <NameList>BODY</NameList>
       <DisplayName>DS：机头钝度</DisplayName>
-      <Tooltips />
+      <Tooltips>机头钝度，对于尖机鼻为0</Tooltips>
       <TYPE>REAL</TYPE>
       <SubType />
       <Group />
@@ -1859,7 +1859,7 @@
     <NPTS dcType="Variable">
       <VarName>NPTS</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName>NTPS:截面输入点个数</DisplayName>
+      <DisplayName>NPTS:截面输入点个数</DisplayName>
       <Tooltips>截面输入点个数，对应XCORD、YUPPER、YLOWER、MEAN、THICK</Tooltips>
       <TYPE>INT</TYPE>
       <SubType />
@@ -2207,8 +2207,8 @@ Positive when the tangent intersects the chord plane forward of the reference ch
     <CLALPA dcType="Variable">
       <VarName>CLALPA</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName>翼型截面升力曲线斜率</DisplayName>
-      <Tooltips>输入值必须和飞行条件中的VIF匹配</Tooltips>
+      <DisplayName>CLALPA：升力曲线斜率</DisplayName>
+      <Tooltips>CLALPA：翼型截面升力曲线斜率；输入值必须和飞行条件中的VIF匹配</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>Lift</Group>
@@ -2223,8 +2223,8 @@ Positive when the tangent intersects the chord plane forward of the reference ch
     <CLMAX dcType="Variable">
       <VarName>CLMAX</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName>最大升力系数</DisplayName>
-      <Tooltips>输入值必须和飞行条件中的VIF匹配</Tooltips>
+      <DisplayName>CLMAX：最大升力系数</DisplayName>
+      <Tooltips>CLMAX：最大升力系数；输入值必须和飞行条件中的VIF匹配</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />
       <Group>Lift</Group>
@@ -2239,7 +2239,7 @@ Positive when the tangent intersects the chord plane forward of the reference ch
     <XAC dcType="Variable">
       <VarName>XAC</VarName>
       <NameList>WGSCHR</NameList>
-      <DisplayName>截面气动中心在弦线的比例位置</DisplayName>
+      <DisplayName>XAC：气动中心比例位置</DisplayName>
       <Tooltips>截面气动中心在弦线的比例位置，输入值必须和飞行条件中的VIF匹配</Tooltips>
       <TYPE>Array</TYPE>
       <SubType />

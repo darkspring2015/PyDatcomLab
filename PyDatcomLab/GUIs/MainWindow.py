@@ -473,7 +473,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
                                r"保存当前的Model吗?",
                                QMessageBox.Yes | QMessageBox.No)
         if button == QMessageBox.Yes:
-            tDoc = self.currentCASE.getDoc()
+            tDoc = self.currentCASE.getModel()
             #tDoc.writeToXML(self.currentModelPath)
             tDoc.save(self.currentModelPath)
             self.logger.info(r"保存模型到：%s"%self.currentModelPath)        
@@ -527,7 +527,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         if  self.currentCASE is not None and self.centralWidgetUsed :
             #当前模型存在,则提示是否写入到XML
             button = QMessageBox.question(self, r"重新加载当前模型",
-                                   "重新加载当前模型，使Datcom定义生效？\n\t注意：操作将导致当前模型被写入到文件！",
+                                   "重新加载当前模型，使Datcom定义生效？\n\n注意：操作将导致当前模型被写入到文件！",
                                    QMessageBox.Yes | QMessageBox.No)
             if button == QMessageBox.Yes:                    
                 try:

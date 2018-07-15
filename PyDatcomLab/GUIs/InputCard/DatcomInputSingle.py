@@ -136,6 +136,7 @@ class DatcomInputSingle(QWidget):
         self.InputWidget = QtWidgets.QLineEdit(self.splitter_Inner)
         self.InputWidget.setObjectName('InputWidget%s'%self.VarName) #设置输入组件的名称为变量名
         self.InputWidget.editingFinished.connect(self.on_InputWidget_editingFinished)
+        #self.InputWidget.editingFinished.connect(self.on_InputWidget_editingFinished)
         self.InputWidget.textChanged.connect(self.on_InputWidget_textChanged)
         #调节录入框的策略
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -330,8 +331,8 @@ class DatcomInputSingle(QWidget):
         if self.InputWidget.isEnabled() :
             #捕获焦点，全选，设置光标为最后
             self.InputWidget.setFocus()
-            self.InputWidget.setSelection(0,len(self.InputWidget.text()) )
-            #self.InputWidget.setCursorPosition(len(self.InputWidget.text()) )
+            #self.InputWidget.setSelection(0,len(self.InputWidget.text()) )
+            self.InputWidget.setCursorPosition(len(self.InputWidget.text()) )
                      
     def cancelSelection_onWindowDeactivate(self):
         """
@@ -539,7 +540,7 @@ class DatcomInputSingle(QWidget):
             self.logger.warning("%s录入控件的的当前值：%s，无法通过验证"%(self.vUrl,self.InputWidget.text() ))
             return None
         #获得数据
-        tDefault = self._getCurrentValueInModel()  #获取模型中的具体数值
+        tDefault = self._getCurrentValueInModel().copy()  #获取模型中的具体数值,并且只能是副本
         if not self.InputWidget.isEnabled():
             tDefault.update({'InUsed':'False'})
         else:
@@ -622,6 +623,7 @@ class DatcomInputSingle(QWidget):
         可以程序改变文本值的逻辑
         对于程序更改变量值得情况，应该在 setDataByVariable中进行处理
         """
+        if self.InputWidget.hasFocus():return 
         tVd = self.InputWidget.validator()
         if tVd is not None  and tVd.validate(self.InputWidget.text(), 0)[0] == QtGui.QValidator.Acceptable:
             self.emit_InputWidget_text()
@@ -637,6 +639,11 @@ class DatcomInputSingle(QWidget):
             return 
         #获得当前控件的输入值
         tVar = self._getDatcomData()       
+        tNowVar = self.dtModel.getVariableByUrl(self.vUrl)
+        #判断减少不必要的修改和发送  
+        if tNowVar is not None and tVar is not None and tNowVar['Value'] == tVar['Value']  and tNowVar['Unit'] == tVar['Unit']:
+            #此处认为Unit是‘’而不是None
+            return 
         #写入到响应的数据中
         self.dtModel.setVariable(tVar)          
         #发送信号
@@ -776,7 +783,8 @@ class DatcomInputSingleNoLabel(DatcomInputSingle):
         tLabel = self.findChild(QtWidgets.QCheckBox, 'checkBox_Var%s'%self.VarName)
         tLabel2 = self.findChild(QtWidgets.QLabel, 'label_Var%s'%self.VarName)
         if tLabel is not None :
-            tLabel.setCheckState(Qt.Checked)
+            #tLabel.setCheckState(Qt.Checked)  #此句破坏了内部结构，要求具有dtModel
+            self.InputWidget.setEnabled(True)
             tLabel.deleteLater()
         elif tLabel2 is not None:
             tLabel2.deleteLater()  

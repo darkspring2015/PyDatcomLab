@@ -312,7 +312,7 @@ class DatcomInputList(QWidget):
                 tVar =  self.dtDefine.getVariableTemplateByUrl(self.vUrl)
             tVar.update({'InUsed':'False'})
             self._loadDataToWidget(tVar)
-            self.on_EnabledStatusChanged(Qt.Unchecked)
+            #self.on_EnabledStatusChanged(Qt.Unchecked)
         else:
             tVar = self._getCurrentValueInModel()
             self._loadDataToWidget(tVar)
@@ -401,16 +401,16 @@ class DatcomInputList(QWidget):
             #判断是否需要激活控件
             if 'MustInput' in self.VarDefine.keys() and self.VarDefine['MustInput' ] in ['UnChecked', 'Checked'] :
                 if 'Default' in self.VarDefine and self.VarDefine['Default'] != tKey :
-                    self.on_EnabledStatusChanged(True)
+                    self.on_EnabledStatusChanged(Qt.Checked)
                 else:
-                    self.on_EnabledStatusChanged(False)
+                    self.on_EnabledStatusChanged(Qt.Unchecked)
             else:
-                self.on_EnabledStatusChanged(True)
+                self.on_EnabledStatusChanged(Qt.Checked)
         else:
             if 'Default' in self.VarDefine.keys():
-                self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(self.VarDefine['Default']))
-                self.on_EnabledStatusChanged(False)
+                self.InputWidget.setCurrentIndex(self.VarDefine['Range'].index(self.VarDefine['Default']))                
                 self.logger.error("传递的参数具有的值不在预设范围之内：%s,使用默认值修正：%s"%(tKey, self.VarDefine['Default'])) 
+                self.on_EnabledStatusChanged(Qt.Unchecked)
             else:
                 self.logger.error("传递的参数具有的值不在预设范围之内：%s"%(iVariable['Value'])) 
 

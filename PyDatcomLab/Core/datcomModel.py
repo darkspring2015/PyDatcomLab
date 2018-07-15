@@ -327,6 +327,8 @@ class dcModel(datcomXMLLoader):
             #如果Value为None则删除该变量
             self.logger.warning("设置Array变量%s的%d位的数值为None是没有意义的！"%(tUrl, iIndex))
             self._setArrayItembyIndex(tDefault, iIndex)
+            #设置数据的标识位
+            #self.doc[iVar['Url']].update({'InUsed':'True'})
             return False
         elif tUrl in self.doc.keys() and iVar['Value'] is not  None:
             #如果Vlaue不为None则更新信息
@@ -364,7 +366,7 @@ class dcModel(datcomXMLLoader):
             if tNowVar['Unit'] != iVar['Unit']:
                 tNewInputVar = dtDimension.unitTransformation(iVar,tNowVar['Unit'] )
             #判断长度变换
-            if tNowLength>= iIndex +1 and  tNowLength != 0:
+            if tNowLength> iIndex  and  tNowLength != 0:  #iIndex从零开始，-1无效，所哟len恒大于Iindex
                 tNowVar['Value'][iIndex] = tNewInputVar['Value']
             if tNowLength < iIndex + 1 and iIndex > tRange[0] and iIndex < tRange[1]:
                 tNowVar['Value'] = tNowVar['Value'] + [tDefault['Value']]*(iIndex + 1 - tNowLength)
