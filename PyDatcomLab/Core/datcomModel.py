@@ -229,12 +229,21 @@ class dcModel(datcomXMLLoader):
         for iV in variables:
             tUrl = '%s/%s'%(namelist, iV)
             tVtp = self.dtDefine.getVariableTemplateByUrl(tUrl)
+            #此处对变量的初始值进行配置
+            if self._checkMustInputStatus(tUrl):
+                tVtp.update({'InUsed':'True'})
             if tVtp is None:
                 self.logger.error("无法创建对应的变量的基本实例%s"%(tUrl))
                 continue
             if tUrl not in self.doc:
                 self.doc[tUrl] = tVtp
        
+    def _checkMustInputStatus(self, iUrl):
+        """
+        检查输入iUrl的是否是必须输入的变量
+        函数使用：音速、构型等信息推定必要性
+        """
+        return False
         
     def deleteNamelist(self, namelist):
         """
