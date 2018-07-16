@@ -21,6 +21,7 @@ from PyDatcomLab.Core import  datcomRunner
 from PyDatcomLab.Core.DictionaryLoader import  DTdictionary, defaultDatcomDefinition as DDefine
 from PyDatcomLab.Core.PyDatcomConfigLoader import  PyDatcomLabConfig as dtConfig
 from PyDatcomLab.GUIs.tools.XMLEditer import XMLEditer 
+from PyDatcomLab.GUIs.tools.XMLEditer import datcomXMLEditer 
 from PyDatcomLab.GUIs.tools.HelperSystem.HelperBrowses import PyMarkDownHelper
 
 
@@ -494,7 +495,7 @@ class DatcomMainWindow(QMainWindow, Ui_MainWindow):
         """
         # TODO: not implemented yet
         if self.dtXMLEditer is None:
-            self.dtXMLEditer = XMLEditer.XMLEditer()
+            self.dtXMLEditer = datcomXMLEditer.datcomXMLEditer()
             self.dtXMLEditer.setWindowTitle("Datcom元数据编辑")
             self.dtXMLEditer.Load(self.Properties['DatcomDefineFile'])
             self.dtXMLEditer.Command_ReloadDtDefine_triggered.connect(self.on_ReloadCaseUI)

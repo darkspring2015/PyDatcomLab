@@ -2,7 +2,6 @@
 
 """
 Module implementing XMLTreeModel.
-这是非常费劲，但是失败的技术尝试
 
 """
 from PyQt5.QtCore import QAbstractItemModel, Qt, QVariant, QModelIndex

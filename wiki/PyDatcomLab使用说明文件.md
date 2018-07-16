@@ -216,3 +216,41 @@ datcomConstraint 用来加载和记录与基本计算构型相关的datcom配置
    ​             Bug ： 修复了重新加载CASEUI时的打印不美观问题       &radic;
 
    ​             Bug  ： 修改DatcomDefine编辑器没有合适标题的问题  &radic;
+
+   Bug ： 'InUsed'与‘MustInput'逻辑冲突  修复了List中的函数调用参数错误问题 &radic;
+
+   Bug   :  NTPS 和表格的联系没有生效 &radic;
+
+​       Bug   : 表格限制列的无法在10位数的情况进行正确输出, 将Single控件获得窗口的基本行为修改为setFocus + setCursor &radic;
+
+Bug： 可选的Single如数控件没有正确的显示默认值、提示值  &radic; 不是bug，缺失没有定义值
+
+Task ：帮助文档系统，改进 主要功能
+
+- 系统刷新Define是能够自动刷新帮助文档
+- 支持Define定义的Helpdoc使用本地相对路径  raletionPath + baseUrl
+
+Task :  修改Datcom编辑器系统系统
+
+- 支持规则节点添加，自动识别
+- 支持属性节点添加，自动识别
+- 支持git备份功能
+
+
+
+Bug： 表格的表头自适应宽度+ 左对齐  &radic;
+
+Bug  : 表格控件，空值不保存的问题。正确的行为应该是创建空值后写入到模型！ &radic;
+
+Bug  ：可以错误的删除SLOPE列的错误    &radic;
+
+Bug  ： 删除所有行的修复逻辑出错 &radic;
+
+Bug   ：添加所有行没有初始化 &radic;
+
+
+
+Task :修改新建模型的界面，使其支持最新的分组和必要性配置选项
+
+
+
