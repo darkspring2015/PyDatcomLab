@@ -7,7 +7,8 @@ from PyQt5 import QtCore,  QtWidgets , QtGui
 from PyQt5.QtCore import pyqtSlot, Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget
 
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
+from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 from PyDatcomLab.Core.datcomDimension import Dimension, unitTransformation
 #from PyDatcomLab.Core import datcomDimension as dtDimension
 from PyDatcomLab.Core.datcomModel import dcModel
@@ -25,7 +26,7 @@ class DatcomInputSingle(QWidget):
     Signal_NMACHChanged  =  pyqtSignal(int)            #发送NMACH变化的结果
     Signal_VariableChanged =  pyqtSignal(str)            #控件对应的datcom变量发生变化时触发 str为变量的iUrl，用于通知其他的相关控件
     
-    def __init__(self, iUrl, parent=None, iDefinition = DDefine, iModel =None , isDelegate= False):
+    def __init__(self, iUrl, parent=None, iDefinition = DTdictionary.defaultConfig, iModel =None , isDelegate= False):
         """
         Constructor
         DatcomInputSingle是一个QWidget控件，用来输出和显示一个REAL、INT类型的值
@@ -775,7 +776,7 @@ class DatcomInputSingleNoLabel(DatcomInputSingle):
     """
     没有Label栏的输入框
     """
-    def __init__(self, iUrl,  parent=None, iDefinition = DDefine, isRemoveSpacer = True):
+    def __init__(self, iUrl,  parent=None, iDefinition = DTdictionary.defaultConfig, isRemoveSpacer = True):
         """
         """
         super(DatcomInputSingleNoLabel, self).__init__(iUrl,  parent, iDefinition, isDelegate= True)
@@ -804,17 +805,17 @@ if __name__ == "__main__":
     tMPath = os.path.join(os.path.expanduser('~'), r'.PyDatcomLab\extras\PyDatcomProjects\1\case2.xml')
     tModel = dcModel(tMPath)
 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/TSMACH',  parent=tMain, iDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/TSMACH',  parent=tMain, iDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DDefine ))  
-    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DDefine ))  
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine , iModel = tModel)) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine , iModel = tModel)) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine , iModel = tModel)) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine , iModel = tModel)) 
-    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/NALPHA',  parent=tMain, iDefinition = DDefine )) 
-    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/NALPHA',  parent=tMain, iDefinition = DDefine , isRemoveSpacer = False)) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/TSMACH',  parent=tMain, iDefinition = DTdictionary.defaultConfig )) 
+    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/TSMACH',  parent=tMain, iDefinition = DTdictionary.defaultConfig )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DTdictionary.defaultConfig ))  
+    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DTdictionary.defaultConfig ))  
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DTdictionary.defaultConfig , iModel = tModel)) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DTdictionary.defaultConfig , iModel = tModel)) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DTdictionary.defaultConfig , iModel = tModel)) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DTdictionary.defaultConfig , iModel = tModel)) 
+    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/WT'    ,  parent=tMain, iDefinition = DTdictionary.defaultConfig )) 
+    LiftLayout.addWidget(DatcomInputSingle( 'FLTCON/NALPHA',  parent=tMain, iDefinition = DTdictionary.defaultConfig )) 
+    LiftLayout.addWidget(DatcomInputSingleNoLabel( 'FLTCON/NALPHA',  parent=tMain, iDefinition = DTdictionary.defaultConfig , isRemoveSpacer = False)) 
 
     tMain.show()
     sys.exit(app.exec_())

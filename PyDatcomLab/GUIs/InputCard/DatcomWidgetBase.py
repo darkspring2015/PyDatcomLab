@@ -10,7 +10,8 @@ from PyQt5 import  QtWidgets ,QtCore
 
 #from PyDatcomLab.Core import dcModel
 from PyDatcomLab.Core import datcomModel as dcModel
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  
+from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 #from PyDatcomLab.GUIs.InputCard import DatcomCARDLogicBase as DCLogic  
 from PyDatcomLab.GUIs.InputCard.DatcomWidgetBaseUi import DatcomWidgetBaseUi 
 import logging
@@ -38,7 +39,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
     Singal_varComboChangedFromTable   = pyqtSignal(str , str)     #向外部通知表格中激活的列组合关系发生变化 <sender.vUrl,"[]">
     Singal_NMACHChanged                    = pyqtSignal(int)            #用来接收NMACH的变化的信号
     
-    def __init__(self, iNamelist, parent=None , iModel = None, iDefine = DDefine ):
+    def __init__(self, iNamelist, parent=None , iModel = None, iDefine = DTdictionary.defaultConfig ):
         """
         Constructor
         @param iDefine  DTdictionary的实例，存储Datcom的定义

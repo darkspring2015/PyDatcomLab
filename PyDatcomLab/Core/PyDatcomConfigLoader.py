@@ -35,6 +35,8 @@ class PyDatcomLabConfig():
     1.该类型派生自datcomXMLLoader类，需要自定义解析关系，请使用xml文档约定来实现函数ParseXmltoDoc
     
     """
+
+    
     def __init__(self, iPath = None ):
         """
         初始化模型类，读取path指定的配置文件
@@ -64,6 +66,7 @@ class PyDatcomLabConfig():
         'ConfigurationType':[{'MainTag':'Configuration','SubTag':['CName', 'DisplayName', 'Description', 'Namelist'] }], 
         }
         #执行path的分析
+        self.xmlDoc  = self.createXMLDocBasic()
         if iPath is None :
             if os.path.isfile(self.configPathDefault ):
                 iPath = self.configPathDefault 

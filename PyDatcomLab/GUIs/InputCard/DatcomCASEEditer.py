@@ -14,7 +14,8 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 
 #PyDatcomLab
 from PyDatcomLab.Core import datcomModel as dcModel
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  , DTdictionary as dtDefinition
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine  , DTdictionary as dtDefinition
+from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 from PyDatcomLab.GUIs.InputCard.DatcomCASEEditerUi import DatcomCASEEditerUi
 from PyDatcomLab.GUIs.InputCard.DatcomWidgetBase import DatcomWidgetBase
 
@@ -25,7 +26,7 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
     """
     Singal_NMACHChanged                    = pyqtSignal(int)          #用来接收NMACH的变化的信号
     
-    def __init__(self, parent=None, iModelpath = None, iDefine = DDefine):
+    def __init__(self, parent=None, iModelpath = None, iDefine = DTdictionary.defaultConfig):
         """
         构造函数        
         @param parent reference to the parent widget
@@ -40,8 +41,8 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         #初始化日志系统
         self.logger = logging.getLogger(r'Datcomlogger')
         #创建内部数据结构        
-        if iDefine is None or type(iDefine) != dtDefinition:
-            self.dtDefine = DDefine
+        if iDefine is None or type(iDefine) != DTdictionary:
+            self.dtDefine = DTdictionary.defaultConfig
         else:
             self.dtDefine = iDefine
         #分析并建立Model

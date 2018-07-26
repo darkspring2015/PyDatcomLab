@@ -4,7 +4,8 @@
 Module implementing DatcomInputDelegate.
 """
 from PyQt5 import QtCore,  QtWidgets 
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
+from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 from PyDatcomLab.GUIs.InputCard.DatcomInputSingle import DatcomInputSingleNoLabel as SInput 
 from PyDatcomLab.GUIs.InputCard.DatcomInputList   import DatcomInputListNoLabel as LInput 
 
@@ -16,14 +17,14 @@ class DatcomInputContinuousDelegate(QtWidgets.QStyledItemDelegate ):
     """
     定义一个用来编辑的代理控件
     """
-    def __init__(self, vUrl, parent = None, iDefine = DDefine):
+    def __init__(self, vUrl, parent = None, iDefine = DTdictionary.defaultConfig):
         """
         vUrl 指向需要代理的列的定义
         """
         super(DatcomInputContinuousDelegate, self).__init__(parent)
         #日志系统        
         self.logger = logging.getLogger(r'Datcomlogger')  
-        if iDefine is None : iDefine = DDefine
+        if iDefine is None : iDefine = DTdictionary.defaultConfig
         self.dtDefine = iDefine
         if vUrl is None or vUrl == "":
             self.logger.error("输入的标示是无效的：%s ！"%vUrl) 

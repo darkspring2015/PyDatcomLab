@@ -8,7 +8,8 @@ from PyQt5.QtCore import pyqtSlot, Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget
 
 from PyDatcomLab.Core.datcomModel import dcModel
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
+from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 import logging
 
 
@@ -19,7 +20,7 @@ class DatcomInputList(QWidget):
     currentIndexChanged = pyqtSignal(str, str)  #将编辑结构发送出去  当前索引 int   # (Url,index在Range中的具体值）
     Signal_VariableChanged =  pyqtSignal(str)            #控件对应的datcom变量发生变化时触发 str为变量的iUrl，用于通知其他的相关控件
     
-    def __init__(self, iUrl,  parent=None, iDefinition = DDefine , iModel =None, isDelegate = False):
+    def __init__(self, iUrl,  parent=None, iDefinition = DTdictionary.defaultConfig , iModel =None, isDelegate = False):
         """
         Constructor
         DatcomInputList是一个QWidget控件，用来输出和显示一个List类型的值,list的内容默认为str
@@ -523,7 +524,7 @@ class DatcomInputListNoLabel(DatcomInputList):
     """
     没有Label栏的输入框的List输入控件
     """
-    def __init__(self, iUrl,  parent=None, iDefinition = DDefine, isRemoveSpacer = True):
+    def __init__(self, iUrl,  parent=None, iDefinition = DTdictionary.defaultConfig, isRemoveSpacer = True):
         """
         """
         #super(DatcomInputListNoLabel, self).__init__(CARD, VarName,  parent=None, DDefinition = DDefine)
@@ -550,8 +551,8 @@ if __name__ == "__main__":
     tMain.setLayout(LiftLayout)
     tModel = dcModel()
 
-    LiftLayout.addWidget(DatcomInputList(        'FLTCON/HYPERS',  parent=tMain, iDefinition = DDefine , iModel =tModel))  
-    LiftLayout.addWidget(DatcomInputListNoLabel( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DDefine ))  
+    LiftLayout.addWidget(DatcomInputList(        'FLTCON/HYPERS',  parent=tMain, iDefinition = DTdictionary.defaultConfig , iModel =tModel))  
+    LiftLayout.addWidget(DatcomInputListNoLabel( 'FLTCON/HYPERS',  parent=tMain, iDefinition = DTdictionary.defaultConfig ))  
  
     tMain.show()
     sys.exit(app.exec_())

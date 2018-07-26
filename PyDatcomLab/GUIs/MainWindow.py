@@ -11,14 +11,15 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QMessageBox, QFileDialog
 from PyQt5 import  QtCore,  QtWidgets
 from PyQt5.QtGui import  QStandardItem, QStandardItemModel
 
-from Ui_MainWindow import Ui_MainWindow
+from PyDatcomLab.GUIs.Ui_MainWindow import Ui_MainWindow
 #from PyDatcomLab.GUIs  import   
 
 from PyDatcomLab.GUIs.components import *
 from PyDatcomLab.GUIs.InputCard import *
 from PyDatcomLab.Core import projectManager as PM
 from PyDatcomLab.Core import  datcomRunner  
-from PyDatcomLab.Core.DictionaryLoader import  DTdictionary, defaultDatcomDefinition as DDefine
+from PyDatcomLab.Core.DictionaryLoader import  DTdictionary
+#from PyDatcomLab.Core.DictionaryLoader.DTdictionary import  defaultConfig as DDefine
 from PyDatcomLab.Core.PyDatcomConfigLoader import  PyDatcomLabConfig as dtConfig
 from PyDatcomLab.GUIs.tools.XMLEditer import XMLEditer 
 from PyDatcomLab.GUIs.tools.XMLEditer import datcomXMLEditer 

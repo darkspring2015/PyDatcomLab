@@ -10,7 +10,8 @@ from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox, QCheckBox #, QComboBox
 from .Ui_NewModel import Ui_Dialog
 from PyDatcomLab.Core.datcomModel import dcModel as dcModel 
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+from PyDatcomLab.Core.DictionaryLoader import  DTdictionary
 from PyDatcomLab.Core.PyDatcomConfigLoader import  defaultConfig 
 
 
@@ -18,7 +19,7 @@ class NewModelDlg(QDialog, Ui_Dialog):
     """
     Class documentation goes here.
     """
-    def __init__(self, parent=None, iDefine = DDefine, iConfig = defaultConfig):
+    def __init__(self, parent=None, iDefine = DTdictionary.defaultConfig, iConfig = defaultConfig):
         """
         Constructor
         

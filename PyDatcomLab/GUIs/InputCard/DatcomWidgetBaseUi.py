@@ -13,7 +13,8 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyDatcomLab.GUIs.InputCard.DatcomInputTable import DatcomInputTable  as TB
 from PyDatcomLab.GUIs.InputCard.DatcomInputComboChooser import DatcomInputComboChooser
 from PyDatcomLab.GUIs.InputCard import DatcomInputSingle as SInput,  DatcomInputList as LInput
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+#from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 
 import logging
 

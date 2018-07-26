@@ -21,7 +21,11 @@ from PyDatcomLab.Core import datcomDimension as DimTools
 
 class DTdictionary():
     """
+    定义Datcom各种类型选项卡加载所需要的组件
+    组件将XML定义文件加载到内存，并实例化相关的类
     """
+    #定义一个默认的值，用来为初始化执行方便
+    defaultConfig = None
     def __init__(self, path):
         """
         初始化定义文件
@@ -145,7 +149,8 @@ class DTdictionary():
                     try:
                         tNTable = eval(iT.attrib[iA])
                     except Exception as e:
-                        self.logger.warning("无法推定NMACHLinkTable属性%s：%s的实际类型"%(iA,iT.attrib[iA]))
+                        pass
+#                        self.logger.warning("无法推定NMACHLinkTable属性%s：%s的实际类型"%(iA,iT.attrib[iA]))
                         
                     tResDict.update({iA:tNTable})
                      
@@ -745,7 +750,7 @@ class DTdictionary():
         
         
 #导出一个常量
-defaultDatcomDefinition = DTdictionary("")
+defaultDatcomDefinition = DTdictionary.defaultConfig
 
 
         

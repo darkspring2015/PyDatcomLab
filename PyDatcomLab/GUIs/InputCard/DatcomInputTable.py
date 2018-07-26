@@ -11,7 +11,8 @@ from PyQt5.QtWidgets import QAction , QTableWidgetItem, QMenu, QWidget
 from PyQt5.QtGui import  QIcon, QPixmap#,QDoubleValidator, QIntValidator, QValidator
 import logging
 #项目导入项
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
 #from PyDatcomLab.Core import dcModel
 from PyDatcomLab.Core.datcomModel import    dcModel
 from PyDatcomLab.Core import datcomDimension as dtDimension
@@ -30,7 +31,7 @@ class DatcomInputTable(QWidget):
     Singal_variableComboChanged = pyqtSignal(str , str)    #向外部通知表格中激活的列组合关系发生变化  <self.vUrl,"[]">
     #Singal_NMACHChanged           = pyqtSignal(int)          #用来接收NMACH的变化的信号
     
-    def __init__(self, iNamelist, iGroup,  parent=None, iDefine = DDefine , iModel =None):
+    def __init__(self, iNamelist, iGroup,  parent=None, iDefine = DTdictionary.defaultConfig , iModel =None):
         """
         Constructor
         
@@ -1134,7 +1135,7 @@ if __name__ == "__main__":
     LiftLayout = QtWidgets.QVBoxLayout()
     #LiftLayout.setContentsMargins(5, 0, 0, 5)
     tMain.setLayout(LiftLayout)
-    tTable = DatcomInputTable( 'FLTCON', 'Speed_Atmospheric',  parent=tMain, iDefine = DDefine )
+    tTable = DatcomInputTable( 'FLTCON', 'Speed_Atmospheric',  parent=tMain, iDefine = DTdictionary.defaultConfig )
     LiftLayout.addWidget(tTable) 
     tMPath = os.path.join(os.path.expanduser('~'), r'.PyDatcomLab\extras\PyDatcomProjects\1\case2.xml')
     tModel = dcModel(tMPath)

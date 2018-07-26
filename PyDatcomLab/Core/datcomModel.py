@@ -7,7 +7,8 @@
 # 
 
 from xml.etree import ElementTree  as ET
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DtDefine  #, datcomConstraint
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DtDefine  #, datcomConstraint
+from PyDatcomLab.Core.DictionaryLoader import  DTdictionary
 from PyDatcomLab.Core.datcomXMLLoader import datcomXMLLoader
 #from PyDatcomLab.Core import datcomTools as dtTools
 from PyDatcomLab.Core import datcomDimension as dtDimension
@@ -29,7 +30,7 @@ class dcModel(datcomXMLLoader):
     使用说明：
     1.该类型派生自datcomXMLLoader类，需要自定义解析关系，请使用xml文档约定来实现函数ParseXmltoDoc
     """
-    def __init__(self, iPath = None, iDefine = DtDefine):
+    def __init__(self, iPath = None, iDefine = DTdictionary.defaultConfig):
         """
         初始化模型类
         如果指定了path，将加载对应的模型文件，否则创建基础的Datcom模型，基础模型在defaultDatcomDefinition中定义
@@ -39,6 +40,7 @@ class dcModel(datcomXMLLoader):
         #初始化日志系统
         self.logger = logging.getLogger(r'Datcomlogger')
         #定义各种属性
+        if iDefine is None : iDefine = DTdictionary.defaultConfig
         self.dtDefine = iDefine
         self.Properties.update({
                                 'CName':'AerocraftName CASE', 
@@ -491,7 +493,7 @@ class dcModel(datcomXMLLoader):
         #开始内容分析机制,        
         tAllInfo = self.getNamelistCollection()
         if tAllInfo is None or len(tAllInfo) == 0 :
-            tReport['Report'].append("模型内并没有信息/n")
+            tReport['Report'].append({'status':'Intermediate', 'Report':"模型内并没有信息/n"})
             tReport['status'] = 'Invalid'       
             
         for iN in tAllInfo.keys():#循环Namelist 

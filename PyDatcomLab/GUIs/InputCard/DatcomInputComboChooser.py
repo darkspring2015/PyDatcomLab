@@ -7,7 +7,8 @@ from PyQt5 import QtCore,  QtWidgets
 from PyQt5.QtCore import pyqtSlot,  pyqtSignal
 from PyQt5.QtWidgets import QWidget
 
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine 
+from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 import logging
 #from collections import OrderedDict
 
@@ -16,7 +17,7 @@ class DatcomInputComboChooser(QWidget):
     用来显示和选择变量组合关系
     """
     varComboChanged = pyqtSignal(str, str)      #将变量组合结构发送出去 <self.vUrl,Howto-ChosedKey>
-    def __init__(self,iUrl,  parent=None, iDefinition = DDefine ):
+    def __init__(self,iUrl,  parent=None, iDefinition = DTdictionary.defaultConfig ):
         """
         Constructor
        DatcomInputComboChooser是一个QWidget控件，用来显示和选择变量组合关系
@@ -225,7 +226,7 @@ if __name__ == "__main__":
     tMain = QtWidgets.QWidget()  
     LiftLayout = QtWidgets.QVBoxLayout()
     tMain.setLayout(LiftLayout)
-    tC = DatcomInputComboChooser( 'FLTCON/Variables',  parent=tMain, iDefinition = DDefine )
+    tC = DatcomInputComboChooser( 'FLTCON/Variables',  parent=tMain, iDefinition = DTdictionary.defaultConfig )
     LiftLayout.addWidget(tC) 
     tC.varComboChanged.connect(lambda urlA,  index: print("%s-%s"%(urlA,  index)) )
 

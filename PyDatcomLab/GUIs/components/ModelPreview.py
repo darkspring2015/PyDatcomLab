@@ -14,7 +14,8 @@ import logging, os
 from xml.etree import ElementTree  as ET
 from PyDatcomLab.Core.datcomModel import dcModel 
 from PyDatcomLab.Core.PyDatcomConfigLoader import defaultConfig as dtConfig
-from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+#from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DDefine
+from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 
 
 from Ui_ModelPreview import Ui_ModelPreview
@@ -24,7 +25,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
     """
     模型预览窗口，以Tree样式展示所有的Datcom模型配置信息.
     """
-    def __init__(self, parent=None, iDefine = DDefine, iConfig = dtConfig ):
+    def __init__(self, parent=None, iDefine = DTdictionary.defaultConfig, iConfig = dtConfig ):
         """
         Constructor
         
@@ -46,7 +47,7 @@ class ModelPreview(QWidget, Ui_ModelPreview):
         else:
             self.dtConfig = iConfig     
         if iDefine is None: 
-            self.dtDefine = DDefine
+            self.dtDefine = DTdictionary.defaultConfig
         else:
             self.dtDefine = iDefine    
         self.libraryKeyWord = 'ProjectLibrary'
