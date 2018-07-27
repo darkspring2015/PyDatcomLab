@@ -15,7 +15,7 @@ from xml.etree import ElementTree  as ET
 import logging, os
 
 
-from Ui_XMLEditer import Ui_XMLEditer
+from .Ui_XMLEditer import Ui_XMLEditer
 
 editingModeDef = ['ValueOnly', 'Readonly', 'All']
 

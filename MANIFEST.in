@@ -1,0 +1,11 @@
+#MANIFEST.in
+include *.md *.txt *.pdf *.css
+recursive-include PyDatcomLab/bin *.*
+recursive-include PyDatcomLab/GUIs/tools/HelperSystem/css *.css
+recursive-include PyDatcomLab/GUIs/tools/HelperSystem/images *.*
+recursive-include PyDatcomLab/GUIs/tools/XMLEditer/res     *.*
+recursive-include PyDatcomLab/docs *.*
+recursive-include PyDatcomLab/extras *.*
+recursive-include PyDatcomLab/config *.*
+recursive-include PyDatcomLab/3rdParty *.md *.zip *.tar
+prune 3rdParty/.git

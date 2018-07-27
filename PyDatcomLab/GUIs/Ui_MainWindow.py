@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1202, 900)
+        #MainWindow.resize(1202, 900)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/mainwindow/images/mainwindow/BostenAI.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -412,7 +412,8 @@ class Ui_MainWindow(object):
         self.actionDtcomDefineEditer.setText(_translate("MainWindow", "Datcom定义编辑"))
         self.actionUpdateCASEUIConfig.setText(_translate("MainWindow", "更新UI配置"))
 
-import PyDatcomLab_rc
+#import PyDatcomLab_rc
+from  .PyDatcomLab_rc  import *
 
 if __name__ == "__main__":
     import sys

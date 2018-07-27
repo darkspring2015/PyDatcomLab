@@ -3,7 +3,7 @@
 # -*- coding: utf-8 -*-
 
 #from distutils.core import setup
-from setuptools import setup #, find_packages
+from setuptools import setup , find_packages
 
 setup(
     name="PyDatcomLab",
@@ -32,26 +32,54 @@ setup(
         "Topic :: Scientific/Engineering :: Astronomy",
         "Topic :: Scientific/Engineering :: Atmospheric Science"
     ],
-    packages=[
-        "PyDatcomLab",
-        "PyDatcomLab.Core",
-        "PyDatcomLab.GUIs",
-        "PyDatcomLab.GUIs.components",
-        "PyDatcomLab.GUIs.InputCard",
-        "PyDatcomLab.GUIs.PlaneConfiguration",
-        "PyDatcomLab.GUIs.tools.HelperSystem"
-    ],
-    
+    packages= find_packages(),
+#    [
+#        "PyDatcomLab",
+#        "PyDatcomLab.Core",
+#        "PyDatcomLab.GUIs",
+#        "PyDatcomLab.GUIs.components",
+#        "PyDatcomLab.GUIs.InputCard",
+#        "PyDatcomLab.GUIs.PlaneConfiguration",
+#        "PyDatcomLab.GUIs.tools.HelperSystem",
+#        "PyDatcomLab.GUIs.tools.XMLEditer",
+#        #"PyDatcomLab.bin",
+#        #"PyDatcomLab.config",
+#        #"PyDatcomLab.docs",
+#        #"PyDatcomLab.scripts",
+#        #"PyDatcomLab.extras",
+#        #"PyDatcomLab.tests",
+#    ],
+
 #    # 需要安装的依赖
     install_requires=[
         'markdown>=2.6.11',
         'setuptools>=16.0',
-        'pyqt>=5.6.0'
+        'pyqt5>=5.6.0',
+        'python-markdown-math'
     ],
-    
+    #包含所有的包资源
+    include_package_data=True,
+#    package_data={
+#    #所有的xml文件
+#
+#    '':['*.xml', '*.md', '*.png', '*.jpg', '*.ico', '*.dcxml'
+#    , 'bin/*.*',
+##    'bin':['*.*'],
+##    'config':['*.*'],
+#    'docs/PyDatcomLab-Help/*.*',
+##    'extras':['*.*'],
+##    '3rdparty':['*.*'],
+#],
+#    },
+    #排除性资源
+#    exclude_package_data={'':['.gitignore'],
+#    #'3rdparty':['.git/*.*'],
+#    },
     # 添加这个选项，在windows下Python目录的scripts下生成exe文件
     # 注意：模块与函数之间是冒号:
-#    entry_points={'console_scripts': [
-#         'pydatcomlab = PyDatcomLab.PyDatcomLab:main',
-#     ]},
+    entry_points={'console_scripts': [
+         'pydatcomlab = PyDatcomLab.PyDatcomLab:main',
+     ]},
+
+    install_scripts =['scripts/zip3rdParty.py']
 )

@@ -14,7 +14,7 @@ from PyQt5 import QtCore ,QtWidgets , QtGui
 import logging  #, os
 
 
-from XMLEditer import XMLEditer
+from PyDatcomLab.GUIs.tools.XMLEditer.XMLEditer import XMLEditer
 
 
 

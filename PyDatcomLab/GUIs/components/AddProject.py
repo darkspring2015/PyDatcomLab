@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
 import os
 import logging
 
-from Ui_AddProject import Ui_Dialog
+from .Ui_AddProject import Ui_Dialog
 
 
 class AddProject(QDialog, Ui_Dialog):

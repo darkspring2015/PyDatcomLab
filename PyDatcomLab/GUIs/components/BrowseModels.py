@@ -7,8 +7,6 @@ Module implementing DlgBrowseModels.
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QSize, QPoint, Qt
 from PyQt5.QtWidgets import QDialog, QFileDialog, QMenu, QTableWidgetItem
 from PyQt5.QtGui import QIcon, QPixmap
-from Ui_BrowseModels import Ui_BrowseModel
-
 import logging
 import os
 from xml.etree import ElementTree  as ET
@@ -16,6 +14,8 @@ from xml.etree import ElementTree  as ET
 from PyDatcomLab.GUIs.components.NewModel import NewModelDlg 
 from PyDatcomLab.GUIs.components.ModelPreview import ModelPreview as Mp
 from PyDatcomLab.Core.PyDatcomConfigLoader import defaultConfig as dtConfig
+#导入界面
+from .Ui_BrowseModels import Ui_BrowseModel
 
 
 class BrowseModels(QDialog, Ui_BrowseModel):

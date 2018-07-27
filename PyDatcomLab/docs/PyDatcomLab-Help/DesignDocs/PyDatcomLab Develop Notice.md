@@ -254,3 +254,34 @@ Task :修改新建模型的界面，使其支持最新的分组和必要性配�
 
 
 
+2018-07-29
+
+Bug：帮助浏览器始终覆盖主窗口 &radic;   去掉self可以防止出现这个问题
+
+Bug： 更改目录结构后，docs功能异常  No module named 'mdx_mdx_math'
+
+```shell
+pip install python-markdown-math
+```
+
+安装之后就好了&radic;
+
+Bug：添加选项卡时SYSTH的初始化状态不应该为选中
+
+Bug:  机翼界面斜率没有合适的初始值，没有列数据出来
+
+Bug:  NMACHLink异常
+
+Bug: 小屏幕情况下界面下溢 
+
+Bug: 小屏幕情况下长列表界面无法正常比例显示的问题
+
+Bug：combo2Stuats状态异常的问题
+
+
+
+Task： 将MathJax的位置改动到~/.PyDatcomLab/3rdParty中，减少每次更新和测试的时间消耗
+
+Task ：设计3rdParty的配置文件设置方式
+
+Task ：新建模型窗口不支持正确分组的问题

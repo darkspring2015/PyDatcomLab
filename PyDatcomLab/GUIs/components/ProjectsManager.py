@@ -15,7 +15,7 @@ from PyDatcomLab.GUIs.tools.XMLEditer.XMLTreeEditer import XMLTreeModel as XM
 #from xml.etree import ElementTree  as ET
 from lxml import etree as ET
 
-from Ui_ProjectsManager import Ui_ProjectsMainWindow
+from .Ui_ProjectsManager import Ui_ProjectsMainWindow
 
 
 class ProjectsManager(QMainWindow, Ui_ProjectsMainWindow):

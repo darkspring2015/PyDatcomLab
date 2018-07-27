@@ -18,7 +18,7 @@ from PyDatcomLab.Core.PyDatcomConfigLoader import defaultConfig as dtConfig
 from PyDatcomLab.Core.DictionaryLoader import   DTdictionary 
 
 
-from Ui_ModelPreview import Ui_ModelPreview
+from .Ui_ModelPreview import Ui_ModelPreview
 
 
 class ModelPreview(QWidget, Ui_ModelPreview):

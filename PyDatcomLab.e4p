@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-6.0.dtd">
 <!-- eric project file for project PyDatcomLab -->
-<!-- Saved: 2018-07-16, 01:07:44 -->
+<!-- Saved: 2018-07-28, 15:58:51 -->
 <!-- Copyright (C) 2018 linger, lingo_renlo@qq.com -->
 <Project version="6.0">
   <Language>en_US</Language>
@@ -74,11 +74,15 @@
     <Source>PyDatcomLab/GUIs/tools/XMLEditer/XMLEditer.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLEditer/XMLModel.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLEditer/XMLTreeEditer.py</Source>
+    <Source>PyDatcomLab/GUIs/tools/XMLEditer/__init__.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLEditer/datcomXMLEditer.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLEditer/dtXMLTreeWidget.py</Source>
     <Source>PyDatcomLab/GUIs/tools/XMLEditer/tools_rc.py</Source>
     <Source>PyDatcomLab/PyDatcomLab.py</Source>
     <Source>PyDatcomLab/__init__.py</Source>
+    <Source>PyDatcomLab/extras/SomeTools/registerPython.py</Source>
+    <Source>scripts/zip3rdParty.py</Source>
+    <Source>setup.py</Source>
   </Sources>
   <Forms>
     <Form>PyDatcomLab/GUIs/MainWindow.ui</Form>
@@ -102,14 +106,17 @@
   </Resources>
   <Others>
     <Other>.gitignore</Other>
+    <Other>INSTALL</Other>
+    <Other>LICENSE</Other>
+    <Other>MANIFEST.in</Other>
     <Other>PyDatcomLab/GUIs/tools/HelperSystem/css/diy1.css</Other>
     <Other>PyDatcomLab/GUIs/tools/HelperSystem/css/typora_defualt.css</Other>
+    <Other>PyDatcomLab/bin</Other>
     <Other>PyDatcomLab/config/datcomDefinitionDefault.xml</Other>
     <Other>PyDatcomLab/config/datcomModelTemplateDefault.xml</Other>
-    <Other>docs</Other>
-    <Other>extras</Other>
+    <Other>PyDatcomLab/docs</Other>
+    <Other>PyDatcomLab/extras</Other>
     <Other>wiki</Other>
-    <Other>wiki/PyQtGuide/QTabwidget.md</Other>
   </Others>
   <MainScript>PyDatcomLab/PyDatcomLab.py</MainScript>
   <Vcs>
