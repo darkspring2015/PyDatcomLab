@@ -285,3 +285,13 @@ Task： 将MathJax的位置改动到~/.PyDatcomLab/3rdParty中，减少每次更
 Task ：设计3rdParty的配置文件设置方式
 
 Task ：新建模型窗口不支持正确分组的问题
+
+
+
+Bug ：错误发布已经删除的docs .md &radic; 
+
+​            没有执行setup clean
+
+Bug ：没有发布Helper系统 &radic; 
+
+​            find_packages()无法识别没有"__init__()"的目录

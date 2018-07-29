@@ -103,6 +103,7 @@ def main():
                'SQliteDB':os.path.join(tDefaultDir, 'DB') ,
                'ConfigDirectory':os.path.join(tDefaultDir, 'config') ,
                'WikiDirectory':os.path.join(tDefaultDir, 'wiki'),
+               '3rdParty':os.path.join(tDefaultDir, '3rdParty'),
                #'extras':os.path.join(configPath, 'extras')
     }
     for tDir in tDirlist.keys():
@@ -189,31 +190,42 @@ def main():
     #if not os.path.exists(dbFile):
 
     #定义MathJax附加库的路径
-    tMathJax = os.path.realpath(os.path.join(PyDatcomLabProperties['DatcomModuleDirectory'],  '3rdparty', 'MathJax', 'MathJax.js'))
+#    tMathJax = os.path.realpath(os.path.join(PyDatcomLabProperties['DatcomModuleDirectory'],  '3rdparty', 'MathJax', 'MathJax.js'))
+    tMathJax = os.path.realpath(os.path.join(PyDatcomLabProperties['3rdParty'], 'MathJax', 'MathJax.js'))
     #推定传入参数类型
     if hasattr(argments, 'MathJaxPath') :
-        if os.path.isabs(argments.MathJaxPath) and os.path.exists(argments.MathJaxPath):
-            tMathJax = os.path.realpath(os.path.join(argments.MathJaxPath,  'MathJax.js'))
-        if not os.path.isabs(argments.MathJaxPath):
-            tMP = os.path.realpath(os.path.join(PyDatcomLabProperties['DatcomModuleDirectory'], argments.MathJaxPath, 'MathJax.js'))
+        if os.path.isabs(argments.MathJaxPath):
+            #绝对路径
+            if os.path.exists(argments.MathJaxPath):
+                tMathJax = os.path.realpath(os.path.join(argments.MathJaxPath,  'MathJax.js'))
+            else:
+                logger.info("输入的MathJax绝对路径不存在，使用%s！"%tMathJax)
+        else:
+            #相对路径
+            tMP = os.path.realpath(os.path.join(PyDatcomLabProperties['PyDatcomWorkspace']
+                        , argments.MathJaxPath, 'MathJax.js'))
             if os.path.exists(tMP):
                 tMathJax = tMP
     #更新MathJax库路径定义
     if os.path.exists(tMathJax):
         PyDatcomLabProperties.update({'MathJaxPath':tMathJax})
-        PyDatcomLabProperties.update({'MathJaxOnLinePath':r'http://cdn.mathjax.org/mathjax/latest/MathJax.js'})
     else:
+        #给定的路径不存在
         try:
-            t3rdRoot = os.path.join(PyDatcomLabProperties['DatcomModuleDirectory'],  '3rdparty')
-            tTar = os.path.join(t3rdRoot, 'MathJax.zip')
-            if os.path.exists(tTar):
+            tMathJaxTar = os.path.join(PyDatcomLabProperties['DatcomModuleDirectory']
+                ,  '3rdparty',  'MathJax.zip')
+            if os.path.exists(tMathJaxTar):
                 logger.info("开始解压MathJax，请耐心等待！")
-                shutil.unpack_archive(tTar,  os.path.join(t3rdRoot, 'MathJax'))
-                logger.info("MathJax解压完毕！")
+                shutil.unpack_archive(tMathJaxTar, PyDatcomLabProperties['3rdParty'])
+                tNewPath = os.path.join(PyDatcomLabProperties['3rdParty'],  'MathJax','MathJax.js')
+                logger.info("MathJax解压完毕！新路径%s"%tNewPath)
+                PyDatcomLabProperties.update({'MathJaxPath':tNewPath})
             else:
-                logger.error("不存在MathJax的压缩包！")
+                raise UserWarning("不存在MathJax的压缩包！预期输入为%s"%tMathJaxTar)
         except Exception as e:
             logger.error("无法解压MathJax！%s"%e)
+    #更新网络版内容
+    PyDatcomLabProperties.update({'MathJaxOnLinePath':r'http://cdn.mathjax.org/mathjax/latest/MathJax.js'})
 
     #导入主要的窗体
     from PyDatcomLab.GUIs.MainWindow import DatcomMainWindow

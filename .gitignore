@@ -17,5 +17,5 @@ cur/
 tmp/
 __pycache__/
 *.DS_Store
-PyDatcomLab/3rdparty/MathJax/
+#PyDatcomLab/3rdparty/MathJax/
 PyDatcomLab/3rdparty/MathJax.zip
