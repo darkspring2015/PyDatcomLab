@@ -27,8 +27,12 @@ class DatcomCASEEditerUi(object):
         #self.tabWidget_Configuration.tabBar().setExpanding(True)
         #循环添加表单
         Dialog._loadTabs()
+        #修改tabCloseRequested自带的tabCloseRequested异常问题，使用自定义的槽函数
+        self.tabWidget_Configuration.tabCloseRequested.connect(self.on__tabCloseRequested)
+        self.tabWidget_Configuration.tabBarDoubleClicked.connect(self.on__tabBarDoubleClicked)
         #添加TabWidget
         self.horizontalLayout.addWidget(self.tabWidget_Configuration)
+
         #翻译
         self.retranslateUi(Dialog)
         #设置初始值
