@@ -350,7 +350,10 @@ class DatcomCASEEditer(QDialog, DatcomCASEEditerUi):
         响应tabBar栏的双击行为
         1. 当为-1时，创建新的选项卡
         """
-        self.on_addNamelistAtIndex(index)
+        if index <0:
+            self.on_addNamelistAtIndex(index)
+        else:
+            self.on__tabCloseRequested(index)
 
     def _ChoiseNamelistDialog(self, iMode = '未添加'):
         """
