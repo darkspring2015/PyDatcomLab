@@ -4,7 +4,7 @@
 #
 # @editer Linger
 #
-# 
+#
 
 from xml.etree import ElementTree  as ET
 #from PyDatcomLab.Core.DictionaryLoader import  defaultDatcomDefinition as DtDefine  #, datcomConstraint
@@ -26,7 +26,7 @@ class dcModel(datcomXMLLoader):
     3.如果text经过eval评估是合法的数据则解释成对应float、list等信息，其他的默认为文本
     4.变量的集合是Datcom定义defaultDatcomDefinition的子集，没有的值或者组合直接从内存中删除
     5.包含DatcomInput文件的输出，单位信息包含在每一个变量的内存结构中，单位信息应当被持续化到xml文件，在解析输出时统一后由DIM命令指定
-    6.dcModel模型的实例将作为控件的引用参数被直接修改  
+    6.dcModel模型的实例将作为控件的引用参数被直接修改
     使用说明：
     1.该类型派生自datcomXMLLoader类，需要自定义解析关系，请使用xml文档约定来实现函数ParseXmltoDoc
     """
@@ -34,7 +34,7 @@ class dcModel(datcomXMLLoader):
         """
         初始化模型类
         如果指定了path，将加载对应的模型文件，否则创建基础的Datcom模型，基础模型在defaultDatcomDefinition中定义
-        如果指定了dtDefine的值，将使用自定义的Datcom定义        
+        如果指定了dtDefine的值，将使用自定义的Datcom定义
         """
         super(dcModel, self).__init__()  #使用空初始化以避免加载
         #初始化日志系统
@@ -43,17 +43,17 @@ class dcModel(datcomXMLLoader):
         if iDefine is None : iDefine = DTdictionary.defaultConfig
         self.dtDefine = iDefine
         self.Properties.update({
-                                'CName':'AerocraftName CASE', 
-                                'CASEID':'1',  
-                                'Describe':'2', 
-                                'AerocraftName':'AerocraftName', 
-                                'Configuration':'wing-body' , 
+                                'CName':'AerocraftName CASE',
+                                'CASEID':'1',
+                                'Describe':'2',
+                                'AerocraftName':'AerocraftName',
+                                'Configuration':'wing-body' ,
                                 'numForE':'100'
-                                })  
-        self.Tag      = 'CASE'   #覆盖定义         
+                                })
+        self.Tag      = 'CASE'   #覆盖定义
         #self.numForE  = 100      #使用科学计数法的值
         #定义XML结构
-        self.additionalDoc = {}              #存储datcom配置之外的信息          
+        self.additionalDoc = {}              #存储datcom配置之外的信息
         self.isValid =True
         #执行path的分析
         if iPath is None :
@@ -66,52 +66,52 @@ class dcModel(datcomXMLLoader):
                 self.logger.error("加载算例文件:%s 出现异常:%s"%(iPath, e.message))
                 self.isValid = False
 
-        
+
     def __createBasicdoc(self):
         """
         创建一个基本的doc，类型是ET
         基础空白的模型为了可用默认添加了所有的变量和结果
         """
         #添加最低配置的CASE
-        #FLTCON        
+        #FLTCON
         self.Properties.update({'UUID':str(uuid.uuid1())})
         for iN in self.dtDefine.getBasicNamelistCollection():
             self.addNamelist(iN)
         #调用验证器修正错误，并给所有量赋初值
         self.validate()
-    
-        
-    #下面是必须重载的函数    
+
+
+    #下面是必须重载的函数
     def ParseXmltoDoc(self):
         """
         用来覆盖父类的ParseXmltoDoc方法，提供不同的解释器功能
         """
         if self.xmlDoc is None:return False
         #分析XML文件
-        if not self.xmlDoc.tag == self.Tag: 
+        if not self.xmlDoc.tag == self.Tag:
             self.logger.error("加载的文件格式有问题，Root节点的名称不是%s"%self.Tag)
             #return False
-        #根据节点设置对象信息 
+        #根据节点设置对象信息
         self.__analysisXML(self.xmlDoc)
         if self.doc =={}: return False
         return True
-        
+
     def __analysisXML(self, tXML):
         """
         从XML ET.Element中解析出文档结构
         tXML 根节点
         Notice: 将情况自身的数据
         """
-        if tXML is None: 
+        if tXML is None:
             self.logger.error("xmlDoc为空，终止解析")
             return
         #属性节点赋值
-        self.Properties.update(tXML.attrib) 
+        self.Properties.update(tXML.attrib)
 
         #清理自身数据
-        self.doc = {}        
+        self.doc = {}
         self.additionalDoc = {}
-        
+
         #读取实例
         for iNode in list(tXML):
             #执行非Namelist节的解析
@@ -119,16 +119,16 @@ class dcModel(datcomXMLLoader):
                 tSet = iNode.attrib  #获得所有属性
                 tUrl = tSet.get('Url', None)
                 if tUrl is None or tUrl == '':
-                    self.logger.error("信息结构异常！%s"%(str(tSet))) 
+                    self.logger.error("信息结构异常！%s"%(str(tSet)))
                 tValue = None
-                try:        
+                try:
                     if iNode.text is not None :  #此处遇到 .TRUE.
                         if iNode.text in ['.TRUE.', '.FLASE.']:
                             tValue = iNode.text
                         else:
                             tValue = eval(iNode.text)
                 except Exception as e:
-                    self.logger.error("解析值结构异常！%s - %s"%(e, iNode.text ))  
+                    self.logger.error("解析值结构异常！%s - %s"%(e, iNode.text ))
                 finally:
                     tSet['Value'] = tValue
                 #写入结果
@@ -136,19 +136,19 @@ class dcModel(datcomXMLLoader):
             else:
                 tDoc = self.recursiveParseElement(iNode)  #base class的方法，解析到标准实现中
                 if iNode.tag in self.additionalDoc.keys():
-                    #暂时不考虑实现                    
-                    self.additionalDoc[iNode.tag].append(tDoc) 
+                    #暂时不考虑实现
+                    self.additionalDoc[iNode.tag].append(tDoc)
                 else:
                     self.additionalDoc[iNode.tag] = [tDoc]
-        #解析结束             
-        
+        #解析结束
+
     def buildXMLFromDoc(self):
         """
         用来覆盖父类的ParseXmltoDoc方法，提供不同的解释器功能
         """
         #super(dcModel, self).buildXMLFromDoc()
-        tRoot  = self.createXMLDocBasic() 
-        for iV in self.doc.keys(): 
+        tRoot  = self.createXMLDocBasic()
+        for iV in self.doc.keys():
             tVar = self.doc[iV].copy()
             #跳过不使用的模型的值
             if 'InUsed' in tVar and  tVar['InUsed'] == 'False':
@@ -156,15 +156,15 @@ class dcModel(datcomXMLLoader):
             #分析变量的值
             tValue = None if 'Value' not  in tVar.keys() else tVar['Value']
             tVar.pop('Value')
-            if 'Edited' in tVar.keys() : 
+            if 'Edited' in tVar.keys() :
                 tVar.pop('Edited') #不保存对应的字段
             #将属性值全部都刷新到
             tElem = ET.SubElement(tRoot, 'VARIABLE', tVar)
             if tValue is not None:
                 tElem.text = str(tValue)
-            
+
         return tRoot
-    
+
     def getCASEUUID(self):
         """
         获得当前CASE的UUID
@@ -175,8 +175,8 @@ class dcModel(datcomXMLLoader):
         else:
             self.Properties.update({'UUID':str(uuid.uuid1())})
             #self.save() #此处存在一定的异常风险，可能导致错误的保存了
-        
-    
+
+
     def getNamelistCollection(self):
         """
         返回实例包含的所有的Namelist和对应的Variaable
@@ -184,36 +184,36 @@ class dcModel(datcomXMLLoader):
         Notice : 返回的结果不包括值
         """
         #从 self.xmlDoc中进行分析结果
-        tResult = {}        
+        tResult = {}
         for iV in self.doc.keys():
             tNamelist = iV.split('/')[-2]
             tVarName  = iV.split('/')[-1]
             if tNamelist in tResult.keys():
                 tResult[tNamelist].append(tVarName)
             else:
-                tResult[tNamelist] = [tVarName]           
-        
+                tResult[tNamelist] = [tVarName]
+
         return tResult
-        
+
     def _getNamelistCollectionInUsed(self):
         """
         返回doc中实际在用的所有变量和Namelist的组合
         """
          #从 self.xmlDoc中进行分析结果
-        tResult = {}        
+        tResult = {}
         for iV in self.doc.keys():
             tNamelist = iV.split('/')[-2]
             tVarName  = iV.split('/')[-1]
             #如果变量在文档中并且在使用
             if ('InUsed' in self.doc[iV] and self.doc[iV]['InUsed'] =='True') or \
-                'InUsed' not in self.doc[iV] :           
+                'InUsed' not in self.doc[iV] :
                 if tNamelist in tResult.keys():
                     tResult[tNamelist].append(tVarName)
                 else:
-                    tResult[tNamelist] = [tVarName]           
-        
-        return tResult       
-        
+                    tResult[tNamelist] = [tVarName]
+
+        return tResult
+
     def addNamelist(self, namelist, variables = []):
         """
         向实例添加一个选项卡和对应的变量
@@ -222,48 +222,55 @@ class dcModel(datcomXMLLoader):
         """
         #从 self.dtDefine中获得约束条件
         #增加Namelist对应的基础配置和默认值信息
-        
+
 
         if variables is None or len(variables)  == 0:
             tNLDf = self.dtDefine.getNamelistDefineByName(namelist)
             variables = list(tNLDf.keys())
-        
+
         for iV in variables:
             tUrl = '%s/%s'%(namelist, iV)
             tVtp = self.dtDefine.getVariableTemplateByUrl(tUrl)
             #此处对变量的初始值进行配置
-            if self._checkMustInputStatus(tUrl):
-                tVtp.update({'InUsed':'True'})
+#            if self._checkMustInputStatus(tUrl):
+#                tVtp.update({'InUsed':'True'})
+#            else:
+#                tVtp.update({'InUsed':'False'})
             if tVtp is None:
                 self.logger.error("无法创建对应的变量的基本实例%s"%(tUrl))
                 continue
             if tUrl not in self.doc:
                 self.doc[tUrl] = tVtp
-       
+
     def _checkMustInputStatus(self, iUrl):
         """
         检查输入iUrl的是否是必须输入的变量
         函数使用：音速、构型等信息推定必要性
+
         """
-        return False
-        
+        tVtp = self.dtDefine.getVariableDefineByUrl(iUrl)
+        if 'MustInput' in tVtp and tVtp['MustInput'] in ['UnChecked', 'Checked']:
+            return False
+        else:
+            return True
+
     def deleteNamelist(self, namelist):
         """
         从实例移除一个选项卡
         namelist str：选项卡的名称
         Notice 不承诺数据的完整性
         """
- 
+
         if namelist not in self.dtDefine.getNamelistCollection():
             self.logger.error("NAMELIST : %s并没有在配置中定义！"%namelist)
-            return 
+            return
         #遍历执行，删除Namelist对应的所有变量
         for iV in list(self.doc):       #这里只能使用list而不能使用key，因为会无法删除
             if self.doc[iV]['Namelist'] == namelist:
-                self.doc.pop(iV) 
-        
-        
-        
+                self.doc.pop(iV)
+
+
+
     def setVariable(self, iVar):
         """
         设置实例的某一个变量的值
@@ -278,10 +285,10 @@ class dcModel(datcomXMLLoader):
         """
         #进行必要的单位变换
         #写入数据到doc中
-        
+
         #数据校验
         tResult, tReport = self.checkMustKeys(iVar, ['Url', 'Unit', 'Value'])
-        if tResult is False: 
+        if tResult is False:
             self.logger.error("输入的变量不合法，%s！"%tReport)
             return False
         #检查值
@@ -304,8 +311,8 @@ class dcModel(datcomXMLLoader):
             tVarTem = self.dtDefine.getVariableTemplateByUrl(tUrl)
             tVarTem.update(iVar)
             self.doc[tUrl] = tVarTem
-            return True 
-            
+            return True
+
     def setVariablebyArrayIndex(self, iVar, iIndex):
         """
         设置实例的Array变量的某个值值,
@@ -320,10 +327,10 @@ class dcModel(datcomXMLLoader):
         5.对于存在单位的变量进行单位变换，变换到当前model的Unit
         """
         #进行必要的单位变换
-        #写入数据到doc中        
+        #写入数据到doc中
         #数据校验
         tResult, tReport = self.checkMustKeys(iVar, ['Url', 'Unit', 'Value'])
-        if tResult is False: 
+        if tResult is False:
             self.logger.error("输入的变量不合法，%s！"%tReport)
             return False
         #检查值
@@ -333,7 +340,7 @@ class dcModel(datcomXMLLoader):
             return False
         #执行更新逻辑
         tDefault = self.dtDefine.getVariableTemplateByUrl( tUrl, isSubType = True)
-        
+
         if tUrl in self.doc.keys() and iVar['Value'] is None :
             #如果Value为None则删除该变量
             self.logger.warning("设置Array变量%s的%d位的数值为None是没有意义的！"%(tUrl, iIndex))
@@ -351,10 +358,10 @@ class dcModel(datcomXMLLoader):
             #首先调用添加变量的函数
             namelist, varName = tUrl.split('/')
             self.addNamelist(namelist, [varName])
-            self._setArrayItembyIndex(iVar, iIndex)      
-            return True    
-            
-        return True         
+            self._setArrayItembyIndex(iVar, iIndex)
+            return True
+
+        return True
 
     def _setArrayItembyIndex(self, iVar, iIndex):
         """
@@ -366,12 +373,12 @@ class dcModel(datcomXMLLoader):
         注意事项：
         函数不进行大量的检查，因此可能造成异常
         """
-        tUrl = iVar['Url']       
+        tUrl = iVar['Url']
         try:
             tRange        = self.dtDefine.getVariableDefineByUrl(tUrl)['Limit']
             tDefault       = self.dtDefine.getVariableTemplateByUrl( tUrl, isSubType = True)
             tNowVar      = self.getVariableByUrl(tUrl)
-            tNowLength = len(tNowVar['Value']) 
+            tNowLength = len(tNowVar['Value'])
             #转换坐标
             tNewInputVar = iVar
             if tNowVar['Unit'] != iVar['Unit']:
@@ -383,10 +390,10 @@ class dcModel(datcomXMLLoader):
                 tNowVar['Value'] = tNowVar['Value'] + [tDefault['Value']]*(iIndex + 1 - tNowLength)
                 tNowVar['Value'][iIndex] = tNewInputVar['Value']
             if  iIndex > tRange[1] or  iIndex < 0:
-                raise UserWarning("无效的索引")            
+                raise UserWarning("无效的索引")
         except Exception as e:
             self.logger.error("设置过程出错！%s"%(e))
- 
+
 
     def checkMustKeys(self, iDict, iMust=[]):
         """
@@ -394,7 +401,7 @@ class dcModel(datcomXMLLoader):
         检查规则：
         1.iDict是dict类型
         2.iMust定义的所有key都在iDict中
-        
+
         """
         if iDict is None or not type(iDict):
             return False, '输出变量不是字典类型：%s'%str(iDict)
@@ -408,19 +415,19 @@ class dcModel(datcomXMLLoader):
                 tResult = False
         return tResult, '\n'.join(tReport)
 
-        
+
     def validateAVariable(self,tVar ):
         """
-        验证单个变量是否符合定义要求        
+        验证单个变量是否符合定义要求
         """
         tReport = {'status':'Intermediate', 'Report':[]}
         tLog = []
-        #验证有效性        
+        #验证有效性
         if tVar is None or type(tVar) != dict:
             tReport['status'] = 'Invalid'
             tReport['Report'].append("模型无效")
             return tReport
-            
+
         #验证字段完整性
         tMust = ['VarName', 'Namelist', 'Url', 'Unit', 'Value']
         for iP in tMust:
@@ -435,68 +442,68 @@ class dcModel(datcomXMLLoader):
         #检查单位问题
         if  'Dimension' in tDf.keys() and tDf['Dimension'] not in [None, '', '/']\
         and  tVar['Unit'] not in dtDimension.getUnitListByDimension(tDf['Dimension']):
-            tLog.append("变量的单位与定义的单位/量纲%s不对应"%(tDf['Dimension']))  
-        
+            tLog.append("变量的单位与定义的单位/量纲%s不对应"%(tDf['Dimension']))
+
         #进行值类型
         #INT
         if tDf['TYPE'] == 'INT' :
-            if type(tVar['Value']) not in [ int, float]: 
-                tLog.append('变量的类型应当为INT实际是%s'%(type(tVar['Value']))) 
+            if type(tVar['Value']) not in [ int, float]:
+                tLog.append('变量的类型应当为INT实际是%s'%(type(tVar['Value'])))
             elif 'Range' in tDf.keys() :
                 if tVar['Value'] < tDf['Range'][0] or tVar['Value'] > tDf['Range'][1]:
-                    tLog.append('变量的类型INT,值：%d,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))                
+                    tLog.append('变量的类型INT,值：%d,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))
         #REAL
         if tDf['TYPE'] == 'REAL' :
             if  type(tVar['Value'])  != float:
-                tLog.append('变量的类型应当为REAL实际是%s'%(type(tVar['Value']))) 
+                tLog.append('变量的类型应当为REAL实际是%s'%(type(tVar['Value'])))
             elif 'Range' in tDf.keys() :
                 if tVar['Value'] < tDf['Range'][0] or tVar['Value'] > tDf['Range'][1]:
-                    tLog.append('变量的类型REAL,值：%f,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))             
-            
+                    tLog.append('变量的类型REAL,值：%f,超出Range：%s '%(tVar['Value'], str(tDf['Range'])))
+
         if tDf['TYPE'] == 'Array' :
             if 'InUsed' in tVar and tVar['InUsed'] == 'True':
                 #默认不使用的变量是错误的
                 if type(tVar['Value']) != list :
                     tLog.append('变量的类型应当为Array实际是%s'%(type(tVar['Value'])) )
                 elif len(tVar['Value']) ==0:
-                    tLog.append("变量%s的类型为Array，但值长度为0"%tUrl )      
+                    tLog.append("变量%s的类型为Array，但值长度为0"%tUrl )
                 elif 'Range' in tDf.keys() :
                     for iV in tVar['Value']:
                         if ('SubType' in tDf.keys() and tDf['SubType'] in ['INT', 'REAL']) or\
                             'SubType' not  in tDf.keys() :
                             if iV < tDf['Range'][0] or iV > tDf['Range'][1]:
-                                tLog.append('变量的类型Array,值：%s,超出Range：%s '%(str(iV), str(tDf['Range'])))  
+                                tLog.append('变量的类型Array,值：%s,超出Range：%s '%(str(iV), str(tDf['Range'])))
                         if 'SubType' in tDf.keys() and tDf['SubType'] in ['List']:
                              if iV not in  tDf['Range']:
-                                tLog.append('变量的类型Array,元素类型%s,值：%s,超出Range：%s '%(tDf['SubType'] , 
-                                str(iV), str(tDf['Range'])))  
-                    
+                                tLog.append('变量的类型Array,元素类型%s,值：%s,超出Range：%s '%(tDf['SubType'] ,
+                                str(iV), str(tDf['Range'])))
+
         if tDf['TYPE'] == 'List' :
             if type(tVar['Value'])  != str:
                 tLog.append('变量的类型应当为List 实际是%s'%(type(tVar['Value'])))
             elif 'Range' in tDf.keys() :
                 if tVar['Value'] not in  tDf['Range']:
-                    tLog.append('变量的类型List,值：%s,超出Range：%s '%(str(tVar['Value']), str(tDf['Range'])))                  
+                    tLog.append('变量的类型List,值：%s,超出Range：%s '%(str(tVar['Value']), str(tDf['Range'])))
         #形成总报告
         if len(tLog) ==0:
             tReport = {'status':'Acceptable', 'Report':[]}
         else:
-            tReport = {'status':'Invalid', 'Report':tLog}   
+            tReport = {'status':'Invalid', 'Report':tLog}
         return tReport
-        
+
     def validate(self):
         """
         验证当前的配置是否是一个可以执行的配置，并返回报告信息
         返回值为当前配置的错误报告
         """
-        tReport = {'status':'Acceptable', 'Report':[]}        
-        #开始内容分析机制,        
+        tReport = {'status':'Acceptable', 'Report':[]}
+        #开始内容分析机制,
         tAllInfo = self.getNamelistCollection()
         if tAllInfo is None or len(tAllInfo) == 0 :
             tReport['Report'].append({'status':'Intermediate', 'Report':"模型内并没有信息/n"})
-            tReport['status'] = 'Invalid'       
-            
-        for iN in tAllInfo.keys():#循环Namelist 
+            tReport['status'] = 'Invalid'
+
+        for iN in tAllInfo.keys():#循环Namelist
             #Namelist 级别
             tNMExcept = {}
             for iV in tAllInfo[iN]:
@@ -512,28 +519,28 @@ class dcModel(datcomXMLLoader):
                 #附加规则验证
                 #pass
             if len(tNMExcept) == 0:
-                tReport['Report'].append({'Namelist':iN, 'status':'Acceptable', 'Report':[]}) 
+                tReport['Report'].append({'Namelist':iN, 'status':'Acceptable', 'Report':[]})
             else:
                 tReport['Report'].append({'Namelist':iN, 'status':'Intermediate', 'Report':tNMExcept})
-                    
+
         #形成总报告
         for iN in tReport['Report']:
             if iN['status'] != 'Acceptable':
                 tReport['status'] = 'Invalid'
-                break   
+                break
         return tReport
-    
-        
+
+
     def buildDatcomInputFile(self, path):
         """
         根据当前的CASE配置创建datcom的计算文件
         过程出错将引发异常
         """
         if self.doc is None or len(self.doc ) == 0:
-            raise  UserWarning('模型内并没有信息') 
+            raise  UserWarning('模型内并没有信息')
         #开始内容分析机制
-        tReport = self.validate()    
-        if tReport['status'] != 'Acceptable':       
+        tReport = self.validate()
+        if tReport['status'] != 'Acceptable':
             #分析报告并输出
             tAllError = []
             for iR in tReport['Report']:
@@ -541,27 +548,27 @@ class dcModel(datcomXMLLoader):
                     for iSubR in iR['Report']:
                         tAllError.append( iR['Report'][iSubR])
             tReport = '\n'.join(tAllError)
-            self.logger.info(str(tReport))   
-            raise  UserWarning(tReport)     
+            self.logger.info(str(tReport))
+            raise  UserWarning(tReport)
         #获得doc的全部定义
         tAllInfo = self._getNamelistCollectionInUsed()
         if tAllInfo is None or len(tAllInfo) == 0 :
-            raise  UserWarning('不包含数据的空模型') 
+            raise  UserWarning('不包含数据的空模型')
 
         #将信息格式化为输出文件 要求列宽为80
         TStr = []
         tCASEDes = ''
         tCASEID =1
-        for itr in tAllInfo.keys():#循环Namelist 
-            #添加一个数据行，记录            
-            TStr.append('')  
+        for itr in tAllInfo.keys():#循环Namelist
+            #添加一个数据行，记录
+            TStr.append('')
             theStr = " $%s "%itr
             self.Append80ColumsLimit(TStr, theStr)
             tNMlstPos = len(TStr[-1]) #记录Namelist变量的位置
             lastCheck = 1
             for itVar in tAllInfo[itr]:#循环Var []
                 #获得当前变量的结论
-                theStr = '%s'%itVar 
+                theStr = '%s'%itVar
                 tURl    = '%s/%s'%(itr, itVar)
                 tVarStruct = self.getVariableByUrl(tURl)
                 tVarValueS = tVarStruct['Value']
@@ -570,7 +577,7 @@ class dcModel(datcomXMLLoader):
                 if tVarValueS is None :
                     self.logger.error("创建Datcom计算配置文件失败，不能为空值创建结果！%s/%s"%(itr,itVar ))
                     continue
-                    #raise(Exception("创建Datcom计算配置文件失败，不能为空值创建结果！%s/%s"%(itr,itVar ))) 
+                    #raise(Exception("创建Datcom计算配置文件失败，不能为空值创建结果！%s/%s"%(itr,itVar )))
                 #跳过不在使用的变量
                 if 'InUsed' in tVarStruct and tVarStruct['InUsed'] =='False' :
                     continue
@@ -582,29 +589,29 @@ class dcModel(datcomXMLLoader):
                     else:
                         theStr += '='
                     if len(TStr[-1])> tNMlstPos: #当当前行是非空行时换行增加序列值
-                        TStr.append(' '*tNMlstPos)     
+                        TStr.append(' '*tNMlstPos)
                     self.Append80ColumsLimit(TStr, theStr)
-                    tNewPos = len(TStr[-1]) #记录当前变量的位置   
-                    for itValue in tVarValueS: #循环追加所有的数据                        
+                    tNewPos = len(TStr[-1]) #记录当前变量的位置
+                    for itValue in tVarValueS: #循环追加所有的数据
                         if itValue < int(self.Properties['numForE']) :
                             theStr = '%.3f,'%itValue
                         else:
                             theStr = '%.3E,'%itValue
-                        self.Append80ColumsLimit(TStr, theStr, tNewPos)        
+                        self.Append80ColumsLimit(TStr, theStr, tNewPos)
                     #防止个数变量出现在序列变量之后
-                    if lastCheck < len(tAllInfo[itr]): 
-                        TStr.append(' '*tNMlstPos) 
-                elif tVarDf['TYPE'] == 'List' :#对于1.0 2.0 或者.TRUE.等字符型 
+                    if lastCheck < len(tAllInfo[itr]):
+                        TStr.append(' '*tNMlstPos)
+                elif tVarDf['TYPE'] == 'List' :#对于1.0 2.0 或者.TRUE.等字符型
                     #具有默认值则不输出
-                    if not ('Default' in tVarDf.keys() and  tVarValueS == tVarDf['Default']):  
+                    if not ('Default' in tVarDf.keys() and  tVarValueS == tVarDf['Default']):
                         theStr += '=%s,'%tVarValueS
                         self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
                     else:
                         theStr = ''
-                elif tVarDf['TYPE'] == 'INT' :#对于数值类型  INT  
+                elif tVarDf['TYPE'] == 'INT' :#对于数值类型  INT
                     theStr += '=%d.0,'%int(tVarValueS)
                     self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
-                elif tVarDf['TYPE'] == 'REAL' :#对于数值类型 REAL                
+                elif tVarDf['TYPE'] == 'REAL' :#对于数值类型 REAL
                     if float(tVarValueS) < float(self.Properties['numForE']):
                     #if float(tVarValueS) < self.numForE:
                         theStr += '=%.3f,'%float(tVarValueS)
@@ -612,54 +619,54 @@ class dcModel(datcomXMLLoader):
                         theStr += '=%.3E,'%float(tVarValueS)
                     self.Append80ColumsLimit(TStr, theStr, tNMlstPos)
             #写入Datcom的Namelist的结尾部分$
-            TStr[-1] = TStr[-1][:-1] + '$'            
-      
+            TStr[-1] = TStr[-1][:-1] + '$'
+
 
         #写入CASE ID
-        TStr.append('CASEID %s,CASE %s'%(tCASEDes, str(tCASEID)) )       
+        TStr.append('CASEID %s,CASE %s'%(tCASEDes, str(tCASEID)) )
         #写入SAVE
         TStr.append('SAVE')
-        TStr.append('DUMP CASE' )      
-        TStr.append('NEXT CASE' )   
-        
+        TStr.append('DUMP CASE' )
+        TStr.append('NEXT CASE' )
+
         LastResult = '\n'.join(TStr)
         with open(path,"w") as f:
             f.write(LastResult)
-            
+
         return LastResult
-        
-   
+
+
     def getVariableByUrl(self, tUrl):
         """
         获得tUrl对应的Datcom变量副本
         注意：外部修改该变量副本将影响dcmodel中值，因为返回的是一个dict
-        
+
         """
         if tUrl is None or tUrl == "" or self.doc is None:
             return None
         if tUrl in self.doc.keys():
             return self.doc[tUrl]
-            
+
     def getVariableCopyByUrl(self, tUrl) :
         """
         获得tUrl对应的Datcom变量的副本
-        注意：外部修改该变量的值不会影响dcmodel中值，因为返回的是一个dict的拷贝        
+        注意：外部修改该变量的值不会影响dcmodel中值，因为返回的是一个dict的拷贝
         """
         tV =  self.getVariableByUrl(tUrl)
         if  tV is not None:
             return tV.copy()
 
 
-    
+
     def getDiscreteVariableValueByName(self, tUrl):
         """
         函数从当前模型中获得变量的值，对应离散量 List
         tUrl变量的Url: Namelist/VarName
-        """   
+        """
         return self.getVariableByUrl(tUrl)
 
 
-    
+
     def getContinuousVariableValueByName(self, tUrl):
         """
         函数从当前模型中获得变量的值/单位/量纲，对应连续量 INT REAL
@@ -667,13 +674,13 @@ class dcModel(datcomXMLLoader):
         """
         #获得对应变量的最基本的定义 {'Dimension':'', 'Value':None , 'Unit':'' }
         return self.getVariableByUrl(tUrl)
-        
-        
+
+
     def setDiscreteVariableValueByName(self,tUrl, tVar):
         """
-        写入离散量的值，写入信息Discrete的量 对应List类型 
+        写入离散量的值，写入信息Discrete的量 对应List类型
         varValue 直接就是对应的结果
-        """        
+        """
         tVarIn = self.getDiscreteVariableValueByName(tUrl)
         if tVarIn is not None :
             if type(tVar) is str and tVar != '':
@@ -684,15 +691,15 @@ class dcModel(datcomXMLLoader):
                 else:
                     self.doc[tUrl].update(tVar)  #当变量的值不为None是，将跟新该变量
             else:
-                self.logger.error("dcModel.setDiscreteVariableValueByName，无法处理的类型信息%s"%(str(tVar))) 
+                self.logger.error("dcModel.setDiscreteVariableValueByName，无法处理的类型信息%s"%(str(tVar)))
         else:   #模型中本来就没有该变量
             if 'Value' in tVar.keys() and tVar['Value'] is not None:
                 self.doc[tUrl] = tVar
             else :#当原来就没有时直接忽略
                 pass
-        
 
-    
+
+
     def setContinuousVariableValueByName(self, tUrl, varValue):
         """
         写入连续量的值，写入信息Continuous的量 对应Int Real类型
@@ -712,8 +719,8 @@ class dcModel(datcomXMLLoader):
                 else:
                     self.doc[tUrl].update(varValue)  #当变量的值不为None是，将跟新该变量
             else:
-                self.logger.error("dcModel.setContinuousVariableValueByName无法处理的类型信息%s"%(str(varValue)))   
-    
+                self.logger.error("dcModel.setContinuousVariableValueByName无法处理的类型信息%s"%(str(varValue)))
+
     def removeVariable(self, tUrl):
         """
         将从模型中移除tUrl的相关数据
@@ -723,12 +730,12 @@ class dcModel(datcomXMLLoader):
         #self.doc.pop(tUrl)
 
 
-        
-    def Append80ColumsLimit(self, tStrBuffer, beAddStr,   newLineStartPos = 1, limitLen = 78):  
+
+    def Append80ColumsLimit(self, tStrBuffer, beAddStr,   newLineStartPos = 1, limitLen = 78):
         """
         将输出流限制到宽度
         tStrBuffer 是一个str的List数组
-        """  
+        """
         if len(beAddStr) + newLineStartPos >= limitLen:
             self.logger.error("需要追加的字段实在是太长了")
         #尝试追加数据
@@ -736,8 +743,8 @@ class dcModel(datcomXMLLoader):
             tStrBuffer[-1] += beAddStr
         else :
             tStrBuffer.append(' '*newLineStartPos + beAddStr)
-            
-    
+
+
     def Variable_ETElementToDict(self, elem):
         """
         将一个Variable的ET.Element节点翻译成一个dict
@@ -760,16 +767,16 @@ class dcModel(datcomXMLLoader):
                 tVAttrib['Value'] = elem.text
             else:
                 self.logger.error("异常类型信息：%s"%tDf['TYPE'])
-        else:            
+        else:
             #强制为该参数的默认值
             tVAttrib['Value'] = tDf.getVariableTemplateByUrl(tVAttrib['Url'])
         #添加到子节点中
         return tVAttrib
-        
+
     def Variable_DictToETElement(self, tDict, tRoot = None):
         """
         将tDict转化为一个elem描述
-        
+
         """
         tMust = ['VarName', 'Namelist', 'Url', 'Unit', 'Value']
         if tDict is None or type(tDict) != dict:
@@ -784,7 +791,7 @@ class dcModel(datcomXMLLoader):
         tValue = str(tDict['Value'])
         tElemAttrib = tDict.copy()
         tElemAttrib.pop('Value')
-        
+
         #开始转换
         if tRoot is None :
             tNode = ET.Element('VARIABLE', tElemAttrib)
@@ -792,14 +799,14 @@ class dcModel(datcomXMLLoader):
             tNode = ET.SubElement(tRoot, 'VARIABLE', tElemAttrib)
         tNode.text = tValue
         return tNode
-        
+
     def getVariableCollection(self):
         """
         返回模型中定义的所有的变量 {url：variable}
         返回的变量组合不再影响该模型的值 self.doc.copy()
         """
         return self.doc.copy()
- 
+
 
 if __name__=="__main__":
     """

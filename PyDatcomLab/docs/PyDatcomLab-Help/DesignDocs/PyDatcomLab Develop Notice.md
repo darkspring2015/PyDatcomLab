@@ -295,3 +295,13 @@ Bug ：错误发布已经删除的docs .md &radic;
 Bug ：没有发布Helper系统 &radic; 
 
 ​            find_packages()无法识别没有"__init__()"的目录
+
+Bug： WGPLNF/TYPE 的类型不同问题
+
+TASK ： 增加直接读取Datcom Input文件的能力
+
+TASK ： 增加绘制各种曲线的能力
+
+
+
+Bug ： 曲面上下表面和中线表面的录入关系没有执行其一
