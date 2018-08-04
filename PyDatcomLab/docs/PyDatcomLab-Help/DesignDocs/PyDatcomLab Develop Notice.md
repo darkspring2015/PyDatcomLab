@@ -282,6 +282,8 @@ Bug：combo2Stuats状态异常的问题
 
 Task： 将MathJax的位置改动到~/.PyDatcomLab/3rdParty中，减少每次更新和测试的时间消耗
 
+&radic;
+
 Task ：设计3rdParty的配置文件设置方式
 
 Task ：新建模型窗口不支持正确分组的问题
@@ -311,3 +313,8 @@ Bug ： 曲面上下表面和中线表面的录入关系没有执行其一
 
 
 Bug ： 删除分组选项卡中的一个，另一个并没有被删除&radic;增加了具体的功能
+
+Knowledge:  #求商数用//
+
+Bug : 并没有放满8个控件，而是N-1个   &radic;先算商数再自增
+

@@ -52,97 +52,125 @@ class DatcomWidgetBaseUi(object):
         self.splitter_H1.setObjectName("splitter_H1")
 
         #创建左侧布局
-#        self.groupBox_lift = QtWidgets.QGroupBox(self.splitter_H1)
-        self.groupBox_lift = QtWidgets.QGroupBox(self)
-        self.groupBox_lift.setTitle("")
-        self.groupBox_lift.setObjectName("groupBox_lift")
-        self.LiftLayout = QtWidgets.QVBoxLayout(self.groupBox_lift)
-        self.LiftLayout.setObjectName("LiftLayout")
-        #限制groupBox_lift的格式
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.groupBox_lift.sizePolicy().hasHeightForWidth())
-        self.groupBox_lift.setSizePolicy(sizePolicy)
-        #循环遍历Group框架定义
+        #计算输入控件的分组信息
+        tGroupVars , tNormalLifts, tRuleLifts , tLiftGroupNum = CARD._getInputWidgetClassification()
+        tAllTabKey = list(set(list(tNormalLifts.keys())+list(tRuleLifts.keys()))) #获得所有的分组信息
+        if tLiftGroupNum == 1:
+            #如果一个分组可以容纳
+            self.Widget_lift = QtWidgets.QGroupBox(self.splitter_H1)
+            self.Widget_lift.setTitle("")
+            self.Widget_lift.setObjectName("groupBox_lift")
+            tLiftLayout = QtWidgets.QVBoxLayout(self.Widget_lift)
+            tLiftLayout.setObjectName("LiftLayout%d"%(1))
+            #指向顶级控件
+            #tGroupWidget = self.Widget_lift
+            #添加tNormalLifts
+            for iT in tNormalLifts:
+                #遍历iT
+                for iV in tNormalLifts[iT]:
+                    #遍历所有的变量
+                    self._addWidgetToLayout(CARD,tLiftLayout,  iV)
+            #添加tRuleLifts
+            for iT in tRuleLifts:
+                #遍历iT
+                for iV in tRuleLifts[iT]:
+                    #遍历所有的变量
+                    self._addWidgetToLayout(CARD,tLiftLayout,  iV)
 
-        tableCache ={}
-        if hasattr(CARD,'VariableList'):
-            #开始参数配置过程
-            for tVarName in CARD.VariableList.keys():
-                tUrl = '%s/%s'%(CARD.Namelist, tVarName)
-                tVarDefine = CARD.dtDefine.getVariableDefineByUrl(tUrl)
-                #判断类型
-                if tVarDefine['TYPE'] == 'Array':
-                    #对于表格类型不在这里创建信息
-                    groupName = tVarDefine['Group']
-                    if groupName in tableCache.keys() :
-                        tableCache[groupName].append(tVarName)
-                    else:
-                        tableCache[groupName] =[tVarName]
-                    continue
-                elif tVarDefine['TYPE'] in ['INT', 'REAL'] :
-                    # 开始单值工程量创建
-                    tVarWidget = SInput.DatcomInputSingle(tUrl, parent=self.groupBox_lift,  iModel =CARD.dtModel , iDefinition = CARD.dtDefine )
-                    tVarWidget.setObjectName(tVarName)
-                    #限制var的格式
-                    sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-                    sizePolicy.setHorizontalStretch(0)
-                    sizePolicy.setVerticalStretch(0)
-                    sizePolicy.setHeightForWidth(tVarWidget.sizePolicy().hasHeightForWidth())
-                    tVarWidget.setSizePolicy(sizePolicy)
-                    self.LiftLayout.addWidget(tVarWidget)
+            #创建下方的空间分割器
+            spacerItem_LiftBottom = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+            tLiftLayout.addItem(spacerItem_LiftBottom)
+        else:
+            #需要多个分组的情况
+            self.Widget_lift = QtWidgets.QTabWidget(self.splitter_H1)
+            self.Widget_lift.setTabPosition(QtWidgets.QTabWidget.West) #设置左侧分页
+            #添加tNormalLifts
+            for iT in tNormalLifts:
+                tIndex =-1
+                for tTabId in range(0, self.Widget_lift.tabBar().count()):
+                    tData = self.Widget_lift.tabBar().tabData(tTabId)
+                    if iT == tData['Key']:
+                        tIndex = tTabId
+                        break
+                #如果没有Tab，则新建Tab
+                if tIndex <= -1:
+                    #新建Tab
+                    tWidget = QtWidgets.QWidget(self)
+                    tLiftLayout = QtWidgets.QVBoxLayout(tWidget)
+                    tLiftLayout.setObjectName("LiftLayout_%s"%(iT))
+                    tIndex = self.Widget_lift.addTab(tWidget, iT)
+                    self.Widget_lift.tabBar().setTabData(tIndex, {'Key':iT, 'VariableList':tNormalLifts[iT]})
 
-                elif tVarDefine['TYPE'] in ['List'] :
-                    # 结束单值工程量创建
-                    tVarWidget = LInput.DatcomInputList(tUrl, parent=self.groupBox_lift ,  iModel =CARD.dtModel  , iDefinition = CARD.dtDefine)
-                    tVarWidget.setObjectName(tVarName)
-                    #限制var的格式
-                    sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-                    sizePolicy.setHorizontalStretch(0)
-                    sizePolicy.setVerticalStretch(0)
-                    sizePolicy.setHeightForWidth(tVarWidget.sizePolicy().hasHeightForWidth())
-                    tVarWidget.setSizePolicy(sizePolicy)
-                    self.LiftLayout.addWidget(tVarWidget)
-
-
-        #创建附加控件 如果定义筛选变量组的控件
-        if hasattr(CARD,'RuleIndexToCombo'):
-            #逐条创建附加筛选逻辑
-            for tCombo in CARD.RuleIndexToCombo:
-                if  tCombo is None or tCombo == {}:
-                    continue
-                if not 'Index'  in tCombo.keys():
-                    continue
-                #创建一个水平布局器
-                tVarName   = tCombo['Index']
-                tUrl = '%s/%s'%(CARD.Namelist, tVarName)
-                tWidget = self.findChild(QtWidgets.QWidget, '%s'%tVarName)
+                #存在有效索引
+                tWidget = self.Widget_lift.widget(tIndex)
                 if tWidget is None:
-                    tWidget = DatcomInputComboChooser(tUrl,
-                                   parent=self.groupBox_lift, iDefinition = CARD.dtDefine)
-                    tWidget.setObjectName('Chooser_%s'%tVarName)
-                    self.LiftLayout.addWidget(tWidget)
-                    #连接变量变化信号到本Widget的转发信号
-                    tWidget.varComboChanged.connect(CARD.Singal_RuleIndexToCombo)
-                    #连接当前转发的表格变化信号
-                    self.Singal_varComboChangedFromTable.connect(tWidget.on_Singal_varComboChangedFromTable)
-                else:
-                    tWidget.currentIndexChanged.connect(CARD.Singal_RuleIndexToCombo)
-                #绑定值变换信号到自身信号 因为尚未创建对象TableWidget无法直接绑定
+                    raise UserWarning("setupUi异常，无法获得对应的Widget")
+                #获取布局
+                tLiftLayout = tWidget.layout()
+                if tLiftLayout is None:
+                    raise UserWarning("setupUi异常，无法获得Widget对应的Layout")
+                #执行添加
+                for iV in tNormalLifts[iT]:
+                    #遍历所有的变量
+                    self._addWidgetToLayout(CARD,tLiftLayout,  iV)
 
+            #添加tRuleLifts
+            for iT in tRuleLifts:
+                tIndex =-1
+                for tTabId in range(0, self.Widget_lift.tabBar().count()):
+                    tData = self.Widget_lift.tabBar().tabData(tTabId)
+                    if iT == tData['Key']:
+                        tIndex = tTabId
+                        break
+                #如果没有Tab，则新建Tab
+                if tIndex <= -1:
+                    #新建Tab
+                    tWidget = QtWidgets.QWidget(self)
+                    tLiftLayout = QtWidgets.QVBoxLayout(tWidget)
+                    tLiftLayout.setObjectName("LiftLayout_%s"%(iT))
+                    tIndex = self.Widget_lift.addTab(tWidget, iT)
+                    self.Widget_lift.tabBar().setTabData(tIndex, {'Key':iT, 'VariableList':tNormalLifts[iT]})
 
-        #创建下方的空间分割器
-        spacerItem_LiftBottom = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.LiftLayout.addItem(spacerItem_LiftBottom)
+                #存在有效索引
+                tWidget = self.Widget_lift.widget(tIndex)
+                if tWidget is None:
+                    raise UserWarning("setupUi异常，无法获得对应的Widget")
+                #获取布局
+                tLiftLayout = tWidget.layout()
+                if tLiftLayout is None:
+                    raise UserWarning("setupUi异常，无法获得Widget对应的Layout")
+                #执行添加
+                for iV in tRuleLifts[iT]:
+                    #遍历所有的变量
+                    self._addWidgetToLayout(CARD,tLiftLayout,  iV)
 
-        #创建左侧的滚动区域
-        self.LiftScrollArea = QtWidgets.QScrollArea(self.splitter_H1)
-        self.LiftScrollArea.setWidget(self.groupBox_lift)
-
+            #为所有的分组添加分割器
+            for iT in tAllTabKey:
+                tIndex = -1
+                for tTabId in range(0, self.Widget_lift.tabBar().count()):
+                    tData = self.Widget_lift.tabBar().tabData(tTabId)
+                    if iT == tData['Key']:
+                        tIndex = tTabId
+                        break
+                #如果没有Tab，则新建Tab
+                if tIndex <= -1:
+                    continue
+                #负责识别
+                #存在有效索引
+                tWidget = self.Widget_lift.widget(tIndex)
+                if tWidget is None:
+                    self.logger.error("setupUi异常，无法获得对应的Widget")
+                    continue
+                #获取布局
+                tLiftLayout = tWidget.layout()
+                if tLiftLayout is None:
+                    self.logger.error("setupUi异常，无法获得Widget对应的Layout")
+                    continue
+                #创建下方的空间分割器
+                spacerItem_LiftBottom = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+                tLiftLayout.addItem(spacerItem_LiftBottom)
 
         #完成左侧布局结构
-
 
         #创建右侧结构
         tabWidget_right = QtWidgets.QTabWidget(self.splitter_H1)
@@ -154,7 +182,7 @@ class DatcomWidgetBaseUi(object):
         sizePolicy.setHeightForWidth(tabWidget_right.sizePolicy().hasHeightForWidth())
         tabWidget_right.setSizePolicy(sizePolicy)
         #创建多值工程量的输入结构
-        for tGroup in tableCache.keys():
+        for tGroup in tGroupVars.keys():
             #创建表单  iNamelist, iGroup,  parent=None, iDefine = DDefine , iModel =None
             tTabTable = TB(iNamelist = CARD.Namelist, iGroup = tGroup , iDefine = CARD.dtDefine, parent = CARD, iModel =CARD.dtModel)
             tTabTable.setObjectName("tableWidget_%s"%tGroup)
@@ -193,13 +221,63 @@ class DatcomWidgetBaseUi(object):
         #self.splitter_H1.setSizes(self.baseSplitterSize)
 
         #调用控件信号槽绑定逻辑
-        self.connectSlotsByRule(CARD) #绑定自定义的信号槽关系
+        CARD._connectSlots() #绑定自定义的信号槽关系
         QtCore.QMetaObject.connectSlotsByName(CARD)
 
-    def connectSlotsByRule(self, tCARD):
+    def _addWidgetToLayout(self, CARD,tLayout,  iVarName):
+        """
+        创建tUrl对应的控件并添加到Layout
+
+        """
+        tUrl = '%s/%s'%(CARD.Namelist, iVarName)
+        tVarDefine = CARD.dtDefine.getVariableDefineByUrl(tUrl)
+
+        if 'TYPE' in tVarDefine.keys() and tVarDefine['TYPE'] in ['INT', 'REAL'] :
+            # 开始单值工程量创建
+            tVarWidget = SInput.DatcomInputSingle(tUrl, parent=self,
+                        iModel =CARD.dtModel , iDefinition = CARD.dtDefine )
+            tVarWidget.setObjectName(iVarName)
+            #限制var的格式
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(tVarWidget.sizePolicy().hasHeightForWidth())
+            tVarWidget.setSizePolicy(sizePolicy)
+            tLayout.addWidget(tVarWidget)
+        if 'TYPE' in tVarDefine.keys() and tVarDefine['TYPE'] in ['List'] :
+            # 结束单值工程量创建
+            tVarWidget = LInput.DatcomInputList(tUrl, parent = self ,  iModel =CARD.dtModel  , iDefinition = CARD.dtDefine)
+            tVarWidget.setObjectName(iVarName)
+            #限制var的格式
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(tVarWidget.sizePolicy().hasHeightForWidth())
+            tVarWidget.setSizePolicy(sizePolicy)
+            tLayout.addWidget(tVarWidget)
+        if 'TYPE' not in tVarDefine.keys():
+            if 'RuleIndexToCombo' in tVarDefine.keys():
+                tWidget = DatcomInputComboChooser(tUrl,
+                               parent=CARD, iDefinition = CARD.dtDefine)
+                tWidget.setObjectName('Chooser_%s'%iVarName)
+                tLayout.addWidget(tWidget)
+                #连接变量变化信号到本Widget的转发信号
+                #tWidget.varComboChanged.connect(CARD.Singal_RuleIndexToCombo)
+                #连接当前转发的表格变化信号
+                #CARD.Singal_varComboChangedFromTable.connect(tWidget.on_Singal_varComboChangedFromTable)
+        else:
+            self.logger.warning("错误的变量分组信息")
+
+
+
+
+    def _connectSlotsByRule(self, tCARD):
         """
         根据定义的Rule来绑定对应的信号槽
         """
+
+
+
 
         #添加变量组合控制逻辑
         if hasattr(tCARD,'RuleVariableStatus'):

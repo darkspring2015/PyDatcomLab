@@ -31,12 +31,12 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
     #定义各个Widget之间进行参数同步的信号
     Singal_InitializeUI                            = pyqtSignal(int)            #用来提供额外的界面初始化逻辑，响应信号对界面进行额外的初始化
     Singal_RuleIndexToCombo                 = pyqtSignal(str,str)       #处理变量组合的选择发生变换时，由ComboCHoose触发 <sender.vUrl,Howto-ChosedKey>
-    Singal_CheckboxStateChanged          = pyqtSignal(int,str)       #处理checkbox的同步问题
-    Singal_TableCountEditingFinished       = pyqtSignal(str, int)      #处理表格长度控制变量的触发逻辑 str Url int :count
+    Singal_CheckboxStateChanged          = pyqtSignal(int,str)          #处理checkbox的同步问题
+    Singal_TableCountEditingFinished       = pyqtSignal(str, int)       #处理表格长度控制变量的触发逻辑 str Url int :count
     Singal_CommonUIChanged                = pyqtSignal(str)            #通用的输入状态变化规则
-    #Singal_RuleVariableStatus                = pyqtSignal(str, str)       #通用的RuleVariableStatus状态变化规则  (ControlVarUrl,key)
-    Singal_TBRowCountChanged             = pyqtSignal(int, str)      #用于通知表格的行数发生了变化
-    Singal_varComboChangedFromTable   = pyqtSignal(str , str)     #向外部通知表格中激活的列组合关系发生变化 <sender.vUrl,"[]">
+    #Singal_RuleVariableStatus                = pyqtSignal(str, str)             #通用的RuleVariableStatus状态变化规则  (ControlVarUrl,key)
+    Singal_TBRowCountChanged             = pyqtSignal(int, str)       #用于通知表格的行数发生了变化
+    Singal_varComboChangedFromTable   = pyqtSignal(str , str)          #向外部通知表格中激活的列组合关系发生变化 <sender.vUrl,"[]">
     Singal_NMACHChanged                    = pyqtSignal(int)            #用来接收NMACH的变化的信号
 
     def __init__(self, iNamelist, parent=None , iModel = None, iDefine = DTdictionary.defaultConfig ):
@@ -64,12 +64,12 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         self.Namelist                = iNamelist
         self.dtDefine                 = iDefine
         self.NamelistAttriabute    = self.dtDefine.getNamelistAttributeByName(self.Namelist)
-        self.VariableList             = self.dtDefine.getNamelistDefineByName(self.Namelist)
-        self.NMACHLinkTable       = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'NMACHLinkTable')
-        self.RuleNumToCount      = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleNumToCount')
-        self.RuleIndexToCombo   = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleIndexToCombo')
-        self.GroupDefine            = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'GroupDefine')
-        self.RuleVariableStatus   = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableStatus')
+        self.VariableList          = self.dtDefine.getNamelistDefineByName(self.Namelist)
+        self.NMACHLinkTable        = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'NMACHLinkTable')
+        self.RuleNumToCount        = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleNumToCount')
+        self.RuleIndexToCombo      = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleIndexToCombo')
+        self.GroupDefine           = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'GroupDefine')
+        self.RuleVariableStatus    = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableStatus')
         #规则self.RuleVariableCorrelation
         self.RuleVariableCorrelation = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableCorrelation')
         self.RuleVariableCorrelationMasterVList = []
@@ -85,6 +85,7 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
         self.curWidget = None
         self.curN = None
         self.popMenu = None
+        self.subTabWidgetLimit = 12  #每页显示的widget的数量
 
         #定义控件dtModel
         if iModel is None or type(iModel) is not dcModel.dcModel:
@@ -153,6 +154,79 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
             tWidget.setModel(self.dtModel)
             #遍历所有的遍历写入到表格中
         #遍历所有表格控件
+    def _connectSlots(self):
+        """
+        负责链接所有的信号
+        1.链接RuleIndexToCombo
+        2.链接Rule
+        self.NMACHLinkTable        = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'NMACHLinkTable')
+        self.RuleNumToCount        = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleNumToCount')
+        self.RuleIndexToCombo      = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleIndexToCombo')
+        self.GroupDefine           = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'GroupDefine')
+        self.RuleVariableStatus    = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableStatus')
+        self.RuleVariableCorrelation = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableCorrelation')
+
+        """
+        #规则tNMACHLinkTable
+        tNMACHLinkTable  = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'NMACHLinkTable')
+        if tNMACHLinkTable is not None:
+            for iG in tNMACHLinkTable:
+                tWidget = self.findChild(QtWidgets.QWidget, "tableWidget_%s"%iG)
+                if tWidget is None:
+                    self.logger.error("没有找到对应的控件")
+                else:
+                    self.Singal_NMACHChanged.connect(tWidget.on_Singal_NMACHChanged)
+        #规则RuleNumToCount
+        RuleNumToCount        = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleNumToCount')
+        # <Rule Group="Speed_Atmospheric" Num="NMACH" />
+        if RuleNumToCount is not None:
+            for iR in RuleNumToCount:
+                tCWidget  = self.findChild(QtWidgets.QWidget, iR['Num'])
+                tTbWidget = self.findChild(QtWidgets.QWidget,'tableWidget_%s'%iR['Group'])
+                if tCWidget is None or tTbWidget is None:
+                    self.logger.error("变量%s对应的控件不存在"%(iR['Num']))
+                    continue
+                #变量num->Table
+                #直接进行绑定不经过Mainwindo的转发了
+                tCWidget.editingFinished.connect(tTbWidget.on_Singal_RuleNumToCount)
+                #表格长度到-NUM
+                tTbWidget.Signal_rowCountChanged.connect(tCWidget.on_Signal_rowCountChanged)
+
+        #添加变量组合控制逻辑
+        RuleVariableStatus    = self.dtDefine.getCARDAddtionalInformation(self.Namelist, 'RuleVariableStatus')
+        if RuleVariableStatus is not None:
+            for iR in RuleVariableStatus:#[]
+                tControlVar = iR['ControlVar'] #获得控制变量的名称
+                if tControlVar not in self.VariableList.keys() :
+                    self.logger.warning("emit_Singal_RuleVariableStatus() 尝试使用不在Datcom定义中的变量%s，忽略!"%tControlVar)
+                    tCWidget  = self.findChild(QtWidgets.QWidget, "comboBox_%s"%(tControlVar))
+                    tCWidget.currentIndexChanged.connect(self.on_RuleVariableStatus_cuurentIndexChanged)
+                else:
+                    tCWidget  = self.findChild(QtWidgets.QWidget, "%s"%(tControlVar))
+                    if tCWidget is None :
+                        self.logger.error("变量%s对应的控件不存在"%(iR['ControlVar']))
+                        continue
+                    #变量num->Table
+                    tCWidget.currentIndexChanged.connect(self.on_RuleVariableStatus_dt_triggered)
+
+
+
+    def _clacScreen(self):
+        """
+        计算屏幕大小
+        """
+#        QDesktopWidget* pDesktopWidget = QApplication::desktop();
+        pDesktopWidget = QApplication.desktop()
+        #获取可用桌面大小 QRect
+        deskRect = pDesktopWidget.availableGeometry()
+        #获取主屏幕分辨率 QRect
+        screenRect = pDesktopWidget.screenGeometry()
+        #获取屏幕数量 int
+        nScreenCount = pDesktopWidget.screenCount()
+
+        if (deskRect.height*0.6) //500:
+            self.subTabWidgetLimit = 8
+
 
     def getModel(self):
         """
@@ -182,6 +256,61 @@ class DatcomWidgetBase(QWidget, DatcomWidgetBaseUi):
 #        #执行界面刷新
         return self.dtModel
 
+    def _getInputWidgetClassification(self):
+        """
+        分析获得当前控件分类添加的规则
+        """
+        tableCache ={}  #添加到右侧的变量的计数器
+        tNuGroup = {}   #添加到左侧的变量集合 {'1'：[]}
+        tRuleGroup = {} #添加到左侧的附加控制变量的集合 {'1'：[]}
+        tGIndex = 1     #左侧分组的序号计数
+        tCount = 0      #添加到左侧的变量的计数器
+        for iV in self.VariableList:
+            #循环遍历Group框架定义
+            tUrl = '%s/%s'%(self.Namelist, iV)
+            tVarDefine = self.dtDefine.getVariableDefineByUrl(tUrl)
+            #判断类型
+            if tVarDefine['TYPE'] == 'Array':
+                #对于表格类型不在这里创建信息
+                groupName = tVarDefine['Group']
+                if groupName in tableCache.keys() :
+                    tableCache[groupName].append(iV)
+                else:
+                    tableCache[groupName] =[iV]
+            elif tVarDefine['TYPE'] in ['INT', 'REAL', 'List'] :
+                #如果计数到self.subTabWidgetLimit的倍数，新增Tab
+                tGIndex = tCount//self.subTabWidgetLimit +1   #求商数用//
+                # 开始单值工程量创建
+                tCount = tCount +1
+                if str(tGIndex) in tNuGroup:
+                    tNuGroup[str(tGIndex)].append(iV)
+                else:
+                    tNuGroup[str(tGIndex)]= [iV]
+            else:
+                self.logger.warning("无法归档的定义%s"%tUrl)
+
+        #创建附加控件 如果定义筛选变量组的控件
+        if hasattr(self,'RuleIndexToCombo'):
+            #逐条创建附加筛选逻辑
+            for tCombo in self.RuleIndexToCombo:
+                if  tCombo is None or tCombo == {} or not 'Index'  in tCombo.keys():
+                    self.logger.warning("无法归档的定义RuleIndexToCombo：%s"%(str(tCombo)))
+                    continue
+                #分析相关性
+                iV   = tCombo['Index']
+                if iV not in self.VariableList:
+                    #如果计数到self.subTabWidgetLimit的倍数，新增Tab
+                    tGIndex = tCount//self.subTabWidgetLimit +1 #求商数用//
+                    # 开始单值工程量创建
+                    tCount = tCount +1
+                    if str(tGIndex) in tRuleGroup:
+                        tRuleGroup[str(tGIndex)].append(iV)
+                    else:
+                        tRuleGroup[str(tGIndex)]= [iV]
+
+
+            #返回计算结果
+            return tableCache, tNuGroup, tRuleGroup, tGIndex
 
     def UILogic(self):
         """
